@@ -1,0 +1,13 @@
+Prateleira	Bloco	CoordX	CoordY	Linhas	Colunas	Sentido
+0	0	4	2	2	21	C
+1	0	4	6	2	21	A
+2	0	4	10	2	21	C
+3	0	4	14	2	21	A
+4	0	4	18	2	21	C
+5	0	4	22	2	21	A
+6	0	33	2	2	21	C
+7	0	33	6	2	21	A
+8	0	33	10	2	21	C
+9	0	33	14	2	21	A
+10	0	33	18	2	21	C
+11	0	33	22	2	21	A

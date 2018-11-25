@@ -1,0 +1,14 @@
+[x] Separar correlação/analise do setLists
+[x] Cache de rotas na classe do armazem
+[x] Cacher função de avaliação
+[x] Safe cache para função de avaliação
+[x] Função verificar solução
+[] Sortear celulas de vertices ao invez de sortear de prateleiras
+[x] First Improvement = n²
+[x] Fazer leitura dos produtos baseado nas ordens
+[x] Verificar ILS
+[x] Calibrar parametros ILS
+
+
+
+[] Da pra otimizar ainda mais a busca local, se for nescessario fazer isso depois
