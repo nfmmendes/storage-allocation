@@ -1,11 +1,8 @@
 #include<iostream>
+#include<string>
 #include<cmath>
 #include<ctime>
-#include<vector>
-#include<algorithm>
-#include<utility>
 using namespace std; 
-
 
 
 namespace QuickTSP{
@@ -22,15 +19,4 @@ namespace QuickTSP{
             void getResultingGraph(Graph &graph); 
         
     }; 
-
-    
-
-
-}
-
-int main(){
-    
-    
-    
-    
 }
