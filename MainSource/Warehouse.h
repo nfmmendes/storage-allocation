@@ -1,3 +1,6 @@
+#ifndef WAREHOUSE_H
+#define WAREHOUSE_H
+
 #include<iostream>
 #include<vector>
 #include<string>
@@ -39,3 +42,5 @@ class Warehouse{
             
             
 };
+
+#endif

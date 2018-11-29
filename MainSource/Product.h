@@ -21,7 +21,8 @@ class Product{
         }
         
         Product(string name, string type){
-            
+            this->name = name;
+            this->type = type;
         }
         
     
