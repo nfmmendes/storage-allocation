@@ -27,10 +27,14 @@
     // 2. The  number n2 of block exits
     //      2.1. The next n2 lines will contain each one
     //           idExit, exitCoordX, exitCoordY, blockA_name, blockB_name (nullable. If null the block name will be #_#_#)
-    //          
-    //3. The number n3 of shelves
+    //3. The number n3 of shelves          
     //      3.1. The next n3 lines will contain each one
     //          idShelve, blockName, bottomLeftCoordX, bottomLeftCoordY, Column, Lines, CellsLenght, CellsWidth
+    //4. The number n4 of corridors
+    //
+    //
+    //
+    //
 
 
     if(file.is_open()){

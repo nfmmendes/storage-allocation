@@ -1,3 +1,6 @@
+#ifndef TIME_H
+#define TIME_H
+
 #include<iostream>
 #include<string>
 #include<cstdlib>
@@ -71,3 +74,5 @@ class Time{
         }
         
 };
+
+#endif

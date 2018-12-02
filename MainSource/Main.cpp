@@ -8,29 +8,30 @@
 #include "allClasses.h"
 #include "Warehouse.h"
 #include "Product.h"
-#include "Orders.h"
-#include QuickTSP.h"
+#include "Order.h"
+#include "QuickTSP.h"
 using namespace std;
 using namespace QuickTSP;
 
 int main(int argc, char **argv){
     
-    string paramFileName = str(argv[0]);
+    string paramFileName = argv[0];
     string warehouseDescriptionFileName; 
     string ordersFileName; 
     Warehouse *warehouse; 
-    QuickTSP *algorithm;
-    vector<Order> orders; 
+    QuickTSP::QuickTSP *algorithm;
+    //vector<Order> orders; 
     
     //READ THE INPUT 
-    ifstream file = ifstream.open(paramFileName, ios::in); 
+    ifstream file;
+    file.open(paramFileName, ios::in); 
     if(file.is_open()){
         cout<<"Starting the input reading...\n";
         file>>warehouseDescriptionFileName;
         file>>ordersFileName; 
         file.close();
     }else{
-        cerr<<"The file could not be open!\n Verifiy if it exists or if the you passed the right path." 
+        cerr<<"The file could not be open!\n Verifiy if it exists or if the you passed the right path.";
         return 1;
     }
       

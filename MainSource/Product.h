@@ -1,3 +1,6 @@
+#ifndef PRODUCT_H
+#define PRODUCT_H
+
 #include<iostream>
 #include<cstdlib>
 #include<string>
@@ -27,3 +30,5 @@ class Product{
         
     
 };
+
+#endif

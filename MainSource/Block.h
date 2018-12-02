@@ -19,7 +19,7 @@ class Block{
         
     public:
         Block();
-        Block(Block &other);
+        Block(const Block &other);
         Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY);
         
         bool hasValidConfiguration(){
@@ -48,8 +48,10 @@ class Block{
         
         ///Add a exit in a block (if it was not inserted a exit with same Id yet)
         void addExit(BlockExit & other) { 
-            if( find(exits.begin(), exits.end(), other) != exits.end())
-                exits.push_back(other);
+            if( find(exits.begin(), exits.end(), other) != exits.end()){
+                BlockExit inserted(other); 
+                exits.push_back(inserted);
+            }
         }
         
         /// Removes the exit with id equals to Id in the block of exits 

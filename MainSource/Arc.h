@@ -2,6 +2,7 @@
 #include<string>
 #include<cmath>
 #include<cstdlib>
+#include "Vertex.h"
 using namespace std;
 
 
@@ -15,12 +16,12 @@ namespace QuickTSP{
         private:
             string label;
             double value; 
-            Vertex &beginVertex;
-            Vertex &endVertex; 
+            Vertex beginVertex;
+            Vertex endVertex; 
         
         public:
             Arc();
-            Arc(Arc &arc){
+            Arc(const Arc &arc){
                 this->label = arc.getLabel();
                 this->value = arc.getValue(); 
                 this->beginVertex = arc.getBeginVertex();
@@ -53,10 +54,10 @@ namespace QuickTSP{
             }
             
             
-            string getLabel() { return label; }
-            double getValue() { return value; }
-            Vertex getBeginVertex() { return beginVertex; }
-            Vertex endVertex() {return endVertex; }
+            string getLabel() const { return label; }
+            double getValue() const  { return value; }
+            Vertex getBeginVertex() const { return beginVertex; }
+            Vertex getEndVertex() const  {return endVertex; }
             
             
             

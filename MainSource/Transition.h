@@ -1,11 +1,20 @@
+#ifndef TRANSITION_H
+#define TRANSITION_H
+
+#include<iostream>
+#include<vector>
+#include "Vertex.h"
+#include "HananGraph.h"
+using namespace std; 
+
 namespace QuickTSP{
 
     class Transition{
         
         private:
-            Vertex& beginVertex;
-            Vertex& endVertex;
-            HananGraph &graph;
+            Vertex beginVertex;
+            Vertex endVertex;
+            HananGraph graph;
 
         public:  
             Transition();
@@ -18,12 +27,14 @@ namespace QuickTSP{
             
             void setBeginVertex(Vertex &value) { this->beginVertex = value; }
             void setEndVertex(Vertex &value){ this->endVertex = value; }
-            void setHananGraph(HananGraph &value) { this->HananGraph = value; } 
+            void setHananGraph(HananGraph &value) { this->graph = value; } 
             
             Vertex & getBeginVertex() { return this->beginVertex; }
             Vertex & getEndVertex() { return this->endVertex; } 
-            HananGraph & getGraph() { return this->HananGraph; } 
+            HananGraph & getGraph() { return this->graph; } 
         
     };
     
  }
+ 
+ #endif

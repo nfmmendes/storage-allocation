@@ -1,6 +1,9 @@
 #include<iostream>
 #include<cmath>
 #include<ctime>
+#include<vector>
+#include "HananGraph.h"
+#include "PathUnity.h"
 using namespace std;
 
     
@@ -8,7 +11,7 @@ namespace QuickTSP{
         class QuickTSP{
             private: 
                 HananGraph graph;
-                vector<PathUnity&> solution
+                vector<PathUnity> solution;
             public:
                 QuickTSP();
                 QuickTSP(QuickTSP &other);
@@ -16,7 +19,7 @@ namespace QuickTSP{
                 
                 void setHananGraph(HananGraph &graph){ this->graph = graph;}
                 HananGraph getHananGraph()           { return this->graph; }
-                Vector<PathUnity &> getSolution()    {return this->solution; } 
+                vector<PathUnity> getSolution()    {return this->solution; } 
                 
                 void Run(){
                     

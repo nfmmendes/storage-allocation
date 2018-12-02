@@ -1,3 +1,6 @@
+#ifndef POINT_H
+#define POINT_H
+
 #include<iostream>
 #include<string>
 #include<utility>
@@ -17,7 +20,7 @@ using namespace std;
             
             //Full constructor
             //Null values are not allowed
-            Point(string &label, double &coordX, double &coordY, double & coordZ){
+            Point(string label, double coordX, double coordY, double coordZ){
             
                 if(label == "")
                     throw("Error"); 
@@ -30,7 +33,7 @@ using namespace std;
             
             //Copy constructor
             //Null values are not allowed  
-            Point(Point &point){
+            Point(const Point &point){
             
                 this->label = point.getLabel();
                 this->coordX = point.getCoordX();
@@ -60,8 +63,11 @@ using namespace std;
                 this->coordZ = point.coordZ;
             }
             
-            double getCoordX(){ return coordX;}
-            double getCoordY(){ return coordY; }
-            double getCoordZ(){ return coordZ; }
-            string getLabel() { return label; }
+            double getCoordX() const { return coordX;}
+            double getCoordY() const { return coordY; }
+            double getCoordZ() const { return coordZ; }
+            string getLabel()  const { return label; }
 };
+
+
+#endif

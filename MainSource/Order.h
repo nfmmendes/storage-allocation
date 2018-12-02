@@ -1,3 +1,6 @@
+#ifndef ORDER_H
+#define ORDER_H
+
 #include<iostream>
 #include<ctime>
 #include<vector>
@@ -6,6 +9,8 @@
 #include "Date.h"
 #include "Time.h"
 #include "Client.h"
+#include "Time.h"
+#include "Date.h"
 using namespace std;
 
 
@@ -28,7 +33,7 @@ class Order{
     public:
         Order();
         Order(Order &order);
-        Order(vector< pair<Product, double> , Data dataDeadline, Time hourDeadline, Client client);
+        Order(vector< pair<Product, double> >, Date dataDeadline, Time hourDeadline, Client client);
         
         void setOrderItem(int i, Product &product, double quantity);
         void removeOrderItem(int i);
@@ -42,4 +47,6 @@ class Order{
         
         
     
-}
+};
+
+#endif

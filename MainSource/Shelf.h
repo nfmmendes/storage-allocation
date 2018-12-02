@@ -22,16 +22,20 @@ class Shelf{
         
     public:
         Shelf();
-        Shelf(Shelf &other){
-            for(unsigned int i=0; i <other.cells.size(); i++)
-                this->cells.push_back(Cell(other.cells[i])); 
+        Shelf(const Shelf &other){
+            for(unsigned int i=0; i <other.cells.size(); i++){
+                Cell inserted(other.cells[i]);
+                this->cells.push_back(inserted); 
+            }
         }
         
         Shelf(vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName, 
               int columns, int lines, double cellLenght, double cellWidth){
                   
-            for(int i=0;i<cells.size(); i++)
-                this->cells.push_back(cells[i]);
+            for(unsigned int i=0;i<cells.size(); i++){
+                Cell inserted(cells[i]);
+                this->cells.push_back(inserted);
+            }
             
             this->bottomLeftCoords = bottomLeftCoords;
             this->blockName = blockName;
@@ -41,8 +45,8 @@ class Shelf{
             this->cellWidth = cellWidth; 
         }
          
-        double getBottomLeftCoordX() { return bottomLeftCoord.first; }
-        double getBottomLeftCoordY() { return bottomLeftCoord.second; }
-        double getBottomLeftCoords() { return bottomLeftCoords; }
+        double getBottomLeftCoordX() { return bottomLeftCoords.first; }
+        double getBottomLeftCoordY() { return bottomLeftCoords.second; }
+        pair<double,double> getBottomLeftCoords() { return bottomLeftCoords; }
         
 };

@@ -16,7 +16,7 @@ class BlockExit{
         string blockBName;
     public:
         BlockExit();
-        BlockExit(BlockExit &other){
+        BlockExit(const BlockExit &other){
             this->Id = other.Id;
             this->coordX = other.coordX;
             this->coordY = other.coordY;
@@ -47,7 +47,7 @@ class BlockExit{
         void setBlockAName(double value) { blockAName = value; }
         void setBlockBName(double value) { blockBName = value; }
         
-        bool operator==(BlockExit &other) { return this->Id == other.Id; }
-        bool operator!=(BlockExit &other) { return this->Id != other.Id; }
+        bool operator==(const BlockExit &other) { return this->Id == other.Id; }
+        bool operator!=(const BlockExit &other) { return this->Id != other.Id; }
 
-        };
+};

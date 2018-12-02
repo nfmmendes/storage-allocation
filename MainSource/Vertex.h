@@ -1,5 +1,8 @@
+#ifndef VERTEX_H
+#define VERTEX_H
+
 #include<iostream>
-#incude<string>
+#include<string>
 using namespace std;
 
 
@@ -14,7 +17,7 @@ namespace QuickTSP{
         
         public:
             Vertex();
-            Vertex(Vertex &other){
+            Vertex(const Vertex &other){
                 this->label = other.label;
                 this->type = other.type;
                 this->value = other.value; 
@@ -25,9 +28,21 @@ namespace QuickTSP{
             void setType(string value) { this->label = value; }
             void setValue(string value) { this->label = value; } 
         
+            bool operator==(const Vertex & other){
+                return label == other.label && type == other.type && value == other.value;
+            }
+            
+            bool operator!=(const Vertex & other){
+                return label != other.label || type != other.type || value != other.value;
+            }
         
+            bool operator<(const Vertex &other){
+                return label+type+to_string(value) < other.label+other.type+to_string(other.value);
+                
+            }
         
     };
     
 }
-    
+
+#endif    

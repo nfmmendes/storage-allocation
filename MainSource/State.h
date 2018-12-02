@@ -1,9 +1,16 @@
+#ifndef STATE_H
+#define STATE_H
+
 #include<iostream>
 #include<cmath>
 #include<ctime>
 #include<vector>
 #include<algorithm>
 #include<utility>
+#include<map>
+#include "HananGraph.h"
+#include "PathUnity.h"
+#include "Transition.h"
 using namespace std; 
 
 
@@ -16,14 +23,13 @@ namespace QuickTSP{
 
         public: 
             //Data
-            vector<Vertex&> vertexParity;
-            map<Vertex &, int> vertexComponent; 
-            vector<Vertex&> vertexComponent;
-            HananGraph<int> &graph; 
+            vector<Vertex> vertexParity;
+            map<Vertex , int> vertexComponent; 
+            HananGraph graph; 
         
             State();
-            State(vector<int> parity, vector<int> component, HananGraph &graph){
-                this->vertexParity = parity;
+            State(vector<int> parity, map<Vertex, int> component, HananGraph &graph){
+                //this->vertexParity = parity;
                 this->vertexComponent = component;
                 this->graph = graph; 
             }
@@ -34,4 +40,7 @@ namespace QuickTSP{
             
 
     };
+
 }
+
+#endif

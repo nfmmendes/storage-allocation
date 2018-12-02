@@ -13,6 +13,15 @@ class Cell{
 
     private: 
         string code;
+        long int idShelf;
+        int row;
+        int column; 
+        int levels; 
+  
+    public:
+        Cell();
+        Cell(const Cell & other);
+        Cell(string code, long int IdShelf, int row, int column, int levels); 
 };
 
 #endif
