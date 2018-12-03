@@ -7,7 +7,8 @@
 using namespace std; 
 
 
-
+///Class to represent the date (without time)
+///The aritmetic operations ware not implemented yet
 class Date{
     
     private:

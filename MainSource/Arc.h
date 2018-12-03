@@ -32,11 +32,11 @@ namespace QuickTSP{
                 this->label = label;
                 this->value = value; 
                 this->beginVertex = begin;
-                this->endVertex= endVertex;
+                this->endVertex= end;
             }
         
             void setLabel(string label){
-                this->label = value;
+                this->label = label;
             }
             
             

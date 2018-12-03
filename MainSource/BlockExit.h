@@ -5,7 +5,9 @@
 #include<utility>
 using namespace std;
 
-
+/// This class describes a block exit. These exits can connect one warehouse
+/// to another or just to a warehouse exit. In this implementation, a exit can
+/// not connect more than two blocks.
 class BlockExit{
     
     private:
@@ -15,7 +17,7 @@ class BlockExit{
         string blockAName; 
         string blockBName;
     public:
-        BlockExit();
+        BlockExit(){}
         BlockExit(const BlockExit &other){
             this->Id = other.Id;
             this->coordX = other.coordX;
@@ -49,5 +51,7 @@ class BlockExit{
         
         bool operator==(const BlockExit &other) { return this->Id == other.Id; }
         bool operator!=(const BlockExit &other) { return this->Id != other.Id; }
+        bool operator<(const BlockExit & other) const { return this->Id < other.Id;} //<! Allow the use of an object of this class
+                                                                                     // as a key in a map
 
 };

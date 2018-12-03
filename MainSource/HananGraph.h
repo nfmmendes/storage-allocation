@@ -33,12 +33,32 @@ namespace QuickTSP {
             vector<Vertex> getBuildVertexes(){
                 return buildVertexes;
             }
-            
-            /*
+        
+            HananGraph & operator=(HananGraph &other){
+                HananGraph returned;
+                for(unsigned int i=0; i< other.lines.size(); i++)
+                    returned.lines.push_back(Line(other.lines[i]));
+                
+                for(unsigned int i=0; i<other.columns.size(); i++)
+                    returned.columns.push_back(Line(other.columns[i]));
+                
+                for(unsigned int i=0; i<other.points.size();i++)
+                    returned.points.push_back(Point(other.points[i]));
+                
+                for(unsigned int i=0; i<other.buildVertexes.size();i++)
+                    returned.buildVertexes.push_back(Vertex(other.buildVertexes[i]));
+                
+                for(map<Vertex, pair<int,int> >::iterator it = other.vertexCoordinate.begin(); it != other.vertexCoordinate.end(); it++)
+                    returned.vertexCoordinate[it->first] = make_pair(it->second.first, it->second.second);
+                
+                return returned;
+            }
+        
+        
             pair<int, int> getVertexCoordinate(Vertex &v){
                 return vertexCoordinate[v]; 
             }
-            */
+        
         
     };
 }

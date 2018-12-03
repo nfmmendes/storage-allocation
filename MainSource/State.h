@@ -23,13 +23,13 @@ namespace QuickTSP{
 
         public: 
             //Data
-            vector<Vertex> vertexParity;
+            map<Vertex,int> vertexParity;
             map<Vertex , int> vertexComponent; 
             HananGraph graph; 
         
             State();
-            State(vector<int> parity, map<Vertex, int> component, HananGraph &graph){
-                //this->vertexParity = parity;
+            State(map<Vertex,int> parity, map<Vertex, int> component, HananGraph &graph){
+                this->vertexParity = parity;
                 this->vertexComponent = component;
                 this->graph = graph; 
             }

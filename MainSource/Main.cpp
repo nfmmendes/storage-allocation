@@ -9,7 +9,7 @@
 #include "Warehouse.h"
 #include "Product.h"
 #include "Order.h"
-#include "QuickTSP.h"
+#include "TSP.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -19,7 +19,7 @@ int main(int argc, char **argv){
     string warehouseDescriptionFileName; 
     string ordersFileName; 
     Warehouse *warehouse; 
-    QuickTSP::QuickTSP *algorithm;
+    TSP *algorithm;
     vector<Order> orders; 
     
     //READ THE INPUT 

@@ -26,6 +26,7 @@ class Direction{
         
 };
 
+///Static class members initialization
 const string Direction::horizontalCode = "horizontal";
 const string Direction::verticalCode = "vertical";
 Direction Direction::HORIZONTAL(Direction::horizontalCode);
@@ -55,6 +56,7 @@ class Sense{
         string getSenseCode() { return code;}
 };
 
+///Static class members iniatilization
 const string Sense::up_down_code = "up_down";
 const string Sense::bottom_up_code = "bottom_up_code";
 const string Sense::left_to_right_code = "left_to_right";

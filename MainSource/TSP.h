@@ -8,14 +8,25 @@ using namespace std;
 
     
 namespace QuickTSP{
-        class QuickTSP{
+        class TSP{
             private: 
                 HananGraph graph;
                 vector<PathUnity> solution;
             public:
-                QuickTSP();
-                QuickTSP(QuickTSP &other);
-                QuickTSP(HananGraph &graph); 
+                TSP() {
+                    
+                }
+            
+                TSP(TSP &other){
+                    this->graph = other.graph;
+                    
+                    for(unsigned int i=0; i< other.solution.size();i++)
+                        this->solution.push_back(other.solution[i]);
+                }
+            
+                TSP(HananGraph &graph){
+                    this->graph = graph;
+                }
                 
                 void setHananGraph(HananGraph &graph){ this->graph = graph;}
                 HananGraph getHananGraph()           { return this->graph; }
