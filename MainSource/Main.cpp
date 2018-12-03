@@ -20,7 +20,7 @@ int main(int argc, char **argv){
     string ordersFileName; 
     Warehouse *warehouse; 
     QuickTSP::QuickTSP *algorithm;
-    //vector<Order> orders; 
+    vector<Order> orders; 
     
     //READ THE INPUT 
     ifstream file;

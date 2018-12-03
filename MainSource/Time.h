@@ -16,6 +16,8 @@ class Time{
         int millisecond;
         
     public:
+        Time(const Time& other);
+        
         int getSecond(){ return second; }
         int getMinute(){ return minute; }
         int getHour(){ return hour; }

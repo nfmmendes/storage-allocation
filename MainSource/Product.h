@@ -18,7 +18,7 @@ class Product{
         
     public:
         Product();
-        Product(Product & other){
+        Product(const Product & other){
             this->name = other.name;
             this->type = other.type;
         }

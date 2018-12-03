@@ -18,6 +18,7 @@ class Date{
                                    "August", "September", "October", "November", "December"};
         
     public:
+        Date(const Date& other); 
         int getDay() { return day; } 
         int getMonth() { return month; }
         int getYear() { return year; }

@@ -32,7 +32,7 @@ class Order{
         
     public:
         Order();
-        Order(Order &order);
+        Order(const Order &order);
         Order(vector< pair<Product, double> >, Date dataDeadline, Time hourDeadline, Client client);
         
         void setOrderItem(int i, Product &product, double quantity);
