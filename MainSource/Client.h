@@ -24,6 +24,8 @@ class Client{
     
     public:
         Client(){}
+    
+        // Member by member constructor
         Client(string name, string type, long int idClient, pair<double, double> coordinates ){
             this->name = name;
             this->type = type;
@@ -31,6 +33,7 @@ class Client{
             this->coordinates = coordinates;
         }
     
+        //Copy constructor
         Client(const Client &other){
             this->name = other.name;
             this->Id = other.Id;
@@ -38,15 +41,23 @@ class Client{
             this->coordinates = other.coordinates;
         }
     
-        void setName(string value){ this->name = name;}
+        //Set functions
+        void setName(string value){ this->name = value;}
         void setId(long int value){ if(value>0) this->Id = value;}
-        void setType(string value){ this->type = type; }
+        void setType(string value){ this->type = value; }
         void setCoordinates(pair<double,double> value){ this->coordinates =value; }
     
+        //Get functions
         string getName(){ return name;}
         long int getId() { return Id;}
         string setType() { return type;}
         pair<double, double> getCoordinates(){ return coordinates;}
+    
+    
+        //Assignment operator
+        Client & operator=(const Client &other){
+            return Client(other.name, other.type, other.Id, other.coordinates);
+        }
 
 };
 

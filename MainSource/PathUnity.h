@@ -15,7 +15,7 @@ using namespace std;
 namespace QuickTSP{
 
 
-
+    
     class PathUnity{
         
         private: 

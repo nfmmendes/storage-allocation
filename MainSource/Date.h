@@ -53,7 +53,7 @@ class Date{
             
             if(format == "yyyy/MM/dd")
                 return to_string(year) +"/" + to_string(month)+"/" + to_string(day);
-            
+            return "";
         }
         
         bool operator==(Date &other){

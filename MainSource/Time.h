@@ -33,7 +33,7 @@ class Time{
             
             if(format == "HH:mm:ss")
                 return to_string(hour) +"/" + to_string(minute)+"/" + to_string(second);
-            
+            return "";
         }
         
         bool operator==(Time &other){

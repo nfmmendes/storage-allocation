@@ -54,6 +54,11 @@ namespace QuickTSP {
                 return returned;
             }
         
+            //By now columns and lines will be represented by the same class
+            vector<Vertex> getVertexexByLine(Line &line);
+            vector<Vertex> getVertexesByColumn(Line &column);
+            vector<Arc> getArcstByLine(Line &line);
+            vector<Arc> getArcsByColumn(Line &column);
         
             pair<int, int> getVertexCoordinate(Vertex &v){
                 return vertexCoordinate[v]; 

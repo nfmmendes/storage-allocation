@@ -22,30 +22,68 @@ using namespace std;
 class Order{
     
     private:
-        vector<pair<Product, double> > orderItem; //!< The first element describe the product and 
+        vector<pair<Product, double> > orderItens; //!< The first element describe the product and
                                                   //!  the second the quantity
         pair<Date, Time> deadline;                //!< It can be initialized or not. If it is not
                                                   //!  its default value will be 2001/01/01
-        Date dateDeadline;                        
-        Time hourDeadline;      //
-        Client client;          //The amount of data needed in this object will depend of  
+    
+        Client client;                            //The amount of data needed in this object will depend of
         
     public:
-        Order();
-        Order(const Order &order);
+        Order() {
+        
+        }
+    
+        Order(const  Order &order){
+            this->dateDeadline = other.dateDeadline;
+            this->client = other.Client;
+            
+            for(unsigned int i=0; i< order.orderItens.size(); i++){
+                this->orderItens.push_back(order.orderItens[i]);
+            }
+        }
+    
         Order(vector< pair<Product, double> >, Date dataDeadline, Time hourDeadline, Client client);
-        
-        void setOrderItem(int i, Product &product, double quantity);
-        void removeOrderItem(int i);
-        void addOrderItem(Product &product, double quantity);
-        void setOrders(vector<Product, double> orders);
-        vector<pair<Product, double> > getOrders();
-        
-        void setDateDeadline(Date &date);
-        void setTimeDeadline(Time &time); 
-        
-        
-        
+    
+    
+        void setorderItens(int i, Product &product, double quantity) {
+            if(i >=0 && i< this->orderItens.size())
+                this->orderItens[i] = make_pair(product, quantity);
+        }
+    
+    
+        void removeorderItens(int i){
+                if(i>=0 && i<this->orderItens.size())
+                    this->orderItens.erase(i);
+        }
+    
+    
+        void addorderItens(Product &product, double quantity){
+            this->orderItens.push_back(make_pair(product,quantity));
+        }
+    
+    
+        void setOrders(vector<Product, double> orders){
+            this->orderItens.clear();
+            
+            for(unsigned int i= 0; i< orders.size; i++)
+                this->orderItens.push_back(make_pair(orders[i].first, orders[i].second));
+        }
+    
+    
+        vector<pair<Product, double> > getOrders(){
+            return this->orderItens;
+        }
+    
+    
+        void setDateDeadline(Date &date){
+            this->deadline.Date = date;
+        }
+    
+    
+        void setTimeDeadline(Time &time){
+            this->deadline.Time = time;
+        }
     
 };
 
