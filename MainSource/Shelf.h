@@ -16,7 +16,7 @@ class Shelf{
         string blockName;
         int columns;
         int lines; 
-        double cellLenght;
+        double cellLength;
         double cellWidth; 
         
         
@@ -29,8 +29,7 @@ class Shelf{
             }
         }
         
-        Shelf(vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName, 
-              int columns, int lines, double cellLenght, double cellWidth){
+        Shelf(vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName,int columns, int lines, double cellLength, double cellWidth){
                   
             for(unsigned int i=0;i<cells.size(); i++){
                 Cell inserted(cells[i]);
@@ -41,12 +40,27 @@ class Shelf{
             this->blockName = blockName;
             this->columns = columns;
             this->lines = lines;
-            this->cellLenght = cellLenght;
+            this->cellLength = cellLength;
             this->cellWidth = cellWidth; 
         }
          
         double getBottomLeftCoordX() { return bottomLeftCoords.first; }
         double getBottomLeftCoordY() { return bottomLeftCoords.second; }
         pair<double,double> getBottomLeftCoords() { return bottomLeftCoords; }
-        
+        vector<Cell> getCell(){ return cells;}
+        string getBlockName(){ return blockName; }
+        string getNumColumns() {return columns;}
+        string getNumLines(){ return lines;}
+        double getCellLength() { return cellLength;}
+        double getCellWidth() { return getCellWidth;}
+    
+        void setBottomLeftCoordX(double value) { this->bottomLeftCoords.first = value; }
+        void setBottomLeftCoordY(double value) { this->bottomLeftCoords.second = value; }
+        void setBottomLeftCoords(pair<double, double> value ) { this->setBottomLeftCoords = value;}
+        void setCell(vector<Cell> &cells){ this->cells = cells;}
+        void setBlockName(string name){ this->name = name;}
+        void setNumColumns(int value){ if(value > 0) columns = value; }
+        void setNumLines(int value){ if(value > 0) lines = value; }
+        void setCellLength(double value){ if(value>0) cellLength = value;}
+        void setCellWidth(double value){ if(value >0) cellWidth = value; }
 };

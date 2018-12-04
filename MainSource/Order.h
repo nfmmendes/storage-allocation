@@ -77,12 +77,12 @@ class Order{
     
     
         void setDateDeadline(Date &date){
-            this->deadline.Date = date;
+            this->deadline.deadline.first = date;
         }
     
     
         void setTimeDeadline(Time &time){
-            this->deadline.Time = time;
+            this->deadline.deadline.second = time;
         }
     
 };
