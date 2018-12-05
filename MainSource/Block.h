@@ -45,7 +45,15 @@ class Block{
         vector<Shelf> getShelves() {return shelves; }
         vector<BlockExit> getExits() {return exits; }
         pair<double,double> getBottomLeftCoords() {return bottomLeftCoords; }
-        
+    
+        //Set all the shelves of a block
+        void setShelves(vector<Shelf > & other){
+            this->shelves.clear();
+            for(unsigned int i=0; i<other.size();i++)
+                this->shelves.push_back(Shelf(other[i]));
+            
+        }
+    
         ///Add a exit in a block (if it was not inserted a exit with same Id yet)
         void addExit(BlockExit & other) { 
             if( find(exits.begin(), exits.end(), other) != exits.end()){
@@ -56,11 +64,23 @@ class Block{
         
         /// Removes the exit with id equals to Id in the block of exits 
         void removeExitWithId(long int Id){
-            
+            for(unsigned int i=0; i<this->exits.size();i++)
+                if(this->exits[i].getId() == Id){
+                    this->exits.erase(this->exits.begin()+i);
+                    break;
+                }
         }
         
         /// Removes the exit with the index i in the block list of exits
         void removeExit(int index){
-            
+            if(index >= 0 && index < (int)this->exits.size())
+                this->exits.erase(this->exits.begin()+index);
+        }
+    
+    
+    
+        //TODO: Improve this
+        bool operator==(const Block &other){
+            return this->name == other.name;
         }
 };

@@ -56,7 +56,12 @@ class Client{
     
         //Assignment operator
         Client & operator=(const Client &other){
-            return Client(other.name, other.type, other.Id, other.coordinates);
+            this->name = other.name;
+            this->type = other.type;
+            this->Id = other.Id;
+            this->coordinates = other.coordinates;
+            
+            return *this;
         }
 
 };

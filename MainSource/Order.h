@@ -3,8 +3,11 @@
 
 #include<iostream>
 #include<ctime>
+#include<string>
 #include<vector>
+#include<fstream>
 #include<utility>
+#include<cstdlib>
 #include "Product.h"
 #include "Date.h"
 #include "Time.h"
@@ -34,12 +37,12 @@ class Order{
         
         }
     
-        Order(const  Order &order){
-            this->dateDeadline = other.dateDeadline;
-            this->client = other.Client;
+        Order(const  Order &other){
+            this->deadline = other.deadline;
+            this->client = other.client;
             
-            for(unsigned int i=0; i< order.orderItens.size(); i++){
-                this->orderItens.push_back(order.orderItens[i]);
+            for(unsigned int i=0; i< other.orderItens.size(); i++){
+                this->orderItens.push_back(other.orderItens[i]);
             }
         }
     
@@ -47,14 +50,14 @@ class Order{
     
     
         void setorderItens(int i, Product &product, double quantity) {
-            if(i >=0 && i< this->orderItens.size())
+            if(i >=0 && i<(int)this->orderItens.size())
                 this->orderItens[i] = make_pair(product, quantity);
         }
     
     
         void removeorderItens(int i){
-                if(i>=0 && i<this->orderItens.size())
-                    this->orderItens.erase(i);
+                if(i>=0 && i<(int)this->orderItens.size())
+                    this->orderItens.erase(this->orderItens.begin()+i);
         }
     
     
@@ -63,10 +66,10 @@ class Order{
         }
     
     
-        void setOrders(vector<Product, double> orders){
+        void setOrders(vector<pair<Product, double>> orders){
             this->orderItens.clear();
             
-            for(unsigned int i= 0; i< orders.size; i++)
+            for(unsigned int i= 0; i< orders.size(); i++)
                 this->orderItens.push_back(make_pair(orders[i].first, orders[i].second));
         }
     
@@ -77,14 +80,26 @@ class Order{
     
     
         void setDateDeadline(Date &date){
-            this->deadline.deadline.first = date;
+            this->deadline.first = date;
         }
     
     
         void setTimeDeadline(Time &time){
-            this->deadline.deadline.second = time;
+            this->deadline.second = time;
         }
     
+        static vector<Order> readOrdersData(string fileName);
+    
 };
+
+static vector<Order> readOrdersData(string fileName){
+    vector<Order> input;
+    ifstream file;
+    
+    file.open(fileName,ios::in);
+    
+    
+    return input;
+}
 
 #endif

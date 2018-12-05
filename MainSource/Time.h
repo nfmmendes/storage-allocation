@@ -16,8 +16,20 @@ class Time{
         int millisecond;
         
     public:
-        Time(const Time& other);
-        
+        Time(){
+            this->millisecond = 0;
+            this->second = 0;
+            this->minute = 0;
+            this->hour = 0;
+        }
+    
+        Time(const Time& other){
+            this->millisecond = other.millisecond;
+            this->second = other.second;
+            this->minute = other.minute;
+            this->hour = other.hour;
+        }
+    
         int getSecond(){ return second; }
         int getMinute(){ return minute; }
         int getHour(){ return hour; }
@@ -49,20 +61,20 @@ class Time{
     
     
         void addMinutes(int value){
-            if(value =<0)
+            if(value <=0)
                 return;
             
             value = value%(60*24);
             
             if(this->minute + value >=60)
-                addHours((int)(this->minutes+value)/60);
+                addHours((int)(this->minute+value)/60);
             
             this->minute = (this->minute + value)%60;
         }
     
     
         void minusMinutes(int value){
-            if(value =< 0)
+            if(value <= 0)
                 return;
             
             if(this->minute-value<=0){
@@ -73,7 +85,7 @@ class Time{
         }
     
         void addSeconds(int value){
-            if(value =<0)
+            if(value <=0)
                 return;
             
             value=value%(60*60*24);
@@ -81,11 +93,11 @@ class Time{
             if(this->second + value >=60)
                 addMinutes((int)(this->second+value)/60);
             
-            this->second = (this->second + value)%60
+            this->second = (this->second + value)%60;
         }
     
         void minusSecond(int value){
-            if(value =< 0)
+            if(value <= 0)
                 return;
             
             if(this->second-value<=0){
@@ -98,7 +110,7 @@ class Time{
         }
     
         void addMilliseconds(int value){
-            if(value =<0)
+            if(value <=0)
                 return;
             
             value = value%(1000*60*60*24);
@@ -111,7 +123,7 @@ class Time{
         }
     
         void minusMilliseconds(int value){
-            if(value =<0)
+            if(value <=0)
                 return;
             
             value = value%(1000*60*60*24);

@@ -1,8 +1,12 @@
- #include<iostream>
- #include<cstdlib>
- #include<map>
- #include<utility>
- #include<vector>
+#include<iostream>
+#include<string>
+#include<cstdlib>
+#include<map>
+#include<fstream>
+#include<utility>
+#include<vector>
+#include<cstdlib>
+
  #include "Warehouse.h"
  
  using namespace std;
@@ -14,7 +18,8 @@
  ///////////////////////////////////////////////////////////////////
  void Warehouse::ReadWarehouseData(string fileName){
     
-    ifstream file = ifstream.open(fileName);
+     ifstream file;
+     file.open(fileName,ios::in);
     
     int numBlocks;
     int numExits;
@@ -47,38 +52,38 @@
 
         for(int i=0; i<numBlocks; i++){
             file>> blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY;
-            this->blocks[i].push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY));
+            this->blocks.push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY));
         }
 
         //Read all the data concerning block exits
-        file>> numExists;
-        long int IdExit; 
-        double exitCoordX, exitCoordY; 
+        file>> numExits;
+        long int idExit;
+        double exitCoordX, exitCoordY;
         string blockBName; 
         map<string, vector<BlockExit>> exitsByBlock; 
    
-        if(nummExits == 0){
+        if(numExits == 0){
             for(int i=0; i<numExits; i++){
                 file>> idExit >> exitCoordX >> exitCoordY>>blockName>>blockBName; 
 
                 //Fill auxiliary structure to connect 
                 if(blockBName != "#_#_#")
-                    exitByBlock[blockName].push_back(BlockExit(idExit, coordX, coordY, blockA)); 
+                    exitsByBlock[blockName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockName));
                 else{
                     //Here are done two inserts because the data describing the exits can arrive in just one way, 
                     //but the exit should be inserted in both blocks objects (We can assume that a single exit connects
                     //just two blocks)
-                    exitByBlock[blockName].push_back(BlockExit(idExit, coordX, coordY, blockA,blockBName));
-                    exitByBlock[blockBName].push_back(BlockExit(idExit, coordX, coordY, blockA,blockBName));   
+                    exitsByBlock[blockName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockName,blockBName));
+                    exitsByBlock[blockBName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockName,blockBName));
                 }
             }
 
             //Now, for each block, we will insert all its exits. 
             //We assume that it will be few blocks and each block will have few exits, so this part of code will
             //not harm the code performance
-            for(int i=0;i<blocks[i];i++){
-                vector<BlockExits> exitsOfBlock = exitByBlock[blocks[i].getName()];
-                for(int j=0;j<exitsOfBlock.size();j++)
+            for(int i=0;i<(int)blocks.size();i++){
+                vector<BlockExit> exitsOfBlock = exitsByBlock[blocks[i].getName()];
+                for(int j=0;j<(int)exitsOfBlock.size();j++)
                     this->blocks[i].addExit(exitsOfBlock[j]);
             }
         }
@@ -93,17 +98,17 @@
         map<string, vector<Shelf> > shelvesByBlock; 
         for(int i=0; i<numShelves; i++){
             file>>idShelf>>blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY>> columns >> lines >> cellsLenght >> cellsWidth; 
-            Shelf aux = Shelf(vetor<Cell>(), make_pair(blockBottomLeftCoordX, blockBottomLeftCoordY), 
+            Shelf aux = Shelf(vector<Cell>(), make_pair(blockBottomLeftCoordX, blockBottomLeftCoordY),
                                                    blockName, columns, lines, cellsLenght, cellsWidth );
             shelves.push_back(aux);
-            shelvesByBlock[blockName].push_back(shelvesByBlock);
+            shelvesByBlock[blockName].push_back(aux);
         }
 
         //Now, for each block, we will insert all its shelves. 
         //We assume that it will be few blocks and each block will have few shelves, so this part of code will
         //not harm the code performance
-        for(int i=0;i<blocks[i];i++){
-            this->blocks[i].setShelves(shelves[blocks[i].getName()]);
+        for(int i=0;i<(int)blocks.size();i++){
+            this->blocks[i].setShelves(shelvesByBlock[blocks[i].getName()]);
         }
         
     }
@@ -129,15 +134,15 @@ void Warehouse::InsertNewBlock(Block &b){
 ///     Remove a block "b" in the blocks list
 /////////////////////////////////////////////////////////////////// 
 void Warehouse::RemoveBlock(Block &b){
-    remove(this->bloks.begin(), this->blocks.end(),b);
+    remove(this->blocks.begin(), this->blocks.end(),b);
 }
 
 ///////////////////////////////////////////////////////////////////
 ///     Remove a block in the position i of blocks list
 /////////////////////////////////////////////////////////////////// 
 void Warehouse::RemoveBlock(int i){
-    if(i >= 0 && i < this->blocks.size())
-        this->blocks.remove(i);
+    if(i >= 0 && i <(int) this->blocks.size())
+        this->blocks.erase(this->blocks.begin()+i);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -145,17 +150,17 @@ void Warehouse::RemoveBlock(int i){
 ///     In this procedure is created a copy of the data, so the original one
 ///         will be not referecend by the warehouse object
 /////////////////////////////////////////////////////////////////// 
-void Warehouse::SetProductAllocation(vector<pair<Product, Cell>> & productAllocation){
+void Warehouse::setProductAllocation(vector<pair<Product, Cell>> & productAllocation){
     this->productAllocation.clear();
     
-    for(int i=0; i<productAllocation.size(); i++)
+    for(int i=0; i<(int)productAllocation.size(); i++)
         this->productAllocation.push_back(make_pair(productAllocation[i].first, productAllocation[i].second));
 }
 
 ///////////////////////////////////////////////////////////////////
 ///     Inserts a new product allocation on the warehouse
 /////////////////////////////////////////////////////////////////// 
-void Warehouse::AddProductAllocation(pair<Product, Cell> & productionAllocation){
+void Warehouse::AddProductAllocation(pair<Product, Cell> & productAllocation){
     this->productAllocation.push_back(make_pair(productAllocation.first, productAllocation.second));
 }
 
@@ -163,8 +168,12 @@ void Warehouse::AddProductAllocation(pair<Product, Cell> & productionAllocation)
 ///     Remove a allocation of a product
 /////////////////////////////////////////////////////////////////// 
 void Warehouse::RemoveProductAllocation(Cell &cell){
-    
-    
+    vector<pair<Product,Cell>>::iterator it = this->productAllocation.begin();
+    for(;it != this->productAllocation.end(); it++)
+        if(it->second == cell){
+            productAllocation.erase(it);
+            break;
+        }
 }
 
 
@@ -174,40 +183,42 @@ void Warehouse::RemoveProductAllocation(Cell &cell){
 /////////////////////////////////////////////////////////////////// 
 void Warehouse::RemoveProductAllocation(int i){
     
-    
+    if(i >= 0 && i < (int) this->productAllocation.size())
+        this->productAllocation.erase(this->productAllocation.begin()+i);
 }
             
 ///////////////////////////////////////////////////////////////////
 ///
 ///
 ///////////////////////////////////////////////////////////////////            
-string GetName(string &name){ return this->name;}
+string Warehouse::getName(){ return this->name;}
 
 ///////////////////////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////////////////////// 
-vector<Block &> GetBlocks(){ return this->blocks;}
+vector<Block> Warehouse::getBlocks(){ return this->blocks;}
 
 ///////////////////////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////////////////////// 
-vector<pair<Product, Cell> > GetProductAllocation(){
+vector<pair<Product, Cell> > Warehouse::getProductAllocation(){
     return this->productAllocation;
 }
 
 ///////////////////////////////////////////////////////////////////
 ///
 ///////////////////////////////////////////////////////////////////             
-void SetName(string &name){
+void Warehouse::setName(string &name){
     this->name = name;
 }
 
 ///////////////////////////////////////////////////////////////////
 ///
 ///////////////////////////////////////////////////////////////////             
-void SetBlocks(vector<Block &> blocks){
+void Warehouse::setBlocks(vector<Block>& blocks){
     this->blocks.clear();
     
-    for(usingned int i=0; i < blocks.size(); i++)
+    for(unsigned int i=0; i < blocks.size(); i++)
         this->blocks.push_back(Block(blocks[i]));
 }
+

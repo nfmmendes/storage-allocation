@@ -16,7 +16,9 @@ using namespace std;
             double coordZ; 
             
         public:
-            Point();
+            Point(){
+                coordX = coordY = coordZ = 0;
+            }
             
             //Full constructor
             //Null values are not allowed

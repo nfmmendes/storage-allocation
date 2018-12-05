@@ -6,6 +6,8 @@
 #include<cstdlib>
 using namespace std; 
 
+const string monthName[13] = {"", "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December"};
 
 ///Class to represent the date (without time)
 ///The aritmetic operations ware not implemented yet
@@ -15,10 +17,10 @@ class Date{
         int day;
         int month;
         int year;
-        const string monthName[13] = {"", "January", "February", "March", "April", "May", "June", "July", 
-                                   "August", "September", "October", "November", "December"};
+    
         
     public:
+        Date(){ this->day = 1; this->month = 1; this->year = 1990; }
         Date(const Date& other); 
         int getDay() { return day; } 
         int getMonth() { return month; }
@@ -48,14 +50,22 @@ class Date{
                 
                 
         }
-        
+    
+    
         string toString(string format="yyyy/MM/dd"){
             
             if(format == "yyyy/MM/dd")
                 return to_string(year) +"/" + to_string(month)+"/" + to_string(day);
             return "";
         }
-        
+    
+        Date &operator=(const Date &other){
+            this->day = other.day;
+            this->year = other.year;
+            this->month = other.month;
+            return *this;
+        }
+    
         bool operator==(Date &other){
             return this->day == other.day && this->month == other.month && this->year == other.year;
         }

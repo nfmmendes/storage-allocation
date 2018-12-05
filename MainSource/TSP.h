@@ -4,6 +4,7 @@
 #include<vector>
 #include "HananGraph.h"
 #include "PathUnity.h"
+#include "Order.h"
 using namespace std;
 
     
@@ -11,6 +12,7 @@ namespace QuickTSP{
         class TSP{
             private: 
                 HananGraph graph;
+                vector<Order> orders;
                 vector<PathUnity> solution;
             public:
                 TSP() {
@@ -24,13 +26,16 @@ namespace QuickTSP{
                         this->solution.push_back(other.solution[i]);
                 }
             
-                TSP(HananGraph &graph){
+                TSP(HananGraph &graph,vector<Order> &orders){
                     this->graph = graph;
+                    this->orders = orders;
                 }
                 
                 void setHananGraph(HananGraph &graph){ this->graph = graph;}
-                HananGraph getHananGraph()           { return this->graph; }
-                vector<PathUnity> getSolution()    {return this->solution; } 
+                void setOrders(vector<Order>& orders){ this->orders = orders;}
+                HananGraph getHananGraph() { return this->graph; }
+                vector<Order> & getOrders() { return this->orders;}
+                vector<PathUnity> getSolution()    {return this->solution; }
                 
                 void Run(){
                     

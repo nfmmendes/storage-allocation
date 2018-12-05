@@ -50,7 +50,6 @@ namespace QuickTSP{
             ///This overload allows the use of an object of this class as a key to a map
             bool operator<(const Vertex &other)const{
                 return label+type+to_string(value) < other.label+other.type+to_string(other.value);
-                
             }
         
     };

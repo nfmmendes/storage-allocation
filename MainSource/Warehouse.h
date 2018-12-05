@@ -19,7 +19,7 @@ class Warehouse{
             vector<Block> blocks;
             vector<pair<Product, Cell> > productAllocation;
         public:
-            Warehouse();
+            Warehouse(){}
             Warehouse(Warehouse &other);
             void ReadWarehouseData(string fileName);
             void WriteWarehouseData(string fileName);
@@ -32,13 +32,13 @@ class Warehouse{
             void RemoveProductAllocation(Cell &cell); 
             void RemoveProductAllocation(int i); 
             
-            string GetName(string &name);
-            vector<Block &> GetBlocks(); 
-            vector<pair<Product, Cell> > GetProductAllocation();
+            string getName();
+            vector<Block> getBlocks();
+            vector<pair<Product, Cell> > getProductAllocation();
             
-            void SetName(string &name); 
-            void SetBlocks(vector<Block &> blocks);
-            void SetProductAllocation(vector<pair<Product, Cell> > & productAllocation); 
+            void setName(string &name);
+            void setBlocks(vector<Block>& blocks);
+            void setProductAllocation(vector<pair<Product, Cell> > & productAllocation); 
             
             
 };

@@ -40,6 +40,10 @@ class Cell{
             this->levels = levels;
         }
     
+        bool operator==(Cell & other) const{
+            return code == other.code && idShelf == other.idShelf && row == other.row && column == other.column && levels == other.levels;
+        }
+    
         void setCode(string value){ this->code = value;}
         void setIdShelf(long int value ){ if(value >= 0) this->idShelf = value;}
         void setRow(int value){ if(value >= 0)this->row = value; }

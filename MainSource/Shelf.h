@@ -49,16 +49,16 @@ class Shelf{
         pair<double,double> getBottomLeftCoords() { return bottomLeftCoords; }
         vector<Cell> getCell(){ return cells;}
         string getBlockName(){ return blockName; }
-        string getNumColumns() {return columns;}
-        string getNumLines(){ return lines;}
+        int getNumColumns() {return columns;}
+        int getNumLines(){ return lines;}
         double getCellLength() { return cellLength;}
-        double getCellWidth() { return getCellWidth;}
+        double getCellWidth() { return cellWidth;}
     
         void setBottomLeftCoordX(double value) { this->bottomLeftCoords.first = value; }
         void setBottomLeftCoordY(double value) { this->bottomLeftCoords.second = value; }
-        void setBottomLeftCoords(pair<double, double> value ) { this->setBottomLeftCoords = value;}
+        void setBottomLeftCoords(pair<double, double> value ) { this->bottomLeftCoords = value;}
         void setCell(vector<Cell> &cells){ this->cells = cells;}
-        void setBlockName(string name){ this->name = name;}
+        void setBlockName(string name){ this->blockName = name;}
         void setNumColumns(int value){ if(value > 0) columns = value; }
         void setNumLines(int value){ if(value > 0) lines = value; }
         void setCellLength(double value){ if(value>0) cellLength = value;}

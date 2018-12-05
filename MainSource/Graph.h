@@ -16,7 +16,7 @@ namespace QuickTSP{
                 vector<Arc> arcs;
                 string name;
             public:
-                Graph();
+                Graph(){}
             
                 Graph(const Graph &graph) {
                     for(unsigned int i=0; i< graph.vertexes.size(); i++)

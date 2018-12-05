@@ -27,7 +27,7 @@ namespace QuickTSP {
             map<Vertex, pair<int,int> > vertexCoordinate; 
             
         public:
-            HananGraph();
+            HananGraph(){}
             HananGraph(const vector<Point &>points, Graph & graph);
             
             vector<Vertex> getBuildVertexes(){
@@ -35,23 +35,28 @@ namespace QuickTSP {
             }
         
             HananGraph & operator=(HananGraph &other){
-                HananGraph returned;
+                
+                this->lines.clear();
                 for(unsigned int i=0; i< other.lines.size(); i++)
-                    returned.lines.push_back(Line(other.lines[i]));
+                    this->lines.push_back(Line(other.lines[i]));
                 
+                this->columns.clear();
                 for(unsigned int i=0; i<other.columns.size(); i++)
-                    returned.columns.push_back(Line(other.columns[i]));
+                    this->columns.push_back(Line(other.columns[i]));
                 
+                this->points.clear();
                 for(unsigned int i=0; i<other.points.size();i++)
-                    returned.points.push_back(Point(other.points[i]));
+                    this->points.push_back(Point(other.points[i]));
                 
+                this->buildVertexes.clear();
                 for(unsigned int i=0; i<other.buildVertexes.size();i++)
-                    returned.buildVertexes.push_back(Vertex(other.buildVertexes[i]));
+                    this->buildVertexes.push_back(Vertex(other.buildVertexes[i]));
                 
+                this->vertexCoordinate.clear();
                 for(map<Vertex, pair<int,int> >::iterator it = other.vertexCoordinate.begin(); it != other.vertexCoordinate.end(); it++)
-                    returned.vertexCoordinate[it->first] = make_pair(it->second.first, it->second.second);
+                    this->vertexCoordinate[it->first] = make_pair(it->second.first, it->second.second);
                 
-                return returned;
+                return *this;
             }
         
             //By now columns and lines will be represented by the same class

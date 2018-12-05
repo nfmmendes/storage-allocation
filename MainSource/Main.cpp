@@ -1,6 +1,7 @@
 #include<iostream>
 #include<string>
 #include<cstdlib>
+#include<fstream>
 #include<cmath>
 #include<vector>
 #include<utility>
@@ -15,9 +16,15 @@ using namespace QuickTSP;
 
 int main(int argc, char **argv){
     
+    //Main input file name. This file will say which input files will be used
     string paramFileName = argv[0];
-    string warehouseDescriptionFileName; 
-    string ordersFileName; 
+    
+    ///Input file names
+    string warehouseDescriptionFileName;
+    string ordersFileName;
+    string parametersFileName;
+    
+    //Data structures
     Warehouse *warehouse; 
     TSP *algorithm;
     vector<Order> orders; 
@@ -28,8 +35,20 @@ int main(int argc, char **argv){
     if(file.is_open()){
         cout<<"Starting the input reading...\n";
         file>>warehouseDescriptionFileName;
-        file>>ordersFileName; 
+        file>>ordersFileName;
+        file>>parametersFileName;
+        
         file.close();
+        
+        cout<<"Reading warehouse data...\n";
+        warehouse = new Warehouse();
+        warehouse->ReadWarehouseData(warehouseDescriptionFileName);
+        
+        cout<<"Reading order data...\n";
+        Order::readOrdersData(ordersFileName);
+        
+        cout<<"Reading parameters...\n";
+        
     }else{
         cerr<<"The file could not be open!\n Verifiy if it exists or if the you passed the right path.";
         return 1;
@@ -37,7 +56,9 @@ int main(int argc, char **argv){
       
     //START THE DATA PROCESS
     cout<<"Start data processing...\n";
-
+    HananGraph hanan;
+    algorithm = new TSP(hanan, orders);
+    
     
     
     //START THE SOLUTION PROCEDURE
