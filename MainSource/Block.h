@@ -6,6 +6,8 @@
 #include<utility>
 #include "Shelf.h"
 #include "BlockExit.h"
+#include "Corridor.h"
+#include "Point.h"
 using namespace std; 
 
 
@@ -13,7 +15,8 @@ class Block{
 
     private: 
         vector<Shelf> shelves;
-        vector<BlockExit> exits; 
+        vector<BlockExit> exits;
+        vector<Corridor> corridors;
         string name; 
         pair<double,double> bottomLeftCoords;
         
@@ -44,7 +47,16 @@ class Block{
         string getName() { return name; }
         vector<Shelf> getShelves() {return shelves; }
         vector<BlockExit> getExits() {return exits; }
+        vector<Corridor> getCorridors() { return corridors;}
         pair<double,double> getBottomLeftCoords() {return bottomLeftCoords; }
+    
+        //Set corridors
+        void setCorridors(vector<Corridor> & others){
+            this->corridors.clear();
+            
+            for(unsigned int i=0; i<others.size();i++)
+                this->corridors.push_back(Corridor(others[i]));
+        }
     
         //Set all the shelves of a block
         void setShelves(vector<Shelf > & other){

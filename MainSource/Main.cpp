@@ -16,62 +16,65 @@ using namespace QuickTSP;
 
 int main(int argc, char **argv){
     
-    //Main input file name. This file will say which input files will be used
-    string paramFileName = argv[0];
-    
-    ///Input file names
-    string warehouseDescriptionFileName;
-    string ordersFileName;
-    string parametersFileName;
-    
-    //Data structures
-    Warehouse *warehouse; 
-    TSP *algorithm;
-    vector<Order> orders; 
-    
-    //READ THE INPUT 
-    ifstream file;
-    file.open(paramFileName, ios::in); 
-    if(file.is_open()){
-        cout<<"Starting the input reading...\n";
-        file>>warehouseDescriptionFileName;
-        file>>ordersFileName;
-        file>>parametersFileName;
+    if(argc > 1){
+        //Main input file name. This file will say which input files will be used
+        string indexFileName = argv[1];
         
-        file.close();
+        ///Input file names
+        string warehouseDescriptionFileName;
+        string ordersFileName;
+        string parametersFileName;
         
-        cout<<"Reading warehouse data...\n";
-        warehouse = new Warehouse();
-        warehouse->ReadWarehouseData(warehouseDescriptionFileName);
+        //Data structures
+        Warehouse *warehouse;
+        TSP *algorithm;
+        vector<Order> orders;
         
-        cout<<"Reading order data...\n";
-        Order::readOrdersData(ordersFileName);
+        //READ THE INPUT
+        ifstream file;
+        file.open(indexFileName, ios::in);
+        if(file.is_open()){
+            cout<<"Starting the input reading...\n";
+            file>>warehouseDescriptionFileName;
+            file>>ordersFileName;
+            file>>parametersFileName;
+            
+            file.close();
+            
+            cout<<"Reading warehouse data...\n";
+            warehouse = new Warehouse();
+            warehouse->ReadWarehouseData(warehouseDescriptionFileName);
+            
+            cout<<"Reading order data...\n";
+            Order::readOrdersData(ordersFileName);
+            
+            cout<<"Reading parameters...\n";
+            
+        }else{
+            cerr<<"The file could not be open!\n Verifiy if it exists or if the you passed the right path.";
+            return 1;
+        }
         
-        cout<<"Reading parameters...\n";
+        //START THE DATA PROCESS
+        cout<<"Start data processing...\n";
+        HananGraph hanan;
+        algorithm = new TSP(hanan, orders);
         
-    }else{
-        cerr<<"The file could not be open!\n Verifiy if it exists or if the you passed the right path.";
-        return 1;
-    }
-      
-    //START THE DATA PROCESS
-    cout<<"Start data processing...\n";
-    HananGraph hanan;
-    algorithm = new TSP(hanan, orders);
-    
-    
-    
-    //START THE SOLUTION PROCEDURE
-    cout<<"Calling the solver...\n";
-    
-    
-    
-    //START THE 
-    cout<<"Processing the solution...\n";
-    
-    
-    
-    cout<<"Ending execution.";
+        
+        
+        //START THE SOLUTION PROCEDURE
+        cout<<"Calling the solver...\n";
+        
+        
+        
+        //START THE
+        cout<<"Processing the solution...\n";
+        
+        
+        
+        cout<<"Ending execution.";
+    }else
+        cerr<<"Too few  arguments. Inform the index file name.";
     
     return 0; 
 }

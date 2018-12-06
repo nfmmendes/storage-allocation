@@ -17,8 +17,6 @@ using namespace std;
 
 namespace QuickTSP{
 
-
-
     class State {
 
         public: 
@@ -28,15 +26,8 @@ namespace QuickTSP{
             HananGraph graph; 
         
             State();
-            State(map<Vertex,int> parity, map<Vertex, int> component, HananGraph &graph){
-                this->vertexParity = parity;
-                this->vertexComponent = component;
-                this->graph = graph; 
-            }
-            
-            void addTransition(Transition &t){
-                //Verify the components of state 
-            }
+            State(map<Vertex,int> parity, map<Vertex, int> component, HananGraph &graph);
+            void addTransition(Transition &t);
             
 
     };

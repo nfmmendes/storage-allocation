@@ -15,30 +15,18 @@ namespace QuickTSP{
                 vector<Order> orders;
                 vector<PathUnity> solution;
             public:
-                TSP() {
-                    
-                }
+                TSP();
             
-                TSP(TSP &other){
-                    this->graph = other.graph;
-                    
-                    for(unsigned int i=0; i< other.solution.size();i++)
-                        this->solution.push_back(other.solution[i]);
-                }
+                TSP(TSP &other);
             
-                TSP(HananGraph &graph,vector<Order> &orders){
-                    this->graph = graph;
-                    this->orders = orders;
-                }
+                TSP(HananGraph &graph,vector<Order> &orders);
                 
-                void setHananGraph(HananGraph &graph){ this->graph = graph;}
-                void setOrders(vector<Order>& orders){ this->orders = orders;}
-                HananGraph getHananGraph() { return this->graph; }
-                vector<Order> & getOrders() { return this->orders;}
-                vector<PathUnity> getSolution()    {return this->solution; }
+                void setHananGraph(HananGraph &graph);
+                void setOrders(vector<Order>& orders);
+                HananGraph getHananGraph();
+                vector<Order> & getOrders();
+                vector<PathUnity> getSolution();
                 
-                void Run(){
-                    
-                }
+                void Run();
         };
 }

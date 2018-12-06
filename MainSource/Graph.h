@@ -30,7 +30,13 @@ namespace QuickTSP{
             
                Graph(vector<Vertex > vertexes, vector<Arc> arcs, string name);
             
-               Graph &operator=(Graph &other);
+                Graph &operator=(const Graph &other){
+                    this->vertexes = other.vertexes;
+                    this->arcs = other.arcs;
+                    this->name = other.name;
+                    
+                    return *this;
+                }
         };
     
 }

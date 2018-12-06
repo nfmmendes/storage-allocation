@@ -1,3 +1,6 @@
+#ifndef PATH_UNITY_H
+#define PATH_UNITY_H
+
 #include<iostream>
 #include<cmath>
 #include<ctime>
@@ -26,20 +29,18 @@ namespace QuickTSP{
         public:
             PathUnity();
             PathUnity(const PathUnity &other);
-            PathUnity(Vertex &begin, Vertex &end, Transition &transition){
-                this->beginVertex = begin;
-                this->endVertex = end;
-                this->transition = transition; 
-            }
-            
-            void setBeginVertex(Vertex &value) { this->beginVertex = value; }
-            void setEndVertex(Vertex &value){ this->endVertex = value; }
-            void setHananTransition(Transition &value) { this->transition = value; } 
-            
-            Vertex & getBeginVertex() { return this->beginVertex; }
-            Vertex & getEndVertex() { return this->endVertex; } 
-            Transition & getTransition() { return this->transition; } 
+            PathUnity(Vertex &begin, Vertex &end, Transition &transition);
+                
+            void setBeginVertex(Vertex &value);
+            void setEndVertex(Vertex &value);
+            void setHananTransition(Transition &value);
+                
+            Vertex & getBeginVertex();
+            Vertex & getEndVertex();
+            Transition & getTransition(); 
             
         
     };
 }
+
+#endif

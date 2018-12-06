@@ -11,6 +11,7 @@ using namespace std;
 class Shelf{
 
     private:
+        long int Id;
         vector<Cell> cells; 
         pair<double,double> bottomLeftCoords;
         string blockName;
@@ -27,15 +28,24 @@ class Shelf{
                 Cell inserted(other.cells[i]);
                 this->cells.push_back(inserted); 
             }
+            
+            this->Id = other.Id;
+            this->bottomLeftCoords = other.bottomLeftCoords;
+            this->blockName = other.blockName;
+            this->columns = other.columns;
+            this->cellLength = other.cellLength;
+            this->cellWidth = other.cellWidth;
         }
         
-        Shelf(vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName,int columns, int lines, double cellLength, double cellWidth){
+        Shelf(long int Id,vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName,
+              int columns, int lines, double cellLength, double cellWidth){
                   
             for(unsigned int i=0;i<cells.size(); i++){
                 Cell inserted(cells[i]);
                 this->cells.push_back(inserted);
             }
             
+            this->Id = Id;
             this->bottomLeftCoords = bottomLeftCoords;
             this->blockName = blockName;
             this->columns = columns;
@@ -43,7 +53,8 @@ class Shelf{
             this->cellLength = cellLength;
             this->cellWidth = cellWidth; 
         }
-         
+    
+        long int getId(){ return Id;}
         double getBottomLeftCoordX() { return bottomLeftCoords.first; }
         double getBottomLeftCoordY() { return bottomLeftCoords.second; }
         pair<double,double> getBottomLeftCoords() { return bottomLeftCoords; }
@@ -57,7 +68,7 @@ class Shelf{
         void setBottomLeftCoordX(double value) { this->bottomLeftCoords.first = value; }
         void setBottomLeftCoordY(double value) { this->bottomLeftCoords.second = value; }
         void setBottomLeftCoords(pair<double, double> value ) { this->bottomLeftCoords = value;}
-        void setCell(vector<Cell> &cells){ this->cells = cells;}
+        void setCells(vector<Cell> &cells){ this->cells = cells;}
         void setBlockName(string name){ this->blockName = name;}
         void setNumColumns(int value){ if(value > 0) columns = value; }
         void setNumLines(int value){ if(value > 0) lines = value; }

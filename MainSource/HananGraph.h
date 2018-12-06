@@ -34,7 +34,7 @@ namespace QuickTSP {
                 return buildVertexes;
             }
         
-            HananGraph & operator=(HananGraph &other){
+            HananGraph & operator=(const HananGraph &other){
                 
                 this->lines.clear();
                 for(unsigned int i=0; i< other.lines.size(); i++)
@@ -53,8 +53,7 @@ namespace QuickTSP {
                     this->buildVertexes.push_back(Vertex(other.buildVertexes[i]));
                 
                 this->vertexCoordinate.clear();
-                for(map<Vertex, pair<int,int> >::iterator it = other.vertexCoordinate.begin(); it != other.vertexCoordinate.end(); it++)
-                    this->vertexCoordinate[it->first] = make_pair(it->second.first, it->second.second);
+                this->vertexCoordinate = other.vertexCoordinate;
                 
                 return *this;
             }

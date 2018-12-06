@@ -24,7 +24,9 @@
     int numBlocks;
     int numExits;
     int numShelves;
-    
+    int numCorridors; 
+    int numCells;
+     
     //The reading sequence is 
     // 1. The number n1 of blocks
     //      1.1. The next n1 lines will contain each one 
@@ -36,11 +38,17 @@
     //      3.1. The next n3 lines will contain each one
     //          idShelve, blockName, bottomLeftCoordX, bottomLeftCoordY, Column, Lines, CellsLenght, CellsWidth
     //4. The number n4 of corridors
+    //      4.1. The next n3 lines will contain each one
+    //          idCorridor, blockName, CorridorDirection, CorridorSense, beginCoordX, beginCoordEnd, length
+    //5. The number n5 of cells
+    //      5.1. The next n5 lines will contain each one
+    //          idShelve, code, num_of_levels, row, column
+    //6. The number n6 of curves
+    //      6.1. The next n6 lines will contain each one
+    //          idCurva, corridor1Id, corridor2Id, sense, pointXCorridor1, pointYCorridor1, pointXCorridor1, pointYCorridor2
     //
     //
     //
-    //
-
 
     if(file.is_open()){
         file>>numBlocks;
@@ -98,7 +106,7 @@
         map<string, vector<Shelf> > shelvesByBlock; 
         for(int i=0; i<numShelves; i++){
             file>>idShelf>>blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY>> columns >> lines >> cellsLenght >> cellsWidth; 
-            Shelf aux = Shelf(vector<Cell>(), make_pair(blockBottomLeftCoordX, blockBottomLeftCoordY),
+            Shelf aux = Shelf(idShelf,vector<Cell>(), make_pair(blockBottomLeftCoordX, blockBottomLeftCoordY),
                                                    blockName, columns, lines, cellsLenght, cellsWidth );
             shelves.push_back(aux);
             shelvesByBlock[blockName].push_back(aux);
@@ -107,10 +115,47 @@
         //Now, for each block, we will insert all its shelves. 
         //We assume that it will be few blocks and each block will have few shelves, so this part of code will
         //not harm the code performance
-        for(int i=0;i<(int)blocks.size();i++){
+        for(int i=0;i<(int)blocks.size();i++)
             this->blocks[i].setShelves(shelvesByBlock[blocks[i].getName()]);
+        
+        
+        
+        //Read all data concerning corridors
+        file>>numCorridors;
+        long int idCorridor;
+        string dirCorridor, senseCorridor;
+        double beginCoordX, beginCoordY,length;
+        map<string, vector<Corridor> > corridorsByBlock;
+        for(int i=0; i < numCorridors; i++){
+            file>>idCorridor>>blockName>>dirCorridor>>senseCorridor>>beginCoordX>>beginCoordY>>length;
+            Direction dir = Direction::parseDirection(dirCorridor);
+            Sense sense = Sense::parseSense(senseCorridor);
+            corridorsByBlock[blockName].push_back(Corridor(idCorridor,blockName, dir, sense, make_pair(beginCoordX, beginCoordY), length));
         }
         
+        //Now, for each block, we insert all its corridors
+        //We assume that it be few blocks, so this part of code will not harm too much the code perfomance
+        for(unsigned int i=0; i<blocks.size();i++)
+            this->blocks[i].setCorridors(corridorsByBlock[this->blocks[i].getName()]);
+        
+        
+        file>>numCells;
+        int row, column;
+        string cellCode;
+        int numLevels;
+        map<int,vector<Cell>> cellsByShelf;
+        for(int i=0;i<numCells;i++){
+            file>>idShelf>>cellCode>>numLevels>>row>>column;
+            cellsByShelf[idShelf].push_back(Cell(cellCode,idShelf,numLevels,row,column));
+        }
+        
+        for(unsigned int i= 0; i<blocks.size();i++){
+            vector<Shelf> blockShelves = blocks[i].getShelves();
+            for(unsigned j=0; j<blockShelves.size();j++)
+                blockShelves[i].setCells(cellsByShelf[blockShelves[i].getId()]);
+            blocks[i].setShelves(blockShelves);
+                
+        }
     }
  }
  
@@ -120,7 +165,9 @@
  ///////////////////////////////////////////////////////////////////
  void Warehouse::WriteWarehouseData(string fileName){
      
-     
+     ofstream file;
+     file.open(fileName, ios::out);
+     file.close();
  }
  
  ///////////////////////////////////////////////////////////////////

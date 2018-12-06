@@ -23,6 +23,15 @@ class Direction{
         static Direction HORIZONTAL;
         static Direction VERTICAL;
         string getDirectionCode() { return code;}
+    
+        static Direction parseDirection(string &directionString){
+            if(directionString == Direction::VERTICAL.code)
+                return Direction::VERTICAL;
+            else if(directionString == Direction::HORIZONTAL.code)
+                return Direction::HORIZONTAL;
+            else
+                return Direction::VERTICAL;
+        }
         
 };
 
@@ -54,6 +63,20 @@ class Sense{
         
         Sense &operator=(Sense &other){ this->code = other.code;  return *this;} 
         string getSenseCode() { return code;}
+    
+        static Sense parseSense(string &senseString){
+            if(senseString == Sense::UP_DOWN.code)
+                return Sense::UP_DOWN;
+            else if(senseString == Sense::BOTTOM_UP.code)
+                return Sense::BOTTOM_UP;
+            else if(senseString == Sense::LEFT_TO_RIGHT.code)
+                return Sense::LEFT_TO_RIGHT;
+            else if(senseString == Sense::RIGHT_TO_LEFT.code)
+                return Sense::RIGHT_TO_LEFT;
+            else
+                return Sense::UP_DOWN;
+        }
+    
 };
 
 ///Static class members iniatilization
@@ -75,29 +98,38 @@ class Corridor{
     
     private:
         long int Id;
-        long int IdBlock;
+        string blockName;
         Direction direction;           //! The values can be: horizontal or vertical
         Sense sense;               //! The values can be: up_down, bottom_up, left_to_right, right_to_left
-        pair<double, double> bottom;
-        double lenght;
+        pair<double, double> begin;
+        double length;
     
     public:
         Corridor();
         Corridor(const Corridor & other);
-        
+        Corridor(long int Id, string blockName, Direction dir, Sense sense, pair<double,double> begin, double length){
+            this->Id = Id;
+            this->blockName = blockName;
+            this->direction = dir;
+            this->sense = sense;
+            this->begin = begin;
+            this->length = length;
+        }
+    
+    
         void setDirection(Direction value){  direction = value;}
         void setSense(Sense value) { sense = value; }
         void setId( long int value ) { if(value > 0) Id = value; else throw("Error. Invalid negative Id"); }
-        void setIdBlock (long int value) { if(value > 0) IdBlock = value; else throw("Error.Invalide negative IdBlock"); }
-        void setBottom(pair<double,double> value){ bottom = value; }
-        void setLength(double value){ lenght = value; }
+        void setIdBlock (string value) {blockName = value;}
+        void setBeginCoords(pair<double,double> value){ begin = value; }
+        void setLength(double value){ length = value; }
         
         Direction getDirection(){ return direction; }
         Sense getSense() { return sense; } 
         long int getId() { return Id; }
-        long int getBlockId() {return IdBlock; }
-        pair<double, double> getBottomCoords() { return bottom; }
-        double getLenght() { return lenght; } 
+        string getBlockId() {return blockName; }
+        pair<double, double> getBeginCoords() { return begin; }
+        double getLenght() { return length; } 
         
         
 };

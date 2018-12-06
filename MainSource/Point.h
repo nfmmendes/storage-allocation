@@ -16,59 +16,20 @@ using namespace std;
             double coordZ; 
             
         public:
-            Point(){
-                coordX = coordY = coordZ = 0;
-            }
+            Point();
+            Point(string label, double coordX, double coordY, double coordZ);
+            Point(const Point &point);
+            void setCoordX(double value);
+            void setCoordY(double value);
             
-            //Full constructor
-            //Null values are not allowed
-            Point(string label, double coordX, double coordY, double coordZ){
+        
+            void setCoordZ(double value);
+            void setPoint(Point &point);
             
-                if(label == "")
-                    throw("Error"); 
-            
-                this->label = label;
-                this->coordX = coordX;
-                this->coordY = coordY; 
-                this->coordZ = coordZ; 
-            }
-            
-            //Copy constructor
-            //Null values are not allowed  
-            Point(const Point &point){
-            
-                this->label = point.getLabel();
-                this->coordX = point.getCoordX();
-                this->coordY = point.getCoordY();
-                this->coordZ = point.getCoordZ(); 
-            }
-            
-            //Set the value of X coordinate 
-            void setCoordX(double value){
-                this->coordX = value;
-            }
-            
-            //Set the value of the Y coordinate
-            void setCoordY(double value){
-                this->coordY = value;
-            }
-            
-            //Set the value of the Z coordinate
-            void setCoordZ(double value){
-                this->coordZ = value;
-            }
-            
-            void setPoint(Point &point){
-                this->label = point.label;
-                this->coordX = point.coordX;
-                this->coordY = point.coordY;
-                this->coordZ = point.coordZ;
-            }
-            
-            double getCoordX() const { return coordX;}
-            double getCoordY() const { return coordY; }
-            double getCoordZ() const { return coordZ; }
-            string getLabel()  const { return label; }
+            double getCoordX() const;
+            double getCoordY() const;
+            double getCoordZ() const;
+            string getLabel() const;
 };
 
 

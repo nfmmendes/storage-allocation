@@ -20,79 +20,29 @@ class Date{
     
         
     public:
-        Date(){ this->day = 1; this->month = 1; this->year = 1990; }
-        Date(const Date& other); 
-        int getDay() { return day; } 
-        int getMonth() { return month; }
-        int getYear() { return year; }
-        
-        void setDay(int value){ if(value <= 31 && value >= 1) day = value;  validatedate(*this); } 
-        void setMonth(int value){ if(value <= 12 && value >= 1) month= value; validatedate(*this); }
-        void setYear(int value){ if(value >= 0) year = value; }
-        
-        
-        void validatedate(Date &date){
-            if(month == 1 || month == 3 || month == 5 || month == 7 ||
-               month == 8 || month == 10 || month == 12){
-                    if(day > 31)
-                        throw("Invalid date (" + date.toString() +") ! The day value must be equals or minor than 31!");
-                        
-            }else if(month == 4 || month == 6 || month == 9 || month == 11){
-            
-            }else if(month == 2){
-                if(day >= 30)
-                    throw("Invalid date (" + date.toString() +") ! The day value must be equals or minor than 29!");
-                else if(year%4 == 0 && (year%100 != 0 || year%400 == 0) && day >29)
-                    throw("Invalid date (" + date.toString() +") ! The day value must be equals or minor than 29!");
-                else if(day >= 29)
-                    throw("Invalid date (" + date.toString() +") ! The day value must be equals or minor than 28!");
-            }
-                
-                
-        }
+        Date();
+        Date(const Date& other);
+        int getDay();
+        int getMonth();
+        int getYear();
+    
+        void setDay(int value);
+        void setMonth(int value);
+        void setYear(int value);
     
     
-        string toString(string format="yyyy/MM/dd"){
-            
-            if(format == "yyyy/MM/dd")
-                return to_string(year) +"/" + to_string(month)+"/" + to_string(day);
-            return "";
-        }
+        void validatedate(Date &date);
     
-        Date &operator=(const Date &other){
-            this->day = other.day;
-            this->year = other.year;
-            this->month = other.month;
-            return *this;
-        }
     
-        bool operator==(Date &other){
-            return this->day == other.day && this->month == other.month && this->year == other.year;
-        }
-        
-        bool operator!=(Date &other){
-            return this->day != other.day || this->month != other.month || this->year != other.year;
-        }
-        
-        bool operator<=(Date &other){
-            return year <= other.year || (this->year == other.year && this->month <= other.month) ||
-                   (this->year == other.year && this->month == other.month && this->day <= other.day);     
-        }
-        
-        bool operator<(Date &other){
-                return year < other.year || (this->year == other.year && this->month < other.month) ||
-                   (this->year == other.year && this->month == other.month && this->day < other.day); 
-        }
-        
-        bool operator>=(Date &other){
-            return year >= other.year || (this->year == other.year && this->month >= other.month) ||
-                   (this->year == other.year && this->month == other.month && this->day >= other.day);     
-        }
-        
-        bool operator>(Date &other){
-                return year > other.year || (this->year == other.year && this->month > other.month) ||
-                   (this->year == other.year && this->month == other.month && this->day > other.day); 
-        }
+        string toString(string format="yyyy/MM/dd");
+    
+        Date &operator=(const Date &other);
+        bool operator==(Date &other);
+        bool operator!=(Date &other);
+        bool operator<=(Date &other);
+        bool operator<(Date &other);
+        bool operator>=(Date &other);
+        bool operator>(Date &other);
         
 
 };

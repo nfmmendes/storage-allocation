@@ -16,10 +16,10 @@ run.exe: GeneralClasses.o QuickTSP.o WarehousePack.o GraphPack.o main.cpp
 
 #BASIC CLASSES (CAN BE USED IN ANY SOFTWARE. IT'S NOT ALGORITHM RELATED
 GeneralClasses.o: Point.h Date.h Time.h
-	$(CC) $(COMPILE_FLAGS)  Point.h Date.h Time.h
+	$(CC) $(COMPILE_FLAGS)  -c Point.cpp Date.cpp Time.cpp
 
 QuickTSP.o : PathUnity.h TSP.h State.h 
-	$(CC) $(COMPILE_FLAGS) PathUnity.h TSP.h State.h
+	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp State.cpp
 
 #DAO CLASSES (DIRECTLY RELATED WITH THE DESCRIPTION OF DATA)
 WarehousePack.o: Cell.h Shelf.h Block.h Warehouse.h BlockExit.h Corridor.h
@@ -27,7 +27,7 @@ WarehousePack.o: Cell.h Shelf.h Block.h Warehouse.h BlockExit.h Corridor.h
 
 
 GraphPack.o: Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h
-	$(CC) $(COMPILE_FLAGS) Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h
+	$(CC) $(COMPILE_FLAGS) -c Point.cpp Vertex.h Arc.h Graph.h HananGraph.h Line.h
 
 
 clean: 

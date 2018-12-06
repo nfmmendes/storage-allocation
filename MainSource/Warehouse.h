@@ -18,6 +18,7 @@ class Warehouse{
             string name;
             vector<Block> blocks;
             vector<pair<Product, Cell> > productAllocation;
+            vector<Point> deliveryPoints;   /// Points where the products must be delivered after be picked on shelves
         public:
             Warehouse(){}
             Warehouse(Warehouse &other);

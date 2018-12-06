@@ -33,6 +33,13 @@ namespace QuickTSP{
             Vertex & getEndVertex() { return this->endVertex; } 
             HananGraph & getGraph() { return this->graph; } 
         
+            Transition & operator=(const Transition &other){
+                this->beginVertex = other.beginVertex;
+                this->endVertex = other.endVertex;
+                this->graph = other.graph;
+                
+                return *this;
+            }
     };
     
  }
