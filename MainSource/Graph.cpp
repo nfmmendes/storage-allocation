@@ -1,37 +1,41 @@
 #include<iostream>
 #include "Graph.h"
 using namespace std;
+using namespace QuickTSP;
 
 /// Copy constructor
-Graph::Graph(Graph &graph){
+Graph::Graph(const Graph &graph){
     this->name = graph.name;
     
-    for(int i=0;i<graph.vertexes.size();i++)
+    for(int i=0;i<(int)graph.vertexes.size();i++)
         this->vertexes.push_back(Vertex(graph.vertexes[i]));
-    for(int i=0;i<graph.arcs.size();i++)
+    for(int i=0;i<(int)graph.arcs.size();i++)
         this->arcs.push_back(Arc(graph.arcs[i]));
 }
 
 /// Graph constructor by members
-Graph::Graph(vector<Vertex &> vertexes, vector<Arc&> arcs, string name){
+Graph::Graph(vector<Vertex> vertexes, vector<Arc> arcs, string name){
     this->name = name;
     
-    for(int i=0;i<graph.vertexes.size();i++)
+    for(int i=0;i<(int)vertexes.size();i++)
         this->vertexes.push_back(Vertex(vertexes[i]));
-    for(int i=0;i<graph.arcs.size();i++)
+    for(int i=0;i<(int)arcs.size();i++)
         this->arcs.push_back(Arc(arcs[i]));
 }
 
 
-Graph &operator=(const Graph &other){
-    Graph returned;
+Graph & Graph::operator=(const Graph &other){
+   
     
-    returned.name = graph.name;
+    this->name = other.name;
     
-    for(int i=0;i<graph.vertexes.size();i++)
-        returned->vertexes.push_back(Vertex(graph.vertexes[i]));
-    for(int i=0;i<graph.arcs.size();i++)
-        returned->arcs.push_back(Arc(graph.arcs[i]));
+    this->vertexes.clear();
+    this->arcs.clear();
     
-    return returned;
+    for(int i=0;i<(int)other.vertexes.size();i++)
+        this->vertexes.push_back(Vertex(other.vertexes[i]));
+    for(int i=0;i<(int)other.arcs.size();i++)
+        this->arcs.push_back(Arc(other.arcs[i]));
+    
+    return *this;
 }

@@ -18,25 +18,11 @@ namespace QuickTSP{
             public:
                 Graph(){}
             
-                Graph(const Graph &graph) {
-                    for(unsigned int i=0; i< graph.vertexes.size(); i++)
-                        this->vertexes.push_back(Vertex(graph.vertexes[i]));
-                    
-                    for(unsigned int i=0; i < graph.arcs.size(); i++)
-                        this->arcs.push_back(Arc(graph.arcs[i]));
-                    
-                    this->name = graph.name;
-                }
+            Graph(const Graph &graph);
             
                Graph(vector<Vertex > vertexes, vector<Arc> arcs, string name);
             
-                Graph &operator=(const Graph &other){
-                    this->vertexes = other.vertexes;
-                    this->arcs = other.arcs;
-                    this->name = other.name;
-                    
-                    return *this;
-                }
+            Graph &operator=(const Graph &other);
         };
     
 }

@@ -24,37 +24,23 @@ class Cell{
         Cell(){
             
         }
-        Cell(const Cell & other){
-            this->code = other.code;
-            this->idShelf = other.idShelf;
-            this->row = other.row;
-            this->column = other.column;
-            this->levels = other.levels;
-        }
-    
-        Cell(string code, long int IdShelf,int levels, int row, int column){
-            this->code = code;
-            this->idShelf = IdShelf;
-            this->row = row;
-            this->column = column;
-            this->levels = levels;
-        }
-    
-        bool operator==(Cell & other) const{
-            return code == other.code && idShelf == other.idShelf && row == other.row && column == other.column && levels == other.levels;
-        }
-    
-        void setCode(string value){ this->code = value;}
-        void setIdShelf(long int value ){ if(value >= 0) this->idShelf = value;}
-        void setRow(int value){ if(value >= 0)this->row = value; }
-        void setColumn(int value) { if(value >=0) this->column = value;}
-        void setLevels(int value){ if(value > 0) this->levels = value; }
-    
-        string getCode(){ return code;}
-        long int getIdShelf() { return idShelf;}
-        int getRow(){ return row;}
-        int getColumn() { return column; }
-        int getLevels() { return levels; }
+        Cell(const Cell & other);
+        
+        Cell(string code, long int IdShelf,int levels, int row, int column);
+        
+        bool operator==(Cell & other) const;
+        
+        void setCode(string value);
+        void setIdShelf(long int value );
+        void setRow(int value);
+        void setColumn(int value);
+        void setLevels(int value);
+        
+        string getCode();
+        long int getIdShelf();
+        int getRow();
+        int getColumn();
+        int getLevels();
 };
 
 #endif

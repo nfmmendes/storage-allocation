@@ -1,3 +1,6 @@
+#ifndef BLOCK_EXIT_H
+#define BLOCK_EXIT_H
+
 #include<iostream>
 #include<vector>
 #include<string>
@@ -17,41 +20,30 @@ class BlockExit{
         string blockAName; 
         string blockBName;
     public:
-        BlockExit(){}
-        BlockExit(const BlockExit &other){
-            this->Id = other.Id;
-            this->coordX = other.coordX;
-            this->coordY = other.coordY;
-            this->blockAName = other.blockAName;
-            this->blockBName = other.blockBName; 
-        } 
+        BlockExit();
+        BlockExit(const BlockExit &other);
         
-        BlockExit(long int id, double coordX, double coordY, string blockA, string blockB=""){
-            this->Id = id;
-            this->coordX = coordX;
-            this->coordY = coordY;
-            this->blockAName = blockA;
-            this->blockBName = blockB; 
-        }
+        BlockExit(long int id, double coordX, double coordY, string blockA, string blockB="");
         
-        long int getId() { return Id; }
-        double getCoordX() {return coordX; }
-        double getCoordY() {return coordY; }
-        string getBlockAName() { return blockAName; }
-        string getBlockBName() { return blockBName; }
-        pair<double, double> getCoords(){ return make_pair(coordX, coordY); }
-        
-        
-        
-        void setId(long int value) { Id = value; }  //There is no Id value validation
-        void setCoordX(double value) { coordX = value; }
-        void setCoordY(double value) { coordY = value; }
-        void setBlockAName(double value) { blockAName = value; }
-        void setBlockBName(double value) { blockBName = value; }
-        
-        bool operator==(const BlockExit &other) { return this->Id == other.Id; }
-        bool operator!=(const BlockExit &other) { return this->Id != other.Id; }
-        bool operator<(const BlockExit & other) const { return this->Id < other.Id;} //<! Allow the use of an object of this class
-                                                                                     // as a key in a map
-
+        long int getId();
+        double getCoordX();
+        double getCoordY();
+        string getBlockAName();
+        string getBlockBName();
+        pair<double, double> getCoords();
+    
+    
+    
+        void setId(long int value);
+        void setCoordX(double value);
+        void setCoordY(double value);
+        void setBlockAName(double value);
+        void setBlockBName(double value);
+    
+        bool operator==(const BlockExit &other);
+        bool operator!=(const BlockExit &other);
+        bool operator<(const BlockExit & other) const;
+    
 };
+
+#endif

@@ -18,39 +18,25 @@ namespace QuickTSP{
             double value;
         
         public:
-            Vertex(){}
-            Vertex(const Vertex &other){
-                this->label = other.label;
-                this->type = other.type;
-                this->value = other.value; 
-            }
+            Vertex();
+            Vertex(const Vertex &other);
         
-            Vertex(string label, string Type, double value = 0){
-                this->label = label;
-                this->type = Type;
-                this->value = value;
-            }
-       
-            void setLabel(string value){ this->label = value; }
-            void setType(string value) { this->type = value; }
-            void setValue(double value) { this->value = value; }
+            Vertex(string label, string Type, double value = 0);
         
-            string getLabel(){ return this->label; }
-            string getType(){ return this->type; }
-            double getValue() { return this->value; }
+            void setLabel(string value);
+            void setType(string value);
+            void setValue(double value);
         
-            bool operator==(const Vertex & other){
-                return label == other.label && type == other.type && value == other.value;
-            }
-            
-            bool operator!=(const Vertex & other){
-                return label != other.label || type != other.type || value != other.value;
-            }
+            string getLabel();
+            string getType();
+            double getValue();
         
-            ///This overload allows the use of an object of this class as a key to a map
-            bool operator<(const Vertex &other)const{
-                return label+type+to_string(value) < other.label+other.type+to_string(other.value);
-            }
+            bool operator==(const Vertex & other);
+        
+            bool operator!=(const Vertex & other);
+        
+                ///This overload allows the use of an object of this class as a key to a map
+            bool operator<(const Vertex &other)const;
         
     };
     

@@ -21,24 +21,17 @@ namespace QuickTSP{
             Line();
         
             ///Copy constructor
-            Line(const Line &other){
-                this->startPoint = Point(other.getStartPoint());
-                this->slope = Point(other.getSlope());
-            }
+            Line(const Line &other);
+                
+                ///Constructor member by member
+            Line(string label, Point &pointA, Point &pointB);
+                
+            Point getSlope() const;
+            Point getStartPoint() const;
+            string getLabel() const;
             
-            ///Constructor member by member
-            Line(string label, Point &pointA, Point &pointB){
-                string pointLabel = label+string("_slope");
-                this->slope = Point(pointLabel,pointA.getCoordX() - pointB.getCoordX(),pointA.getCoordY() - pointB.getCoordY(),pointA.getCoordZ() - pointB.getCoordZ());
-                this->startPoint = Point(pointA);  
-            }
-            
-            Point getSlope() const { return slope; }
-            Point getStartPoint() const {return startPoint; }
-            string getLabel() const { return  label; }
-        
-            void setSlope(Point &value) { this->slope = value; }
-            void setStartPoint(Point &value) { this->startPoint = value; }
-            void setLabel(string value) { this->label = value;}
+            void setSlope(Point &value);
+            void setStartPoint(Point &value);
+            void setLabel(string value);
     };
 }

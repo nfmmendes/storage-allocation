@@ -30,33 +30,9 @@ namespace QuickTSP {
             HananGraph(){}
             HananGraph(const vector<Point &>points, Graph & graph);
             
-            vector<Vertex> getBuildVertexes(){
-                return buildVertexes;
-            }
+            vector<Vertex> getBuildVertexes();
         
-            HananGraph & operator=(const HananGraph &other){
-                
-                this->lines.clear();
-                for(unsigned int i=0; i< other.lines.size(); i++)
-                    this->lines.push_back(Line(other.lines[i]));
-                
-                this->columns.clear();
-                for(unsigned int i=0; i<other.columns.size(); i++)
-                    this->columns.push_back(Line(other.columns[i]));
-                
-                this->points.clear();
-                for(unsigned int i=0; i<other.points.size();i++)
-                    this->points.push_back(Point(other.points[i]));
-                
-                this->buildVertexes.clear();
-                for(unsigned int i=0; i<other.buildVertexes.size();i++)
-                    this->buildVertexes.push_back(Vertex(other.buildVertexes[i]));
-                
-                this->vertexCoordinate.clear();
-                this->vertexCoordinate = other.vertexCoordinate;
-                
-                return *this;
-            }
+            HananGraph & operator=(const HananGraph &other);
         
             //By now columns and lines will be represented by the same class
             vector<Vertex> getVertexexByLine(Line &line);
@@ -64,9 +40,7 @@ namespace QuickTSP {
             vector<Arc> getArcstByLine(Line &line);
             vector<Arc> getArcsByColumn(Line &column);
         
-            pair<int, int> getVertexCoordinate(Vertex &v){
-                return vertexCoordinate[v]; 
-            }
+            pair<int, int> getVertexCoordinate(Vertex &v);
         
         
     };

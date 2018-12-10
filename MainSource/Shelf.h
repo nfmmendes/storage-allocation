@@ -1,3 +1,6 @@
+#ifndef SHELF_H
+#define SHELF_H
+
 #include<iostream>
 #include<cmath>
 #include<ctime>
@@ -23,55 +26,31 @@ class Shelf{
         
     public:
         Shelf();
-        Shelf(const Shelf &other){
-            for(unsigned int i=0; i <other.cells.size(); i++){
-                Cell inserted(other.cells[i]);
-                this->cells.push_back(inserted); 
-            }
-            
-            this->Id = other.Id;
-            this->bottomLeftCoords = other.bottomLeftCoords;
-            this->blockName = other.blockName;
-            this->columns = other.columns;
-            this->cellLength = other.cellLength;
-            this->cellWidth = other.cellWidth;
-        }
+    Shelf(const Shelf &other);
         
         Shelf(long int Id,vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName,
-              int columns, int lines, double cellLength, double cellWidth){
-                  
-            for(unsigned int i=0;i<cells.size(); i++){
-                Cell inserted(cells[i]);
-                this->cells.push_back(inserted);
-            }
-            
-            this->Id = Id;
-            this->bottomLeftCoords = bottomLeftCoords;
-            this->blockName = blockName;
-            this->columns = columns;
-            this->lines = lines;
-            this->cellLength = cellLength;
-            this->cellWidth = cellWidth; 
-        }
+              int columns, int lines, double cellLength, double cellWidth);
     
-        long int getId(){ return Id;}
-        double getBottomLeftCoordX() { return bottomLeftCoords.first; }
-        double getBottomLeftCoordY() { return bottomLeftCoords.second; }
-        pair<double,double> getBottomLeftCoords() { return bottomLeftCoords; }
-        vector<Cell> getCell(){ return cells;}
-        string getBlockName(){ return blockName; }
-        int getNumColumns() {return columns;}
-        int getNumLines(){ return lines;}
-        double getCellLength() { return cellLength;}
-        double getCellWidth() { return cellWidth;}
-    
-        void setBottomLeftCoordX(double value) { this->bottomLeftCoords.first = value; }
-        void setBottomLeftCoordY(double value) { this->bottomLeftCoords.second = value; }
-        void setBottomLeftCoords(pair<double, double> value ) { this->bottomLeftCoords = value;}
-        void setCells(vector<Cell> &cells){ this->cells = cells;}
-        void setBlockName(string name){ this->blockName = name;}
-        void setNumColumns(int value){ if(value > 0) columns = value; }
-        void setNumLines(int value){ if(value > 0) lines = value; }
-        void setCellLength(double value){ if(value>0) cellLength = value;}
-        void setCellWidth(double value){ if(value >0) cellWidth = value; }
+        long int getId();
+        double getBottomLeftCoordX();
+        double getBottomLeftCoordY();
+        pair<double,double> getBottomLeftCoords();
+        vector<Cell> getCell();
+        string getBlockName();
+        int getNumColumns();
+        int getNumLines();
+        double getCellLength();
+        double getCellWidth();
+        
+        void setBottomLeftCoordX(double value);
+        void setBottomLeftCoordY(double value);
+        void setBottomLeftCoords(pair<double, double> value );
+        void setCells(vector<Cell> &cells);
+        void setBlockName(string name);
+        void setNumColumns(int value);
+        void setNumLines(int value);
+        void setCellLength(double value);
+        void setCellWidth(double value);
 };
+
+#endif

@@ -33,73 +33,38 @@ class Order{
         Client client;                            //The amount of data needed in this object will depend of
         
     public:
-        Order() {
+        Order();
+    
+        Order(const  Order &other);
+    
+        Order(vector< pair<Product, double> >items, Date dataDeadline, Time hourDeadline, Client client);
+    
+    
+        void setorderItens(int i, Product &product, double quantity);
+    
+    
+        void removeorderItens(int i);
+    
+    
+        void addorderItens(Product &product, double quantity);
+    
+    
+        void setOrders(vector<pair<Product, double>> orders);
+    
+    
+        vector<pair<Product, double> > getOrders();
+    
+    
+        void setDateDeadline(Date &date);
         
-        }
-    
-        Order(const  Order &other){
-            this->deadline = other.deadline;
-            this->client = other.client;
-            
-            for(unsigned int i=0; i< other.orderItens.size(); i++){
-                this->orderItens.push_back(other.orderItens[i]);
-            }
-        }
-    
-        Order(vector< pair<Product, double> >, Date dataDeadline, Time hourDeadline, Client client);
+        
+        void setTimeDeadline(Time &time);
     
     
-        void setorderItens(int i, Product &product, double quantity) {
-            if(i >=0 && i<(int)this->orderItens.size())
-                this->orderItens[i] = make_pair(product, quantity);
-        }
-    
-    
-        void removeorderItens(int i){
-                if(i>=0 && i<(int)this->orderItens.size())
-                    this->orderItens.erase(this->orderItens.begin()+i);
-        }
-    
-    
-        void addorderItens(Product &product, double quantity){
-            this->orderItens.push_back(make_pair(product,quantity));
-        }
-    
-    
-        void setOrders(vector<pair<Product, double>> orders){
-            this->orderItens.clear();
-            
-            for(unsigned int i= 0; i< orders.size(); i++)
-                this->orderItens.push_back(make_pair(orders[i].first, orders[i].second));
-        }
-    
-    
-        vector<pair<Product, double> > getOrders(){
-            return this->orderItens;
-        }
-    
-    
-        void setDateDeadline(Date &date){
-            this->deadline.first = date;
-        }
-    
-    
-        void setTimeDeadline(Time &time){
-            this->deadline.second = time;
-        }
-    
-        static vector<Order> readOrdersData(string fileName);
+    static vector<Order> readOrdersData(string fileName);
     
 };
 
-static vector<Order> readOrdersData(string fileName){
-    vector<Order> input;
-    ifstream file;
-    
-    file.open(fileName,ios::in);
-    
-    
-    return input;
-}
+
 
 #endif

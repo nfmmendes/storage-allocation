@@ -21,43 +21,25 @@ namespace QuickTSP{
         
         public:
             Arc();
-            Arc(const Arc &arc){
-                this->label = arc.getLabel();
-                this->value = arc.getValue(); 
-                this->beginVertex = arc.getBeginVertex();
-                this->endVertex = arc.getEndVertex();
-            }
-            
-            Arc(string label, double value, Vertex &begin, Vertex &end){
-                this->label = label;
-                this->value = value; 
-                this->beginVertex = begin;
-                this->endVertex= end;
-            }
-        
-            void setLabel(string label){
-                this->label = label;
-            }
-            
-            
-            void setValue(double value){
-                this->value = value; 
-            }
-            
-            void setBeginVertex(Vertex& vertex){
-                this->beginVertex = vertex;
+            Arc(const Arc &arc);
                 
-            }
+            Arc(string label, double value, Vertex &begin, Vertex &end);
             
-            void setEndVertex(Vertex& vertex){
-                this->endVertex = vertex; 
-            }
+            void setLabel(string label);
+                
+                
+            void setValue(double value);
+                
+            void setBeginVertex(Vertex& vertex);
             
-            
-            string getLabel() const { return label; }
-            double getValue() const  { return value; }
-            Vertex getBeginVertex() const { return beginVertex; }
-            Vertex getEndVertex() const  {return endVertex; }
+                
+            void setEndVertex(Vertex& vertex);
+        
+        
+            string getLabel() const;
+            double getValue() const;
+            Vertex getBeginVertex() const;
+            Vertex getEndVertex() const;
             
             
             
