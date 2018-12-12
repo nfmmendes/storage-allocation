@@ -9,16 +9,17 @@
 #include "Line.h"
 #include "Point.h"
 #include "Vertex.h"
+#include "HananGraph.h"
 using namespace std;
 using namespace QuickTSP;
 
 
 HananGraph::HananGraph(){}
-HananGraph::HananGraph(const vector<Point &>points, Graph & graph){
-    for(unsigned int i=0; i<other.points.size();i++)
-        this->points.push_back(Point(other.points[i]));
+HananGraph::HananGraph(const vector<Point >points, Graph & graph){
+    for(unsigned int i=0; i<points.size();i++)
+        this->points.push_back(Point(points[i]));
     
-    cout<<graph.getArcs().size();
+    this->graph = graph;
     
 }
 
@@ -51,8 +52,8 @@ HananGraph & HananGraph::operator=(const HananGraph &other){
 }
 
 //By now columns and lines will be represented by the same class
-vector<Vertex> HananGraph::getVertexexByLine(Line &line){   return this->lines;}
-vector<Vertex> HananGraph::getVertexesByColumn(Line &column){ return this->columns; }
+//vector<Vertex> HananGraph::getVertexexByLine(Line &line){   return this->lines;}
+//vector<Vertex> HananGraph::getVertexesByColumn(Line &column){ return this->columns; }
 //vector<Arc> HananGraph::getArcstByLine(Line &line){ retu}
 //vector<Arc> HananGraph::getArcsByColumn(Line &column);
 

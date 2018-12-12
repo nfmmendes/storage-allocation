@@ -19,14 +19,18 @@ namespace QuickTSP{
 
     class State {
 
+        private:
+            map<Vertex,int> vertexParity;
+            map<Vertex , int> vertexComponent;
+            void adjustParity(Vertex &v,bool insertedInArc = true);
+            void adjustComponent(Transition &transition);
+        
         public: 
             //Data
-            map<Vertex,int> vertexParity;
-            map<Vertex , int> vertexComponent; 
-            HananGraph graph; 
+        
         
             State();
-            State(map<Vertex,int> parity, map<Vertex, int> component, HananGraph &graph);
+            State(map<Vertex,int> parity, map<Vertex, int> component);
             void addTransition(Transition &t);
             
 

@@ -1,3 +1,6 @@
+#ifndef ARC_H
+#define ARC_H
+
 #include<iostream>
 #include<string>
 #include<cmath>
@@ -40,8 +43,11 @@ namespace QuickTSP{
             double getValue() const;
             Vertex getBeginVertex() const;
             Vertex getEndVertex() const;
-            
-            
+        
+            Arc& operator=(const Arc & other);
+            bool operator==(const Arc &other)const;
             
     };
 }
+
+#endif

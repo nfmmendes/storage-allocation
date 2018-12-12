@@ -31,7 +31,7 @@ namespace QuickTSP{
             string getType();
             double getValue();
         
-            bool operator==(const Vertex & other);
+            bool operator==(const Vertex & other)const;
         
             bool operator!=(const Vertex & other);
         

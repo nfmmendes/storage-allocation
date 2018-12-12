@@ -1,3 +1,6 @@
+#ifndef LINE_H
+#define LINE_H
+
 #include<iostream>
 #include<string>
 #include<sstream>
@@ -35,3 +38,5 @@ namespace QuickTSP{
             void setLabel(string value);
     };
 }
+
+#endif

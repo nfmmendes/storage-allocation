@@ -27,7 +27,7 @@ string Vertex::getLabel(){ return this->label; }
 string Vertex::getType(){ return this->type; }
 double Vertex::getValue() { return this->value; }
 
-bool Vertex::operator==(const Vertex & other){
+bool Vertex::operator==(const Vertex & other)const {
     return label == other.label && type == other.type && value == other.value;
 }
 

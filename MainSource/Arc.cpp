@@ -48,3 +48,18 @@ string Arc::getLabel() const { return label; }
 double Arc::getValue() const  { return value; }
 Vertex Arc::getBeginVertex() const { return beginVertex; }
 Vertex Arc::getEndVertex() const  {return endVertex; }
+
+Arc& Arc::operator=(const Arc & other)
+{
+    this->label = other.label;
+    this->value = other.value;
+    this->beginVertex = other.beginVertex;
+    this->endVertex = other.endVertex;
+    
+    return *this;
+}
+
+bool Arc::operator==(const Arc &other)const {
+    return this->label == other.label && this->value == other.value &&
+            this->beginVertex == other.beginVertex && this->endVertex  == other.endVertex;
+}

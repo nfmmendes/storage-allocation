@@ -28,7 +28,7 @@ WarehousePack.o: Cell.h Shelf.h Block.h Warehouse.h BlockExit.h Corridor.h
 
 
 GraphPack.o: Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h
-	$(CC) $(COMPILE_FLAGS) -c Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.h Line.cpp
+	$(CC) $(COMPILE_FLAGS) -c Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.cpp Line.cpp
 
 
 clean: 

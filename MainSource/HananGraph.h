@@ -12,6 +12,7 @@
 #include "Line.h"
 #include "Point.h"
 #include "Vertex.h"
+#include "Transition.h"
 using namespace std; 
 
 
@@ -24,11 +25,12 @@ namespace QuickTSP {
             vector<Line> columns; 
             vector<Point> points; 
             vector<Vertex> buildVertexes;
-            map<Vertex, pair<int,int> > vertexCoordinate; 
+            map<Vertex, pair<int,int> > vertexCoordinate;
+            Graph graph;
             
         public:
-            HananGraph(){}
-            HananGraph(const vector<Point &>points, Graph & graph);
+            HananGraph();
+            HananGraph(const vector<Point >points, Graph & graph);
             
             vector<Vertex> getBuildVertexes();
         
@@ -41,7 +43,7 @@ namespace QuickTSP {
             vector<Arc> getArcsByColumn(Line &column);
         
             pair<int, int> getVertexCoordinate(Vertex &v);
-        
+            bool isFeasibleTransition(Transition &t);
         
     };
 }
