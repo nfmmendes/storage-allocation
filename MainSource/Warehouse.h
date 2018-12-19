@@ -9,6 +9,7 @@
 #include "Block.h"
 #include "Product.h"
 #include "Cell.h"
+#include "Curve.h"
 using namespace std; 
 
 
@@ -39,7 +40,7 @@ class Warehouse{
             
             void setName(string &name);
             void setBlocks(vector<Block>& blocks);
-            void setProductAllocation(vector<pair<Product, Cell> > & productAllocation); 
+            void setProductAllocation(vector<pair<Product, Cell> > & productAllocation);
             
             
 };

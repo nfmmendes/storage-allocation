@@ -8,6 +8,7 @@
 #include "BlockExit.h"
 #include "Corridor.h"
 #include "Point.h"
+#include "Curve.h"
 using namespace std; 
 
 
@@ -17,6 +18,7 @@ class Block{
         vector<Shelf> shelves;
         vector<BlockExit> exits;
         vector<Corridor> corridors;
+        vector<Curve> curves;
         string name; 
         pair<double,double> bottomLeftCoords;
         
@@ -32,25 +34,28 @@ class Block{
         vector<Shelf> getShelves();
         vector<BlockExit> getExits();
         vector<Corridor> getCorridors();
+        vector<Curve> getCurves();
         pair<double,double> getBottomLeftCoords();
     
-            //Set corridors
+        //Set corridors
         void setCorridors(vector<Corridor> & others);
     
-            //Set all the shelves of a block
+        //Set all the shelves of a block
         void setShelves(vector<Shelf > & other);
     
-            ///Add a exit in a block (if it was not inserted a exit with same Id yet)
+        void setCurves(vector<Curve> &other);
+    
+        ///Add a exit in a block (if it was not inserted a exit with same Id yet)
         void addExit(BlockExit & other);
     
-            /// Removes the exit with id equals to Id in the block of exits
+        /// Removes the exit with id equals to Id in the block of exits
         void removeExitWithId(long int Id);
     
-            /// Removes the exit with the index i in the block list of exits
+        /// Removes the exit with the index i in the block list of exits
         void removeExit(int index);
     
     
     
-            //TODO: Improve this
+        //TODO: Improve this
         bool operator==(const Block &other);
 };

@@ -6,7 +6,6 @@
 #include<utility>
 #include<vector>
 #include<cstdlib>
-
  #include "Warehouse.h"
  
  using namespace std;
@@ -26,11 +25,12 @@
     int numShelves;
     int numCorridors; 
     int numCells;
+    int numCurves;
      
     //The reading sequence is 
     // 1. The number n1 of blocks
     //      1.1. The next n1 lines will contain each one 
-    //           nomeOfBlock, beginBlockX, beginBlockY (top left corner) 
+    //           blockName, beginBlockX, beginBlockY (top left corner)
     // 2. The  number n2 of block exits
     //      2.1. The next n2 lines will contain each one
     //           idExit, exitCoordX, exitCoordY, blockA_name, blockB_name (nullable. If null the block name will be #_#_#)
@@ -45,7 +45,7 @@
     //          idShelve, code, num_of_levels, row, column
     //6. The number n6 of curves
     //      6.1. The next n6 lines will contain each one
-    //          idCurva, corridor1Id, corridor2Id, sense, pointXCorridor1, pointYCorridor1, pointXCorridor1, pointYCorridor2
+    //          blockName, idCurva, corridor1Id, corridor2Id, pointXCorridor1, pointYCorridor1, pointXCorridor1, pointYCorridor2
     //
     //
     //
@@ -138,7 +138,7 @@
         for(unsigned int i=0; i<blocks.size();i++)
             this->blocks[i].setCorridors(corridorsByBlock[this->blocks[i].getName()]);
         
-        
+        //Read all data concerning cells
         file>>numCells;
         int row, column;
         string cellCode;
@@ -154,8 +154,21 @@
             for(unsigned j=0; j<blockShelves.size();j++)
                 blockShelves[i].setCells(cellsByShelf[blockShelves[i].getId()]);
             blocks[i].setShelves(blockShelves);
-                
         }
+        
+        file>>numCurves;
+        long int idCurve, startCorridor, endCorridor;
+        double endCoordX, endCoordY;
+        map<string, vector<Curve>> curvesByBlock;
+        for(int i=0;i<numCurves;i++){
+            file>>blockName>>idCurve>>startCorridor>>endCorridor>>beginCoordX>>beginCoordY>>endCoordX>>endCoordY;
+            curvesByBlock[blockName].push_back(Curve(idCurve, startCorridor, endCorridor,
+                                                     Point("",beginCoordX, beginCoordY,0), Point("",endCoordX, endCoordY,0)));
+            
+        }
+        
+        for(unsigned int i=0; i<blocks.size();i++)
+            blocks[i].setCurves(curvesByBlock[blocks[i].getName()]);
     }
  }
  
