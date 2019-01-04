@@ -36,6 +36,7 @@ class Date{
     
         string toString(string format="yyyy/MM/dd");
     
+        static Date Parse(string date, string format);
         Date &operator=(const Date &other);
         bool operator==(Date &other);
         bool operator!=(Date &other);

@@ -2,6 +2,7 @@
 #include<string>
 #include<cstdlib>
 #include "Time.h"
+#include "Util.h"
 using namespace std;
 
 
@@ -10,6 +11,13 @@ Time::Time(){
     this->second = 0;
     this->minute = 0;
     this->hour = 0;
+}
+
+Time::Time(unsigned short int hour, unsigned short int minute, unsigned short int second, unsigned short millisecond){
+    this->hour = hour;
+    this->second = second;
+    this->minute = minute;
+    this->millisecond = millisecond;
 }
 
 Time::Time(const Time& other){
@@ -122,6 +130,55 @@ void Time::minusMilliseconds(int value){
     }else
         this->millisecond -= value;
 }
+
+Time Time::Parse(string time, string format){
+    Time returned;
+    size_t pos = 0;
+    
+    if(format == "HH:MM:SS.mmmm"){
+        vector<string> firstSplit = Util::splitString(time,":");
+        string last = *firstSplit.last();
+        vector<string> secondSplit = Util::splitString(time, ".");
+        
+        if(firstSplit.size() == 3){
+            returned.setHour(stoi(firstSplit[0]) );
+            returned.setMinute(stoi(firstSplit[1]));
+            
+            if(secondSplit.size == 1)
+                returned.setSecond(secondSplit[0]);
+            if(secondSplit.size() == 2)
+                returned.setMillisecond(secondSplit[1]);
+        }
+    }else if(format =="HH:MM:SS"){
+        vector<string> firstSplit = Util::splitString(time,":");
+        
+        if(firstSplit.size() == 3){
+            returned.setHour(stoi(firstSplit[0]) );
+            returned.setMinute(stoi(firstSplit[1]));
+            returned.setSecond(stoi(firstSplit[2]));
+        }
+        
+    }else if(format == "hh:mm:ss am/pm"){
+        vector<string> firstSplit = Util::splitString(time, ":");
+        
+        if(firstSplit.size()==3){
+            if((pos = originalString.find("PM")) != std::string::npos || (pos = originalString.find("pm")) != std::string::npos)
+                returned.setHour(stoi(firstSplit[0])%12+12);
+            else
+                returned.setHour(stoi(firstSplit[0])%12);
+            
+            returned.setMinute(stoi(firstSplit[1]));
+            
+            vector<string> secondSplit = Util::splitString(firstSplit[2],"pm");
+            returned.setSecond(stoi(secondSplit[0]));
+        }
+        
+    }
+    
+    return returned;
+    
+}
+
 
 bool Time::operator==(Time &other){
     return this->second == other.second && this->minute == other.minute &&

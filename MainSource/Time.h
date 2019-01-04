@@ -18,6 +18,7 @@ class Time{
     public:
         Time();
         Time(const Time& other);
+        Time(unsigned short int hour, unsigned short int minute, unsigned short int second=0, unsigned short millisecond = 0);
         
         int getSecond();
         int getMinute();
@@ -40,7 +41,8 @@ class Time{
         void minusSecond(int value);
         void addMilliseconds(int value);
         void minusMilliseconds(int value);
-        
+    
+        static Time Parse(string time, string format);
         bool operator==(Time &other);
         bool operator!=(Time &other);
         bool operator<=(Time &other);

@@ -43,6 +43,26 @@ string Date::toString(string format){
     return "";
 }
 
+
+//This function transform a string representing a date in a object
+//of Date class. If your data format is not here, feel free to insert it
+Date Date::Parse(string date, string format){
+    
+    Date returned;
+    
+    if(format == "YYYY/MM/DD"){
+        vector<string> split = Util::splitString(date, "/");
+        
+        returned.setYear(stoi(split[0]));
+        returned.setMonth(stoi(split[1]));
+        returned.setDay(stoi(split[2]));
+        
+    }
+        
+    return returned;
+}
+
+
 Date & Date::operator=(const Date &other){
     this->day = other.day;
     this->year = other.year;

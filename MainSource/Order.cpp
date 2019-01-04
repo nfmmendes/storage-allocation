@@ -77,11 +77,48 @@ void Order::setTimeDeadline(Time &time){
 }
 
 vector<Order> Order::readOrdersData(string fileName){
-    vector<Order> input;
+    vector<Order> orders;
     ifstream file;
     
     file.open(fileName,ios::in);
     
+    int numOrders;
+    int numItems;
+    int productId;
+    double quantity;
+    Product item;
+    Client client;
+    string date, time;
+    file>>numOrders;
     
-    return input;
+    InputData input;
+    vector<pair<Product, quantity> > items;
+    vector<Product> products = input.getProducts();
+    vector<Clients> clients = input.getClients();
+    
+    map<long int,Product> productById;
+    map<long int,Client> clientById;
+    
+    for(int i=0; i<products.size(); i++)
+        productById[products[i].getID()] = products[i];
+    
+    
+    for(unsigned int i=0; i<numOrders; i++){
+        file>>numItems;
+        file>>clientId;
+        file>>date>>time;
+        
+        client = clientById[clientId];
+        
+        for(unsigned int j=0;j<numItems;j++){
+            file>>productId>>quantity;
+            product = productById[productId];
+            items.push_back(make_pair(product,quantity));
+        }
+        
+        orders.push_back(Order(items,Date::Parse(date, "YYYY/MM/DD"),time::Parse("HH:MM:SS"),client));
+    }
+    
+    
+    return orders;
 }
