@@ -15,7 +15,7 @@ class Shelf{
 
     private:
         long int Id;
-        vector<Cell> cells; 
+        vector<Cell> cells;         //TODO: Remeber to make this kind of relationship be consistent in both senses 
         pair<double,double> bottomLeftCoords;
         string blockName;
         int columns;

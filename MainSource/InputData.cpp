@@ -14,19 +14,6 @@ InputData::InputData(){
 }
 
 
-InputData::InputData(vector<Product> products, vector<Clients> clients, vector<Orders> orders,
-                     vector<Parameter>parameters,  Warehouse warehouse){
-    if(!alredyCreated){
-        alredyCreated = true;
-        setProducts(products);
-        setClients(clients);
-        setOrders(orders);
-        setWarehouse(warehouse);
-        setParameters(parameters);
-    }
-    
-}
-
 
 InputData::InputData(string  metadataFile){
     
@@ -35,10 +22,10 @@ InputData::InputData(string  metadataFile){
     string productsFileName;
     string clientsFileName;
     string ordersFileName;
+    string prohibitionsFileName;
     string parametersFileName;
     
-    //Data structures
-    
+    //Data structures    
     
     
     //READ THE INPUT
@@ -49,6 +36,7 @@ InputData::InputData(string  metadataFile){
         file>>warehouseDescriptionFileName;
         file>>productsFileName
         file>>ordersFileName;
+        file>>prohibitionsFileName;
         file>>parametersFileName;
         
         file.close();
@@ -57,10 +45,19 @@ InputData::InputData(string  metadataFile){
         warehouse = new Warehouse();
         warehouse->ReadWarehouseData(warehouseDescriptionFileName);
         
+        cout<<"Reading products data..\n"
+        products = Product::readProductsData(productsFileName);
+        
         cout<<"Reading order data...\n";
-        Order::readOrdersData(ordersFileName);
+        orders = Order::readOrdersData(ordersFileName);
+        
+        
+        cout<<"Reading allocation prohibitions...\n";
+        prohibitions = ProductAllocationProhitions::readAllProhibitionsData(prohibitionsFileName);
         
         cout<<"Reading parameters...\n";
+        
+        
         
     }else{
         cerr<<"The file could not be open!\n Verifiy if it exists or if the you passed the right path.";
@@ -69,10 +66,6 @@ InputData::InputData(string  metadataFile){
 }
 
 
-InputData::InputData(string productsFile, string clientsFile, string ordersFile, string warehouseFile){
-    
-    
-}
 
 void InputData::setProducts(vector<Product> products){
     InputData::products.clear();
@@ -82,7 +75,7 @@ void InputData::setProducts(vector<Product> products){
     
 }
 
-void InputData::setClients(vector<Clients> clients){
+void InputData::setClients(vector<Client> clients){
     InputData::clients.clear();
     
     for(unsigned int i=0; i<clients.size(); i++)
@@ -118,7 +111,7 @@ vector<Product> InputData::getProducts(){return products;}
 
 vector<Clients> InputData::getClients(){ return clients;}
 
-vector<Orders> InputData::getOrders() { return orders;}
+vector<Orders> &InputData::getOrders() { return orders;}
 
 vector<Parameter> getParameters() { return parameters;}
 

@@ -17,7 +17,7 @@ namespace QuickTSP{
             public:
                 TSP();
             
-                TSP(TSP &other);
+                TSP(const TSP &other);
             
                 TSP(HananGraph &graph,vector<Order> &orders);
                 

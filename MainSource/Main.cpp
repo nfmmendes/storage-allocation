@@ -11,6 +11,7 @@
 #include "Product.h"
 #include "Order.h"
 #include "TSP.h"
+#include "InputData.h"
 using namespace std;
 using namespace QuickTSP;
 

@@ -18,6 +18,7 @@
 #include "Order.h"
 #include "Parameter.h"
 #include "Warehouse.h"
+#include "ProductAllocationProhibition.h"
 using namespace std;
 
 //=======================================================================================
@@ -27,28 +28,25 @@ class InputData{
     
     private:
         static vector<Product> products;
-        static vector<Clients> clients;
-        static vector<Orders> orders;
+        static vector<Client> clients;
+        static vector<Order> orders;
         static vector<Parameter> parameters;
+        static vector<ProductAllocationProhibitions> prohibitions;
         static Warehouse warehouse;
         bool alreadyCreated; 
     
     public:
         InputData();
-        InputData(vector<Product> products, vector<Clients> clients, vector<Orders> orders,
-                  vector<Parameter> paramters, Warehouse warehouse);
-    
         InputData(string  metadataFile);
-        InputData(string productsFile, string clientsFile, string ordersFile, string parametersFile, string warehouseFile);
     
         void setProducts(vector<Product> products);
-        void setClients(vector<Clients> clients);
+        void setClients(vector<Client> clients);
         void setOrders(vector<Order> orders);
         void setWarehouse(Warehouse warehouse);
     
         vector<Product> getProducts();
-        vector<Clients> getClients();
-        vector<Orders> getOrders();
+        vector<Client> getClients();
+        vector<Order> &getOrders();
         vector<Parameter> getParameters();
         Warehouse & getWarehouse();
     

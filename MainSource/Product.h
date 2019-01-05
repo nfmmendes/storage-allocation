@@ -23,7 +23,8 @@ class Product{
             this->type = other.type;
         }
         
-        Product(string name, string type){
+        Product(long int ID, string name, string type){
+            this->ID = ID;
             this->name = name;
             this->type = type;
         }
@@ -36,6 +37,7 @@ class Product{
         void setName(string name){ this->name = name;}
         void setType(string type){ this->type = type;}
     
+        static vector<Product> readProductsData(string fileName);
     
 };
 

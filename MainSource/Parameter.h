@@ -20,21 +20,23 @@ class Parameter{
     public:
         Parameter();
         Parameter(Parameter & other);
-        Parametrs(string name, string value);
-        Parametrs(string name, int value);
-        Parametrs(string name, double value);
-        Parametrs(string name, bool value);
+        Parameter(string name, string value);
+        Parameter(string name, int value);
+        Parameter(string name, double value);
+        Parameter(string name, bool value);
     
         void setParameterValue(string value);
         void setParameterValue(double value);
         void setParameterValue(int value);
         void setParameterValue(bool value);
+        void readParametersData();
     
         ParameterType getParameterType();
         string getParameterValue();
-        int setParameterValue();
-        double setParameterValue();
-        bool setParameterValue();
-}
+        bool getBoolParameterValue();
+        int getIntParameterValue();
+        double getDoubleParameterValue();
+        string getStringParameterValue();
+};
 
 #endif /* Parameter_hp */

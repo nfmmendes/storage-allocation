@@ -13,7 +13,7 @@ TSP::TSP() {
     
 }
 
-TSP::TSP(TSP &other){
+TSP::TSP(const TSP &other){
     this->graph = other.graph;
     
     for(unsigned int i=0; i< other.solution.size();i++)

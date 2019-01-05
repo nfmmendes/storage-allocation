@@ -1,3 +1,6 @@
+#ifndef BLOCK_H
+#define BLOCK_H
+
 #include<iostream>
 #include<cmath>
 #include<ctime>
@@ -59,3 +62,5 @@ class Block{
         //TODO: Improve this
         bool operator==(const Block &other);
 };
+
+#endif

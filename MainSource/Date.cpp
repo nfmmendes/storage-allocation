@@ -1,7 +1,9 @@
 #include<iostream>
 #include<string>
 #include<cstdlib>
+#include<vector>
 #include "Date.h"
+#include "Util.h"
 using namespace std;
 
 Date::Date(){ this->day = 1; this->month = 1; this->year = 1990; }

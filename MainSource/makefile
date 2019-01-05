@@ -23,8 +23,8 @@ QuickTSP.o : PathUnity.h TSP.h State.h Layer.h
 	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp State.cpp Layer.cpp
 
 #DAO CLASSES (DIRECTLY RELATED WITH THE DESCRIPTION OF DATA)
-WarehousePack.o: Cell.h Shelf.h Block.h Warehouse.h BlockExit.h Corridor.h Curve.h
-	$(CC) $(COMPILE_FLAGS) -c Cell.cpp Shelf.cpp Block.cpp Warehouse.cpp BlockExit.cpp Corridor.h Curve.cpp
+WarehousePack.o: Cell.h Shelf.h Block.h Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h
+	$(CC) $(COMPILE_FLAGS) -c Cell.cpp Shelf.cpp Block.cpp Warehouse.cpp BlockExit.cpp Corridor.h Curve.cpp Client.cpp Product.cpp
 
 
 GraphPack.o: Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h

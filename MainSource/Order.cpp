@@ -12,6 +12,7 @@
 #include "Time.h"
 #include "Date.h"
 #include "Order.h"
+#include "InputData.h"
 using namespace std;
 
 
@@ -62,7 +63,10 @@ void Order::setOrders(vector<pair<Product, double>> orders){
 }
 
 
-vector<pair<Product, double> > Order::getOrders(){
+/**
+ *  Return all the items of an order with their respective quantities
+ */
+vector<pair<Product, double> > & Order::getOrderItems(){
     return this->orderItens;
 }
 
@@ -85,38 +89,42 @@ vector<Order> Order::readOrdersData(string fileName){
     int numOrders;
     int numItems;
     int productId;
+    int clientId;
     double quantity;
-    Product item;
+    Product product;
     Client client;
     string date, time;
     file>>numOrders;
     
     InputData input;
-    vector<pair<Product, quantity> > items;
+    vector<pair<Product, double> > items;
     vector<Product> products = input.getProducts();
-    vector<Clients> clients = input.getClients();
+    vector<Client> clients = input.getClients();
     
     map<long int,Product> productById;
     map<long int,Client> clientById;
     
-    for(int i=0; i<products.size(); i++)
+    for(int i=0; i<(int)products.size(); i++)
         productById[products[i].getID()] = products[i];
     
+    for(int i=0; i<(int)clients.size(); i++)
+        clientById[clients[i].getId()] = clients[i];
     
-    for(unsigned int i=0; i<numOrders; i++){
+    
+    for(int i=0; i<numOrders; i++){
         file>>numItems;
         file>>clientId;
         file>>date>>time;
         
         client = clientById[clientId];
         
-        for(unsigned int j=0;j<numItems;j++){
+        for(int j=0;j<numItems;j++){
             file>>productId>>quantity;
             product = productById[productId];
             items.push_back(make_pair(product,quantity));
         }
         
-        orders.push_back(Order(items,Date::Parse(date, "YYYY/MM/DD"),time::Parse("HH:MM:SS"),client));
+        orders.push_back(Order(items,Date::Parse(date, "YYYY/MM/DD"),Time::Parse(time,"HH:MM:SS"),client));
     }
     
     

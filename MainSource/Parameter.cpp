@@ -14,20 +14,20 @@ Parameter::Parameter(Parameter & other){
     this->type = other.type;
 }
 
-Parameter::Parametrs(string name, string value){
+Parameter::Parameter(string name, string value){
     this->name = name;
     this->stringValue = value;
     type=ParameterType::_string_;
 }
 
-Parameter::Parametrs(string name, int value){
+Parameter::Parameter(string name, int value){
     
     this->name = name;
     this->intValue = value;
     type=ParameterType::_int_;
 }
 
-Parameter::Parametrs(string name, double value){
+Parameter::Parameter(string name, double value){
     
     this->name = name;
     this->doubleValue = value;
@@ -50,7 +50,7 @@ void Parameter::setParameterValue(bool value){      booelanValue = value;   type
 
 string getName
 ParameterType Parameter::getParameterType() { return type;}
-string Parameter::getParameterValue() { return stringValue;}
-int Parameter::setParameterValue()  { return intValue; }
-double Parameter::setParameterValue() { return doubleValue;}
-bool Parameter::setParameterValue() { return booleanValue;}
+string Parameter::getStringParameterValue() { return stringValue;}
+int Parameter::getIntParameterValue()  { return intValue; }
+double Parameter::getDoubleParameterValue() { return doubleValue;}
+bool Parameter::getBoolParameterValue() { return booleanValue;}
