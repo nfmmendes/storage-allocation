@@ -35,7 +35,7 @@ class Shelf{
         double getBottomLeftCoordX();
         double getBottomLeftCoordY();
         pair<double,double> getBottomLeftCoords();
-        vector<Cell> getCell();
+        vector<Cell> getCells();
         string getBlockName();
         int getNumColumns();
         int getNumLines();

@@ -5,13 +5,13 @@ BIN_NAME = StorageAllocation
 CC = g++
 
 #FLAGS TO THE COMPILER
-COMPILE_FLAGS = -std=c++11 -Wall -Wextra -g
+COMPILE_FLAGS = -O3 -std=c++11 -Wall -Wextra -g
 
 all: run.exe GeneralClasses.o QuickTSP.o WarehousePack.o GraphPack.o 
 
 
 run.exe: GeneralClasses.o QuickTSP.o WarehousePack.o GraphPack.o main.cpp
-	$(CC) $(COMPILE_FLAGS) -c main.cpp warehouse.cpp Order.cpp
+	$(CC) $(COMPILE_FLAGS) -c main.cpp InputData.cpp
 
 
 #BASIC CLASSES (CAN BE USED IN ANY SOFTWARE. IT'S NOT ALGORITHM RELATED
@@ -19,12 +19,12 @@ GeneralClasses.o: Point.h Date.h Time.h
 	$(CC) $(COMPILE_FLAGS)  -c Point.cpp Date.cpp Time.cpp
 
 #Classes to proceed the TSP algorithm
-QuickTSP.o : PathUnity.h TSP.h State.h Layer.h
-	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp State.cpp Layer.cpp
+QuickTSP.o : PathUnity.h TSP.h State.h WarehouseToGraphConverter.h Layer.h Parameter.h
+	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp State.cpp WarehouseToGraphConverter.cpp Layer.cpp Parameter.cpp
 
 #DAO CLASSES (DIRECTLY RELATED WITH THE DESCRIPTION OF DATA)
-WarehousePack.o: Cell.h Shelf.h Block.h Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h
-	$(CC) $(COMPILE_FLAGS) -c Cell.cpp Shelf.cpp Block.cpp Warehouse.cpp BlockExit.cpp Corridor.h Curve.cpp Client.cpp Product.cpp
+WarehousePack.o: Cell.h Shelf.h Block.h Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h Order.h
+	$(CC) $(COMPILE_FLAGS) -c Cell.cpp Shelf.cpp Block.cpp Warehouse.cpp BlockExit.cpp Corridor.h Curve.cpp Client.cpp Product.cpp Order.cpp
 
 
 GraphPack.o: Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h

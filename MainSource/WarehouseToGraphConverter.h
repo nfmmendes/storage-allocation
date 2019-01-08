@@ -11,14 +11,16 @@ namespace QuickTSP{
        
         private:
             Warehouse warehouse; 
-            Graph graph; 
+            Graph graph;
+            map<Cell, Vertex> vertexes;
+            void initiliazeCellFirstLevel(map<string, Vertex> &, vector<Vertex> &,
+                                          map<string, pair<int,int> > &, Vertex , Cell);
         
         public:
             WarehouseToGraphConverter();
-            WarehouseToGraphConverter(WarehouseToGraphConverter & other){
-            
-            }
-            void getResultingGraph(Graph &graph); 
+            WarehouseToGraphConverter(WarehouseToGraphConverter & other);
+            WarehouseToGraphConverter(Warehouse &warehouse);
+            void generateGraph(); 
         
     }; 
 }

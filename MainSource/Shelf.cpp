@@ -45,7 +45,7 @@ long int Shelf::getId(){ return Id;}
 double Shelf::getBottomLeftCoordX() { return bottomLeftCoords.first; }
 double Shelf::getBottomLeftCoordY() { return bottomLeftCoords.second; }
 pair<double,double> Shelf::getBottomLeftCoords() { return bottomLeftCoords; }
-vector<Cell> Shelf::getCell(){ return cells;}
+vector<Cell> Shelf::getCells(){ return cells;}
 string Shelf::getBlockName(){ return blockName; }
 int Shelf::getNumColumns() {return columns;}
 int Shelf::getNumLines(){ return lines;}

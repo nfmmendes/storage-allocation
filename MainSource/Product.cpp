@@ -4,6 +4,7 @@
 #include<vector>
 #include <stdio.h>
 #include "Product.h"
+using namespace std;
 
 
 

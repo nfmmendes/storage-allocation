@@ -4,13 +4,12 @@
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
+#include "Parameter.h"
 #include "InputData.h"
 
 
-InputData::alredyCreated = false;
-
 InputData::InputData(){
-    alredyCreated = true;
+    alreadyCreated = true;
 }
 
 
@@ -34,7 +33,7 @@ InputData::InputData(string  metadataFile){
     if(file.is_open()){
         cout<<"Starting the input reading...\n";
         file>>warehouseDescriptionFileName;
-        file>>productsFileName
+        file>>productsFileName;
         file>>ordersFileName;
         file>>prohibitionsFileName;
         file>>parametersFileName;
@@ -42,10 +41,9 @@ InputData::InputData(string  metadataFile){
         file.close();
         
         cout<<"Reading warehouse data...\n";
-        warehouse = new Warehouse();
-        warehouse->ReadWarehouseData(warehouseDescriptionFileName);
+        warehouse.ReadWarehouseData(warehouseDescriptionFileName);
         
-        cout<<"Reading products data..\n"
+        cout<<"Reading products data..\n";
         products = Product::readProductsData(productsFileName);
         
         cout<<"Reading order data...\n";
@@ -53,15 +51,14 @@ InputData::InputData(string  metadataFile){
         
         
         cout<<"Reading allocation prohibitions...\n";
-        prohibitions = ProductAllocationProhitions::readAllProhibitionsData(prohibitionsFileName);
+        prohibitions = ProductAllocationProhibitions::readAllProhibitionsData(prohibitionsFileName);
         
         cout<<"Reading parameters...\n";
-        
+        parameters = Parameter::readParametersData(parametersFileName);
         
         
     }else{
         cerr<<"The file could not be open!\n Verifiy if it exists or if the you passed the right path.";
-        return 1;
     }
 }
 
@@ -98,7 +95,7 @@ void InputData::setParameters(vector<Parameter> parameters){
     InputData::parameters.clear();
     
     for(unsigned int i=0; i< parameters.size(); i++)
-        InputData::orders.push_back(Parameter(parameters[i]));
+        InputData::parameters.push_back(Parameter(parameters[i]));
     
 }
 
@@ -109,10 +106,10 @@ void InputData::setWarehouse(Warehouse warehouse){
 
 vector<Product> InputData::getProducts(){return products;}
 
-vector<Clients> InputData::getClients(){ return clients;}
+vector<Client> InputData::getClients(){ return clients;}
 
-vector<Orders> &InputData::getOrders() { return orders;}
+vector<Order> &InputData::getOrders() { return orders;}
 
-vector<Parameter> getParameters() { return parameters;}
+vector<Parameter> InputData::getParameters() { return parameters;}
 
 Warehouse & InputData::getWarehouse() { return warehouse; }

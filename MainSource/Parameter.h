@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <vector>
+using namespace std;
 
 enum ParameterType { _string_, _double_, _int_, _bool_};
 
@@ -19,7 +21,7 @@ class Parameter{
     
     public:
         Parameter();
-        Parameter(Parameter & other);
+        Parameter(const Parameter & other);
         Parameter(string name, string value);
         Parameter(string name, int value);
         Parameter(string name, double value);
@@ -29,10 +31,11 @@ class Parameter{
         void setParameterValue(double value);
         void setParameterValue(int value);
         void setParameterValue(bool value);
-        void readParametersData();
+        void setName(string name);
+        static vector<Parameter> readParametersData(string fileName);
     
         ParameterType getParameterType();
-        string getParameterValue();
+        string getName();
         bool getBoolParameterValue();
         int getIntParameterValue();
         double getDoubleParameterValue();

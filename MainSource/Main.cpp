@@ -11,6 +11,7 @@
 #include "Product.h"
 #include "Order.h"
 #include "TSP.h"
+#include "VND.h"
 #include "InputData.h"
 using namespace std;
 using namespace QuickTSP;
@@ -22,27 +23,11 @@ int main(int argc, char **argv){
         string indexFileName = argv[1];
         InputData input(indexFileName);
 
-        
-        TSP *algorithm;
-        
-        //START THE DATA PROCESS
-        cout<<"Start data processing...\n";
-        HananGraph hanan;
-        algorithm = new TSP(hanan, input.getOrders());
+        cout<<"Converting algorithm to graph\n";
+        TSP *router;
+        VND *vnd;
         
         
-        
-        //START THE SOLUTION PROCEDURE
-        cout<<"Calling the solver...\n";
-        
-        
-        
-        //START THE
-        cout<<"Processing the solution...\n";
-        
-        
-        
-        cout<<"Ending execution.";
     }else
         cerr<<"Too few  arguments. Inform the index file name.";
     

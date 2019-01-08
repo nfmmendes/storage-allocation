@@ -33,7 +33,7 @@ class InputData{
         static vector<Parameter> parameters;
         static vector<ProductAllocationProhibitions> prohibitions;
         static Warehouse warehouse;
-        bool alreadyCreated; 
+        bool alreadyCreated = false; 
     
     public:
         InputData();
@@ -42,6 +42,7 @@ class InputData{
         void setProducts(vector<Product> products);
         void setClients(vector<Client> clients);
         void setOrders(vector<Order> orders);
+        void setParameters(vector<Parameter> parameters);
         void setWarehouse(Warehouse warehouse);
     
         vector<Product> getProducts();

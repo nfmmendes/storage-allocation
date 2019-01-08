@@ -57,8 +57,6 @@ class Block{
         /// Removes the exit with the index i in the block list of exits
         void removeExit(int index);
     
-    
-    
         //TODO: Improve this
         bool operator==(const Block &other);
 };
