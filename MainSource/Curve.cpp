@@ -33,8 +33,16 @@ void Curve::setStartingPoint(Point &point){ this->startingPoint = point; }
 void Curve::setEndingPoint(Point &point){ this->endingPoint = point; }
 void Curve::setId(long int id){ this->Id = id;}
 
-long int Curve::getStartCorridor(){ return startingCorridorId; }
-long int Curve::getEndCorridor(){ return endingCorridorId; }
-Point Curve::getStartingPoint(){ return startingPoint;}
-Point Curve::getEndingPoint(){ return endingPoint; }
-long int Curve::getId(){ return Id; }
+long int Curve::getStartCorridor() const { return startingCorridorId; }
+long int Curve::getEndCorridor() const { return endingCorridorId; }
+Point Curve::getStartingPoint() const { return startingPoint;}
+Point Curve::getEndingPoint() const { return endingPoint; }
+long int Curve::getId()const{ return Id; }
+
+Curve & Curve::operator=(const Curve &other){
+    this->Id = other.Id;
+    this->startingCorridorId = other.startingCorridorId;
+    this->endingCorridorId = other.endingCorridorId;
+    this->startingPoint = other.startingPoint;
+    this->endingPoint = other.endingPoint;
+}

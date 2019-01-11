@@ -46,6 +46,7 @@ namespace QuickTSP{
         
             Arc& operator=(const Arc & other);
             bool operator==(const Arc &other)const;
+            bool operator<(const Arc &other) const;
             
     };
 }

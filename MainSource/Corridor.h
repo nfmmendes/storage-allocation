@@ -32,7 +32,8 @@ class Direction{
             else
                 return Direction::VERTICAL;
         }
-        
+    
+        bool operator==(const Direction &other){  return this->code == other.code;}
 };
 
 ///Static class members initialization
@@ -63,7 +64,7 @@ class Sense{
         static Sense RIGHT_TO_LEFT;
         static Sense BOTH;
     
-        Sense &operator=(Sense &other){ this->code = other.code;  return *this;} 
+        Sense &operator=(const Sense &other){ this->code = other.code;  return *this;} 
         string getSenseCode() { return code;}
     
         static Sense parseSense(string &senseString){
@@ -129,14 +130,23 @@ class Corridor{
         void setBeginCoords(pair<double,double> value){ begin = value; }
         void setLength(double value){ length = value; }
         
-        Direction getDirection(){ return direction; }
+        Direction getDirection() const{ return direction; }
         Sense getSense() { return sense; } 
         long int getId() { return Id; }
         string getBlockId() {return blockName; }
-        pair<double, double> getBeginCoords() { return begin; }
-        double getLenght() { return length; } 
-        
-        
+        pair<double, double> getBeginCoords() const { return begin; }
+        double getLength()const { return length; } 
+        Corridor & operator=(const Corridor &other){
+            this->Id = other.Id;
+            this->blockName = other.blockName;
+            this->direction = other.direction;
+            this->sense = other.sense;
+            this->begin = other.begin;
+            this->length = other.length;
+            
+            return *this;
+        }
+    
 };
 
 

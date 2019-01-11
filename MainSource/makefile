@@ -14,6 +14,7 @@ run.exe: GeneralClasses.o QuickTSP.o WarehousePack.o GraphPack.o main.cpp
 	$(CC) $(COMPILE_FLAGS) -c main.cpp InputData.cpp
 
 
+
 #BASIC CLASSES (CAN BE USED IN ANY SOFTWARE. IT'S NOT ALGORITHM RELATED
 GeneralClasses.o: Point.h Date.h Time.h
 	$(CC) $(COMPILE_FLAGS)  -c Point.cpp Date.cpp Time.cpp

@@ -26,7 +26,7 @@ class Shelf{
         
     public:
         Shelf();
-    Shelf(const Shelf &other);
+        Shelf(const Shelf &other);
         
         Shelf(long int Id,vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName,
               int columns, int lines, double cellLength, double cellWidth);
@@ -34,11 +34,11 @@ class Shelf{
         long int getId();
         double getBottomLeftCoordX();
         double getBottomLeftCoordY();
-        pair<double,double> getBottomLeftCoords();
+        pair<double,double> getBottomLeftCoords()const;
         vector<Cell> getCells();
         string getBlockName();
-        int getNumColumns();
-        int getNumLines();
+        int getNumColumns() const;
+        int getNumLines() const;
         double getCellLength();
         double getCellWidth();
         

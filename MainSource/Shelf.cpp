@@ -44,11 +44,11 @@ Shelf::Shelf(long int Id,vector<Cell> cells, pair<double, double> bottomLeftCoor
 long int Shelf::getId(){ return Id;}
 double Shelf::getBottomLeftCoordX() { return bottomLeftCoords.first; }
 double Shelf::getBottomLeftCoordY() { return bottomLeftCoords.second; }
-pair<double,double> Shelf::getBottomLeftCoords() { return bottomLeftCoords; }
+pair<double,double> Shelf::getBottomLeftCoords() const { return bottomLeftCoords; }
 vector<Cell> Shelf::getCells(){ return cells;}
 string Shelf::getBlockName(){ return blockName; }
-int Shelf::getNumColumns() {return columns;}
-int Shelf::getNumLines(){ return lines;}
+int Shelf::getNumColumns() const{return columns;}
+int Shelf::getNumLines() const { return lines;}
 double Shelf::getCellLength() { return cellLength;}
 double Shelf::getCellWidth() { return cellWidth;}
 

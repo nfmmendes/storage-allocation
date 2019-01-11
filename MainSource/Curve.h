@@ -36,12 +36,12 @@ class Curve{
         void setEndingPoint(Point &point);
         void setId(long int id);
     
-        long int getStartCorridor();
-        long int getEndCorridor();
-        Point getStartingPoint();
-        Point getEndingPoint();
-        long int getId();
-    
+        long int getStartCorridor() const;
+        long int getEndCorridor() const;
+        Point getStartingPoint() const ;
+        Point getEndingPoint() const ;
+        long int getId() const;
+        Curve &operator=(const Curve &other);
 };
 
 #endif

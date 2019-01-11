@@ -1,5 +1,6 @@
 #include<iostream>
 #include<string>
+#include<cmath>
 #include "Vertex.h"
 using namespace std;
 using namespace QuickTSP;
@@ -28,7 +29,7 @@ string Vertex::getType(){ return this->type; }
 double Vertex::getValue() { return this->value; }
 
 bool Vertex::operator==(const Vertex & other)const {
-    return label == other.label && type == other.type && value == other.value;
+    return label == other.label && type == other.type && fabs(value - other.value) <= 0.0000000000001;
 }
 
 bool Vertex::operator!=(const Vertex & other){

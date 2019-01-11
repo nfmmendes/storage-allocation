@@ -63,3 +63,10 @@ bool Arc::operator==(const Arc &other)const {
     return this->label == other.label && this->value == other.value &&
             this->beginVertex == other.beginVertex && this->endVertex  == other.endVertex;
 }
+
+bool Arc::operator<(const Arc &other)const{
+    if(this->label != other.label)
+        return this->label < other.label;
+    else
+        return this->value < other.value;
+}
