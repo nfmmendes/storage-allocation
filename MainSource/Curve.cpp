@@ -45,4 +45,6 @@ Curve & Curve::operator=(const Curve &other){
     this->endingCorridorId = other.endingCorridorId;
     this->startingPoint = other.startingPoint;
     this->endingPoint = other.endingPoint;
+    
+    return *this;
 }

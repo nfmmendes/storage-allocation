@@ -23,6 +23,13 @@ namespace QuickTSP{
             vector<Corridor> getAdjacentCorridors(const vector<Corridor> & corridor, Shelf shelf);
             bool doCorridorTranverse(const Corridor &corridor,const Shelf &shelf);
             void splitCorridorByCurves(const Curve &, map<long int, vector<Curve> > &,map<long int, vector<Point> >&);
+            void createArcsOnCorridors(const Corridor , map<long int, vector<Point>>& ,map<const string,Vertex>& , map<Point, Vertex> &, set<Arc> &);
+        
+            void connectCorridorsByCurves(vector<Curve> curves, map<Point,Vertex> & vertexByPoint, set<Arc> &arcs);
+            void connectShelfToCorridor(const Shelf ,const vector<Corridor>& , int , int , map<long int,vector<Point> > & ,
+                                        map<const string, Vertex> &,map<Point, Vertex> , set<Arc>  );
+        
+        void connectCellLevels(Cell , vector<Vertex> &, vector<vector<string>> &,map<const string, Vertex> & , set<Arc> &);
         
         public:
             WarehouseToGraphConverter();

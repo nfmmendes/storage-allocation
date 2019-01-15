@@ -6,6 +6,7 @@
 #include<algorithm>
 #include<utility>
 #include<cstdlib>
+#include "Point.h"
 using namespace std;
 
 ///Class to define the direction of a corridor in a warehouse
@@ -82,6 +83,10 @@ class Sense{
                 return Sense::UP_DOWN;
         }
     
+        bool operator==(const Sense & other){
+            return this->code == other.code;
+        }
+    
 };
 
 ///Static class members iniatilization
@@ -131,11 +136,26 @@ class Corridor{
         void setLength(double value){ length = value; }
         
         Direction getDirection() const{ return direction; }
-        Sense getSense() { return sense; } 
-        long int getId() { return Id; }
+        Sense getSense()const  { return sense; } 
+        long int getId() const { return Id; }
         string getBlockId() {return blockName; }
         pair<double, double> getBeginCoords() const { return begin; }
-        double getLength()const { return length; } 
+        double getLength()const { return length; }
+    
+        void orderCorridorPoints(vector<Point> & points)const{
+            
+            if(this->getDirection() ==  Direction::VERTICAL){
+                sort(points.begin(), points.end(), Point::isMinorY);
+                if(this->getSense() == Sense::RIGHT_TO_LEFT)
+                    reverse(points.begin(), points.end());
+                
+            }else if(this->getDirection() == Direction::HORIZONTAL){
+                sort(points.begin(), points.end(), Point::isMinorX);
+                if(this->getSense() == Sense::UP_DOWN)
+                    reverse(points.begin(), points.end());
+            }
+        }
+    
         Corridor & operator=(const Corridor &other){
             this->Id = other.Id;
             this->blockName = other.blockName;

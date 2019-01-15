@@ -63,7 +63,7 @@ double Parameter::getDoubleParameterValue() { return doubleValue;}
 bool Parameter::getBoolParameterValue() { return booleanValue;}
 
 
-static vector<Parameter> readParametersData(string fileName){
+vector<Parameter> Parameter::readParametersData(string fileName){
     
     vector<Parameter> returned;
     int numParameters;
