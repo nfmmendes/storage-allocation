@@ -19,7 +19,7 @@ class Shelf{
         pair<double,double> bottomLeftCoords;
         string blockName;
         int columns;
-        int lines; 
+        int rows; 
         double cellLength;
         double cellWidth; 
         
@@ -29,18 +29,18 @@ class Shelf{
         Shelf(const Shelf &other);
         
         Shelf(long int Id,vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName,
-              int columns, int lines, double cellLength, double cellWidth);
+              int columns, int rows, double cellLength, double cellWidth);
     
         long int getId();
-        double getBottomLeftCoordX();
-        double getBottomLeftCoordY();
+        double getBottomLeftCoordX() const;
+        double getBottomLeftCoordY() const;
         pair<double,double> getBottomLeftCoords()const;
         vector<Cell> getCells();
         string getBlockName();
         int getNumColumns() const;
-        int getNumLines() const;
-        double getCellLength();
-        double getCellWidth();
+        int getNumRows() const;
+        double getCellLength() const;
+        double getCellWidth() const;
         
         void setBottomLeftCoordX(double value);
         void setBottomLeftCoordY(double value);
@@ -48,7 +48,7 @@ class Shelf{
         void setCells(vector<Cell> &cells);
         void setBlockName(string name);
         void setNumColumns(int value);
-        void setNumLines(int value);
+        void setNumRows(int value);
         void setCellLength(double value);
         void setCellWidth(double value);
 };

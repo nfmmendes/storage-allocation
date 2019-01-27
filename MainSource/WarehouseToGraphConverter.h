@@ -27,9 +27,9 @@ namespace QuickTSP{
         
             void connectCorridorsByCurves(vector<Curve> curves, map<Point,Vertex> & vertexByPoint, set<Arc> &arcs);
             void connectShelfToCorridor(const Shelf ,const vector<Corridor>& , int , int , map<long int,vector<Point> > & ,
-                                        map<const string, Vertex> &,map<Point, Vertex> , set<Arc>  );
+                                        map<const string, Vertex> &,map<Point, Vertex> , set<Arc> & );
         
-        void connectCellLevels(Cell , vector<Vertex> &, vector<vector<string>> &,map<const string, Vertex> & , set<Arc> &);
+            void connectCellLevels(Cell , vector<Vertex> &, vector<vector<string>> &,map<const string, Vertex> & , set<Arc> &);
         
         public:
             WarehouseToGraphConverter();

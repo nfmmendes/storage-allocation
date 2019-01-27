@@ -37,35 +37,37 @@ WarehouseToGraphConverter::WarehouseToGraphConverter(Warehouse &warehouse){
 void WarehouseToGraphConverter::generateGraph(){
     
     map<const string, Vertex> vertexByCode;
-    set<Arc> arcs;
+    set<Arc> arcs;                                      //Store the arcs of the resulting graph
     vector<Vertex> firstLevelVertexes;                  //Store the vertexes corresponding to cell first levels. We need
                                                         // it because this vertexes will be connected after in the graph
-    map<long int, vector<Curve> > curvesByCorridor;
-    map<long int, vector<Point> > pointsByCorridor;
+    map<long int, vector<Curve> > curvesByCorridor;     //Stores all curves from or to a corridor
+    map<long int, vector<Point> > pointsByCorridor;     //Stores all points where a curve starts or finishes, divided by corridor
     
-    vector<Block> blocks = this->warehouse.getBlocks();
+    vector<Block> blocks = this->warehouse.getBlocks(); //Get the list of warehouse blocks
     map<Point, Vertex> vertexByPoint;
     
+    //This loop creates a subgraph of the final graph to each block. These blocks will be connected by block exits in
+    //second loop
     for(int i= 0; i<(int) blocks.size(); i++){
         vector<Shelf> shelves = blocks[i].getShelves();
         vector<Corridor> corridors = blocks[i].getCorridors();
         vector<Curve> curves = blocks[i].getCurves();
         
-        //Create a subgraph for each shelf in the blocks. These shelves will be connected through the corridors in a
+        //Create a subgraph for each shelf in the blocks. These subgraphs will be connected through the corridors in a
         //second part of the algorithm
         for(int j = 0; j < (int) shelves.size(); j++){
             
             vector<Cell> cells = shelves[j].getCells();
             vector<vector<string> > cellPositions;      //It stores each vertex in its line and row at cell
-                                                        // respective shelf
+                                                        //respective shelf
             vector<Corridor> adjacentCorridors = getAdjacentCorridors(corridors, shelves[j]);
             
             double cellWidth = shelves[j].getCellWidth();
             double cellLenght = shelves[j].getCellLength();
-            int numRows = shelves[j].getNumLines();
+            int numRows = shelves[j].getNumRows();
             int numColumns = shelves[j].getNumColumns();
             
-            cellPositions.resize(shelves[j].getNumLines()+1);
+            cellPositions.resize(shelves[j].getNumRows()+1);
             for(int k=0; k < (int) numRows+1; k++)
                 cellPositions[k].resize(numColumns+1);
             
@@ -82,13 +84,11 @@ void WarehouseToGraphConverter::generateGraph(){
                     //In this case, we define that the cell is accessible by the closest corridor
                     // (in terms of number of cells)
                     if(numRows > 2 && numColumns > 2)
-                        connectInternalNode(vertex, vertexByCode, arcs, numRows, numColumns, k, l,cellWidth, cellLenght, cellPositions);
-                    
-                    if(k==1 || k==numRows || l == 1 || l == numColumns)
-                        connectShelfToCorridor(shelves[j], adjacentCorridors, k, l, pointsByCorridor,vertexByCode,vertexByPoint, arcs);
-                    
+                        connectInternalNode(vertex, vertexByCode, arcs, numRows, numColumns,cellWidth, cellLenght, cellPositions);
                 }
             }
+            
+            connectShelfToCorridor(shelves[j], adjacentCorridors, numRows, numColumns, pointsByCorridor,vertexByCode,vertexByPoint, arcs);
         }
         
         //This will allow to create arcs in the interior of corridors
@@ -104,7 +104,8 @@ void WarehouseToGraphConverter::generateGraph(){
 }
 
 /**
- *
+ * This functions connects the levels inside a cell in order to have a path between any pair of divisions of a cell.
+ * For now it is supposed that all cells divisions are on vertical
  */
 void WarehouseToGraphConverter::connectCellLevels(Cell cell, vector<Vertex> &firstLevelVertexes,vector<vector<string>> &cellPositions,
                                                   map<const string, Vertex> & vertexByCode, set<Arc> &arcs){
@@ -123,6 +124,10 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell, vector<Vertex> &fir
         for(int l=1; l< (int) numLevels; l++){
             Vertex vertex = * (new Vertex( cell.getCode()+"L"+to_string(l) , "UniqueLevelCell"));
             vertexByCode[vertex.getLabel()] = vertex;
+            
+            //We suppose that the pickers came from the lower level, take a product on the first or upper leves
+            // and then come back (or stay) into the first level before go away. In this sense, all the inter-level
+            // connections should be done in both senses (up-down and bottom-up)
             Arc oneSense( "arc_"+firstLevel.getLabel()+"_"+vertex.getLabel(), 1.5 ,firstLevel,vertex );
             Arc otherSense( "arc_"+vertex.getLabel()+"_"+firstLevel.getLabel(), 1.5 ,vertex,firstLevel );
             
@@ -137,10 +142,106 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell, vector<Vertex> &fir
 /**
  *
  */
-void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const vector<Corridor>& adjacentCorridor, int line,
-                                                       int row,map<long int, vector<Point> > & pointsByCorridor,
+void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const vector<Corridor>& adjacentCorridor, int numRows,
+                                                       int numColumns,map<long int, vector<Point> > & pointsByCorridor,
                                                        map<const string, Vertex> &vertexByCorridor,
-                                                       map<Point, Vertex> vertexByPoint,set<Arc> arcs ){
+                                                       map<Point, Vertex> vertexByPoint,set<Arc> &arcs ){
+    int numRows = shelf.getNumRows();
+    int numColumns = shelf.getNumColumns();
+    double cellWidth = shelf.getCellWidth();
+    double cellLength = shelf.getCellLength();
+    
+    
+    Corridor *corridorUp;
+    Corridor *corridorDown;
+    Corridor *corridorLeft;
+    Corridor *corridorRight;
+    
+    //Search and identify the adjacent corridors
+    for(int i=0;i<adjacentCorridor.size();i++)
+        if(adjacentCorridor[i].getDirection() == Direction::VERTICAL &&
+           adjacentCorridor[i].getBeginCoords().first < shelf.getBottomLeftCoordX())
+                corridorLeft =  new Corridor(adjacentCorridor[i]);
+    
+    for(int i=0;i<adjacentCorridor.size();i++)
+        if(adjacentCorridor[i].getDirection() == Direction::VERTICAL &&
+           adjacentCorridor[i].getBeginCoords().first >= shelf.getBottomLeftCoordX())
+            corridorRight =  new Corridor(adjacentCorridor[i]);
+    
+    for(int i=0;i<adjacentCorridor.size();i++)
+        if(adjacentCorridor[i].getDirection() == Direction::HORIZONTAL &&
+           adjacentCorridor[i].getBeginCoords().second >= shelf.getBottomLeftCoordY())
+            corridorUp =  new Corridor(adjacentCorridor[i]);
+    
+    for(int i=0;i<adjacentCorridor.size();i++)
+        if(adjacentCorridor[i].getDirection() == Direction::HORIZONTAL &&
+           adjacentCorridor[i].getBeginCoords().second <= shelf.getBottomLeftCoordY())
+            corridorDown =  new Corridor(adjacentCorridor[i]);
+    
+    //=====================     Vertical shelf   ================================
+    if(numColumns < numRows){
+    
+        for(int k=1; k< (int) numRows+1; k++){
+            //First column
+            if(corridorLeft != null){
+                double coordX = shelf.getBottomLeftCoords().first + 0.5*cellWidth;
+                double coordY = shelf.getBottomLeftCoords().second + cellLength*(k-1) + 0.5*cellLength;
+                
+                Vertex cell;
+                Vertex corridor; 
+
+            }else{
+                //The cell is considered an internal cell thus it will be connected with its neighbors
+            }
+            
+            //Last column
+            if(corridorRight != null){
+                double coordX = shelf.getBottomLeftCoords().first+ cellWidth*(numColumns -1) + 0.5*cellWidth;
+                double coordY = shelf.getBottomLeftCoords().second + cellLength*(k-1) + 0.5*cellLength;
+                
+                Vertex cell;
+                Vertex corridor;
+
+            }else{
+                //The cell is considered an internal cell thus it will be connected with its neighbors
+            }
+        }
+               
+    }
+    
+    //=======================   Horizontal shelf ==============================
+    else if(numRows < numColumns){
+        for(int k=1; k< (int) numColumns+1; k++){
+            //First row
+            if(corridorUp != null){
+                double coordX = shelf.getBottomLeftCoords().first+ cellWidth*(k-1) + 0.5*cellWidth;
+                double coordY = shelf.getBottomLeftCoords().second + 0.5*cellLength;
+                
+                Vertex cell;
+                Vertex corridor;
+
+            }else{
+                //The cell is considered an internal cell thus it will be connected with its neighbors
+            }
+            
+            //Last row
+            if(corridorDown != null){
+                double coordX = shelf.getBottomLeftCoords().first+ cellWidth*(k-1) + 0.5*cellWidth;
+                double coordY = shelf.getBottomLeftCoords().second + cellLength*(numRows - 1) + 0.5*cellLength;
+                
+                Vertex cell;
+                Vertex corridor;
+
+            }else{
+                //The cell is considered an internal cell thus it will be connected with its neighbors
+            }
+        }
+    }
+    
+    //=======================   Squared shelf ==============================
+    if(numRows == numColumns){
+        
+    }
     
 }
 
@@ -160,7 +261,7 @@ void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, m
 }
 
 /**
- *
+ *  It create arcs in the corridor based on curve points and corridor extremities
  */
 void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, map<long int, vector<Point>>& pointsByCorridor,map<const string,Vertex>& vertexByCode, map<Point, Vertex> &vertexByPoint, set<Arc> &arcs){
     
@@ -216,7 +317,8 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, m
 
 
 /**
- *
+ *  Auxiliary function. It gets all the curve points in a corridor. These points will be used in other function
+ *  to generate new vertexes and arcs.
  */
 void WarehouseToGraphConverter::splitCorridorByCurves(const Curve &curve, map<long int, vector<Curve> > &curvesByCorridor,
                            map<long int, vector<Point> >&pointsByCorridor){
@@ -253,8 +355,9 @@ void WarehouseToGraphConverter::splitCorridorByCurves(const Curve &curve, map<lo
 
 
 /**
- *  Auxiliary function. Connects two internal cells in a shelf (cells that have just other cells around)
- *
+ *  Auxiliary function. Connects two internal cells in a shelf (cells that have just other cells around).
+ *  Internal cells in vertical shelves should be connected their left and right neighbors (cells closer to a corridor)
+ *  Internal cells in horizontal shelves should be connected with their up and down neighbors (cells closer to a corridor)
  */
 void WarehouseToGraphConverter::connectInternalNode(Vertex vertex, map<const string,Vertex> & vertexByCode, set<Arc> &arcs,
                                                     const int numRows, const int numColumns,const int k,const int l,
@@ -314,10 +417,10 @@ void WarehouseToGraphConverter::connectInternalNode(Vertex vertex, map<const str
  *  vertical shelves, the same for horizontal ones. Squared corridors can be accessed by corridors with any
  *  shelf (horizontal or vertical). It is supposed also that only the closest corridor can access the shelf
  *  If there are two corridors between two shelves (probably with inverse senses) we consider that you need
- *  to move from the farstest one to the closest one.
+ *  to move from the farstest to the closest one.
  */
 vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Corridor> & corridors, Shelf shelf){
-    int numLines = shelf.getNumLines();
+    int numLines = shelf.getNumRows();
     int numColumns = shelf.getNumColumns();
     
     Corridor closestAtLeft, closestAtRight, closestOver, closestBellow;
@@ -330,6 +433,7 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
     
     pair<double,double> shelfCoords = shelf.getBottomLeftCoords();
     
+    //This first if looks for the closest corridors in vertical direction, if the shelf is also in this same position
     //If numColumns == numRows the two ifs will be executed
     if(numColumns <= numLines){
         for(int i=0;i<(int)corridors.size();i++){
@@ -337,6 +441,7 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
                 
                 double xCoordCorridor = corridors[i].getBeginCoords().first;
                 
+                //If the corridor has a lower x coordinate so it is in the shelf left
                 if(xCoordCorridor - shelfCoords.first < -1*MIN_DIFF  && fabs(shelfCoords.first - xCoordCorridor) < minDistanceLeft){
                     minDistanceLeft = fabs(shelfCoords.first - xCoordCorridor);
                     closestAtLeft = corridors[i];
@@ -353,11 +458,14 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
         }
     }
     
+    //This first if looks for the closest corridors in horizontal direction, if the shelf is also in this same position
+    //If numColumns == numRows the two ifs will be executed
     if(numColumns <= numLines){
         for(int i=0; i<(int)corridors.size();i++){
             if(corridors[i].getDirection() == Direction::HORIZONTAL && doCorridorTranverse(corridors[i], shelf)){
                 double yCoordCorridor = corridors[i].getBeginCoords().second;
                 
+                //If the corridor has a lower x coordinate so it is in the shelf left
                 if(yCoordCorridor - shelfCoords.second < -1*MIN_DIFF  && fabs(shelfCoords.second - yCoordCorridor) < minDistanceDown){
                     minDistanceDown = fabs(shelfCoords.second - yCoordCorridor);
                     closestBellow = corridors[i];
@@ -373,6 +481,9 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
             }
         }
     }
+    
+    //Eventually a shelf does not have a corridor to access their products from a size (as in case of close to wall shelves)
+    //It also prevents no initialized corridors be inserted in the solutions
     if(left) closestAtAll.push_back(closestAtLeft);
     if(right) closestAtAll.push_back(closestAtRight);
     if(up) closestAtAll.push_back(closestOver);
@@ -382,10 +493,11 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
 }
 
 /**
- *
+ *  This function verify if a corridor tranverse a shelf, in other words, if a corridor starts at begining (or before)
+ *  a shelf and finish at the end (or after) of a shelf
  */
 bool WarehouseToGraphConverter::doCorridorTranverse(const Corridor &corridor,const Shelf &shelf){
-    int numLines = shelf.getNumLines();
+    int numLines = shelf.getNumRows();
     int numColumns = shelf.getNumColumns();
     pair<double,double> coordCorridor = corridor.getBeginCoords();
     pair<double, double> shelfCoords = shelf.getBottomLeftCoords();
