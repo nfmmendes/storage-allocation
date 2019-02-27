@@ -207,8 +207,9 @@ void Warehouse::RemoveBlock(int i){
 
 ///////////////////////////////////////////////////////////////////
 ///         Sets the product allocation in a warehouse
-///     In this procedure is created a copy of the data, so the original one
-///         will be not referecend by the warehouse object
+///     In this procedure is created a copy of the data,
+///       so the original one will be not referecend by the
+///             warehouse object
 /////////////////////////////////////////////////////////////////// 
 void Warehouse::setProductAllocation(vector<pair<Product, Cell>> & productAllocation){
     this->productAllocation.clear();

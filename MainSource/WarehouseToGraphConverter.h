@@ -4,6 +4,7 @@
 #include<ctime>
 using namespace std; 
 
+typedef vector< vector<string> > StringMatrix;
 
 namespace QuickTSP{
 
@@ -13,23 +14,24 @@ namespace QuickTSP{
             Warehouse warehouse; 
             Graph graph;
             map<Cell, Vertex> vertexes;
-            void initiliazeCellFirstLevel(map<const string, Vertex> &, vector<Vertex> &,
-                                          vector<vector<string> > &, Vertex , Cell);
-            void connectInternalNode(Vertex ,map<const string,Vertex> &, set<Arc> &arcs,
-                                    const int numRows, const int numColumns,const int k,const int l, double width, double height,
-                                     const vector<vector<string> > cellPositions);
-            void connectVertexesByTwoArcs(Vertex & first, string second,map<const string, Vertex> & vertexByCode,
-                                          set<Arc> &arcs, double size);
+            vector<Vertex> firstLevelVertexes;                  //Store the vertexes corresponding to cell first levels. We need
+                                                                // it because this vertexes will be connected after in the graph
+            map<const string, Vertex> vertexByCode;             //!< Stores all vertex, indexed by code
+            map<const string, Vertex> vertexByCorridor;
+            map<long int, vector<Point> > pointsByCorridor;   //!<Stores all points where a curve starts or finishes, divided by corridor
+            map<Point, Vertex> vertexByPoint;
+        
+            void initiliazeCellFirstLevel(vector<Vertex> & ,StringMatrix &,Vertex , Cell );
+            void connectInternalNode(Vertex , set<Arc> &,const int , const int ,const int ,const int , double , double ,
+                                     const vector<vector<string> > );
+            void connectVertexesByTwoArcs(Vertex & first, string second,set<Arc> &arcs, double size);
             vector<Corridor> getAdjacentCorridors(const vector<Corridor> & corridor, Shelf shelf);
             bool doCorridorTranverse(const Corridor &corridor,const Shelf &shelf);
-            void splitCorridorByCurves(const Curve &, map<long int, vector<Curve> > &,map<long int, vector<Point> >&);
-            void createArcsOnCorridors(const Corridor , map<long int, vector<Point>>& ,map<const string,Vertex>& , map<Point, Vertex> &, set<Arc> &);
-        
-            void connectCorridorsByCurves(vector<Curve> curves, map<Point,Vertex> & vertexByPoint, set<Arc> &arcs);
-            void connectShelfToCorridor(const Shelf ,const vector<Corridor>& , int , int , map<long int,vector<Point> > & ,
-                                        map<const string, Vertex> &,map<Point, Vertex> , set<Arc> & );
-        
-            void connectCellLevels(Cell , vector<Vertex> &, vector<vector<string>> &,map<const string, Vertex> & , set<Arc> &);
+            void splitCorridorByCurves(const Curve &, map<long int, vector<Curve> > &);
+            void createArcsOnCorridors(const Corridor , set<Arc> &);
+            void connectCorridorsByCurves(vector<Curve> curves, set<Arc> &arcs);
+            void connectShelfToCorridor(const Shelf, const vector<Corridor>&, const StringMatrix &, int , int , set<Arc> & );
+            void connectCellLevels(Cell , StringMatrix &, set<Arc> &);
         
         public:
             WarehouseToGraphConverter();
