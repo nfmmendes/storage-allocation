@@ -9,7 +9,11 @@
 #include "Graph.h"
 #include "Warehouse.h"
 #include "Point.h"
+#include "Corridor.h"
 #include "WarehouseToGraphConverter.h"
+#include "Point.h"
+#include "Arc.h"
+#include "Point.h"
 using namespace QuickTSP;
 using namespace std;
 
@@ -155,22 +159,22 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
     
     //Search and identify the adjacent corridors
     for(unsigned int i=0;i< adjacentCorridor.size();i++)
-        if(adjacentCorridor[i].getDirection() == Direction::VERTICAL &&
+        if(adjacentCorridor[i].getDirection() == VERTICAL &&
            adjacentCorridor[i].getBeginCoords().first < shelf.getBottomLeftCoordX())
                 corridorLeft =  new Corridor(adjacentCorridor[i]);
     
     for(unsigned int i=0;i< adjacentCorridor.size();i++)
-        if(adjacentCorridor[i].getDirection() == Direction::VERTICAL &&
+        if(adjacentCorridor[i].getDirection() == VERTICAL &&
            adjacentCorridor[i].getBeginCoords().first >= shelf.getBottomLeftCoordX())
             corridorRight =  new Corridor(adjacentCorridor[i]);
     
     for(unsigned int i=0;i<adjacentCorridor.size();i++)
-        if(adjacentCorridor[i].getDirection() == Direction::HORIZONTAL &&
+        if(adjacentCorridor[i].getDirection() == HORIZONTAL &&
            adjacentCorridor[i].getBeginCoords().second >= shelf.getBottomLeftCoordY())
             corridorUp =  new Corridor(adjacentCorridor[i]);
     
     for(unsigned int i=0;i<adjacentCorridor.size();i++)
-        if(adjacentCorridor[i].getDirection() == Direction::HORIZONTAL &&
+        if(adjacentCorridor[i].getDirection() == HORIZONTAL &&
            adjacentCorridor[i].getBeginCoords().second <= shelf.getBottomLeftCoordY())
             corridorDown =  new Corridor(adjacentCorridor[i]);
     
@@ -329,7 +333,7 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
         arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
         
         count++;
-        if(corridor.getSense() == Sense::BOTH)
+        if(corridor.getSense() == BOTH)
             arcs.insert(Arc("arc_"+second.getLabel()+ "_"+first.getLabel(), distance, second, first));
         
         
@@ -348,7 +352,7 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
         arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
         
         count++;
-        if(corridor.getSense() == Sense::BOTH)
+        if(corridor.getSense() == BOTH)
             arcs.insert(Arc("arc_"+second.getLabel()+ "_"+first.getLabel(), distance, second, first));
         first = second;
     }
@@ -476,7 +480,7 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
     //If numColumns == numRows the two ifs will be executed
     if(numColumns <= numLines){
         for(int i=0;i<(int)corridors.size();i++){
-            if(corridors[i].getDirection() ==  Direction::VERTICAL && doCorridorTranverse(corridors[i], shelf)){
+            if(corridors[i].getDirection() ==  VERTICAL && doCorridorTranverse(corridors[i], shelf)){
                 
                 double xCoordCorridor = corridors[i].getBeginCoords().first;
                 
@@ -501,7 +505,7 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
     //If numColumns == numRows the two ifs will be executed
     if(numColumns <= numLines){
         for(int i=0; i<(int)corridors.size();i++){
-            if(corridors[i].getDirection() == Direction::HORIZONTAL && doCorridorTranverse(corridors[i], shelf)){
+            if(corridors[i].getDirection() == HORIZONTAL && doCorridorTranverse(corridors[i], shelf)){
                 double yCoordCorridor = corridors[i].getBeginCoords().second;
                 
                 //If the corridor has a lower x coordinate so it is in the shelf left
@@ -542,14 +546,14 @@ bool WarehouseToGraphConverter::doCorridorTranverse(const Corridor &corridor,con
     pair<double, double> shelfCoords = shelf.getBottomLeftCoords();
     double len = corridor.getLength();
     
-    if(numColumns < numLines && corridor.getDirection() == Direction::VERTICAL){
+    if(numColumns < numLines && corridor.getDirection() == VERTICAL){
         return coordCorridor.second <= shelfCoords.second && coordCorridor.second + len >= shelfCoords.second;
-    }else if(numColumns > numLines && corridor.getDirection() == Direction::HORIZONTAL){
+    }else if(numColumns > numLines && corridor.getDirection() == HORIZONTAL){
         return coordCorridor.first <= shelfCoords.first && coordCorridor.first + len >= shelfCoords.first;
     }else if(numColumns == numLines){
-        if(corridor.getDirection() == Direction::HORIZONTAL)
+        if(corridor.getDirection() == HORIZONTAL)
             return coordCorridor.first <= shelfCoords.first && coordCorridor.first + len >= shelfCoords.first;
-        if(corridor.getDirection() == Direction::VERTICAL)
+        if(corridor.getDirection() == VERTICAL)
             return coordCorridor.second <= shelfCoords.second && coordCorridor.second + len >= shelfCoords.second;
     }
     return false;

@@ -11,6 +11,12 @@
  using namespace std;
  
  
+ 
+ 
+ Warehouse::Warehouse(Warehouse &other){
+ }
+ 
+ 
  ///////////////////////////////////////////////////////////////////
  ///
  ///
@@ -126,8 +132,8 @@
         map<string, vector<Corridor> > corridorsByBlock;
         for(int i=0; i < numCorridors; i++){
             file>>idCorridor>>blockName>>dirCorridor>>senseCorridor>>beginCoordX>>beginCoordY>>length;
-            Direction dir = Direction::parseDirection(dirCorridor);
-            Sense sense = Sense::parseSense(senseCorridor);
+            string dir = dirCorridor;
+            string sense = senseCorridor;
             corridorsByBlock[blockName].push_back(Corridor(idCorridor,blockName, dir, sense, make_pair(beginCoordX, beginCoordY), length));
         }
         

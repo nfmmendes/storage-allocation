@@ -7,99 +7,23 @@
 #include<utility>
 #include<cstdlib>
 #include "Point.h"
+//#include "Sense.h"
+//#include "Direction.h"
 using namespace std;
 
-///Class to define the direction of a corridor in a warehouse
-///It has two possible values, indicated by static objects 
-class Direction{
 
-    private:
-        string code; 
-        
-    public:
-        Direction(){ this->code = Direction::HORIZONTAL.code; }
-        Direction(const string &c) { this->code = c; }
-        static const string horizontalCode; 
-        static const string verticalCode; 
-        static Direction HORIZONTAL;
-        static Direction VERTICAL;
-        string getDirectionCode() { return code;}
-    
-        static Direction parseDirection(string &directionString){
-            if(directionString == Direction::VERTICAL.code)
-                return Direction::VERTICAL;
-            else if(directionString == Direction::HORIZONTAL.code)
-                return Direction::HORIZONTAL;
-            else
-                return Direction::VERTICAL;
-        }
-    
-        bool operator==(const Direction &other){  return this->code == other.code;}
-};
 
-///Static class members initialization
-const string Direction::horizontalCode = "horizontal";
-const string Direction::verticalCode = "vertical";
-Direction Direction::HORIZONTAL(Direction::horizontalCode);
-Direction Direction::VERTICAL(Direction::verticalCode);
+const string HORIZONTAL = "HORIZONTAL";
+const string VERTICAL = "VERTICAL";
 
-///Class to define the sense of a corridor in a warehouse
-///It has four possible values, indicated by static objects 
-class Sense{
+const string UP_DOWN = "UP_DOWN";
+const string BOTTOM_UP = "BOTTOM_UP";
+const string LEFT_TO_RIGHT = "LEFT_TO_RIGHT";
+const string RIGHT_TO_LEFT = "RIGHT_TO_LEFT";
+const string BOTH = "BOTH";
 
-    private:
-         string code; 
-        
-    public:
-        Sense(){ this->code = UP_DOWN.code; }
-        Sense(const string c){ this->code = c; }
-        static const string both;
-        static const string up_down_code;
-        static const string bottom_up_code;
-        static const string left_to_right_code;
-        static const string right_to_left_code;
-        
-        static Sense UP_DOWN;
-        static Sense BOTTOM_UP;
-        static Sense LEFT_TO_RIGHT;
-        static Sense RIGHT_TO_LEFT;
-        static Sense BOTH;
-    
-        Sense &operator=(const Sense &other){ this->code = other.code;  return *this;} 
-        string getSenseCode() { return code;}
-    
-        static Sense parseSense(string &senseString){
-            if(senseString == Sense::UP_DOWN.code)
-                return Sense::UP_DOWN;
-            else if(senseString == Sense::BOTTOM_UP.code)
-                return Sense::BOTTOM_UP;
-            else if(senseString == Sense::LEFT_TO_RIGHT.code)
-                return Sense::LEFT_TO_RIGHT;
-            else if(senseString == Sense::RIGHT_TO_LEFT.code)
-                return Sense::RIGHT_TO_LEFT;
-            else if(senseString == Sense::BOTH.code)
-                return Sense::BOTH;
-            else
-                return Sense::UP_DOWN;
-        }
-    
-        bool operator==(const Sense & other){
-            return this->code == other.code;
-        }
-    
-};
 
-///Static class members iniatilization
-const string Sense::up_down_code = "up_down";
-const string Sense::bottom_up_code = "bottom_up_code";
-const string Sense::left_to_right_code = "left_to_right";
-const string Sense::right_to_left_code = "right_to_left_code";
-const string Sense::both = "both";
-Sense Sense::UP_DOWN(Sense::up_down_code);
-Sense Sense::BOTTOM_UP(Sense::bottom_up_code);
-Sense Sense::LEFT_TO_RIGHT(Sense::left_to_right_code);
-Sense Sense::RIGHT_TO_LEFT(Sense::right_to_left_code); 
-Sense Sense::BOTH(Sense::right_to_left_code);
+
 
 ///
 ///     Class to represent corridors. This class is used to describe only retilinear corridors
@@ -110,15 +34,15 @@ class Corridor{
     private:
         long int Id;
         string blockName;
-        Direction direction;       //! The values can be: horizontal or vertical
-        Sense sense;               //! The values can be: up_down, bottom_up, left_to_right, right_to_left, both
+        string direction;       //! The values can be: horizontal or vertical
+        string sense;               //! The values can be: up_down, bottom_up, left_to_right, right_to_left, both
         pair<double, double> begin;
         double length;
     
     public:
-        Corridor();
-        Corridor(const Corridor & other);
-        Corridor(long int Id, string blockName, Direction dir, Sense sense, pair<double,double> begin, double length){
+        Corridor(){}
+        Corridor(const Corridor & other){}
+        Corridor(long int Id, string blockName, string dir, string sense, pair<double,double> begin, double length){
             this->Id = Id;
             this->blockName = blockName;
             this->direction = dir;
@@ -128,15 +52,15 @@ class Corridor{
         }
     
     
-        void setDirection(Direction value){  direction = value;}
-        void setSense(Sense value) { sense = value; }
+        void setDirection(string value){  direction = value;}
+        void setSense(string value) { sense = value; }
         void setId( long int value ) { if(value > 0) Id = value; else throw("Error. Invalid negative Id"); }
         void setIdBlock (string value) {blockName = value;}
         void setBeginCoords(pair<double,double> value){ begin = value; }
         void setLength(double value){ length = value; }
         
-        Direction getDirection() const{ return direction; }
-        Sense getSense()const  { return sense; } 
+        string getDirection() const{ return direction; }
+        string getSense()const  { return sense; } 
         long int getId() const { return Id; }
         string getBlockId() {return blockName; }
         pair<double, double> getBeginCoords() const { return begin; }
@@ -144,14 +68,14 @@ class Corridor{
     
         void orderCorridorPoints(vector<Point> & points)const{
             
-            if(this->getDirection() ==  Direction::VERTICAL){
+            if(this->getDirection() ==  VERTICAL){
                 sort(points.begin(), points.end(), Point::isMinorY);
-                if(this->getSense() == Sense::RIGHT_TO_LEFT)
+                if(this->getSense() == RIGHT_TO_LEFT)
                     reverse(points.begin(), points.end());
                 
-            }else if(this->getDirection() == Direction::HORIZONTAL){
+            }else if(this->getDirection() == HORIZONTAL){
                 sort(points.begin(), points.end(), Point::isMinorX);
-                if(this->getSense() == Sense::UP_DOWN)
+                if(this->getSense() == UP_DOWN)
                     reverse(points.begin(), points.end());
             }
         }

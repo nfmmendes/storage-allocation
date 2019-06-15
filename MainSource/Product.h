@@ -19,7 +19,7 @@ class Product{
         string type;
         
     public:
-        Product();
+        Product(){}
         Product(const Product & other){
             this->name = other.name;
             this->type = other.type;

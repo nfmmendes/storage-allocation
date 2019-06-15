@@ -6,7 +6,19 @@
 #include <fstream>
 #include "Parameter.h"
 #include "InputData.h"
+#include "Product.h"
+#include "Client.h"
+#include "Order.h"
+#include "Warehouse.h"
+#include "ProductAllocationProhibition.h"
 
+
+vector<Product> InputData::products;
+vector<Client> InputData::clients;
+vector<Order> InputData::orders;
+vector<Parameter> InputData::parameters;
+vector<ProductAllocationProhibitions> InputData::prohibitions;
+Warehouse InputData::warehouse;
 
 InputData::InputData(){
     alreadyCreated = true;

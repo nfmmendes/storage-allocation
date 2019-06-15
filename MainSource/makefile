@@ -8,27 +8,53 @@ CC = g++
 COMPILE_FLAGS = -O3 -std=c++11 -Wall -Wextra -g
 
 
-all: GeneralClasses.o QuickTSP.o WarehousePack.o GraphPack.o main.cpp
-	$(CC) $(COMPILE_FLAGS) -c main.cpp InputData.cpp  
+all: GraphPack Input WarehousePack Block Warehouse ProductAllocationProhibition QuickTSP GeneralClasses
+	$(CC) $(COMPILE_FLAGS) -o run main.cpp *.o
+	
+
+Input: InputData.h 
+	$(CC) $(COMPILE_FLAGS) -c InputData.cpp
 
 
 
 #BASIC CLASSES (CAN BE USED IN ANY SOFTWARE. IT'S NOT ALGORITHM RELATED
-GeneralClasses.o: Point.h Date.h Time.h
-	$(CC) $(COMPILE_FLAGS)  -c Point.cpp Date.cpp Time.cpp
+GeneralClasses: Point.h Date.h Time.h
+	$(CC) $(COMPILE_FLAGS)  -c Util.cpp Date.cpp Time.cpp
 
 #Classes to proceed the TSP algorithm
-QuickTSP.o : PathUnity.h TSP.h State.h WarehouseToGraphConverter.h Layer.h Parameter.h
+QuickTSP : PathUnity.h TSP.h State.h WarehouseToGraphConverter.h Layer.h Parameter.h Transition.o Order.o
 	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp State.cpp WarehouseToGraphConverter.cpp Layer.cpp Parameter.cpp
 
+
+Order : Order.h Product.o InputData.o 
+	$(CC) $(COMPILE_FLAGS) -c Order.cpp
+
+
+ProductAllocationProhibition: Product.o Cell.o Shelf.o Block.o ProductAllocationProhibition.h
+	$(CC) $(COMPILE_FLAGS) -c ProductAllocationProhibition.cpp
+
+Warehouse : Block.o Cell.o Shelf.o BlockExit.o
+	$(CC) $(COMPILE_FLAGS) -c Warehouse.cpp
+
+Block : Block.h Cell.o Shelf.o Curve.o BlockExit.o
+	$(CC) $(COMPILE_FLAGS) -c Block.cpp
+
 #DAO CLASSES (DIRECTLY RELATED WITH THE DESCRIPTION OF DATA)
-WarehousePack.o: Cell.h Shelf.h Block.h Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h Order.h ProductAllocationProhibition.h
-	$(CC) $(COMPILE_FLAGS) -c Cell.cpp Shelf.cpp Block.cpp Warehouse.cpp BlockExit.cpp Corridor.h Curve.cpp Client.cpp Product.cpp Order.cpp ProductAllocationProhibition.cpp
+WarehousePack : Cell.h Shelf.h  Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h Order.h 
+	$(CC) $(COMPILE_FLAGS) -c Corridor.h Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp 
 
 
-GraphPack.o: Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h
-	$(CC) $(COMPILE_FLAGS) -c Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.cpp Line.cpp 
+Input: InputData.h Parameter.o Client.o Product.o Warehouse.o
+	$(CC) $(COMPILE_FLAGS) -c InputData.cpp
 
+GraphPack: Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h Transition.h
+	$(CC) $(COMPILE_FLAGS) -c Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.cpp Line.cpp Transition.cpp
+
+Parameter: Parameter.h
+	$(CC) $(COMPILE_FLAGS) -c Parameter.cpp
+
+Client: Client.h
+	$(CC) $(COMPILE_FLAGS) -c Client.cpp
 
 clean: 
 	rm -f *.o *.hgc

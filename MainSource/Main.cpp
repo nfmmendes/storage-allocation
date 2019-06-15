@@ -6,10 +6,6 @@
 #include<vector>
 #include<utility>
 #include<algorithm>
-#include "allClasses.h"
-#include "Warehouse.h"
-#include "Product.h"
-#include "Order.h"
 #include "TSP.h"
 #include "VND.h"
 #include "InputData.h"

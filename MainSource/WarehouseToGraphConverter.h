@@ -2,6 +2,17 @@
 #include<string>
 #include<cmath>
 #include<ctime>
+#include<vector>
+#include<set>
+#include "Warehouse.h"
+#include "Arc.h"
+#include "Cell.h"
+#include "Corridor.h"
+#include "Curve.h"
+#include "Point.h"
+#include "Graph.h"
+#include "Arc.h"
+
 using namespace std; 
 
 typedef vector< vector<string> > StringMatrix;
