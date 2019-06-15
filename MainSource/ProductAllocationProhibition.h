@@ -8,6 +8,7 @@
 #include<map>
 #include<algorithm>
 #include<utility>
+#include "Warehouse.h"
 #include "Product.h"
 #include "Shelf.h"
 #include "Block.h"
@@ -28,12 +29,12 @@ class ProductAllocationProhibitions{
         ProductAllocationProhibitions(const ProductAllocationProhibitions &other);
         ProductAllocationProhibitions(Product &product,vector<Shelf>forbiddenShelves,vector<Cell> forbiddenCells,vector<Block> &block);
     
-        void setProduct(Product & other){ this->product = other; }
+        void setProduct(Product & other);
         void setForbiddenShelves(vector<Shelf> & others);
         void setForbiddenCells(vector<Cell> &others);
         void setForbiddenBlocks(vector<Block> &others);
     
-        Product getProduct(){   return this->product;}
+        Product getProduct() const; 
         vector<Shelf> getForbiddenShelves();
         vector<Cell> getForbiddenCells();
         vector<Block> getForbiddenBlocks();
@@ -48,7 +49,7 @@ class ProductAllocationProhibitions{
     
         void removeProductBlockProhibition(int i);
     
-        static vector<ProductAllocationProhibitions> readAllProhibitionsData(string fileName);
+        static vector<ProductAllocationProhibitions> readAllProhibitionsData(ifstream &fileName);
 };
 
 #endif /* PROHIBITION_H */

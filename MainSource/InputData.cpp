@@ -14,7 +14,7 @@ InputData::InputData(){
 
 
 
-InputData::InputData(string  metadataFile){
+InputData::InputData(string  dataFile){
     
     ///Input file names
     string warehouseDescriptionFileName;
@@ -29,7 +29,7 @@ InputData::InputData(string  metadataFile){
     
     //READ THE INPUT
     ifstream file;
-    file.open(metadataFile, ios::in);
+    file.open(dataFile, ios::in);
     if(file.is_open()){
         cout<<"Starting the input reading...\n";
         file>>warehouseDescriptionFileName;
@@ -38,24 +38,23 @@ InputData::InputData(string  metadataFile){
         file>>prohibitionsFileName;
         file>>parametersFileName;
         
-        file.close();
-        
         cout<<"Reading warehouse data...\n";
-        warehouse.ReadWarehouseData(warehouseDescriptionFileName);
+        warehouse.ReadWarehouseData(file);
         
         cout<<"Reading products data..\n";
-        products = Product::readProductsData(productsFileName);
+        products = Product::readProductsData(file);
         
         cout<<"Reading order data...\n";
-        orders = Order::readOrdersData(ordersFileName);
+        orders = Order::readOrdersData(file);
         
         
         cout<<"Reading allocation prohibitions...\n";
-        prohibitions = ProductAllocationProhibitions::readAllProhibitionsData(prohibitionsFileName);
+        prohibitions = ProductAllocationProhibitions::readAllProhibitionsData(file);
         
-        cout<<"Reading parameters...\n";
-        parameters = Parameter::readParametersData(parametersFileName);
+        //cout<<"Reading parameters...\n";
+        //parameters = Parameter::readParametersData(file);
         
+        file.close();
         
     }else{
         cerr<<"The file could not be open!\n Verifiy if it exists or if the you passed the right path.";

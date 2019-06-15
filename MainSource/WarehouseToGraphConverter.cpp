@@ -103,7 +103,7 @@ void WarehouseToGraphConverter::generateGraph(){
  * This functions connects the levels inside a cell in order to have a path between any pair of divisions of a cell.
  * For now it is supposed that all cells divisions are on vertical
  */
-void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string>> &cellPositions,set<Arc> &arcs){
+void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string> > &cellPositions,set<Arc> &arcs){
     
     int numLevels = cell.getLevels();
     
@@ -183,7 +183,6 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
                 coordX = shelf.getBottomLeftCoords().first + 0.5*cellWidth;
                 coordY = shelf.getBottomLeftCoords().second + cellLength*(k-1) + 0.5*cellLength;
                 
-                
                 double corridorCoordX = corridorLeft->getBeginCoords().first;
                 Point corridorPoint("",corridorCoordX, coordY,0);
                 
@@ -191,6 +190,13 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
                 
                 Vertex cell("cell_"+cellPositions[k][1], "CellVertex");
                 Vertex corridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[k][1],"PickVertex");
+                vertexByCode[cell.getLabel()] = cell;
+                vertexByCode[corridor.getLabel()] = corridor;
+                
+                Arc leaving("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordX-coordX), cell, corridor);
+                Arc picking("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordX-coordX), corridor, cell);
+                arcs.insert(leaving);
+                arcs.insert(picking);
 
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
@@ -198,8 +204,8 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
             
             //Last column
             if(corridorRight != NULL){
-                double coordX = shelf.getBottomLeftCoords().first+ cellWidth*(numColumns -1) + 0.5*cellWidth;
-                double coordY = shelf.getBottomLeftCoords().second + cellLength*(k-1) + 0.5*cellLength;
+                coordX = shelf.getBottomLeftCoords().first+ cellWidth*(numColumns -1) + 0.5*cellWidth;
+                coordY = shelf.getBottomLeftCoords().second + cellLength*(k-1) + 0.5*cellLength;
                 
                 double corridorCoordX = corridorRight->getBeginCoords().first;
                 Point corridorPoint("", corridorCoordX, coordY,0);
@@ -208,6 +214,13 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
                 
                 Vertex cell("cell_"+cellPositions[k][numColumns], "CellVertex");
                 Vertex corridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[k][numColumns],"PickVertex");
+                vertexByCode[cell.getLabel()] = cell;
+                vertexByCode[corridor.getLabel()] = corridor;
+                
+                Arc leaving("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordX-coordX), cell, corridor);
+                Arc picking("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordX-coordX), corridor, cell);
+                arcs.insert(leaving);
+                arcs.insert(picking);
 
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
@@ -221,31 +234,44 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
         for(int k=1; k< (int) numColumns+1; k++){
             //First row
             if(corridorUp != NULL){
-                double coordX = shelf.getBottomLeftCoords().first+ cellWidth*(k-1) + 0.5*cellWidth;
-                double coordY = shelf.getBottomLeftCoords().second + 0.5*cellLength;
+                coordX = shelf.getBottomLeftCoords().first+ cellWidth*(k-1) + 0.5*cellWidth;
+                coordY = shelf.getBottomLeftCoords().second + 0.5*cellLength;
                 
                 double corridorCoordY = corridorUp->getBeginCoords().second;
                 Point corridorPoint("", coordX, corridorCoordY,0);
                 
                 Vertex cell("cell_"+cellPositions[numRows][k], "CellVertex");
                 Vertex corridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[numRows][k],"PickVertex");
+                vertexByCode[cell.getLabel()] = cell;
+                vertexByCode[corridor.getLabel()] = corridor;
                 
-
+                Arc leaving("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordY-coordY), cell, corridor);
+                Arc picking("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordY-coordY), corridor, cell);
+                arcs.insert(leaving);
+                arcs.insert(picking);
+                
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
             }
             
             //Last row
             if(corridorDown != NULL){
-                double coordX = shelf.getBottomLeftCoords().first+ cellWidth*(k-1) + 0.5*cellWidth;
-                double coordY = shelf.getBottomLeftCoords().second + cellLength*(numRows - 1) + 0.5*cellLength;
+                coordX = shelf.getBottomLeftCoords().first+ cellWidth*(k-1) + 0.5*cellWidth;
+                coordY = shelf.getBottomLeftCoords().second + cellLength*(numRows - 1) + 0.5*cellLength;
                 
                 double corridorCoordY = corridorUp->getBeginCoords().second;
                 Point corridorPoint("", coordX, corridorCoordY,0);
                 
                 Vertex cell("cell_"+cellPositions[1][k], "CellVertex");
                 Vertex corridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[1][k],"PickVertex");
+                vertexByCode[cell.getLabel()] = cell;
+                vertexByCode[corridor.getLabel()] = corridor;
 
+                Arc leaving("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordY-coordY), cell, corridor);
+                Arc picking("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordY-coordY), corridor, cell);
+                arcs.insert(leaving);
+                arcs.insert(picking);
+                
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
             }

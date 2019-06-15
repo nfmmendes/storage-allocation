@@ -8,14 +8,12 @@ using namespace std;
 
 
 
-vector<Product> Product::readProductsData(string fileName){
+vector<Product> Product::readProductsData(ifstream &file){
     
     vector<Product> products;
-    ifstream file;
     string _name, _type;
     long int ID;
     
-    file.open(fileName,ios::in);
     
     int numProducts;
     file>>numProducts;

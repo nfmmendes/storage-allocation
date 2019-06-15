@@ -2,6 +2,7 @@
 #include <vector>
 #include <cstdlib>
 #include <map>
+#include "InputData.h"
 #include "ProductAllocationProhibition.h"
 using namespace std;
 
@@ -30,9 +31,9 @@ ProductAllocationProhibitions::ProductAllocationProhibitions(Product &product,ve
 void ProductAllocationProhibitions::setProduct(Product & other){ this->product = other; }
 void ProductAllocationProhibitions::setForbiddenShelves(vector<Shelf> & others){  this->forbiddenShelves = others; }
 void ProductAllocationProhibitions::setForbiddenCells(vector<Cell> &others){  this->forbiddenCells = others; }
-void ProductAllocationProhibitions::setForbiddenBlocks(vector<Block> &others) {  this->forbiddenBlocks = other; }
+void ProductAllocationProhibitions::setForbiddenBlocks(vector<Block> &others) {  this->forbiddenBlocks = others; }
 
-Product ProductAllocationProhibitions::getProduct(){   return this->product;}
+Product ProductAllocationProhibitions::getProduct() const{   return this->product;}
 vector<Shelf> ProductAllocationProhibitions::getForbiddenShelves(){ return this->forbiddenShelves;}
 vector<Cell> ProductAllocationProhibitions::getForbiddenCells(){ return this->forbiddenCells; }
 vector<Block> ProductAllocationProhibitions::getForbiddenBlocks() { return this->forbiddenBlocks; }
@@ -65,8 +66,8 @@ void ProductAllocationProhibitions::removeProductBlockProhibition(int i){
 }
 
 
-vector<ProductAllocationProhibitions ProductAllocationProhibitions::readAllProhibitionsData(string fileName){
-    vector<ProductAllocationProhibitions> prohibitions
+vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProhibitionsData(ifstream &file){
+    vector<ProductAllocationProhibitions> prohibitions;
     long int idShelve, idProduct;
     string cellCode, blockName;
     int numProhibitions,numCellProhibitions, numShelvesProhibitions, numBlocksProhibitions;
@@ -85,15 +86,11 @@ vector<ProductAllocationProhibitions ProductAllocationProhibitions::readAllProhi
     vector<Product> products = input.getProducts();
     map<string,Product> productsById;
     for(unsigned int i=0; i < products.size(); i++)
-        productsById[products[i].getId] = products[i];
-    
-    
-    ifstream file;
-    file.open(fileName,ios::in);
+        productsById[products[i].getName()] = products[i];
     
     
     file>>numProhibitions;
-    file>>numCellProhibition>>numShelvesProhibition>>numBlocksProhibitions;
+    file>>numCellProhibitions>>numShelvesProhibitions>>numBlocksProhibitions;
     
     for(int i=0; i < numProhibitions; i++){
         if(numCellProhibitions > 0 || numShelvesProhibitions >0|| numBlocksProhibitions >0 ){
@@ -112,12 +109,12 @@ vector<ProductAllocationProhibitions ProductAllocationProhibitions::readAllProhi
             
             for(int i=0; i<numShelvesProhibitions; i++){
                 file>>idShelve;
-                _cells.push_back(shelvesById[idShelve]);
+                _shelves.push_back(shelvesById[idShelve]);
             }
             
             for(int i=0; i<numBlocksProhibitions; i++){
                 file>>blockName;
-                _cells.push_back(blocksByName[blockName]);
+                _blocks.push_back(blocksByName[blockName]);
             }
             
             prohibition.setForbiddenCells(_cells);
@@ -129,14 +126,14 @@ vector<ProductAllocationProhibitions ProductAllocationProhibitions::readAllProhi
     }
 }
 
-void ProductAllocationProhibition::recoverWarehouseData(const Warehouse warehouse,map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName){
+void ProductAllocationProhibitions::recoverWarehouseData(const Warehouse warehouse, map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName){
     vector<Block> blocks = warehouse.getBlocks();
     vector<Shelf> shelves;
     vector<Cell> cells;
     
     //Fill blocksById dictionary, while get the shelves of the block
     for(unsigned int i=0; i<blocks.size(); i++){
-        blocksById[blocks[i].getName()]= blocks[i];
+        blocksByName[blocks[i].getName()]= blocks[i];
         
         vector<Shelf> shelvesOnBlock = blocks[i].getShelves();
         shelves.insert(shelves.end(), shelvesOnBlock.begin(), shelves.end());
@@ -146,10 +143,10 @@ void ProductAllocationProhibition::recoverWarehouseData(const Warehouse warehous
     for(unsigned int i=0; i< shelves.size(); i++){
         shelvesById[shelves[i].getId()] = shelves[i];
         
-        vector<Cells> cellsOnShelf = shelves[i].getCells();
+        vector<Cell> cellsOnShelf = shelves[i].getCells();
         cells.insert(cells.end(), cellsOnShelf.begin(), cellsOnShelf.end());
     }
     
     for(unsigned int i=0; i<cells.size();i++)
-        cellsByCode[cells.getCode()] = cells[i];
+        cellsByCode[cells[i].getCode()] = cells[i];
 }

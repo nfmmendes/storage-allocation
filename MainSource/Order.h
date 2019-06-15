@@ -43,13 +43,13 @@ class Order{
         void setorderItens(int i, Product &product, double quantity);
         void removeorderItens(int i);
         void addorderItens(Product &product, double quantity);
-        void setOrders(vector<pair<Product, double>> orders);
+        void setOrders(vector<pair<Product, double> > orders);
     
         void setDateDeadline(Date &date);
         void setTimeDeadline(Time &time);
     
         vector<pair<Product, double> > & getOrderItems();
-        static vector<Order> readOrdersData(string fileName);
+        static vector<Order> readOrdersData(ifstream &file);
     
 };
 

@@ -55,7 +55,7 @@ void Order::addorderItens(Product &product, double quantity){
 }
 
 
-void Order::setOrders(vector<pair<Product, double>> orders){
+void Order::setOrders(vector<pair<Product, double> > orders){
     this->orderItens.clear();
     
     for(unsigned int i= 0; i< orders.size(); i++)
@@ -80,11 +80,8 @@ void Order::setTimeDeadline(Time &time){
     this->deadline.second = time;
 }
 
-vector<Order> Order::readOrdersData(string fileName){
+vector<Order> Order::readOrdersData(ifstream &file){
     vector<Order> orders;
-    ifstream file;
-    
-    file.open(fileName,ios::in);
     
     int numOrders;
     int numItems;

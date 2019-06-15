@@ -5,6 +5,7 @@
 #include<cstdlib>
 #include<string>
 #include<vector>
+#include<fstream>
 using namespace std; 
 
 
@@ -38,7 +39,7 @@ class Product{
         void setName(string name){ this->name = name;}
         void setType(string type){ this->type = type;}
     
-        static vector<Product> readProductsData(string fileName);
+        static vector<Product> readProductsData(ifstream &file);
     
 };
 

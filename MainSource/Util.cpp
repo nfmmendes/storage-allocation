@@ -13,7 +13,7 @@ vector<string> Util::splitString(string originalString, string delimiter){
     std::string token;
     while ((pos = originalString.find(delimiter)) != std::string::npos) {
         token = originalString.substr(0, pos);
-        returned.push_back(toke);
+        returned.push_back(token);
         originalString.erase(0, pos + delimiter.length());
     }
     returned.push_back(originalString);

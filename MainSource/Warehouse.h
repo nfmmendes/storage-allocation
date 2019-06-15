@@ -23,7 +23,7 @@ class Warehouse{
         public:
             Warehouse(){}
             Warehouse(Warehouse &other);
-            void ReadWarehouseData(string fileName);
+            void ReadWarehouseData(ifstream & fileName);
             void WriteWarehouseData(string fileName);
             void InsertNewBlock(Block &b);
             
@@ -34,9 +34,9 @@ class Warehouse{
             void RemoveProductAllocation(Cell &cell); 
             void RemoveProductAllocation(int i); 
             
-            string getName();
-            vector<Block> getBlocks();
-            vector<pair<Product, Cell> > getProductAllocation();
+            string getName() const ;
+            vector<Block> getBlocks() const ;
+            vector<pair<Product, Cell> > getProductAllocation() const;
             
             void setName(string &name);
             void setBlocks(vector<Block>& blocks);

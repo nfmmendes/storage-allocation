@@ -15,10 +15,8 @@
  ///
  ///
  ///////////////////////////////////////////////////////////////////
- void Warehouse::ReadWarehouseData(string fileName){
+ void Warehouse::ReadWarehouseData(ifstream &file){
     
-     ifstream file;
-     file.open(fileName,ios::in);
     
     int numBlocks;
     int numExits;
@@ -68,7 +66,7 @@
         long int idExit;
         double exitCoordX, exitCoordY;
         string blockBName; 
-        map<string, vector<BlockExit>> exitsByBlock; 
+        map<string, vector<BlockExit> > exitsByBlock;
    
         if(numExits == 0){
             for(int i=0; i<numExits; i++){
@@ -143,7 +141,7 @@
         int row, column;
         string cellCode;
         int numLevels;
-        map<int,vector<Cell>> cellsByShelf;
+        map<int,vector<Cell> > cellsByShelf;
         for(int i=0;i<numCells;i++){
             file>>idShelf>>cellCode>>numLevels>>row>>column;
             cellsByShelf[idShelf].push_back(Cell(cellCode,idShelf,numLevels,row,column));
@@ -159,7 +157,7 @@
         file>>numCurves;
         long int idCurve, startCorridor, endCorridor;
         double endCoordX, endCoordY;
-        map<string, vector<Curve>> curvesByBlock;
+        map<string, vector<Curve> > curvesByBlock;
         for(int i=0;i<numCurves;i++){
             file>>blockName>>idCurve>>startCorridor>>endCorridor>>beginCoordX>>beginCoordY>>endCoordX>>endCoordY;
             curvesByBlock[blockName].push_back(Curve(idCurve, startCorridor, endCorridor,
@@ -211,7 +209,7 @@ void Warehouse::RemoveBlock(int i){
 ///       so the original one will be not referecend by the
 ///             warehouse object
 /////////////////////////////////////////////////////////////////// 
-void Warehouse::setProductAllocation(vector<pair<Product, Cell>> & productAllocation){
+void Warehouse::setProductAllocation(vector<pair<Product, Cell> > & productAllocation){
     this->productAllocation.clear();
     
     for(int i=0; i<(int)productAllocation.size(); i++)
@@ -229,7 +227,7 @@ void Warehouse::AddProductAllocation(pair<Product, Cell> & productAllocation){
 ///     Remove a allocation of a product
 /////////////////////////////////////////////////////////////////// 
 void Warehouse::RemoveProductAllocation(Cell &cell){
-    vector<pair<Product,Cell>>::iterator it = this->productAllocation.begin();
+    vector<pair<Product,Cell> >::iterator it = this->productAllocation.begin();
     for(;it != this->productAllocation.end(); it++)
         if(it->second == cell){
             productAllocation.erase(it);
@@ -252,17 +250,17 @@ void Warehouse::RemoveProductAllocation(int i){
 ///
 ///
 ///////////////////////////////////////////////////////////////////            
-string Warehouse::getName(){ return this->name;}
+string Warehouse::getName() const { return this->name;}
 
 ///////////////////////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////////////////////// 
-vector<Block> Warehouse::getBlocks(){ return this->blocks;}
+vector<Block> Warehouse::getBlocks() const { return this->blocks;}
 
 ///////////////////////////////////////////////////////////////////
 ///
 /////////////////////////////////////////////////////////////////// 
-vector<pair<Product, Cell> > Warehouse::getProductAllocation(){
+vector<pair<Product, Cell> > Warehouse::getProductAllocation() const {
     return this->productAllocation;
 }
 

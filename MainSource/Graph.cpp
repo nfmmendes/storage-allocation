@@ -14,7 +14,7 @@ Graph::Graph(const Graph &graph){
     
     for(int i=0;i<(int)graph.vertexes.size();i++)
         this->vertexes.push_back(Vertex(graph.vertexes[i]));
-    for(map<Vertex, vector<Arc>>::iterator it = graph.getArcs().begin();it!=graph.getArcs().end();it++)
+    for(map<Vertex, vector<Arc> >::iterator it = graph.getArcs().begin();it!=graph.getArcs().end();it++)
         for(int i=0; i < (int)it->second.size();i++)
             this->arcsByVertex[it->first].push_back(it->second[i]);;
 }
@@ -39,7 +39,7 @@ Graph & Graph::operator=(const Graph &other){
     for(int i=0;i<(int)other.vertexes.size();i++)
         this->vertexes.push_back(Vertex(other.vertexes[i]));
     
-    for(map<Vertex, vector<Arc>>::iterator it = other.getArcs().begin();it!=other.getArcs().end();it++)
+    for(map<Vertex, vector<Arc> >::iterator it = other.getArcs().begin();it!=other.getArcs().end();it++)
         for(int i=0;i <  (int) it->second.size();i++)
             this->arcsByVertex[it->first].push_back(it->second[i]);
     

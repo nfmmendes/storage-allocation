@@ -7,11 +7,9 @@ CC = g++
 #FLAGS TO THE COMPILER
 COMPILE_FLAGS = -O3 -std=c++11 -Wall -Wextra -g
 
-all: run.exe GeneralClasses.o QuickTSP.o WarehousePack.o GraphPack.o 
 
-
-run.exe: GeneralClasses.o QuickTSP.o WarehousePack.o GraphPack.o main.cpp
-	$(CC) $(COMPILE_FLAGS) -c main.cpp InputData.cpp
+all: GeneralClasses.o QuickTSP.o WarehousePack.o GraphPack.o main.cpp
+	$(CC) $(COMPILE_FLAGS) -c main.cpp InputData.cpp  
 
 
 
@@ -24,8 +22,8 @@ QuickTSP.o : PathUnity.h TSP.h State.h WarehouseToGraphConverter.h Layer.h Param
 	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp State.cpp WarehouseToGraphConverter.cpp Layer.cpp Parameter.cpp
 
 #DAO CLASSES (DIRECTLY RELATED WITH THE DESCRIPTION OF DATA)
-WarehousePack.o: Cell.h Shelf.h Block.h Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h Order.h
-	$(CC) $(COMPILE_FLAGS) -c Cell.cpp Shelf.cpp Block.cpp Warehouse.cpp BlockExit.cpp Corridor.h Curve.cpp Client.cpp Product.cpp Order.cpp
+WarehousePack.o: Cell.h Shelf.h Block.h Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h Order.h ProductAllocationProhibition.h
+	$(CC) $(COMPILE_FLAGS) -c Cell.cpp Shelf.cpp Block.cpp Warehouse.cpp BlockExit.cpp Corridor.h Curve.cpp Client.cpp Product.cpp Order.cpp ProductAllocationProhibition.cpp
 
 
 GraphPack.o: Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h
