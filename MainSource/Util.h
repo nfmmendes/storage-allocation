@@ -12,7 +12,7 @@ class Util{
     public:
     
         Util(){}
-        static vector<string> splitString(string originalString, string delimiter);
+        static void splitString(vector<string>& returned ,string originalString, string delimiter);
 };
 
 #endif 

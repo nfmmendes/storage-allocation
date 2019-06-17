@@ -30,14 +30,14 @@ class Order{
         pair<Date, Time> deadline;                //!< It can be initialized or not. If it is not
                                                   //!  its default value will be 2001/01/01
     
-        Client client;                            //The amount of data needed in this object will depend of
+        string client;                            //The amount of data needed in this object will depend of
         
     public:
         Order();
     
         Order(const  Order &other);
     
-        Order(vector< pair<Product, double> >items, Date dataDeadline, Time hourDeadline, Client client);
+        Order(vector< pair<Product, double> >items, Date dataDeadline, Time hourDeadline, string client);
     
     
         void setorderItens(int i, Product &product, double quantity);

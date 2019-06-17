@@ -44,11 +44,7 @@ InputData::InputData(string  dataFile){
     file.open(dataFile, ios::in);
     if(file.is_open()){
         cout<<"Starting the input reading...\n";
-        file>>warehouseDescriptionFileName;
-        file>>productsFileName;
-        file>>ordersFileName;
-        file>>prohibitionsFileName;
-        file>>parametersFileName;
+        
         
         cout<<"Reading warehouse data...\n";
         warehouse.ReadWarehouseData(file);

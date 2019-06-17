@@ -52,12 +52,22 @@ Date Date::Parse(string date, string format){
     
     Date returned;
     
-    if(format == "YYYY/MM/DD"){
-        vector<string> split = Util::splitString(date, "/");
-        
+    if(format == "yyyy-MM-dd"){
+        vector<string> split;
+		Util::splitString(split, date, "-");
+        //cout<<split[0];
         returned.setYear(stoi(split[0]));
-        returned.setMonth(stoi(split[1]));
-        returned.setDay(stoi(split[2]));
+        
+		if(split[1][0] != '0')
+			returned.setMonth(stoi(split[1]));
+		else
+			returned.setMonth(stoi(split[1].substr(1,1)));
+	
+		
+		if(split[2][0] != '0')
+			returned.setDay(stoi(split[2]));
+		else
+			returned.setDay(stoi(split[2].substr(1,1)));
         
     }
         

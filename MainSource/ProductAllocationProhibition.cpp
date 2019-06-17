@@ -68,7 +68,8 @@ void ProductAllocationProhibitions::removeProductBlockProhibition(int i){
 
 vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProhibitionsData(ifstream &file){
     vector<ProductAllocationProhibitions> prohibitions;
-    long int idShelve, idProduct;
+    long int idShelve;
+	string productCode;
     string cellCode, blockName;
     int numProhibitions,numCellProhibitions, numShelvesProhibitions, numBlocksProhibitions;
     
@@ -84,46 +85,61 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
     
     
     vector<Product> products = input.getProducts();
-    map<string,Product> productsById;
+    map<string,Product> productsByCode;
     for(unsigned int i=0; i < products.size(); i++)
-        productsById[products[i].getName()] = products[i];
+        productsByCode[products[i].getName()] = products[i];
     
     
-    file>>numProhibitions;
-    file>>numCellProhibitions>>numShelvesProhibitions>>numBlocksProhibitions;
     
-    for(int i=0; i < numProhibitions; i++){
-        if(numCellProhibitions > 0 || numShelvesProhibitions >0|| numBlocksProhibitions >0 ){
-            
-            ProductAllocationProhibitions prohibition;
-            
-            vector<Cell> _cells;
-            vector<Shelf> _shelves;
-            vector<Block> _blocks;
-            file>>idProduct;
-            
-            for(int i=0; i<numCellProhibitions; i++){
-                file>>cellCode;
-                _cells.push_back(cellsByCode[cellCode]);
-            }
-            
-            for(int i=0; i<numShelvesProhibitions; i++){
-                file>>idShelve;
-                _shelves.push_back(shelvesById[idShelve]);
-            }
-            
-            for(int i=0; i<numBlocksProhibitions; i++){
-                file>>blockName;
-                _blocks.push_back(blocksByName[blockName]);
-            }
-            
-            prohibition.setForbiddenCells(_cells);
-            prohibition.setForbiddenShelves(_shelves);
-            prohibition.setForbiddenBlocks(_blocks);
-            
-            prohibitions.push_back(prohibition);
-        }
-    }
+	while(file>>productCode){
+		file>>numProhibitions;
+		file>>numCellProhibitions>>numShelvesProhibitions>>numBlocksProhibitions;
+    
+		cout<<numCellProhibitions<<" "<<numShelvesProhibitions<<" "<<numBlocksProhibitions<<endl;
+		for(int i=0; i < numProhibitions; i++){
+			if(numCellProhibitions > 0 || numShelvesProhibitions >0|| numBlocksProhibitions >0 ){
+				
+				ProductAllocationProhibitions prohibition;
+				
+				vector<Cell> _cells;
+				vector<Shelf> _shelves;
+				vector<Block> _blocks;
+				file>>productCode;
+				
+				if(productsByCode.find(productCode) != productsByCode.end()){
+					for(int i=0; i<numCellProhibitions; i++){
+					file>>cellCode;
+					_cells.push_back(cellsByCode[cellCode]);
+					}
+					
+					for(int i=0; i<numShelvesProhibitions; i++){
+						file>>idShelve;
+						_shelves.push_back(shelvesById[idShelve]);
+					}
+					
+					for(int i=0; i<numBlocksProhibitions; i++){
+						file>>blockName;
+						_blocks.push_back(blocksByName[blockName]);
+					}
+					
+					
+					prohibition.setForbiddenCells(_cells);
+					prohibition.setForbiddenShelves(_shelves);
+					prohibition.setForbiddenBlocks(_blocks);
+					prohibition.setProduct(productsByCode[productCode]);
+					
+					//cout<<productCode<<" "<<_cells.size()<<" "<<_shelves.size()<<" "<<_blocks.size()<<endl;
+					
+					prohibitions.push_back(prohibition);
+				}
+				
+				
+			}
+		}
+		
+	}
+	
+    
 }
 
 void ProductAllocationProhibitions::recoverWarehouseData(const Warehouse warehouse, map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName){

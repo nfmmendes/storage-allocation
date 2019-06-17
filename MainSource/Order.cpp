@@ -29,7 +29,7 @@ Order::Order(const  Order &other){
     }
 }
 
-Order::Order(vector< pair<Product, double> > items, Date dataDeadline, Time hourDeadline, Client client){
+Order::Order(vector< pair<Product, double> > items, Date dataDeadline, Time hourDeadline, string client){
     this->deadline = make_pair(dataDeadline, hourDeadline);
     this->client = client;
     
@@ -85,43 +85,41 @@ vector<Order> Order::readOrdersData(ifstream &file){
     
     int numOrders;
     int numItems;
-    int productId;
-    int clientId;
+    string productCode;
+    string clientCode;
     double quantity;
     Product product;
-    Client client;
     string date, time;
     file>>numOrders;
-    
+    cout<<numOrders<<endl;
+	
     InputData input;
     vector<pair<Product, double> > items;
     vector<Product> products = input.getProducts();
     vector<Client> clients = input.getClients();
     
-    map<long int,Product> productById;
-    map<long int,Client> clientById;
+    map<string,Product> productByCode;
+    
     
     for(int i=0; i<(int)products.size(); i++)
-        productById[products[i].getID()] = products[i];
-    
-    for(int i=0; i<(int)clients.size(); i++)
-        clientById[clients[i].getId()] = clients[i];
+        productByCode[products[i].getName()] = products[i];
     
     
     for(int i=0; i<numOrders; i++){
         file>>numItems;
-        file>>clientId;
+        file>>clientCode;
         file>>date>>time;
-        
-        client = clientById[clientId];
+      //  cout<<"\t" <<clientCode<<" "<<date<<" "<<time<<endl;
+		
         
         for(int j=0;j<numItems;j++){
-            file>>productId>>quantity;
-            product = productById[productId];
+            file>>productCode>>quantity;
+            product = productByCode[productCode];
+			//cout<<productCode<<" "<<quantity<<endl;
             items.push_back(make_pair(product,quantity));
         }
         
-        orders.push_back(Order(items,Date::Parse(date, "YYYY/MM/DD"),Time::Parse(time,"HH:MM:SS"),client));
+        orders.push_back(Order(items,Date::Parse(date, "yyyy-MM-dd"),Time::Parse(time,"HH:MM:SS"),clientCode));
     }
     
     

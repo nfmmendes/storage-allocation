@@ -55,13 +55,17 @@
     //
 
     if(file.is_open()){
-        file>>numBlocks;
+        
 
         //Those variables will store the basic data of each block in the warehouse
         string blockName;
         double blockBottomLeftCoordX;
         double blockBottomLeftCoordY; 
 
+	
+		file>>numBlocks;
+		cout<<"Reading blocks...\n";
+		cout<<numBlocks<<endl;
         for(int i=0; i<numBlocks; i++){
             file>> blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY;
             this->blocks.push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY));
@@ -74,10 +78,12 @@
         string blockBName; 
         map<string, vector<BlockExit> > exitsByBlock;
    
-        if(numExits == 0){
+		cout<<"Reading blocks exits...\n";
+		cout<<numExits<<endl;
+        if(numExits != 0){
             for(int i=0; i<numExits; i++){
                 file>> idExit >> exitCoordX >> exitCoordY>>blockName>>blockBName; 
-
+				//cout<<blockName<<" "<<blockBName<<endl;
                 //Fill auxiliary structure to connect 
                 if(blockBName != "#_#_#")
                     exitsByBlock[blockName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockName));
@@ -100,8 +106,10 @@
             }
         }
 
+		cout<<"Reading shelves...\n";
         //Read all the data concerning shelves
         file>> numShelves; 
+		cout<<numShelves<<endl;
         long int idShelf;
         int columns;
         int lines; 
@@ -123,15 +131,17 @@
             this->blocks[i].setShelves(shelvesByBlock[blocks[i].getName()]);
         
         
-        
+        cout<<"Reading corridors...\n";
         //Read all data concerning corridors
         file>>numCorridors;
+		cout<<numCorridors<<endl;
         long int idCorridor;
         string dirCorridor, senseCorridor;
         double beginCoordX, beginCoordY,length;
         map<string, vector<Corridor> > corridorsByBlock;
         for(int i=0; i < numCorridors; i++){
             file>>idCorridor>>blockName>>dirCorridor>>senseCorridor>>beginCoordX>>beginCoordY>>length;
+			//cout<<idCorridor<<" "<<dirCorridor<<" "<<senseCorridor<<" "<<beginCoordX<<" "<<beginCoordY<<" "<<length<<endl;
             string dir = dirCorridor;
             string sense = senseCorridor;
             corridorsByBlock[blockName].push_back(Corridor(idCorridor,blockName, dir, sense, make_pair(beginCoordX, beginCoordY), length));
@@ -142,8 +152,10 @@
         for(unsigned int i=0; i<blocks.size();i++)
             this->blocks[i].setCorridors(corridorsByBlock[this->blocks[i].getName()]);
         
+		cout<<"Reading cells...\n";
         //Read all data concerning cells
         file>>numCells;
+		cout<<numCells;
         int row, column;
         string cellCode;
         int numLevels;
@@ -160,14 +172,18 @@
             blocks[i].setShelves(blockShelves);
         }
         
+		cout<<"Reading curves...\n";
         file>>numCurves;
+		cout<<numCurves<<endl;
         long int idCurve, startCorridor, endCorridor;
         double endCoordX, endCoordY;
         map<string, vector<Curve> > curvesByBlock;
         for(int i=0;i<numCurves;i++){
             file>>blockName>>idCurve>>startCorridor>>endCorridor>>beginCoordX>>beginCoordY>>endCoordX>>endCoordY;
+			//cout<<blockName<<" "<<idCurve<<" "<<startCorridor<<" "<<endCorridor<<" "<<beginCoordX<<" "<<beginCoordY<<" "<<endCoordX<<" "<<endCoordY;
             curvesByBlock[blockName].push_back(Curve(idCurve, startCorridor, endCorridor,
-                                                     Point("",beginCoordX, beginCoordY,0), Point("",endCoordX, endCoordY,0)));
+                                                     Point("beginCurve"+to_string(idCurve),beginCoordX, beginCoordY,0), 
+			  									   Point("endCurve"+to_string(idCurve),endCoordX, endCoordY,0)));
             
         }
         

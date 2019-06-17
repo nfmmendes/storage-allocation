@@ -18,27 +18,24 @@ class Client{
     
     private:
         string name;
-        long int Id;
         string type;
         pair<double,double> coordinates;
     
     public:
         Client();
         // Member by member constructor
-        Client(string name, string type, long int idClient, pair<double, double> coordinates );
+        Client(string name, string type,  pair<double, double> coordinates );
     
             //Copy constructor
         Client(const Client &other);
     
             //Set functions
         void setName(string value);
-        void setId(long int value);
         void setType(string value);
         void setCoordinates(pair<double,double> value);
     
             //Get functions
         string getName();
-        long int getId();
         string setType();
         pair<double, double> getCoordinates();
     
