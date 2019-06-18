@@ -118,18 +118,20 @@
         map<string, vector<Shelf> > shelvesByBlock; 
         for(int i=0; i<numShelves; i++){
             file>>idShelf>>blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY>> columns >> lines >> cellsLenght >> cellsWidth; 
-            Shelf aux = Shelf(idShelf,vector<Cell>(), make_pair(blockBottomLeftCoordX, blockBottomLeftCoordY),
+            Shelf aux(idShelf,vector<Cell>(), make_pair(blockBottomLeftCoordX, blockBottomLeftCoordY),
                                                    blockName, columns, lines, cellsLenght, cellsWidth );
             shelves.push_back(aux);
             shelvesByBlock[blockName].push_back(aux);
+			//cout<<"Current block shelve size: "<<blockName<<" " <<shelvesByBlock[blockName].size()<<endl;
         }
 
         //Now, for each block, we will insert all its shelves. 
         //We assume that it will be few blocks and each block will have few shelves, so this part of code will
         //not harm the code performance
-        for(int i=0;i<(int)blocks.size();i++)
+        for(int i=0;i<(int)blocks.size();i++){
+			cout<<"Shelves on block: " <<shelvesByBlock[blocks[i].getName()].size()<<endl;
             this->blocks[i].setShelves(shelvesByBlock[blocks[i].getName()]);
-        
+        }
         
         cout<<"Reading corridors...\n";
         //Read all data concerning corridors
@@ -160,6 +162,7 @@
         string cellCode;
         int numLevels;
         map<int,vector<Cell> > cellsByShelf;
+		int cont = 0;
         for(int i=0;i<numCells;i++){
             file>>idShelf>>cellCode>>numLevels>>row>>column;
             cellsByShelf[idShelf].push_back(Cell(cellCode,idShelf,numLevels,row,column));
@@ -167,8 +170,12 @@
         
         for(unsigned int i= 0; i<blocks.size();i++){
             vector<Shelf> blockShelves = blocks[i].getShelves();
-            for(unsigned j=0; j<blockShelves.size();j++)
-                blockShelves[i].setCells(cellsByShelf[blockShelves[i].getId()]);
+            for(unsigned j=0; j<blockShelves.size();j++){
+                blockShelves[j].setCells(cellsByShelf[blockShelves[j].getId()]);
+			}
+			
+			
+			
             blocks[i].setShelves(blockShelves);
         }
         

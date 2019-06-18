@@ -12,6 +12,67 @@
 using namespace std;
 using namespace QuickTSP;
 
+
+struct Allocation{
+	
+	string productCode; 
+	string cellCode;
+	int level; 
+	
+	Allocation(string prod, string _cell, int _level){ productCode = prod; cellCode = _cell; level = _level;}
+	
+};
+
+
+void printRandomSolution(){
+	
+	vector<Allocation> allocations; 
+	
+	bool allocated = true; 
+	int countLevel = 1; 
+	int productIndex = 0;
+	
+	InputData input;
+	vector<Block> blocks = input.getWarehouse().getBlocks();
+	vector<Product> products = input.getProducts(); 
+	
+	random_shuffle(products.begin(), products.end());
+	cout<<blocks.size()<<" "<<products.size()<<endl;
+	while(allocated == true && productIndex < products.size()){
+			allocated = false; 
+			vector<Cell> possibleCells;
+			for(int i = 0; i<blocks.size(); i++){
+				vector<Shelf> shelves = blocks[i].getShelves();
+				//cout<<"\t"<<shelves.size()<<endl;
+				for(int j=0;j<shelves.size(); j++){
+					vector<Cell> cells = shelves[j].getCells();
+					for(int k=0;k<cells.size();k++)
+						if(cells[k].getLevels() >= countLevel){
+							possibleCells.push_back(cells[k]); 
+						}
+				}
+			}
+			
+			if(possibleCells.size()> 0){
+				allocated = true;
+				
+				for(int i = 0;i<possibleCells.size() && productIndex < products.size();i++, productIndex++)
+					allocations.push_back(Allocation(products[productIndex].getName(), possibleCells[i].getCode(), countLevel));
+			}
+		countLevel++;
+	}
+	
+	ofstream file("results\\solutions.txt");
+	file<<allocations.size()<<endl;
+	for(int i=0;i<allocations.size();i++)
+		file<<allocations[i].productCode<<" "<<allocations[i].cellCode<<" "<<allocations[i].level<<endl;
+	file<<flush;
+	file.close();
+}
+
+
+
+
 int main(int argc, char **argv){
     
     if(argc > 1){
@@ -23,9 +84,11 @@ int main(int argc, char **argv){
         TSP *router;
         VND *vnd;
         
+		printRandomSolution();
         
     }else
         cerr<<"Too few  arguments. Inform the index file name.";
     
     return 0; 
 }
+
