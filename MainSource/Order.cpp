@@ -119,7 +119,11 @@ vector<Order> Order::readOrdersData(ifstream &file){
             items.push_back(make_pair(product,quantity));
         }
         
-        orders.push_back(Order(items,Date::Parse(date, "yyyy-MM-dd"),Time::Parse(time,"HH:MM:SS"),clientCode));
+		if(date.find('-') != std::string::npos)
+			orders.push_back(Order(items,Date::Parse(date, "yyyy-MM-dd"),Time::Parse(time,"HH:MM:SS AM/PM"),clientCode));
+		else if(date.find('/') != std::string::npos)
+			orders.push_back(Order(items,Date::Parse(date, "yyyy/MM/dd"),Time::Parse(time,"HH:MM:SS AM/PM"),clientCode));
+		
     }
     
     

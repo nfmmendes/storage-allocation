@@ -85,6 +85,9 @@ int main(int argc, char **argv){
         VND *vnd;
         
 		printRandomSolution();
+		
+		WarehouseToGraphConverter converter(input.getWarehouse());
+		
         
     }else
         cerr<<"Too few  arguments. Inform the index file name.";

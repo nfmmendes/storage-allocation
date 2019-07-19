@@ -163,7 +163,7 @@ Time Time::Parse(string time, string format){
             returned.setSecond(stoi(firstSplit[2]));
         }
         
-    }else if(format == "hh:mm:ss am/pm"){
+    }else if(format == "HH:MM:SS AM/PM"){/*
         vector<string> firstSplit;
 		Util::splitString(firstSplit,time,":");
         
@@ -176,10 +176,11 @@ Time Time::Parse(string time, string format){
             returned.setMinute(stoi(firstSplit[1]));
             
             vector<string> secondSplit;
-			Util::splitString(secondSplit,firstSplit[2],"pm");
+			//Corrigir isso depois
+			//Util::splitString(secondSplit,firstSplit[2]," ");
             returned.setSecond(stoi(secondSplit[0]));
         }
-        
+     */   
     }
     
     return returned;
