@@ -16,7 +16,10 @@ namespace QuickTSP{
 
         public:  
             Transition(){}
-            Transition(Transition &transition){}
+            Transition(Transition &transition){
+				this->beginVertex= transition.beginVertex;
+				this->endVertex = transition.endVertex;
+			}
             Transition(Vertex &beginVertex, Vertex& endVertex){
                 this->beginVertex = beginVertex;
                 this->endVertex = endVertex;

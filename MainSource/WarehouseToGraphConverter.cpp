@@ -150,10 +150,10 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
     double coordY;
     string cellCode;
     
-    Corridor *corridorUp;
-    Corridor *corridorDown;
-    Corridor *corridorLeft;
-    Corridor *corridorRight;
+    Corridor *corridorUp= NULL;
+    Corridor *corridorDown=NULL;
+    Corridor *corridorLeft=NULL;
+    Corridor *corridorRight=NULL;
     
 
     

@@ -38,3 +38,11 @@ long int Cell::getIdShelf() { return idShelf;}
 int Cell::getRow(){ return row;}
 int Cell::getColumn() { return column; }
 int Cell::getLevels() { return levels; }
+
+void Cell::printCellInformation(){ 
+
+	cout<<"_____________________________\n";
+	cout<<"Cell code: \t"<<this->code<<"\tCell shelf: \t"<<this->idShelf<<endl;
+	cout<<"Row: \t"<<this->row<<"\tColumn: "<<this->column<<"\tNumber of Levels: \t"<<this->levels<<endl;
+	cout<<"_____________________________\n"<<endl;
+}

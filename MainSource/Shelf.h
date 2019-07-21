@@ -51,6 +51,9 @@ class Shelf{
         void setNumRows(int value);
         void setCellLength(double value);
         void setCellWidth(double value);
+		
+		void printShelfInformation();
+		
 };
 
 #endif

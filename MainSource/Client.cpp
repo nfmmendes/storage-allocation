@@ -50,7 +50,6 @@ vector<Client> Client::readClientData(string fileName){
     vector<Client> clients;
     pair<double,double> coordinates;
     string _name, _type;
-    long int ID;
     
     ifstream file;
     file.open(fileName,ios::in);
@@ -70,7 +69,6 @@ vector<Client> Client::readClientDataWithoutCoordinates(string fileName){
     vector<Client> clients;
     pair<double,double> coordinates;
     string _name, _type;
-    long int ID;
     
     ifstream file;
     file.open(fileName,ios::in);

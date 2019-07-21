@@ -48,3 +48,14 @@ Curve & Curve::operator=(const Curve &other){
     
     return *this;
 }
+
+
+void Curve::printCurveInformation(){
+	
+	cout<<"____________________________________\n";
+	cout<<"Curve: \t"<<this->Id <<endl;
+	cout<<"Starting corridor: \t"<<this->startingCorridorId<<"\t"<<"Ending corridor \n"<<endl; 
+	cout<<"Starting point: (x=\t"<<this->startingPoint.getCoordX()<<", y="<<this->startingPoint.getCoordY()<<")";
+	cout<<"Ending point: (x=\t"<<this->endingPoint.getCoordX()<<", y="<<this->endingPoint.getCoordY()<<")\n";
+	cout<<"____________________________________\n";
+}

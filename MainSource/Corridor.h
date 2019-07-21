@@ -41,7 +41,19 @@ class Corridor{
     
     public:
         Corridor(){}
-        Corridor(const Corridor & other){}
+        Corridor(const Corridor & other){
+			
+			this->Id = other.Id;
+			this->blockName = other.blockName;
+			this->direction = other.direction;
+			this->sense = other.sense;
+			this->begin = other.begin; 
+			this->length = other.length;
+		}
+		
+		///
+		///
+		///
         Corridor(long int Id, string blockName, string dir, string sense, pair<double,double> begin, double length){
             this->Id = Id;
             this->blockName = blockName;
@@ -91,6 +103,14 @@ class Corridor{
             return *this;
         }
     
+		
+		void printCorridorInformation(){
+			cout<<"___________________________________\n";
+			cout<<"Corridor :\t"<<this->Id<<endl;
+			cout<<"Block name :\t"<<this->blockName<<"\tDirection: \t"<<this->direction<<"\tSense: \t"<<this->sense<<endl;
+			cout<<"Begin point: \t(x="<<this->begin.first<<" , y="<<this->begin.second<<")\t Length="<<this->length<<endl; 
+			cout<<"___________________________________\n\n";
+		}
 };
 
 

@@ -9,6 +9,7 @@
 #include "TSP.h"
 #include "VND.h"
 #include "InputData.h"
+#include "WarehouseToGraphConverter.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -38,15 +39,15 @@ void printRandomSolution(){
 	
 	random_shuffle(products.begin(), products.end());
 	cout<<blocks.size()<<" "<<products.size()<<endl;
-	while(allocated == true && productIndex < products.size()){
+	while(allocated == true && productIndex < (int)products.size()){
 			allocated = false; 
 			vector<Cell> possibleCells;
-			for(int i = 0; i<blocks.size(); i++){
+			for(unsigned int i = 0; i<blocks.size(); i++){
 				vector<Shelf> shelves = blocks[i].getShelves();
 				//cout<<"\t"<<shelves.size()<<endl;
-				for(int j=0;j<shelves.size(); j++){
+				for(unsigned int j=0;j<shelves.size(); j++){
 					vector<Cell> cells = shelves[j].getCells();
-					for(int k=0;k<cells.size();k++)
+					for(unsigned int k=0;k<cells.size();k++)
 						if(cells[k].getLevels() >= countLevel){
 							possibleCells.push_back(cells[k]); 
 						}
@@ -56,7 +57,7 @@ void printRandomSolution(){
 			if(possibleCells.size()> 0){
 				allocated = true;
 				
-				for(int i = 0;i<possibleCells.size() && productIndex < products.size();i++, productIndex++)
+				for(unsigned int i = 0;i<possibleCells.size() && productIndex < (int) products.size();i++, productIndex++)
 					allocations.push_back(Allocation(products[productIndex].getName(), possibleCells[i].getCode(), countLevel));
 			}
 		countLevel++;
@@ -64,7 +65,7 @@ void printRandomSolution(){
 	
 	ofstream file("results\\solutions.txt");
 	file<<allocations.size()<<endl;
-	for(int i=0;i<allocations.size();i++)
+	for(unsigned int i=0;i<allocations.size();i++)
 		file<<allocations[i].productCode<<" "<<allocations[i].cellCode<<" "<<allocations[i].level<<endl;
 	file<<flush;
 	file.close();
@@ -81,8 +82,8 @@ int main(int argc, char **argv){
         InputData input(indexFileName);
 
         cout<<"Converting algorithm to graph\n";
-        TSP *router;
-        VND *vnd;
+        //TSP *router=NULL;
+        //VND *vnd=NULL;
         
 		printRandomSolution();
 		

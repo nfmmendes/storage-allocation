@@ -42,3 +42,13 @@ bool BlockExit::operator==(const BlockExit &other) { return this->Id == other.Id
 bool BlockExit::operator!=(const BlockExit &other) { return this->Id != other.Id; }
 bool BlockExit::operator<(const BlockExit & other) const { return this->Id < other.Id;} //<! Allow the use of an object of this class
 // as a key in a map
+
+
+void BlockExit::printExitInformation(){
+	cout<<"_____________________________\n";
+	cout<<"Exit Id: \t"<<this->Id<<endl;
+	cout<<"Block start: \t"<<this->blockAName<<"\t Block finish:\t"<<(this->blockBName!= "" ? this->blockBName : "No block")<<endl;
+	cout<<"Exit coordinates: \t(x="<<this->coordX<<",y="<<this->coordY<<")"<<endl; 
+	cout<<"_____________________________\n";
+	
+}

@@ -62,3 +62,15 @@ void Shelf::setNumColumns(int value){ if(value > 0) columns = value; }
 void Shelf::setNumRows(int value){ if(value > 0) rows = value; }
 void Shelf::setCellLength(double value){ if(value>0) cellLength = value;}
 void Shelf::setCellWidth(double value){ if(value >0) cellWidth = value; }
+
+void Shelf::printShelfInformation(){
+	cout<<"_________________________\n";
+	cout<<"Shelf: \t" << this->Id  <<"\tBlock name: \t"<<this->blockName<<endl;
+	cout<<"Bottom-left coord: \t(x="<<this->bottomLeftCoords.first<<",y="<<this->bottomLeftCoords.second<<")"<<endl; 
+	cout<<"Number of rows: \t"<<this->rows<<"\tNumber of columns: \t"<<this->columns<<endl;
+	cout<<"Cell width: \t"<<this->cellWidth<<"\tCell length: \t"<<this->cellLength<<endl<<endl;
+	
+	for(unsigned int i=0;i<this->cells.size();i++)
+		this->cells[i].printCellInformation();
+	cout<<"_________________________\n";
+}

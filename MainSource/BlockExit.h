@@ -43,6 +43,8 @@ class BlockExit{
         bool operator==(const BlockExit &other);
         bool operator!=(const BlockExit &other);
         bool operator<(const BlockExit & other) const;
+		
+		void printExitInformation();
     
 };
 

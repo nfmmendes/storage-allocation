@@ -59,6 +59,8 @@ class Block{
     
         //TODO: Improve this
         bool operator==(const Block &other);
+		
+		void printBlockInformation();
 };
 
 #endif

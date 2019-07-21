@@ -14,6 +14,13 @@
  
  
  Warehouse::Warehouse(Warehouse &other){
+	
+	this->name = other.name;
+	
+	for(unsigned int i=0; i<other.blocks.size();i++)
+		this->blocks.push_back(other.blocks[i]);
+	
+	 
  }
  
  
@@ -162,7 +169,7 @@
         string cellCode;
         int numLevels;
         map<int,vector<Cell> > cellsByShelf;
-		int cont = 0;
+		
         for(int i=0;i<numCells;i++){
             file>>idShelf>>cellCode>>numLevels>>row>>column;
             cellsByShelf[idShelf].push_back(Cell(cellCode,idShelf,numLevels,row,column));
@@ -309,4 +316,17 @@ void Warehouse::setBlocks(vector<Block>& blocks){
     for(unsigned int i=0; i < blocks.size(); i++)
         this->blocks.push_back(Block(blocks[i]));
 }
+
+void Warehouse::printWarehouseInformation(){
+	
+	cout<<"Printing warehouse information...\n\n\n";
+	cout<<"\tNumber of pavilion: \t"<<this->blocks.size() <<endl;
+	cout<<"\tNumber of expedition points \t"<<this->expeditionPoints.size()<<endl;
+	
+	
+	cout<<"Printing detailed information of blocks...\n\n\n";
+	for(unsigned int i =0;i<blocks.size();i++)
+		this->blocks[i].printBlockInformation();
+}
+
 

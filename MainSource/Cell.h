@@ -41,6 +41,8 @@ class Cell{
         int getRow();
         int getColumn();
         int getLevels();
+		
+		void printCellInformation();
 };
 
 #endif

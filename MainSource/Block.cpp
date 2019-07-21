@@ -30,12 +30,21 @@ Block::Block(const Block &other){
     this->bottomLeftCoords = other.bottomLeftCoords;
 }
 
+/**********************************************************************************
+*
+*
+***********************************************************************************/
 Block::Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY){
     
     this->name = blockName;
     this->bottomLeftCoords = make_pair(bottomLeftCoordX, bottomLeftCoordY);
 }
 
+
+/**********************************************************************************
+*
+*
+***********************************************************************************/
 bool Block::hasValidConfiguration(){
     bool isValid = true;
     for(unsigned int i = 0; i <exits.size();i++)
@@ -59,16 +68,48 @@ bool Block::hasValidConfiguration(){
     return isValid;
 }
 
-
+/**********************************************************************************
+*
+*
+***********************************************************************************/
 string Block::getName() { return name; }
+
+/**********************************************************************************
+*
+*
+***********************************************************************************/
 vector<Shelf> Block::getShelves() {return shelves; }
+
+/**********************************************************************************
+*
+*
+***********************************************************************************/
 vector<BlockExit> Block::getExits() {return exits; }
+
+/**********************************************************************************
+*
+*
+***********************************************************************************/
 vector<Corridor> Block::getCorridors() { return corridors;}
+
+/**********************************************************************************
+*
+*
+***********************************************************************************/
 vector<Curve> Block::getCurves() { return curves; }
+
+/**********************************************************************************
+*
+*
+***********************************************************************************/
 pair<double,double> Block::getBottomLeftCoords() {return bottomLeftCoords; }
 
 
-//Set corridors
+
+/**********************************************************************************
+*	Set corridors
+*
+***********************************************************************************/
 void Block::setCorridors(vector<Corridor> & others){
     this->corridors.clear();
     
@@ -76,7 +117,11 @@ void Block::setCorridors(vector<Corridor> & others){
         this->corridors.push_back(Corridor(others[i]));
 }
 
-//Set all the shelves of a block
+
+/**********************************************************************************
+*	Set all the shelves of a block
+*
+***********************************************************************************/
 void Block::setShelves(vector<Shelf > & other){
     this->shelves.clear();
     for(unsigned int i=0; i<other.size();i++)
@@ -84,6 +129,10 @@ void Block::setShelves(vector<Shelf > & other){
     
 }
 
+/**********************************************************************************
+*	Set all the shelves of a block
+*
+***********************************************************************************/
 void Block::setCurves(vector<Curve> & other){
     this->curves.clear();
     for(unsigned int i=0; i < other.size(); i++)
@@ -91,8 +140,10 @@ void Block::setCurves(vector<Curve> & other){
 }
 
 
-
-///Add a exit in a block (if it was not inserted a exit with same Id yet)
+/**********************************************************************************
+*	Add a exit in a block (if it was not inserted a exit with same Id yet)
+*
+***********************************************************************************/
 void Block::addExit(BlockExit & other) {
     if( find(exits.begin(), exits.end(), other) != exits.end()){
         BlockExit inserted(other);
@@ -100,7 +151,10 @@ void Block::addExit(BlockExit & other) {
     }
 }
 
-/// Removes the exit with id equals to Id in the block of exits
+/**********************************************************************************
+*	@brief Removes the exit with id equals to Id in the block of exits
+*
+***********************************************************************************/
 void Block::removeExitWithId(long int Id){
     for(unsigned int i=0; i<this->exits.size();i++)
         if(this->exits[i].getId() == Id){
@@ -109,14 +163,46 @@ void Block::removeExitWithId(long int Id){
         }
 }
 
-/// Removes the exit with the index i in the block list of exits
+/**********************************************************************************
+*	Removes the exit with the index i in the block list of exits
+*
+***********************************************************************************/
 void Block::removeExit(int index){
     if(index >= 0 && index < (int)this->exits.size())
         this->exits.erase(this->exits.begin()+index);
 }
 
 
-//TODO: Improve this
+/**********************************************************************************
+*	@brief TODO: Improve this
+*
+***********************************************************************************/
 bool Block::operator==(const Block &other){
     return this->name == other.name;
+}
+
+
+void Block::printBlockInformation(){
+	
+	cout<<"_________________________________________\n"; 
+	cout<<"Block: \t"<<this->getName()<<endl;
+	cout<<"\n\tNumber of shelves: \t"<<this->shelves.size()<<endl;
+	cout<<"Number of exits: \t"<<this->exits.size()<<endl;
+	cout<<"Number of corridor: \t"<<this->corridors.size()<<endl;
+	cout<<"Number of curves: \t"<<this->curves.size()<<endl; 
+	
+	for(unsigned int i=0;i<this->shelves.size();i++)
+		this->shelves[i].printShelfInformation();
+	
+	for(unsigned int i=0;i<this->exits.size();i++)
+		this->exits[i].printExitInformation();
+	
+	for(unsigned int i=0;i<this->corridors.size();i++)
+		this->corridors[i].printCorridorInformation();
+	
+	for(unsigned int i=0;i<this->curves.size();i++)
+		this->curves[i].printCurveInformation(); 
+	
+	cout<<"_________________________________________\n";
+	cout<<endl; 
 }
