@@ -10,6 +10,7 @@
 #include "Product.h"
 #include "Cell.h"
 #include "Curve.h"
+#include "ExpeditionPoint.h"
 using namespace std; 
 
 
@@ -19,7 +20,7 @@ class Warehouse{
             string name;
             vector<Block> blocks;
             vector<pair<Product, Cell> > productAllocation;
-            vector<Point> expeditionPoints;   /// Points where the products must be delivered after be picked on shelves
+            vector<ExpeditionPoint> expeditionPoints;   /// Points where the products must be delivered after be picked on shelves
         public:
             Warehouse(){}
             Warehouse(Warehouse &other);
@@ -36,13 +37,13 @@ class Warehouse{
             
             string getName() const ;
             vector<Block> getBlocks() const ;
-			vector<Point> getExpeditionPoints();
+			vector<ExpeditionPoint> getExpeditionPoints();
             vector<pair<Product, Cell> > getProductAllocation() const;
             
             void setName(string &name);
             void setBlocks(vector<Block>& blocks);
             void setProductAllocation(vector<pair<Product, Cell> > & productAllocation);
-			void setExpeditionPoints(vector<Point> &points);
+			void setExpeditionPoints(vector<ExpeditionPoint> &points);
 			void printWarehouseInformation();
             
             

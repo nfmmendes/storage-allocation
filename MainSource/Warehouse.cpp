@@ -37,25 +37,29 @@
     int numCorridors; 
     int numCells;
     int numCurves;
+	int numExpeditionPoints;
      
     //The reading sequence is 
     // 1. The number n1 of blocks
     //      1.1. The next n1 lines will contain each one 
     //           blockName, beginBlockX, beginBlockY (top left corner)
-    // 2. The  number n2 of block exits
-    //      2.1. The next n2 lines will contain each one
+	// 2. The number n2 of expeditionPoints
+	//		2.1. The next n2 lines will contain each one
+	//			expeditionPointCode, blockName, coordX, coordY
+    // 3. The  number n2 of block exits
+    //      3.1. The next n2 lines will contain each one
     //           idExit, exitCoordX, exitCoordY, blockA_name, blockB_name (nullable. If null the block name will be #_#_#)
-    //3. The number n3 of shelves          
-    //      3.1. The next n3 lines will contain each one
-    //          idShelve, blockName, bottomLeftCoordX, bottomLeftCoordY, Column, Lines, CellsLenght, CellsWidth
-    //4. The number n4 of corridors
+    // 4. The number n3 of shelves          
     //      4.1. The next n3 lines will contain each one
+    //          idShelve, blockName, bottomLeftCoordX, bottomLeftCoordY, Column, Lines, CellsLenght, CellsWidth
+    // 5. The number n4 of corridors
+    //      5.1. The next n3 lines will contain each one
     //          idCorridor, blockName, CorridorDirection, CorridorSense, beginCoordX, beginCoordEnd, length
-    //5. The number n5 of cells
-    //      5.1. The next n5 lines will contain each one
+    // 6. The number n5 of cells
+    //      6.1. The next n5 lines will contain each one
     //          idShelve, code, num_of_levels, row, column
-    //6. The number n6 of curves
-    //      6.1. The next n6 lines will contain each one
+    // 7. The number n6 of curves
+    //      7.1. The next n6 lines will contain each one
     //          blockName, idCurva, corridor1Id, corridor2Id, pointXCorridor1, pointYCorridor1, pointXCorridor1, pointYCorridor2
     //
     //
@@ -77,6 +81,16 @@
             file>> blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY;
             this->blocks.push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY));
         }
+		
+		file>>numExpeditionPoints;
+		cout<<"Reading expedition points...\n";
+		double coordX, coordY;
+		string expeditionCode; 
+		cout<<numExpeditionPoints<<endl;
+		for(int i=0;i<numExpeditionPoints;i++){
+			file>>expeditionCode>>blockName>>coordX>>coordY; 
+			this->expeditionPoints.push_back(ExpeditionPoint(expeditionCode, blockName, pair<double,double>(coordX, coordY)));
+		}
 
         //Read all the data concerning block exits
         file>> numExits;

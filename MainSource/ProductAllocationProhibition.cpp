@@ -91,20 +91,22 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
     map<string, Block> blocksByName;
     map<long int, Shelf> shelvesById;
     map<string, Cell> cellsByCode;
-    ProductAllocationProhibitions::recoverWarehouseData(warehouse,cellsByCode,shelvesById,blocksByName);
-    
-    
     vector<Product> products = input.getProducts();
     map<string,Product> productsByCode;
+	
     for(unsigned int i=0; i < products.size(); i++)
-        productsByCode[products[i].getName()] = products[i];
-    
-    
-    
+		productsByCode[products[i].getName()] = products[i];
+	
+	ProductAllocationProhibitions::recoverWarehouseData(warehouse,cellsByCode,shelvesById,blocksByName);
+	
+
 	while(file>>productCode){
 		file>>numProhibitions;
+		cout<<numProhibitions<<endl;
 		file>>numCellProhibitions>>numShelvesProhibitions>>numBlocksProhibitions;
     
+	
+		
 		cout<<numCellProhibitions<<" "<<numShelvesProhibitions<<" "<<numBlocksProhibitions<<endl;
 		for(int i=0; i < numProhibitions; i++){
 			if(numCellProhibitions > 0 || numShelvesProhibitions >0|| numBlocksProhibitions >0 ){
@@ -162,17 +164,18 @@ void ProductAllocationProhibitions::recoverWarehouseData(const Warehouse warehou
         blocksByName[blocks[i].getName()]= blocks[i];
         
         vector<Shelf> shelvesOnBlock = blocks[i].getShelves();
-        shelves.insert(shelves.end(), shelvesOnBlock.begin(), shelves.end());
+        shelves.insert(shelves.end(), shelvesOnBlock.begin(), shelvesOnBlock.end());
     }
     
     //Fill shelvesById dictionary, while get the cells of the shelf
-    for(unsigned int i=0; i< shelves.size(); i++){
+	for(unsigned int i=0; i< shelves.size(); i++){
         shelvesById[shelves[i].getId()] = shelves[i];
         
         vector<Cell> cellsOnShelf = shelves[i].getCells();
         cells.insert(cells.end(), cellsOnShelf.begin(), cellsOnShelf.end());
     }
     
+	
     for(unsigned int i=0; i<cells.size();i++)
         cellsByCode[cells[i].getCode()] = cells[i];
 }

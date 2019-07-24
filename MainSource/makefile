@@ -40,8 +40,8 @@ Block : Block.h Cell.o Shelf.o Curve.o BlockExit.o
 	$(CC) $(COMPILE_FLAGS) -c Block.cpp
 
 #DAO CLASSES (DIRECTLY RELATED WITH THE DESCRIPTION OF DATA)
-WarehousePack : Cell.h Shelf.h  Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h Order.h 
-	$(CC) $(COMPILE_FLAGS) -c Corridor.h Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp 
+WarehousePack : ExpeditionPoint.h Cell.h Shelf.h  Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h Order.h 
+	$(CC) $(COMPILE_FLAGS) -c ExpeditionPoint.cpp Corridor.h Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp 
 
 
 Input: InputData.h Parameter.o Client.o Product.o Warehouse.o

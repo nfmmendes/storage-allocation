@@ -49,7 +49,9 @@ void WarehouseToGraphConverter::generateGraph(){
     //This loop creates a subgraph of the final graph to each block. These blocks will be connected by block exits in
     //second loop
     for(int i= 0; i<(int) blocks.size(); i++){
-        vector<Shelf> shelves = blocks[i].getShelves();
+        cout<<"Working on block: " <<blocks[i].getName()<<endl; 
+		
+		vector<Shelf> shelves = blocks[i].getShelves();
         vector<Corridor> corridors = blocks[i].getCorridors();
         vector<Curve> curves = blocks[i].getCurves();
         
@@ -57,6 +59,7 @@ void WarehouseToGraphConverter::generateGraph(){
         //second part of the algorithm
         for(int j = 0; j < (int) shelves.size(); j++){
             
+			cout<<"Working on shelf: "<<shelves[j].getId()<<endl;
             vector<Cell> cells = shelves[j].getCells();
             vector<vector<string> > cellPositions;      //It stores each vertex in its line and row at cell
                                                         //respective shelf
@@ -66,11 +69,13 @@ void WarehouseToGraphConverter::generateGraph(){
             double cellLenght = shelves[j].getCellLength();
             int numRows = shelves[j].getNumRows();
             int numColumns = shelves[j].getNumColumns();
-            
+			
+            cout<<"Connecting cells"<<endl;
             cellPositions.resize(shelves[j].getNumRows()+1);
             for(int k=1; k < (int) numRows+1; k++)
                 cellPositions[k].resize(numColumns+1);
             
+			cout<<"Connecting cells"<<endl;
             for(int k=0; k < (int) cells.size(); k++)
                 connectCellLevels(cells[k], cellPositions, arcs);
             
@@ -87,20 +92,31 @@ void WarehouseToGraphConverter::generateGraph(){
                         connectInternalNode(vertex, arcs, numRows, numColumns,k,l,cellWidth, cellLenght, cellPositions);
                 }
             }
-            
+            cout<<"Connecting shelf to corridor"<<endl;
             connectShelfToCorridor(shelves[j], adjacentCorridors,cellPositions, numRows, numColumns, arcs);
         }
         
+		cout<<"Splitting corridors\n";
         //This will allow to create arcs in the interior of corridors
         for(int j = 0; j<(int)curves.size(); j++)
             splitCorridorByCurves(curves[j], curvesByCorridor);
         
+		
+		for(map<long int, vector<Point> >::iterator it = pointsByCorridor.begin(); it != pointsByCorridor.end();it++){
+			cout<<it->first<<" "<<it->second.size()<<endl;
+		}
+		
+		
+		cout<<"Creating arcs on corridors\n"; 
         for(int j=0; j< (int)corridors.size(); j++)
-            createArcsOnCorridors(corridors[i],arcs);
+            createArcsOnCorridors(corridors[j],arcs);
         
+		cout<<"Connecting corridors\n";
         connectCorridorsByCurves(curves,arcs);
         
     }
+	
+	cout<<"Conversion finished:\nNumber of arcs: \t"<<arcs.size()<<endl;
 }
 
 /**
@@ -180,7 +196,7 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
     
     //=====================     Vertical shelf   ================================
     if(numColumns < numRows){
-    
+		
         for(int k=1; k< (int) numRows+1; k++){
             //First column
             if(corridorLeft != NULL){
@@ -310,7 +326,7 @@ void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, s
 void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, set<Arc> &arcs){
     
     long int id = corridor.getId();
-    
+    cout<<"Corridor id=\t"<<id<<endl;
     vector<Point> points = pointsByCorridor[id];
     corridor.orderCorridorPoints(points);
     
@@ -320,42 +336,50 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
     vertexByCode[first.getLabel()] = first;
     vertexByPoint[Point("corridorBegin_"+to_string(id),beginCorridor.first, beginCorridor.second, 0)] = first;
     
-    //If the initial point of a corridor is not a curve pointe, we do it
-    if(fabs(beginCorridor.first - points[0].getCoordX()) > MIN_DIFF ||
-       fabs(beginCorridor.second - points[0].getCoordY()) > MIN_DIFF){
-        
-        Vertex second("corridor_"+to_string(id)+"point_begin", "CorridorCurvePoint");
-        vertexByCode[second.getLabel()] = second;
-        
-        double distance = sqrt(pow(beginCorridor.first-points[0].getCoordX(),2) +
-                               pow(beginCorridor.second-points[0].getCoordY(),2));
-        
-        arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
-        
-        count++;
-        if(corridor.getSense() == BOTH)
-            arcs.insert(Arc("arc_"+second.getLabel()+ "_"+first.getLabel(), distance, second, first));
-        
-        
-        first = second;
-        
-    }
+	cout<<"Points by corridor= \t"<<points.size()<<endl;
+	
+	if(points.size()>0){
+		//If the initial point of a corridor is not a curve pointe, we do it
+		if(fabs(beginCorridor.first - points[0].getCoordX()) > MIN_DIFF ||
+		   fabs(beginCorridor.second - points[0].getCoordY()) > MIN_DIFF){
+			
+			Vertex second("corridor_"+to_string(id)+"point_begin", "CorridorCurvePoint");
+			vertexByCode[second.getLabel()] = second;
+			
+			double distance = sqrt(pow(beginCorridor.first-points[0].getCoordX(),2) +
+								   pow(beginCorridor.second-points[0].getCoordY(),2));
+			
+			arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
+			
+			count++;
+			if(corridor.getSense() == BOTH)
+				arcs.insert(Arc("arc_"+second.getLabel()+ "_"+first.getLabel(), distance, second, first));
+			
+			
+			first = second;
+			
+		}
+		
+		
+		//After define the first arc we do the orders links
+		for(int k=0; k<(int)points.size()-1; k++){
+			Vertex second = * (new Vertex("corridor_"+to_string(id)+"point_"+to_string(count), "CorridorCurvePoint"));
+			vertexByCode[second.getLabel()] = second;
+			
+			double distance = sqrt(pow(points[k+1].getCoordX()-points[k].getCoordX(),2)+
+								   pow(points[k+1].getCoordY()-points[k].getCoordY(),2));
+			
+			arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
+			
+			count++;
+			if(corridor.getSense() == BOTH)
+				arcs.insert(Arc("arc_"+second.getLabel()+ "_"+first.getLabel(), distance, second, first));
+			first = second;
+		}
+		
+	}
+	
     
-    //After define the first arc we do the orders links
-    for(int k=0; k<(int)points.size()-1; k++){
-        Vertex second = * (new Vertex("corridor_"+to_string(id)+"point_"+to_string(count), "CorridorCurvePoint"));
-        vertexByCode[second.getLabel()] = second;
-        
-        double distance = sqrt(pow(points[k+1].getCoordX()-points[k].getCoordX(),2)+
-                               pow(points[k+1].getCoordY()-points[k].getCoordY(),2));
-        
-        arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
-        
-        count++;
-        if(corridor.getSense() == BOTH)
-            arcs.insert(Arc("arc_"+second.getLabel()+ "_"+first.getLabel(), distance, second, first));
-        first = second;
-    }
 }
 
 

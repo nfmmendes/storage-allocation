@@ -88,6 +88,8 @@ int main(int argc, char **argv){
 		printRandomSolution();
 		
 		WarehouseToGraphConverter converter(input.getWarehouse());
+		cout<<"Starting conversion of warehouse to graph\n";
+		converter.generateGraph();
 		
         
     }else

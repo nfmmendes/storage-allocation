@@ -104,7 +104,6 @@ vector<Order> Order::readOrdersData(ifstream &file){
     for(int i=0; i<(int)products.size(); i++)
         productByCode[products[i].getName()] = products[i];
     
-    
     for(int i=0; i<numOrders; i++){
         file>>numItems;
         file>>clientCode;
@@ -118,11 +117,26 @@ vector<Order> Order::readOrdersData(ifstream &file){
 			//cout<<productCode<<" "<<quantity<<endl;
             items.push_back(make_pair(product,quantity));
         }
-        
+    
+		Date parsedDate; 
+		Time parsedTime;
+		
 		if(date.find('-') != std::string::npos)
-			orders.push_back(Order(items,Date::Parse(date, "yyyy-MM-dd"),Time::Parse(time,"HH:MM:SS AM/PM"),clientCode));
+			parsedDate = Date::Parse(date, "yyyy-MM-dd");
 		else if(date.find('/') != std::string::npos)
-			orders.push_back(Order(items,Date::Parse(date, "yyyy/MM/dd"),Time::Parse(time,"HH:MM:SS AM/PM"),clientCode));
+			parsedDate = Date::Parse(date, "yyyy/MM/dd");
+
+
+		
+		if(time.find('/') != std::string::npos)
+			parsedTime=Time::Parse(time,"HH:MM:SS AM/PM");
+		else
+			parsedTime=Time::Parse(time, "HH:MM:SS"); 
+		
+
+		orders.push_back(Order(items,parsedDate,parsedTime,clientCode));
+		
+		
 		
     }
     
