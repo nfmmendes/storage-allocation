@@ -3,8 +3,11 @@
 #include<string>
 #include<utility>
 #include<cmath>
+#include<algorithm>
 #include "Point.h"
 using namespace std;
+
+#define TOLERANCE 0.000001
 
 
 Point::Point(){
@@ -80,16 +83,44 @@ bool Point::operator<(const Point &other)const{
     double distA = this->coordX*this->coordX + this->coordY*this->coordY + this->coordZ*this->coordZ;
     double distB = other.coordX*other.coordX + other.coordY*other.coordY + other.coordZ*other.coordZ;
     
-    if(fabs(distA - distB) >= 0.00001)
+    if(fabs(distA - distB) >= TOLERANCE)
         return distA < distB;
-    else if(fabs(this->coordX - other.coordX) >= 0.00001)
+    else if(fabs(this->coordX - other.coordX) >= TOLERANCE)
         return this->coordX < other.coordX;
-    else if(fabs(this->coordY - other.coordY) >= 0.00001)
+    else if(fabs(this->coordY - other.coordY) >= TOLERANCE)
         return this->coordY < other.coordY;
-    else if(fabs(this->coordZ - other.coordZ) >= 0.00001)
+    else if(fabs(this->coordZ - other.coordZ) >= TOLERANCE)
         return this->coordZ < other.coordZ;
     else
         return this->label < other.label;
+}
+
+vector<Point>  Point::removeDuplicates(vector<Point> & points){
+	
+	sort(points.begin(), points.end()); 
+	
+	vector<int> pointsToRemove;
+	for(int i=1; i<points.size(); i++){
+		if(fabs(points[i-1].coordX-points[i].coordX) < TOLERANCE && fabs(points[i-1].coordY-points[i].coordY) < TOLERANCE &&
+		   fabs(points[i-1].coordZ-points[i].coordZ) < TOLERANCE)
+		   pointsToRemove.push_back(i);
+	}
+		
+	vector<Point> returned; 
+	int cont = 0; 
+	for(int i=0; i<points.size() && cont < pointsToRemove.size(); i++){
+		cout<<pointsToRemove.size()<<" "<<cont<<endl; 
+		if(pointsToRemove[cont] == i)
+			cont++;
+		else 
+			returned.push_back(points[i]);
+	}
+	
+	if(pointsToRemove.size() == 0)
+		return points; 
+	cout<<"Abracadabra"<<returned.size()<<endl; 
+	return returned; 
+		
 }
 
 

@@ -76,8 +76,25 @@ class Corridor{
         long int getId() const { return Id; }
         string getBlockId() {return blockName; }
         pair<double, double> getBeginCoords() const { return begin; }
+		
         double getLength()const { return length; }
     
+		pair<double, double> getEndCoords() const { 
+		
+			if(direction == HORIZONTAL){
+				if( sense == LEFT_TO_RIGHT)
+					return make_pair<double,double>((double)begin.first + length, (double)begin.second);
+				else 
+					return make_pair<double,double>((double)begin.first - length, (double)begin.second); 				
+			}else {
+				if(sense == UP_DOWN)
+					return make_pair<double,double>((double)begin.first, (double) begin.second - length); 
+				else 
+					return make_pair<double,double>((double)begin.first,(double) begin.second + length); 
+			}
+		}
+		
+	
         void orderCorridorPoints(vector<Point> & points)const{
             
             if(this->getDirection() ==  VERTICAL){

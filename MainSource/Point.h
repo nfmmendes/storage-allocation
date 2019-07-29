@@ -4,6 +4,7 @@
 #include<iostream>
 #include<string>
 #include<utility>
+#include<vector>
 using namespace std;
 
 
@@ -33,6 +34,7 @@ using namespace std;
             static bool isMinorX(const Point &a,const Point &b);
             static bool isMinorY(const Point &a,const Point &b);
             static bool isMinorZ(const Point &a,const Point &b);
+			static vector<Point> removeDuplicates(vector<Point> & points);
         
             bool operator<(const Point &other)const;
         

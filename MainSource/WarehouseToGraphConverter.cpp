@@ -17,6 +17,7 @@
 using namespace QuickTSP;
 using namespace std;
 
+#define DEBUG_LEVEL 1
 #define MIN_DIFF 0.000001
 
 WarehouseToGraphConverter::WarehouseToGraphConverter(){
@@ -62,15 +63,17 @@ void WarehouseToGraphConverter::generateGraph(){
 			cout<<"Working on shelf: "<<shelves[j].getId()<<endl;
             vector<Cell> cells = shelves[j].getCells();
             vector<vector<string> > cellPositions;      //It stores each vertex in its line and row at cell
-                                                        //respective shelf
+                                                        //respective shelf. You should verify if it is updated anytime
+														// the current shelf changes
             vector<Corridor> adjacentCorridors = getAdjacentCorridors(corridors, shelves[j]);
             
+			//The width and length of each cell is relevant to define cells coordinates 
             double cellWidth = shelves[j].getCellWidth();
             double cellLenght = shelves[j].getCellLength();
             int numRows = shelves[j].getNumRows();
             int numColumns = shelves[j].getNumColumns();
 			
-            cout<<"Connecting cells"<<endl;
+            
             cellPositions.resize(shelves[j].getNumRows()+1);
             for(int k=1; k < (int) numRows+1; k++)
                 cellPositions[k].resize(numColumns+1);
@@ -92,6 +95,7 @@ void WarehouseToGraphConverter::generateGraph(){
                         connectInternalNode(vertex, arcs, numRows, numColumns,k,l,cellWidth, cellLenght, cellPositions);
                 }
             }
+			
             cout<<"Connecting shelf to corridor"<<endl;
             connectShelfToCorridor(shelves[j], adjacentCorridors,cellPositions, numRows, numColumns, arcs);
         }
@@ -101,12 +105,6 @@ void WarehouseToGraphConverter::generateGraph(){
         for(int j = 0; j<(int)curves.size(); j++)
             splitCorridorByCurves(curves[j], curvesByCorridor);
         
-		
-		for(map<long int, vector<Point> >::iterator it = pointsByCorridor.begin(); it != pointsByCorridor.end();it++){
-			cout<<it->first<<" "<<it->second.size()<<endl;
-		}
-		
-		
 		cout<<"Creating arcs on corridors\n"; 
         for(int j=0; j< (int)corridors.size(); j++)
             createArcsOnCorridors(corridors[j],arcs);
@@ -128,16 +126,24 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
     int numLevels = cell.getLevels();
     
     if(numLevels == 1){
+		#if DEBUG_LEVEL > 0
+			cout<<"Connecting cell: \t"<<cell.getCode()<<" which has a single level\n";
+		#endif 
         Vertex firstLevel = * (new Vertex( cell.getCode(), "UniqueLevelCell"));
         initiliazeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
         
     }else if(numLevels > 0){
-        Vertex firstLevel = * (new Vertex( cell.getCode()+"_L1", "FirstLevelCell"));
+        Vertex firstLevel(cell.getCode()+"_L1", "FirstLevelCell");
         initiliazeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
         
+		#if DEBUG_LEVEL > 0
+			cout<<"Connecting cell levels of cell "<<cell.getCode()<<" which has " <<numLevels<<" levels\n";
+		#endif
+		
+		
         //Create the vertexes to represent the higher levels and the arcs to connect them
         for(int l=1; l< (int) numLevels; l++){
-            Vertex vertex = * (new Vertex( cell.getCode()+"L"+to_string(l) , "UniqueLevelCell"));
+            Vertex vertex( cell.getCode()+"L"+to_string(l) , "UniqueLevelCell");
             vertexByCode[vertex.getLabel()] = vertex;
             
             //We suppose that the pickers came from the lower level, take a product on the first or upper leves
@@ -171,29 +177,14 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
     Corridor *corridorLeft=NULL;
     Corridor *corridorRight=NULL;
     
-
-    
-    //Search and identify the adjacent corridors
-    for(unsigned int i=0;i< adjacentCorridor.size();i++)
-        if(adjacentCorridor[i].getDirection() == VERTICAL &&
-           adjacentCorridor[i].getBeginCoords().first < shelf.getBottomLeftCoordX())
-                corridorLeft =  new Corridor(adjacentCorridor[i]);
-    
-    for(unsigned int i=0;i< adjacentCorridor.size();i++)
-        if(adjacentCorridor[i].getDirection() == VERTICAL &&
-           adjacentCorridor[i].getBeginCoords().first >= shelf.getBottomLeftCoordX())
-            corridorRight =  new Corridor(adjacentCorridor[i]);
-    
-    for(unsigned int i=0;i<adjacentCorridor.size();i++)
-        if(adjacentCorridor[i].getDirection() == HORIZONTAL &&
-           adjacentCorridor[i].getBeginCoords().second >= shelf.getBottomLeftCoordY())
-            corridorUp =  new Corridor(adjacentCorridor[i]);
-    
-    for(unsigned int i=0;i<adjacentCorridor.size();i++)
-        if(adjacentCorridor[i].getDirection() == HORIZONTAL &&
-           adjacentCorridor[i].getBeginCoords().second <= shelf.getBottomLeftCoordY())
-            corridorDown =  new Corridor(adjacentCorridor[i]);
-    
+	InitializeAdjacentCorridors(corridorUp, corridorDown, corridorLeft, corridorRight, adjacentCorridor, shelf); 
+	
+	#if DEBUG_LEVEL > 0
+		if(corridorUp == corridorLeft && corridorRight == corridorDown && corridorLeft == corridorRight)
+			cout<<"There is a problem with adjacent corridors\n"; 
+	#endif
+	
+	
     //=====================     Vertical shelf   ================================
     if(numColumns < numRows){
 		
@@ -208,18 +199,27 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
                 
                 pointsByCorridor[corridorLeft->getId()].push_back(corridorPoint);
                 
-                Vertex cell("cell_"+cellPositions[k][1], "CellVertex");
-                Vertex corridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[k][1],"PickVertex");
-                vertexByCode[cell.getLabel()] = cell;
-                vertexByCode[corridor.getLabel()] = corridor;
-                
-                Arc leaving("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordX-coordX), cell, corridor);
-                Arc picking("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordX-coordX), corridor, cell);
-                arcs.insert(leaving);
-                arcs.insert(picking);
+                Vertex vertexCell(cellPositions[k][1], "CellVertex");
+                Vertex vertexCorridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[k][1],"PickVertex");
+                vertexByCode[vertexCell.getLabel()] = vertexCell;
+                vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
+				
+				createArcsCellAndShelf(vertexCell, vertexCorridor, fabs(corridorCoordX-coordX), arcs);
 
             }else{
-                //The cell is considered an internal cell thus it will be connected with its neighbors
+                //The cell is considered an internal cell thus it will be connected with its neighbors (a column to the rigth)
+				if(numColumns > 1){
+					Vertex vertexCell(cellPositions[k][1], "CellVertex");
+					Vertex cellOther;
+					if(vertexByCode.find(cellPositions[k][2]) != vertexByCode.end())
+						cellOther = vertexByCode[cellPositions[k][2]];
+					else{
+						cellOther.setLabel(cellPositions[k][2]); 
+						cellOther.setType("CellVertex"); 
+					}
+					
+					createArcsCellAndShelf(vertexCell, cellOther, cellWidth, arcs); 
+				}
             }
             
             //Last column
@@ -232,18 +232,28 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
                 
                 pointsByCorridor[corridorRight->getId()].push_back(corridorPoint);
                 
-                Vertex cell("cell_"+cellPositions[k][numColumns], "CellVertex");
-                Vertex corridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[k][numColumns],"PickVertex");
-                vertexByCode[cell.getLabel()] = cell;
-                vertexByCode[corridor.getLabel()] = corridor;
+                Vertex vertexCell(cellPositions[k][numColumns], "CellVertex");
+                Vertex vertexCorridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[k][numColumns],"PickVertex");
+                vertexByCode[vertexCell.getLabel()] = vertexCell;
+                vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
                 
-                Arc leaving("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordX-coordX), cell, corridor);
-                Arc picking("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordX-coordX), corridor, cell);
-                arcs.insert(leaving);
-                arcs.insert(picking);
+				createArcsCellAndShelf(vertexCell, vertexCorridor, fabs(corridorCoordX-coordX), arcs);
+				
 
             }else{
-                //The cell is considered an internal cell thus it will be connected with its neighbors
+                //The cell is considered an internal cell thus it will be connected with its neighbors (one column to right)
+				if(numColumns > 1){
+					Vertex vertexCell(cellPositions[k][numColumns], "CellVertex");
+					Vertex cellOther;
+					if(vertexByCode.find(cellPositions[k][numColumns-1]) != vertexByCode.end())
+						cellOther = vertexByCode[cellPositions[k][numColumns-1]];
+					else{
+						cellOther.setLabel(cellPositions[k][numColumns-1]); 
+						cellOther.setType("CellVertex"); 
+					}
+					
+					createArcsCellAndShelf(vertexCell, cellOther, cellWidth, arcs); 
+				}
             }
         }
                
@@ -259,19 +269,36 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
                 
                 double corridorCoordY = corridorUp->getBeginCoords().second;
                 Point corridorPoint("", coordX, corridorCoordY,0);
+				
+				pointsByCorridor[corridorUp->getId()].push_back(corridorPoint);
                 
-                Vertex cell("cell_"+cellPositions[numRows][k], "CellVertex");
-                Vertex corridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[numRows][k],"PickVertex");
-                vertexByCode[cell.getLabel()] = cell;
-                vertexByCode[corridor.getLabel()] = corridor;
+                Vertex vertexCell(cellPositions[numRows][k], "CellVertex");
+                Vertex vertexCorridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[numRows][k],"PickVertex");
                 
-                Arc leaving("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordY-coordY), cell, corridor);
-                Arc picking("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordY-coordY), corridor, cell);
-                arcs.insert(leaving);
-                arcs.insert(picking);
+				if(vertexByCode.find(vertexCell.getLabel()) == vertexByCode.end())
+					vertexByCode[vertexCell.getLabel()] = vertexCell;
+				
+				if(vertexByCode.find(vertexCorridor.getLabel()) == vertexByCode.end())
+					vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
+                
+				
+				createArcsCellAndShelf(vertexCell, vertexCorridor, fabs(corridorCoordY-coordY), arcs);
                 
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
+				if(shelf.getNumRows() > 1){
+					
+					Vertex vertexCell(cellPositions[numRows][k], "CellVertex");
+					Vertex cellOther;
+					if(vertexByCode.find(cellPositions[numRows-1][k]) != vertexByCode.end())
+						cellOther = vertexByCode[cellPositions[numRows-1][k]];
+					else{
+						cellOther.setLabel(cellPositions[numRows-1][k]); 
+						cellOther.setType("CellVertex"); 
+					}
+					
+					createArcsCellAndShelf(vertexCell, cellOther, cellLength, arcs);
+				}				
             }
             
             //Last row
@@ -281,19 +308,31 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
                 
                 double corridorCoordY = corridorUp->getBeginCoords().second;
                 Point corridorPoint("", coordX, corridorCoordY,0);
+				
+				pointsByCorridor[corridorDown->getId()].push_back(corridorPoint);
                 
-                Vertex cell("cell_"+cellPositions[1][k], "CellVertex");
-                Vertex corridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[1][k],"PickVertex");
-                vertexByCode[cell.getLabel()] = cell;
-                vertexByCode[corridor.getLabel()] = corridor;
+                Vertex vertexCell(cellPositions[1][k], "CellVertex");
+                Vertex vertexCorridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[1][k],"PickVertex");
+                vertexByCode[vertexCell.getLabel()] = vertexCell;
+                vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
 
-                Arc leaving("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordY-coordY), cell, corridor);
-                Arc picking("arc("+ cell.getLabel() + ","+ corridor.getLabel() +")", fabs(corridorCoordY-coordY), corridor, cell);
-                arcs.insert(leaving);
-                arcs.insert(picking);
+				createArcsCellAndShelf(vertexCell, vertexCorridor, fabs(corridorCoordY-coordY), arcs);
                 
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
+				if(shelf.getNumRows() > 1){
+					
+					Vertex vertexCell(cellPositions[1][k], "CellVertex");
+					Vertex cellOther;
+					if(vertexByCode.find(cellPositions[2][k]) != vertexByCode.end())
+						cellOther = vertexByCode[cellPositions[2][k]];
+					else{
+						cellOther.setLabel(cellPositions[2][k]); 
+						cellOther.setType("CellVertex"); 
+					}
+					
+					createArcsCellAndShelf(vertexCell, cellOther, cellLength, arcs); 
+				}
             }
         }
     }
@@ -305,11 +344,50 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
     
 }
 
+/**
+ *
+ *
+ **/
+void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *up,Corridor * down,Corridor * left,Corridor * right,
+															const vector<Corridor>& adjacents,Shelf shelf){
+	
+	//Search and identify the adjacent corridors
+    for(unsigned int i=0;i< adjacents.size();i++)
+        if(adjacents[i].getDirection() == VERTICAL && adjacents[i].getBeginCoords().first < shelf.getBottomLeftCoordX())
+            left =  new Corridor(adjacents[i]);
+    
+    for(unsigned int i=0;i< adjacents.size();i++)
+        if(adjacents[i].getDirection() == VERTICAL && adjacents[i].getBeginCoords().first > shelf.getBottomLeftCoordX())
+            right =  new Corridor(adjacents[i]);
+    
+    for(unsigned int i=0;i<adjacents.size();i++)
+        if(adjacents[i].getDirection() == HORIZONTAL && adjacents[i].getBeginCoords().second > shelf.getBottomLeftCoordY())
+            up =  new Corridor(adjacents[i]);
+    
+    for(unsigned int i=0;i<adjacents.size();i++)
+        if(adjacents[i].getDirection() == HORIZONTAL && adjacents[i].getBeginCoords().second < shelf.getBottomLeftCoordY())
+            down =  new Corridor(adjacents[i]);
+}
+
+/**
+ *
+ *
+ */
+void WarehouseToGraphConverter::createArcsCellAndShelf(Vertex vertexCell, Vertex vertexCorridor,double value, set<Arc> &arcs){	
+	
+	Arc leaving("arc("+ vertexCell.getLabel() + ","+ vertexCorridor.getLabel() +")", value, vertexCell, vertexCorridor);
+	Arc picking("arc("+ vertexCorridor.getLabel() + ","+ vertexCell.getLabel() +")", value, vertexCorridor, vertexCell);
+	arcs.insert(leaving);
+	arcs.insert(picking);
+}
+
+
 
 /**
  * Connect two corridors using one curve. This curve 
  */
 void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, set<Arc> &arcs){
+	cout<<"Curves size: \n"<<curves.size()<<endl; 
     for(int i=0; i< (int)curves.size();i++){
         Vertex begin = vertexByPoint[curves[i].getStartingPoint()];
         Vertex end = vertexByPoint[curves[i].getEndingPoint()];
@@ -325,61 +403,38 @@ void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, s
  */
 void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, set<Arc> &arcs){
     
-    long int id = corridor.getId();
-    cout<<"Corridor id=\t"<<id<<endl;
-    vector<Point> points = pointsByCorridor[id];
-    corridor.orderCorridorPoints(points);
-    
-    int count = 1;
-    Vertex first("corridor_"+to_string(id)+"point_begin", "CorridorCurvePoint");
-    pair<double,double> beginCorridor = corridor.getBeginCoords();
-    vertexByCode[first.getLabel()] = first;
-    vertexByPoint[Point("corridorBegin_"+to_string(id),beginCorridor.first, beginCorridor.second, 0)] = first;
-    
-	cout<<"Points by corridor= \t"<<points.size()<<endl;
 	
-	if(points.size()>0){
-		//If the initial point of a corridor is not a curve pointe, we do it
-		if(fabs(beginCorridor.first - points[0].getCoordX()) > MIN_DIFF ||
-		   fabs(beginCorridor.second - points[0].getCoordY()) > MIN_DIFF){
-			
-			Vertex second("corridor_"+to_string(id)+"point_begin", "CorridorCurvePoint");
-			vertexByCode[second.getLabel()] = second;
-			
-			double distance = sqrt(pow(beginCorridor.first-points[0].getCoordX(),2) +
-								   pow(beginCorridor.second-points[0].getCoordY(),2));
-			
-			arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
-			
-			count++;
-			if(corridor.getSense() == BOTH)
-				arcs.insert(Arc("arc_"+second.getLabel()+ "_"+first.getLabel(), distance, second, first));
-			
-			
-			first = second;
-			
-		}
+    long int id = corridor.getId();
+	Point beginCorridor("beginCorridor_"+to_string(id), corridor.getBeginCoords().first, corridor.getBeginCoords().second, 0); 
+	Point endCorridor("endCorridor_"+to_string(id), corridor.getEndCoords().first, corridor.getEndCoords().second,0); 
+    
+	vector<Point> points = pointsByCorridor[id];
+	points.push_back(beginCorridor);
+	points.push_back(endCorridor);
+	
+	vector<Point> processedPoints = Point::removeDuplicates(points); 
+    
+	cout<<flush<<endl; 
+	corridor.orderCorridorPoints(processedPoints);
+    
+	Vertex first("corridor_"+to_string(id)+"point_0", "CorridorCurvePoint");
+	vertexByCode[first.getLabel()] = first;
+	
+	for(int k=1; k<(int)processedPoints.size(); k++){
+		Vertex second("corridor_"+to_string(id)+"point_"+to_string(k), "CorridorCurvePoint");
+		vertexByCode[second.getLabel()] = second;
 		
+		double distance = sqrt(pow(processedPoints[k].getCoordX()-processedPoints[k-1].getCoordX(),2)+
+							   pow(processedPoints[k].getCoordY()-processedPoints[k-1].getCoordY(),2));
 		
-		//After define the first arc we do the orders links
-		for(int k=0; k<(int)points.size()-1; k++){
-			Vertex second = * (new Vertex("corridor_"+to_string(id)+"point_"+to_string(count), "CorridorCurvePoint"));
-			vertexByCode[second.getLabel()] = second;
-			
-			double distance = sqrt(pow(points[k+1].getCoordX()-points[k].getCoordX(),2)+
-								   pow(points[k+1].getCoordY()-points[k].getCoordY(),2));
-			
-			arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
-			
-			count++;
-			if(corridor.getSense() == BOTH)
-				arcs.insert(Arc("arc_"+second.getLabel()+ "_"+first.getLabel(), distance, second, first));
-			first = second;
-		}
+		arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
 		
+		if(corridor.getSense() == BOTH)
+			arcs.insert(Arc("arc_"+second.getLabel()+ "_"+first.getLabel(), distance, second, first));
+		first = second;
 	}
 	
-    
+	cout<<"FINAL\n\n";
 }
 
 
@@ -412,11 +467,11 @@ void WarehouseToGraphConverter::splitCorridorByCurves(const Curve &curve, map<lo
        
     //Find condition
     points = pointsByCorridor[end];
-    if(!any_of(pointsByCorridor[end].begin(), pointsByCorridor[end].end(),[&curveStartPoint](const Point &b){
-                 return fabs(curveStartPoint.getCoordX() - b.getCoordX()) < MIN_DIFF &&
-                        fabs(curveStartPoint.getCoordY() - b.getCoordY()) < MIN_DIFF;
+    if(!any_of(points.begin(), points.end(),[&curveEndingPoint](const Point &b){
+                 return fabs(curveEndingPoint.getCoordX() - b.getCoordX()) < MIN_DIFF &&
+                        fabs(curveEndingPoint.getCoordY() - b.getCoordY()) < MIN_DIFF;
            })){
-            pointsByCorridor[end].push_back(curveStartPoint);
+            pointsByCorridor[end].push_back(curveEndingPoint);
         }
 }
 
@@ -485,6 +540,8 @@ void WarehouseToGraphConverter::connectInternalNode(Vertex vertex, set<Arc> &arc
  *  shelf (horizontal or vertical). It is supposed also that only the closest corridor can access the shelf
  *  If there are two corridors between two shelves (probably with inverse senses) we consider that you need
  *  to move from the farstest to the closest one.
+ *  Here is also considered that there is always a corridor between two shelves. All validations to check if 
+ *  it is true are done before. 
  */
 vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Corridor> & corridors, Shelf shelf){
     int numLines = shelf.getNumRows();
@@ -498,6 +555,7 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
     
     left = right = up = down;
     
+	
     pair<double,double> shelfCoords = shelf.getBottomLeftCoords();
     
     //This first if looks for the closest corridors in vertical direction, if the shelf is also in this same position
@@ -582,10 +640,6 @@ bool WarehouseToGraphConverter::doCorridorTranverse(const Corridor &corridor,con
     }
     return false;
     
-    
-    
-    
-    
 }
 
 /**
@@ -602,18 +656,23 @@ void WarehouseToGraphConverter::connectVertexesByTwoArcs(Vertex & first, string 
 
 
 /**
- *   Auxiliary function to fill the vertexByCode, firstLevelVertex and cellPositionsStructure
+ *   Auxiliary function to fill the vertexByCode, firstLevelVertex and cellPositions Structure
+ *	 Those structures are very important to assure the connection between shelves, cells and corridors
  */
 void WarehouseToGraphConverter::initiliazeCellFirstLevel(vector<Vertex> & firstLevelVertexes,vector<vector<string> > &cellPositions,
                                                          Vertex firstLevel, Cell cell){
 
-                vertexByCode[firstLevel.getLabel()] =  firstLevel;
-                firstLevelVertexes.push_back(firstLevel);
+                vertexByCode[firstLevel.getLabel()] =  firstLevel;				//Dictionary to a quick recovery of vertexes 
+                firstLevelVertexes.push_back(firstLevel);						//This structure save all the first level vertex
+																				//Why is it important? Because this vertexes will connect corridors with 
+																				// higher level cells
     
                 int row = cell.getRow();
                 int column = cell.getColumn();
     
                 if(row > 0 && row <= (int)cellPositions.size())
                     if(column > 0 && column <= (int)cellPositions[row].size())
-                        cellPositions[row][column] = firstLevel.getLabel();
+                        cellPositions[row][column] = firstLevel.getLabel();		//This structure saves the position of all first level cells
+																				// Why is it important? Because these cells will be connected with corridors
+																				// then it is very important to know where they are. 
 }
