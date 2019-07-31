@@ -18,11 +18,12 @@ Arc::Arc(const Arc &arc){
     this->endVertex = arc.getEndVertex();
 }
 
-Arc::Arc(string label, double value, Vertex &begin, Vertex &end){
+Arc::Arc(string label, double value, Vertex &begin, Vertex &end, bool directed){
     this->label = label;
     this->value = value;
     this->beginVertex = begin;
     this->endVertex= end;
+    this->directed = directed;
 }
 
 void Arc::setLabel(string label){

@@ -6,6 +6,7 @@
 #include <set>
 #include <string>
 #include<cmath>
+#include<utility>
 #include "Graph.h"
 #include "Warehouse.h"
 #include "Point.h"
@@ -97,7 +98,7 @@ void WarehouseToGraphConverter::generateGraph(){
             }
 			
             cout<<"Connecting shelf to corridor"<<endl;
-            connectShelfToCorridor(shelves[j], adjacentCorridors,cellPositions, numRows, numColumns, arcs);
+            connectShelvesToCorridor(shelves[j], adjacentCorridors,cellPositions, numRows, numColumns, arcs);
         }
         
 		cout<<"Splitting corridors\n";
@@ -114,6 +115,7 @@ void WarehouseToGraphConverter::generateGraph(){
         
     }
 	
+    this->graph = Graph::convertArcsToGraph(arcs);
 	cout<<"Conversion finished:\nNumber of arcs: \t"<<arcs.size()<<endl;
 }
 
@@ -163,14 +165,10 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
 /**
  *
  */
-void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const vector<Corridor>& adjacentCorridor,
+void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,const vector<Corridor>& adjacentCorridor,
                                                        const StringMatrix &cellPositions, int numRows,int numColumns,set<Arc> &arcs ){
     double cellWidth = shelf.getCellWidth();
     double cellLength = shelf.getCellLength();
-    
-    double coordX;
-    double coordY;
-    string cellCode;
     
     Corridor *corridorUp= NULL;
     Corridor *corridorDown=NULL;
@@ -184,165 +182,145 @@ void WarehouseToGraphConverter::connectShelfToCorridor(const Shelf shelf,const v
 			cout<<"There is a problem with adjacent corridors\n"; 
 	#endif
 	
-	
-    //=====================     Vertical shelf   ================================
-    if(numColumns < numRows){
+    //=====================     Vertical or squared shelf   ================================
+    if(numColumns <= numRows){
 		
         for(int k=1; k< (int) numRows+1; k++){
             //First column
             if(corridorLeft != NULL){
-                coordX = shelf.getBottomLeftCoords().first + 0.5*cellWidth;
-                coordY = shelf.getBottomLeftCoords().second + cellLength*(k-1) + 0.5*cellLength;
-                
-                double corridorCoordX = corridorLeft->getBeginCoords().first;
-                Point corridorPoint("",corridorCoordX, coordY,0);
-                
-                pointsByCorridor[corridorLeft->getId()].push_back(corridorPoint);
-                
-                Vertex vertexCell(cellPositions[k][1], "CellVertex");
-                Vertex vertexCorridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[k][1],"PickVertex");
-                vertexByCode[vertexCell.getLabel()] = vertexCell;
-                vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
-				
-				createArcsCellAndShelf(vertexCell, vertexCorridor, fabs(corridorCoordX-coordX), arcs);
-
+                connectSingleCellToSingleShelf(shelf, corridorLeft, arcs,   cellPositions[k][1], "LEFT", k, 1);
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors (a column to the rigth)
 				if(numColumns > 1){
-					Vertex vertexCell(cellPositions[k][1], "CellVertex");
-					Vertex cellOther;
-					if(vertexByCode.find(cellPositions[k][2]) != vertexByCode.end())
-						cellOther = vertexByCode[cellPositions[k][2]];
-					else{
-						cellOther.setLabel(cellPositions[k][2]); 
-						cellOther.setType("CellVertex"); 
-					}
-					
-					createArcsCellAndShelf(vertexCell, cellOther, cellWidth, arcs); 
+					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[k][1], cellPositions[k][2]);
+					createArcsCellAndShelf(extremes.first, extremes.second, cellWidth, arcs); 
 				}
             }
             
             //Last column
             if(corridorRight != NULL){
-                coordX = shelf.getBottomLeftCoords().first+ cellWidth*(numColumns -1) + 0.5*cellWidth;
-                coordY = shelf.getBottomLeftCoords().second + cellLength*(k-1) + 0.5*cellLength;
-                
-                double corridorCoordX = corridorRight->getBeginCoords().first;
-                Point corridorPoint("", corridorCoordX, coordY,0);
-                
-                pointsByCorridor[corridorRight->getId()].push_back(corridorPoint);
-                
-                Vertex vertexCell(cellPositions[k][numColumns], "CellVertex");
-                Vertex vertexCorridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[k][numColumns],"PickVertex");
-                vertexByCode[vertexCell.getLabel()] = vertexCell;
-                vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
-                
-				createArcsCellAndShelf(vertexCell, vertexCorridor, fabs(corridorCoordX-coordX), arcs);
-				
-
+                connectSingleCellToSingleShelf(shelf, corridorRight, arcs,  cellPositions[k][numColumns], "RIGHT", k, numColumns);
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors (one column to right)
 				if(numColumns > 1){
-					Vertex vertexCell(cellPositions[k][numColumns], "CellVertex");
-					Vertex cellOther;
-					if(vertexByCode.find(cellPositions[k][numColumns-1]) != vertexByCode.end())
-						cellOther = vertexByCode[cellPositions[k][numColumns-1]];
-					else{
-						cellOther.setLabel(cellPositions[k][numColumns-1]); 
-						cellOther.setType("CellVertex"); 
-					}
-					
-					createArcsCellAndShelf(vertexCell, cellOther, cellWidth, arcs); 
+					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[k][numColumns], cellPositions[k][numColumns-1]);
+					createArcsCellAndShelf(extremes.first, extremes.second, cellWidth, arcs); 
 				}
             }
-        }
-               
+        }       
     }
     
-    //=======================   Horizontal shelf ==============================
-    else if(numRows < numColumns){
+    //=======================   Horizontal or squared shelf ==============================
+    if(numRows <= numColumns){
         for(int k=1; k< (int) numColumns+1; k++){
             //First row
             if(corridorUp != NULL){
-                coordX = shelf.getBottomLeftCoords().first+ cellWidth*(k-1) + 0.5*cellWidth;
-                coordY = shelf.getBottomLeftCoords().second + 0.5*cellLength;
-                
-                double corridorCoordY = corridorUp->getBeginCoords().second;
-                Point corridorPoint("", coordX, corridorCoordY,0);
-				
-				pointsByCorridor[corridorUp->getId()].push_back(corridorPoint);
-                
-                Vertex vertexCell(cellPositions[numRows][k], "CellVertex");
-                Vertex vertexCorridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[numRows][k],"PickVertex");
-                
-				if(vertexByCode.find(vertexCell.getLabel()) == vertexByCode.end())
-					vertexByCode[vertexCell.getLabel()] = vertexCell;
-				
-				if(vertexByCode.find(vertexCorridor.getLabel()) == vertexByCode.end())
-					vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
-                
-				
-				createArcsCellAndShelf(vertexCell, vertexCorridor, fabs(corridorCoordY-coordY), arcs);
-                
+                connectSingleCellToSingleShelf(shelf, corridorUp, arcs, cellPositions[numRows][k], "UP", numRows, k);
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
 				if(shelf.getNumRows() > 1){
-					
-					Vertex vertexCell(cellPositions[numRows][k], "CellVertex");
-					Vertex cellOther;
-					if(vertexByCode.find(cellPositions[numRows-1][k]) != vertexByCode.end())
-						cellOther = vertexByCode[cellPositions[numRows-1][k]];
-					else{
-						cellOther.setLabel(cellPositions[numRows-1][k]); 
-						cellOther.setType("CellVertex"); 
-					}
-					
-					createArcsCellAndShelf(vertexCell, cellOther, cellLength, arcs);
+					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[numRows][k], cellPositions[numRows-1][k]);
+					createArcsCellAndShelf(extremes.first, extremes.second, cellLength, arcs);
 				}				
             }
             
             //Last row
             if(corridorDown != NULL){
-                coordX = shelf.getBottomLeftCoords().first+ cellWidth*(k-1) + 0.5*cellWidth;
-                coordY = shelf.getBottomLeftCoords().second + cellLength*(numRows - 1) + 0.5*cellLength;
-                
-                double corridorCoordY = corridorUp->getBeginCoords().second;
-                Point corridorPoint("", coordX, corridorCoordY,0);
-				
-				pointsByCorridor[corridorDown->getId()].push_back(corridorPoint);
-                
-                Vertex vertexCell(cellPositions[1][k], "CellVertex");
-                Vertex vertexCorridor("corridor_"+to_string(corridorLeft->getId())+"_cell_"+cellPositions[1][k],"PickVertex");
-                vertexByCode[vertexCell.getLabel()] = vertexCell;
-                vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
-
-				createArcsCellAndShelf(vertexCell, vertexCorridor, fabs(corridorCoordY-coordY), arcs);
-                
+                connectSingleCellToSingleShelf(shelf, corridorDown, arcs,  cellPositions[1][k], "DOWN", 1, k);
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
 				if(shelf.getNumRows() > 1){
-					
-					Vertex vertexCell(cellPositions[1][k], "CellVertex");
-					Vertex cellOther;
-					if(vertexByCode.find(cellPositions[2][k]) != vertexByCode.end())
-						cellOther = vertexByCode[cellPositions[2][k]];
-					else{
-						cellOther.setLabel(cellPositions[2][k]); 
-						cellOther.setType("CellVertex"); 
-					}
-					
-					createArcsCellAndShelf(vertexCell, cellOther, cellLength, arcs); 
+					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[1][k], cellPositions[2][k]);
+					createArcsCellAndShelf(extremes.first, extremes.second, cellLength, arcs); 
 				}
             }
         }
     }
-    
-    //=======================   Squared shelf ==============================
-    if(numRows == numColumns){
-        
-    }
-    
 }
+
+
+/**
+ * 
+ * 
+ */
+void WarehouseToGraphConverter::connectSingleCellToSingleShelf(const Shelf &shelf,Corridor * corridor, set<Arc> &arcs, 
+                                                               string cellName, string position,int row, int column){
+
+    double coordX, coordY; 
+    double cellWidth = shelf.getCellWidth();
+    double cellLength = shelf.getCellLength();
+    
+    if(position == "LEFT"){
+        coordX = shelf.getBottomLeftCoords().first + 0.5*cellWidth;
+        coordY = shelf.getBottomLeftCoords().second + cellLength*(row-1) + 0.5*cellLength;
+    }else if(position == "RIGHT"){
+        coordX = shelf.getBottomLeftCoords().first+ cellWidth*(column -1) + 0.5*cellWidth;
+        coordY = shelf.getBottomLeftCoords().second + cellLength*(row-1) + 0.5*cellLength;
+    }else if(position == "UP"){
+        coordX = shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth;
+        coordY = shelf.getBottomLeftCoords().second + 0.5*cellLength;
+    }else if(position == "DOWN"){
+        coordX = shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth;
+        coordY = shelf.getBottomLeftCoords().second + cellLength*(row - 1) + 0.5*cellLength;
+    }
+                    
+    pair<Vertex,Vertex> extremes = createCellAndCorridorVertexes(corridor, make_pair(coordX, coordY), cellName, position);
+    double corridorCoordX = corridor->getBeginCoords().first;
+    double corridorCoordY = corridor->getBeginCoords().second;
+				
+    if(position == "LEFT" || position == "RIGHT")
+        createArcsCellAndShelf(extremes.first, extremes.second, fabs(corridorCoordX-coordX), arcs);
+    else if(position == "UP" || position == "DOWN")
+        createArcsCellAndShelf(extremes.first, extremes.second, fabs(corridorCoordY-coordY), arcs);
+}
+
+
+/**
+ * 
+ * 
+ */
+pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(string cellNameA, string cellNameB){
+
+    Vertex vertexCell(cellNameA, "CellVertex");
+    Vertex cellOther;
+    if(vertexByCode.find(cellNameB) != vertexByCode.end())
+        cellOther = vertexByCode[cellNameB];
+    else{
+        cellOther.setLabel(cellNameB); 
+        cellOther.setType("CellVertex"); 
+    }
+
+    return make_pair(vertexCell, cellOther);				
+
+}
+
+/**
+ * 
+ * 
+ */
+pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(const Corridor *corridor, pair<double,double> coords, 
+                                                                              string cellName, string position){
+
+    double corridorCoordX = corridor->getBeginCoords().first;
+    double corridorCoordY = corridor->getBeginCoords().second;
+
+    bool horizontal = (position == "LEFT" || position == "RIGHT");
+    Point corridorPoint("", ( horizontal ? corridorCoordX :  coords.first) , (horizontal ?  coords.second : corridorCoordY ),0);
+    
+    pointsByCorridor[corridor->getId()].push_back(corridorPoint);
+    
+    Vertex vertexCell(cellName, "CellVertex");
+    Vertex vertexCorridor("corridor_"+to_string(corridor->getId())+"_cell_"+cellName,"PickVertex");
+    vertexByCode[vertexCell.getLabel()] = vertexCell;
+    vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
+
+
+    return make_pair(vertexCell, vertexCorridor); 
+}
+
+
+
+
 
 /**
  *
@@ -414,7 +392,6 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
 	
 	vector<Point> processedPoints = Point::removeDuplicates(points); 
     
-	cout<<flush<<endl; 
 	corridor.orderCorridorPoints(processedPoints);
     
 	Vertex first("corridor_"+to_string(id)+"point_0", "CorridorCurvePoint");
@@ -433,8 +410,6 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
 			arcs.insert(Arc("arc_"+second.getLabel()+ "_"+first.getLabel(), distance, second, first));
 		first = second;
 	}
-	
-	cout<<"FINAL\n\n";
 }
 
 
@@ -664,8 +639,8 @@ void WarehouseToGraphConverter::initiliazeCellFirstLevel(vector<Vertex> & firstL
 
                 vertexByCode[firstLevel.getLabel()] =  firstLevel;				//Dictionary to a quick recovery of vertexes 
                 firstLevelVertexes.push_back(firstLevel);						//This structure save all the first level vertex
-																				//Why is it important? Because this vertexes will connect corridors with 
-																				// higher level cells
+																				//Why is it important? Because this vertexes will 
+                                                                                //connect corridors with higher level cells
     
                 int row = cell.getRow();
                 int column = cell.getColumn();
@@ -673,6 +648,6 @@ void WarehouseToGraphConverter::initiliazeCellFirstLevel(vector<Vertex> & firstL
                 if(row > 0 && row <= (int)cellPositions.size())
                     if(column > 0 && column <= (int)cellPositions[row].size())
                         cellPositions[row][column] = firstLevel.getLabel();		//This structure saves the position of all first level cells
-																				// Why is it important? Because these cells will be connected with corridors
-																				// then it is very important to know where they are. 
+																				// Why is it important? Because these cells will be connected 
+                                                                                // with corridors then it is very important to know where they are. 
 }

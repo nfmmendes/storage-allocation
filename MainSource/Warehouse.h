@@ -18,7 +18,7 @@ using namespace std;
 class Warehouse{
         private:
             string name;
-            vector<Block> blocks;
+            vector<Block> blocks;  
             vector<pair<Product, Cell> > productAllocation;
             vector<ExpeditionPoint> expeditionPoints;   /// Points where the products must be delivered after be picked on shelves
         public:

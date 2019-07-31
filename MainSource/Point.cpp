@@ -100,7 +100,7 @@ vector<Point>  Point::removeDuplicates(vector<Point> & points){
 	sort(points.begin(), points.end()); 
 	
 	vector<int> pointsToRemove;
-	for(int i=1; i<points.size(); i++){
+	for(int i=1; i<(int) points.size(); i++){
 		if(fabs(points[i-1].coordX-points[i].coordX) < TOLERANCE && fabs(points[i-1].coordY-points[i].coordY) < TOLERANCE &&
 		   fabs(points[i-1].coordZ-points[i].coordZ) < TOLERANCE)
 		   pointsToRemove.push_back(i);
@@ -108,7 +108,7 @@ vector<Point>  Point::removeDuplicates(vector<Point> & points){
 		
 	vector<Point> returned; 
 	int cont = 0; 
-	for(int i=0; i<points.size() && cont < pointsToRemove.size(); i++){
+	for(int i=0; i< (int) points.size() && cont < (int) pointsToRemove.size(); i++){
 		cout<<pointsToRemove.size()<<" "<<cont<<endl; 
 		if(pointsToRemove[cont] == i)
 			cont++;

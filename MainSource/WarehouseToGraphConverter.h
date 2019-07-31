@@ -41,10 +41,13 @@ namespace QuickTSP{
             void splitCorridorByCurves(const Curve &, map<long int, vector<Curve> > &);
             void createArcsOnCorridors(const Corridor , set<Arc> &);
             void connectCorridorsByCurves(vector<Curve> curves, set<Arc> &arcs);
-            void connectShelfToCorridor(const Shelf, const vector<Corridor>&, const StringMatrix &, int , int , set<Arc> & );
+            void connectShelvesToCorridor(const Shelf &, const vector<Corridor>&, const StringMatrix &, int , int , set<Arc> & );
             void connectCellLevels(Cell , StringMatrix &, set<Arc> &);
 			void createArcsCellAndShelf(Vertex vertexCell, Vertex vertexCorridor,double value, set<Arc> &arcs);
 			void InitializeAdjacentCorridors(Corridor *up,Corridor * down,Corridor * left,Corridor * right,const vector<Corridor>& adjacents,Shelf shelf);
+            pair<Vertex, Vertex> createCellAndCorridorVertexes( const Corridor *corridor, pair<double,double> coords, string cellName, string position);
+            void connectSingleCellToSingleShelf(const Shelf &shelf, Corridor * corridor,set<Arc> &arcs, string cellName, string position,int row, int column);
+            pair<Vertex, Vertex> createCellAndCorridorVertexes(string cellNameA, string cellNameB);
 		
         public:
             WarehouseToGraphConverter();

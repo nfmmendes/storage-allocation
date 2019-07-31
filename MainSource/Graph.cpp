@@ -2,6 +2,7 @@
 #include<vector>
 #include<map>
 #include<algorithm>
+#include<set>
 #include "Graph.h"
 #include "Arc.h"
 #include "Vertex.h"
@@ -20,11 +21,15 @@ Graph::Graph(const Graph &graph){
 }
 
 /// Graph constructor by members
-Graph::Graph(vector<Vertex> vertexes, map<Vertex, vector<Arc> > arcs, string name){
+Graph::Graph(const vector<Vertex> &vertexes, map<Vertex, vector<Arc> > &arcs, string name){
     this->name = name;
     
-    this->vertexes = vertexes;
-    this->arcsByVertex = arcs;
+    for(int i=0; i< (int)vertexes.size();i++)
+        this->vertexes.push_back(vertexes[i]);
+
+    for(map<Vertex, vector<Arc> >::iterator it = arcs.begin(); it != arcs.end(); it++)
+        for(int i=0; i < (int)it->second.size(); i++)
+            this->arcsByVertex[it->first].push_back(it->second[i]);
 }
 
 
@@ -101,4 +106,30 @@ void Graph::removeArc(Vertex vertex,int i){
     if(i >= 0 && i < (int)this->arcsByVertex[vertex].size())
         this->arcsByVertex[vertex].erase(this->arcsByVertex[vertex].begin()+i);
 }
+
+/**
+ * 
+ * Convert a set of arcs in a graph. The set of arcs
+ * 
+ */
+Graph Graph::convertArcsToGraph(set<Arc> &arcs,string name){
+
+    set<Vertex> allVertexes;
+    vector<Vertex> listOfVertexes;
+    map<Vertex, vector<Arc> > listOfArcs; 
+
+    for(set<Arc>::iterator it = arcs.begin(); it != arcs.end(); it++){
+        allVertexes.insert(it->getBeginVertex());
+        allVertexes.insert(it->getEndVertex());
+        listOfArcs[it->getBeginVertex()].push_back(*it);
+    }
+    
+    for(set<Vertex>::iterator it=allVertexes.begin(); it!= allVertexes.end(); it++)
+        listOfVertexes.push_back(*it);
+
+
+    Graph returned(listOfVertexes, listOfArcs, name);
+    return returned;
+
+} 
 

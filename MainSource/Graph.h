@@ -8,6 +8,7 @@
 #include<algorithm>
 #include<map>
 #include<utility>
+#include<set>
 #include "Arc.h"
 #include "Vertex.h"
 using namespace std; 
@@ -24,7 +25,7 @@ namespace QuickTSP{
             
                 Graph(const Graph &graph);
             
-                Graph(vector<Vertex> vertexes, map<Vertex, vector<Arc> > arc, string name);
+                Graph(const vector<Vertex> &vertexes, map<Vertex, vector<Arc> > &arc, string name);
             
                 Graph &operator=(const Graph &other);
             
@@ -40,6 +41,7 @@ namespace QuickTSP{
                 void removeArc(Vertex vertex, Arc & arc);
                 void removerVertex(int i);
                 void removeArc(Vertex vertex,int i);
+                static Graph convertArcsToGraph(set<Arc> &arcs,string name=""); 
         };
     
 }

@@ -20,13 +20,14 @@ namespace QuickTSP{
             string label;
             double value; 
             Vertex beginVertex;
-            Vertex endVertex; 
+            Vertex endVertex;
+            bool directed;  
         
         public:
             Arc();
             Arc(const Arc &arc);
                 
-            Arc(string label, double value, Vertex &begin, Vertex &end);
+            Arc(string label, double value, Vertex &begin, Vertex &end, bool directed=true);
             
             void setLabel(string label);
                 
