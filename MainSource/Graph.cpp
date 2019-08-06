@@ -15,9 +15,10 @@ Graph::Graph(const Graph &graph){
     
     for(int i=0;i<(int)graph.vertexes.size();i++)
         this->vertexes.push_back(Vertex(graph.vertexes[i]));
+    
     for(map<Vertex, vector<Arc> >::iterator it = graph.getArcs().begin();it!=graph.getArcs().end();it++)
         for(int i=0; i < (int)it->second.size();i++)
-            this->arcsByVertex[it->first].push_back(it->second[i]);;
+            this->arcsByVertex[it->first].push_back(it->second[i]);
 }
 
 /// Graph constructor by members
@@ -26,16 +27,20 @@ Graph::Graph(const vector<Vertex> &vertexes, map<Vertex, vector<Arc> > &arcs, st
     
     for(int i=0; i< (int)vertexes.size();i++)
         this->vertexes.push_back(vertexes[i]);
-
-    for(map<Vertex, vector<Arc> >::iterator it = arcs.begin(); it != arcs.end(); it++)
-        for(int i=0; i < (int)it->second.size(); i++)
+    
+    int count = 0;
+    for(map<Vertex, vector<Arc> >::iterator it = arcs.begin(); it != arcs.end(); it++){
+        
+        for(unsigned int i=0; i < it->second.size(); i++){
             this->arcsByVertex[it->first].push_back(it->second[i]);
+        }
+    }
+
 }
 
 
 Graph & Graph::operator=(const Graph &other){
    
-    
     this->name = other.name;
     
     this->vertexes.clear();
@@ -44,8 +49,10 @@ Graph & Graph::operator=(const Graph &other){
     for(int i=0;i<(int)other.vertexes.size();i++)
         this->vertexes.push_back(Vertex(other.vertexes[i]));
     
-    for(map<Vertex, vector<Arc> >::iterator it = other.getArcs().begin();it!=other.getArcs().end();it++)
-        for(int i=0;i <  (int) it->second.size();i++)
+    map<Vertex, vector<Arc> > otherArcs = other.getArcs();
+    
+    for(map<Vertex, vector<Arc> >::iterator it = otherArcs.begin();it!=otherArcs.end();it++)
+        for(unsigned int i=0;i <  it->second.size();i++)
             this->arcsByVertex[it->first].push_back(it->second[i]);
     
     return *this;
@@ -67,8 +74,7 @@ string Graph::getName()const
 
 
 void Graph::setArcs(map<Vertex, vector<Arc> > arcs){
-    this->arcsByVertex
-    .clear();
+    this->arcsByVertex.clear();
     
     this->arcsByVertex = arcs;
 }
@@ -118,15 +124,17 @@ Graph Graph::convertArcsToGraph(set<Arc> &arcs,string name){
     vector<Vertex> listOfVertexes;
     map<Vertex, vector<Arc> > listOfArcs; 
 
+    int count=0; 
     for(set<Arc>::iterator it = arcs.begin(); it != arcs.end(); it++){
         allVertexes.insert(it->getBeginVertex());
         allVertexes.insert(it->getEndVertex());
+        
         listOfArcs[it->getBeginVertex()].push_back(*it);
     }
+  
     
     for(set<Vertex>::iterator it=allVertexes.begin(); it!= allVertexes.end(); it++)
         listOfVertexes.push_back(*it);
-
 
     Graph returned(listOfVertexes, listOfArcs, name);
     return returned;

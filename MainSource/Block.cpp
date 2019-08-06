@@ -28,16 +28,20 @@ Block::Block(const Block &other){
     
     this->name = other.name;
     this->bottomLeftCoords = other.bottomLeftCoords;
+    this->width = other.width;
+    this->lenght = other.lenght;
 }
 
 /**********************************************************************************
 *
 *
 ***********************************************************************************/
-Block::Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY){
+Block::Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY, double width, double lenght){
     
     this->name = blockName;
     this->bottomLeftCoords = make_pair(bottomLeftCoordX, bottomLeftCoordY);
+    this->width = width;
+    this->lenght = lenght;
 }
 
 
@@ -179,6 +183,15 @@ void Block::removeExit(int index){
 ***********************************************************************************/
 bool Block::operator==(const Block &other){
     return this->name == other.name;
+}
+
+/**********************************************************************************
+ * 
+ * 
+ **********************************************************************************/
+bool Block::isInBlock(Point &point)const{
+    return point.getCoordX() >= bottomLeftCoords.first && point.getCoordX() <= bottomLeftCoords.first + width &&
+           point.getCoordY() >= bottomLeftCoords.second && point.getCoordY() <= bottomLeftCoords.second + lenght;
 }
 
 

@@ -23,12 +23,14 @@ class Block{
         vector<Corridor> corridors;
         vector<Curve> curves;
         string name; 
+        double lenght;
+        double width; 
         pair<double,double> bottomLeftCoords;
         
     public:
         Block();
         Block(const Block &other);
-        Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY);
+        Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY, double width, double lenght);
         
         bool hasValidConfiguration();
     
@@ -40,6 +42,8 @@ class Block{
         vector<Curve> getCurves();
         pair<double,double> getBottomLeftCoords();
     
+        bool isInBlock(Point &point)const;
+
         //Set corridors
         void setCorridors(vector<Corridor> & others);
     

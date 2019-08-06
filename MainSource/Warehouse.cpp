@@ -20,6 +20,8 @@
 	for(unsigned int i=0; i<other.blocks.size();i++)
 		this->blocks.push_back(other.blocks[i]);
 	
+    for(unsigned int i=0; i<other.expeditionPoints.size();i++)
+        this->expeditionPoints.push_back(other.expeditionPoints[i]);
 	 
  }
  
@@ -71,15 +73,16 @@
         //Those variables will store the basic data of each block in the warehouse
         string blockName;
         double blockBottomLeftCoordX;
-        double blockBottomLeftCoordY; 
+        double blockBottomLeftCoordY;
+        double width, lenght; 
 
 	
 		file>>numBlocks;
 		cout<<"Reading blocks...\n";
 		cout<<numBlocks<<endl;
         for(int i=0; i<numBlocks; i++){
-            file>> blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY;
-            this->blocks.push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY));
+            file>> blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY>> width >> lenght;
+            this->blocks.push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY, width, lenght));
         }
 		
 		file>>numExpeditionPoints;
@@ -329,6 +332,11 @@ void Warehouse::setBlocks(vector<Block>& blocks){
     
     for(unsigned int i=0; i < blocks.size(); i++)
         this->blocks.push_back(Block(blocks[i]));
+}
+
+
+vector<ExpeditionPoint> Warehouse::getExpeditionPoints(){
+    return this->expeditionPoints;
 }
 
 void Warehouse::printWarehouseInformation(){

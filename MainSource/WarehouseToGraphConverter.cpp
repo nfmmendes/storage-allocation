@@ -18,7 +18,7 @@
 using namespace QuickTSP;
 using namespace std;
 
-#define DEBUG_LEVEL 1
+#define DEBUG_LEVEL -1
 #define MIN_DIFF 0.000001
 
 WarehouseToGraphConverter::WarehouseToGraphConverter(){
@@ -46,13 +46,17 @@ void WarehouseToGraphConverter::generateGraph(){
     set<Arc> arcs;                                      //Store the arcs of the resulting graph
     map<long int, vector<Curve> > curvesByCorridor;     //Stores all curves from or to a corridor
     
-    vector<Block> blocks = this->warehouse.getBlocks(); //Get the list of warehouse blocks    
+    vector<Block> blocks = this->warehouse.getBlocks(); //Get the list of warehouse blocks  
+    map<string, Block> blocksByName;
+    vector<ExpeditionPoint> expeditionPoints = this->warehouse.getExpeditionPoints();  
     
     //This loop creates a subgraph of the final graph to each block. These blocks will be connected by block exits in
     //second loop
     for(int i= 0; i<(int) blocks.size(); i++){
-        cout<<"Working on block: " <<blocks[i].getName()<<endl; 
+        //cout<<"Working on block: " <<blocks[i].getName()<<endl; 
 		
+        blocksByName[blocks[i].getName()] = blocks[i];
+
 		vector<Shelf> shelves = blocks[i].getShelves();
         vector<Corridor> corridors = blocks[i].getCorridors();
         vector<Curve> curves = blocks[i].getCurves();
@@ -61,7 +65,7 @@ void WarehouseToGraphConverter::generateGraph(){
         //second part of the algorithm
         for(int j = 0; j < (int) shelves.size(); j++){
             
-			cout<<"Working on shelf: "<<shelves[j].getId()<<endl;
+			//cout<<"Working on shelf: "<<shelves[j].getId()<<endl;
             vector<Cell> cells = shelves[j].getCells();
             vector<vector<string> > cellPositions;      //It stores each vertex in its line and row at cell
                                                         //respective shelf. You should verify if it is updated anytime
@@ -79,14 +83,14 @@ void WarehouseToGraphConverter::generateGraph(){
             for(int k=1; k < (int) numRows+1; k++)
                 cellPositions[k].resize(numColumns+1);
             
-			cout<<"Connecting cells"<<endl;
+			//cout<<"Connecting cells"<<endl;
             for(int k=0; k < (int) cells.size(); k++)
                 connectCellLevels(cells[k], cellPositions, arcs);
             
             //Connects cells with corridors and internal nodes with border nodes in a shelf.
             for(int k=1; k< (int) numRows+1; k++){
                 for(int l=1; l< (int) numColumns+1;l++){
-                    //It should verify if the matrix position stores a valid
+                    //It should verify if the matrix position stores a valid cell
                     Vertex vertex = vertexByCode[cellPositions[k][l]];
                     
                     //There are nodes that have not direct contact with a corridor (internal nodes)
@@ -97,23 +101,25 @@ void WarehouseToGraphConverter::generateGraph(){
                 }
             }
 			
-            cout<<"Connecting shelf to corridor"<<endl;
+            //cout<<"Connecting shelf to corridor"<<endl;
             connectShelvesToCorridor(shelves[j], adjacentCorridors,cellPositions, numRows, numColumns, arcs);
         }
         
-		cout<<"Splitting corridors\n";
+		//cout<<"Splitting corridors\n";
         //This will allow to create arcs in the interior of corridors
         for(int j = 0; j<(int)curves.size(); j++)
             splitCorridorByCurves(curves[j], curvesByCorridor);
         
-		cout<<"Creating arcs on corridors\n"; 
+		//cout<<"Creating arcs on corridors\n"; 
         for(int j=0; j< (int)corridors.size(); j++)
             createArcsOnCorridors(corridors[j],arcs);
         
-		cout<<"Connecting corridors\n";
         connectCorridorsByCurves(curves,arcs);
         
     }
+    cout<<"expedition size\t"<<expeditionPoints.size()<<endl;
+    for(int i=0; i<expeditionPoints.size();i++)
+        connectExpeditionPoint(expeditionPoints[i], arcs, blocksByName);
 	
     this->graph = Graph::convertArcsToGraph(arcs);
 	cout<<"Conversion finished:\nNumber of arcs: \t"<<arcs.size()<<endl;
@@ -179,7 +185,7 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
 	
 	#if DEBUG_LEVEL > 0
 		if(corridorUp == corridorLeft && corridorRight == corridorDown && corridorLeft == corridorRight)
-			cout<<"There is a problem with adjacent corridors\n"; 
+			cout<<"There is a problem with adjacent corridors\t" << shelf.getId()<<" "<<shelf.getNumRows()<<" "<<shelf.getNumColumns() <<endl; 
 	#endif
 	
     //=====================     Vertical or squared shelf   ================================
@@ -188,23 +194,24 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
         for(int k=1; k< (int) numRows+1; k++){
             //First column
             if(corridorLeft != NULL){
-                connectSingleCellToSingleShelf(shelf, corridorLeft, arcs,   cellPositions[k][1], "LEFT", k, 1);
+                connectSingleCellToSingleCorridor(shelf, corridorLeft, arcs,   cellPositions[k][1], "LEFT", k, 1);
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors (a column to the rigth)
 				if(numColumns > 1){
+                    
 					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[k][1], cellPositions[k][2]);
-					createArcsCellAndShelf(extremes.first, extremes.second, cellWidth, arcs); 
+					createArcsCellToCorridor(extremes.first, extremes.second, cellWidth, arcs); 
 				}
             }
             
             //Last column
             if(corridorRight != NULL){
-                connectSingleCellToSingleShelf(shelf, corridorRight, arcs,  cellPositions[k][numColumns], "RIGHT", k, numColumns);
+                connectSingleCellToSingleCorridor(shelf, corridorRight, arcs,  cellPositions[k][numColumns], "RIGHT", k, numColumns);
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors (one column to right)
 				if(numColumns > 1){
 					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[k][numColumns], cellPositions[k][numColumns-1]);
-					createArcsCellAndShelf(extremes.first, extremes.second, cellWidth, arcs); 
+					createArcsCellToCorridor(extremes.first, extremes.second, cellWidth, arcs); 
 				}
             }
         }       
@@ -215,23 +222,23 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
         for(int k=1; k< (int) numColumns+1; k++){
             //First row
             if(corridorUp != NULL){
-                connectSingleCellToSingleShelf(shelf, corridorUp, arcs, cellPositions[numRows][k], "UP", numRows, k);
+                connectSingleCellToSingleCorridor(shelf, corridorUp, arcs, cellPositions[numRows][k], "UP", numRows, k);
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
 				if(shelf.getNumRows() > 1){
 					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[numRows][k], cellPositions[numRows-1][k]);
-					createArcsCellAndShelf(extremes.first, extremes.second, cellLength, arcs);
+					createArcsCellToCorridor(extremes.first, extremes.second, cellLength, arcs);
 				}				
             }
             
             //Last row
             if(corridorDown != NULL){
-                connectSingleCellToSingleShelf(shelf, corridorDown, arcs,  cellPositions[1][k], "DOWN", 1, k);
+                connectSingleCellToSingleCorridor(shelf, corridorDown, arcs,  cellPositions[1][k], "DOWN", 1, k);
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
 				if(shelf.getNumRows() > 1){
 					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[1][k], cellPositions[2][k]);
-					createArcsCellAndShelf(extremes.first, extremes.second, cellLength, arcs); 
+					createArcsCellToCorridor(extremes.first, extremes.second, cellLength, arcs); 
 				}
             }
         }
@@ -243,7 +250,7 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
  * 
  * 
  */
-void WarehouseToGraphConverter::connectSingleCellToSingleShelf(const Shelf &shelf,Corridor * corridor, set<Arc> &arcs, 
+void WarehouseToGraphConverter::connectSingleCellToSingleCorridor(const Shelf &shelf,Corridor * corridor, set<Arc> &arcs, 
                                                                string cellName, string position,int row, int column){
 
     double coordX, coordY; 
@@ -268,10 +275,11 @@ void WarehouseToGraphConverter::connectSingleCellToSingleShelf(const Shelf &shel
     double corridorCoordX = corridor->getBeginCoords().first;
     double corridorCoordY = corridor->getBeginCoords().second;
 				
-    if(position == "LEFT" || position == "RIGHT")
-        createArcsCellAndShelf(extremes.first, extremes.second, fabs(corridorCoordX-coordX), arcs);
-    else if(position == "UP" || position == "DOWN")
-        createArcsCellAndShelf(extremes.first, extremes.second, fabs(corridorCoordY-coordY), arcs);
+    if(position == "LEFT" || position == "RIGHT"){
+        createArcsCellToCorridor(extremes.first, extremes.second, fabs(corridorCoordX-coordX), arcs);
+    }else if(position == "UP" || position == "DOWN"){
+        createArcsCellToCorridor(extremes.first, extremes.second, fabs(corridorCoordY-coordY), arcs);
+    }
 }
 
 
@@ -351,7 +359,7 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *up,Corrido
  *
  *
  */
-void WarehouseToGraphConverter::createArcsCellAndShelf(Vertex vertexCell, Vertex vertexCorridor,double value, set<Arc> &arcs){	
+void WarehouseToGraphConverter::createArcsCellToCorridor(Vertex vertexCell, Vertex vertexCorridor,double value, set<Arc> &arcs){	
 	
 	Arc leaving("arc("+ vertexCell.getLabel() + ","+ vertexCorridor.getLabel() +")", value, vertexCell, vertexCorridor);
 	Arc picking("arc("+ vertexCorridor.getLabel() + ","+ vertexCell.getLabel() +")", value, vertexCorridor, vertexCell);
@@ -365,7 +373,7 @@ void WarehouseToGraphConverter::createArcsCellAndShelf(Vertex vertexCell, Vertex
  * Connect two corridors using one curve. This curve 
  */
 void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, set<Arc> &arcs){
-	cout<<"Curves size: \n"<<curves.size()<<endl; 
+	//cout<<"Curves size: \n"<<curves.size()<<endl; 
     for(int i=0; i< (int)curves.size();i++){
         Vertex begin = vertexByPoint[curves[i].getStartingPoint()];
         Vertex end = vertexByPoint[curves[i].getEndingPoint()];
@@ -374,6 +382,7 @@ void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, s
         
         arcs.insert(Arc("arc_"+begin.getLabel()+ "_"+end.getLabel(),distance,begin, end));
     }
+    
 }
 
 /**
@@ -394,11 +403,11 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
     
 	corridor.orderCorridorPoints(processedPoints);
     
-	Vertex first("corridor_"+to_string(id)+"point_0", "CorridorCurvePoint");
+	Vertex first("corridor_"+to_string(id)+"_point_0", "CorridorCurvePoint");
 	vertexByCode[first.getLabel()] = first;
 	
 	for(int k=1; k<(int)processedPoints.size(); k++){
-		Vertex second("corridor_"+to_string(id)+"point_"+to_string(k), "CorridorCurvePoint");
+		Vertex second("corridor_"+to_string(id)+"_point_"+to_string(k), "CorridorCurvePoint");
 		vertexByCode[second.getLabel()] = second;
 		
 		double distance = sqrt(pow(processedPoints[k].getCoordX()-processedPoints[k-1].getCoordX(),2)+
@@ -650,4 +659,101 @@ void WarehouseToGraphConverter::initiliazeCellFirstLevel(vector<Vertex> & firstL
                         cellPositions[row][column] = firstLevel.getLabel();		//This structure saves the position of all first level cells
 																				// Why is it important? Because these cells will be connected 
                                                                                 // with corridors then it is very important to know where they are. 
+}
+
+
+/**
+ * 
+ * 
+ */
+void WarehouseToGraphConverter::connectExpeditionPoint(ExpeditionPoint &expeditionPoint, set<Arc> & arcs, map<string, Block> &blocksByName){
+    Vertex closestVertex; 
+    double minDistance = 1e20;
+    pair<double,double> reference = expeditionPoint.getCoordinates(); 
+    double distance = 0;
+    
+    
+    if(blocksByName.find(expeditionPoint.getBlockCode()) == blocksByName.end())
+        return;
+
+    Block block = blocksByName[expeditionPoint.getBlockCode()];
+    Point referencePoint("expeditionPoint_"+expeditionPoint.getCode(), reference.first, reference.second, 0); 
+    
+
+    for(map<Point, Vertex>::iterator it=vertexByPoint.begin(); it!= vertexByPoint.end(); it++){
+        if(!block.isInBlock(referencePoint))
+            continue;
+
+        distance = sqrt( pow(it->first.getCoordX()-reference.first,2)+pow(it->first.getCoordY()-reference.second,2));
+        if(distance< minDistance){
+            minDistance = distance;
+            closestVertex = it->second;
+        }
+    }
+    cout<<minDistance<<endl;
+    if(minDistance <= 1e19){
+        //create arc here
+        Vertex expeditionVertex("expedition_"+expeditionPoint.getCode(), "ExpeditionPointVertex",0);
+        vertexByPoint[referencePoint] = expeditionVertex; 
+        vertexByCode[expeditionVertex.getLabel()] = expeditionVertex; 
+
+        Arc one("expedition_"+expeditionPoint.getCode()+"_toVertex_"+closestVertex.getLabel(), minDistance, expeditionVertex, closestVertex);
+        Arc other("Vertex_"+closestVertex.getLabel()+"toExpedition_"+expeditionPoint.getCode(), minDistance, closestVertex, expeditionVertex);
+
+        arcs.insert(one);
+        arcs.insert(other);
+    }
+}
+
+
+
+
+/**
+ * 
+ * 
+ */
+void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & arcs, map<string, Block> &blocksByName){
+    Vertex closestVertexOnA, closestVertexOnB; 
+    double minDistance = 1e20;
+    
+    double distance = 0;
+    
+    
+    if(blocksByName.find(exit.getBlockAName()) == blocksByName.end())
+        return;
+    if(exit.getBlockBName() != "" && blocksByName.find(exit.getBlockAName()) == blocksByName.end())
+        return; 
+
+    Block blockA = blocksByName[exit.getBlockAName()];
+    Block blockB = blocksByName[exit.getBlockBName()];
+
+    pair<double,double> reference = exit.getCoordinates(); 
+    Point referencePoint("expeditionPoint_"+exit.getCode(), reference.first, reference.second, 0); 
+    
+
+    /* 
+    for(map<Point, Vertex>::iterator it=vertexByPoint.begin(); it!= vertexByPoint.end(); it++){
+        if(!block.isInBlock(referencePoint))
+            continue;
+
+        distance = sqrt( pow(it->first.getCoordX()-reference.first,2)+pow(it->first.getCoordY()-reference.second,2));
+        if(distance< minDistance){
+            minDistance = distance;
+            closestVertex = it->second;
+        }
+    }
+    cout<<minDistance<<endl;
+    if(minDistance <= 1e19){
+        //create arc here
+        Vertex expeditionVertex("expedition_"+expeditionPoint.getCode(), "ExpeditionPointVertex",0);
+        vertexByPoint[referencePoint] = expeditionVertex; 
+        vertexByCode[expeditionVertex.getLabel()] = expeditionVertex; 
+
+        Arc one("expedition_"+expeditionPoint.getCode()+"_toVertex_"+closestVertex.getLabel(), minDistance, expeditionVertex, closestVertex);
+        Arc other("Vertex_"+closestVertex.getLabel()+"toExpedition_"+expeditionPoint.getCode(), minDistance, closestVertex, expeditionVertex);
+
+        arcs.insert(one);
+        arcs.insert(other);
+    }
+    */
 }

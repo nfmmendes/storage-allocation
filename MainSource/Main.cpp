@@ -38,7 +38,7 @@ void printRandomSolution(){
 	vector<Product> products = input.getProducts(); 
 	
 	random_shuffle(products.begin(), products.end());
-	cout<<blocks.size()<<" "<<products.size()<<endl;
+	
 	while(allocated == true && productIndex < (int)products.size()){
 			allocated = false; 
 			vector<Cell> possibleCells;

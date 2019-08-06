@@ -42,7 +42,7 @@ Shelf::Shelf(long int Id,vector<Cell> cells, pair<double, double> bottomLeftCoor
     this->cellWidth = cellWidth;
 }
 
-long int Shelf::getId(){ return Id;}
+long int Shelf::getId() const { return Id;}
 double Shelf::getBottomLeftCoordX() const { return bottomLeftCoords.first; }
 double Shelf::getBottomLeftCoordY() const { return bottomLeftCoords.second; }
 pair<double,double> Shelf::getBottomLeftCoords() const { return bottomLeftCoords; }

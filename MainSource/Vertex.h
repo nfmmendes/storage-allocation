@@ -27,7 +27,7 @@ namespace QuickTSP{
             void setType(string value);
             void setValue(double value);
         
-            string getLabel();
+            string getLabel() const ;
             string getType();
             double getValue();
         

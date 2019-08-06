@@ -7,4 +7,28 @@ using namespace std;
 
 
 
+/**
+ * 
+ * 
+ */
+DijkstraDistanceMatrixCalculator(){
+
+}
+
+/**
+ * 
+ * 
+ */
+DijkstraDistanceMatrixCalculator(DijkstraDistanceMatrixCalculator &other){
+
+}
+
+/**
+ * 
+ * 
+ */
+template<class DistanceMatrix, class Graph>
+DistanceMatrix DijkstraDistanceMatrixCalculator::calculateMatrixDistance(Graph &graph){
+
+}
 

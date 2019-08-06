@@ -24,7 +24,7 @@ void Vertex::setLabel(string value){ this->label = value; }
 void Vertex::setType(string value) { this->type = value; }
 void Vertex::setValue(double value) { this->value = value; }
 
-string Vertex::getLabel(){ return this->label; }
+string Vertex::getLabel() const { return this->label; }
 string Vertex::getType(){ return this->type; }
 double Vertex::getValue() { return this->value; }
 
