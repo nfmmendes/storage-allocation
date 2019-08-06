@@ -30,8 +30,8 @@ Order : Order.h Product.o InputData.o
 	$(CC) $(COMPILE_FLAGS) -c Order.cpp
 
 
-ProductAllocationProhibition: Product.o Cell.o Shelf.o Block.o ProductAllocationProhibition.h
-	$(CC) $(COMPILE_FLAGS) -c ProductAllocationProhibition.cpp
+ProductAllocationProhibition: Product.o Cell.o Shelf.o Block.o ProductAllocationProhibition.h  IsolatedFamily.h
+	$(CC) $(COMPILE_FLAGS) -c ProductAllocationProhibition.cpp IsolatedFamily.cpp
 
 Warehouse : Block.o Cell.o Shelf.o BlockExit.o
 	$(CC) $(COMPILE_FLAGS) -c Warehouse.cpp

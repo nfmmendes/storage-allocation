@@ -107,16 +107,16 @@
         if(numExits != 0){
             for(int i=0; i<numExits; i++){
                 file>> idExit >> exitCoordX >> exitCoordY>>blockName>>blockBName; 
-				//cout<<blockName<<" "<<blockBName<<endl;
                 //Fill auxiliary structure to connect 
-                if(blockBName != "#_#_#")
+                if(blockBName == "#_#_#")
                     exitsByBlock[blockName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockName));
                 else{
+					
                     //Here are done two inserts because the data describing the exits can arrive in just one way, 
                     //but the exit should be inserted in both blocks objects (We can assume that a single exit connects
                     //just two blocks)
                     exitsByBlock[blockName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockName,blockBName));
-                    exitsByBlock[blockBName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockName,blockBName));
+                    exitsByBlock[blockBName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockBName,blockName));
                 }
             }
 
@@ -125,11 +125,13 @@
             //not harm the code performance
             for(int i=0;i<(int)blocks.size();i++){
                 vector<BlockExit> exitsOfBlock = exitsByBlock[blocks[i].getName()];
+				
                 for(int j=0;j<(int)exitsOfBlock.size();j++)
                     this->blocks[i].addExit(exitsOfBlock[j]);
             }
         }
-
+		
+		
 		cout<<"Reading shelves...\n";
         //Read all the data concerning shelves
         file>> numShelves; 

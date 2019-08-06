@@ -49,7 +49,7 @@ namespace QuickTSP{
             void connectSingleCellToSingleCorridor(const Shelf &shelf, Corridor * corridor,set<Arc> &arcs, string cellName, string position,int row, int column);
             pair<Vertex, Vertex> createCellAndCorridorVertexes(string cellNameA, string cellNameB);
             void connectExpeditionPoint(ExpeditionPoint &expedition, set<Arc> &arcs, map<string, Block> &blocksByName);
-            void connectBlockExits(BlockExit &exit, set<Arc> & arcs, map<string, Block> &blocksByName)
+            void connectBlockExits(BlockExit &exit, set<Arc> & arcs, map<string, Block> &blocksByName);
 
         public:
             WarehouseToGraphConverter();

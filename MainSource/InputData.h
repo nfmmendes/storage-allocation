@@ -19,6 +19,7 @@
 #include "Parameter.h"
 #include "Warehouse.h"
 #include "ProductAllocationProhibition.h"
+#include "IsolatedFamily.h"
 using namespace std;
 
 //=======================================================================================
@@ -32,6 +33,7 @@ class InputData{
         static vector<Order> orders;
         static vector<Parameter> parameters;
         static vector<ProductAllocationProhibitions> prohibitions;
+		static vector<IsolatedFamily> isolatedFamilies; 
         static Warehouse warehouse;
         bool alreadyCreated = false; 
     
@@ -44,11 +46,13 @@ class InputData{
         void setOrders(vector<Order> orders);
         void setParameters(vector<Parameter> parameters);
         void setWarehouse(Warehouse warehouse);
+		void setIsolatedFamilies(vector<IsolatedFamily> &isolatedFamilies);
     
         vector<Product> getProducts();
         vector<Client> getClients();
         vector<Order> &getOrders();
         vector<Parameter> getParameters();
+		vector<IsolatedFamily> getIsolatedFamily();
         Warehouse & getWarehouse();
     
 };

@@ -99,15 +99,15 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
 	
 	ProductAllocationProhibitions::recoverWarehouseData(warehouse,cellsByCode,shelvesById,blocksByName);
 	
-
-	while(file>>productCode){
+	int numIterations; //Change the name of this variable
+	
+	file>>numIterations; 
+	for(int w= 0; w < numIterations; w++){
+		file>>productCode;
 		file>>numProhibitions;
 		cout<<numProhibitions<<endl;
 		file>>numCellProhibitions>>numShelvesProhibitions>>numBlocksProhibitions;
-    
 	
-		
-		cout<<numCellProhibitions<<" "<<numShelvesProhibitions<<" "<<numBlocksProhibitions<<endl;
 		for(int i=0; i < numProhibitions; i++){
 			if(numCellProhibitions > 0 || numShelvesProhibitions >0|| numBlocksProhibitions >0 ){
 				
@@ -144,8 +144,6 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
 					
 					prohibitions.push_back(prohibition);
 				}
-				
-				
 			}
 		}
 		

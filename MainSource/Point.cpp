@@ -109,7 +109,6 @@ vector<Point>  Point::removeDuplicates(vector<Point> & points){
 	vector<Point> returned; 
 	int cont = 0; 
 	for(int i=0; i< (int) points.size() && cont < (int) pointsToRemove.size(); i++){
-		cout<<pointsToRemove.size()<<" "<<cont<<endl; 
 		if(pointsToRemove[cont] == i)
 			cont++;
 		else 
@@ -118,7 +117,7 @@ vector<Point>  Point::removeDuplicates(vector<Point> & points){
 	
 	if(pointsToRemove.size() == 0)
 		return points; 
-	cout<<"Abracadabra"<<returned.size()<<endl; 
+	
 	return returned; 
 		
 }

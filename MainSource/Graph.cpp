@@ -28,7 +28,6 @@ Graph::Graph(const vector<Vertex> &vertexes, map<Vertex, vector<Arc> > &arcs, st
     for(int i=0; i< (int)vertexes.size();i++)
         this->vertexes.push_back(vertexes[i]);
     
-    int count = 0;
     for(map<Vertex, vector<Arc> >::iterator it = arcs.begin(); it != arcs.end(); it++){
         
         for(unsigned int i=0; i < it->second.size(); i++){
@@ -124,7 +123,6 @@ Graph Graph::convertArcsToGraph(set<Arc> &arcs,string name){
     vector<Vertex> listOfVertexes;
     map<Vertex, vector<Arc> > listOfArcs; 
 
-    int count=0; 
     for(set<Arc>::iterator it = arcs.begin(); it != arcs.end(); it++){
         allVertexes.insert(it->getBeginVertex());
         allVertexes.insert(it->getEndVertex());

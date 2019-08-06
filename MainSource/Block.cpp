@@ -14,6 +14,7 @@ using namespace std;
 Block::Block(){}
 
 Block::Block(const Block &other){
+	
     for(unsigned int i = 0; i< other.shelves.size();i++)
         this->shelves.push_back(Shelf(other.shelves[i]));
     
@@ -26,6 +27,7 @@ Block::Block(const Block &other){
     for(unsigned int i=0;i < other.curves.size();i++)
         this->curves.push_back(Curve(other.curves[i]));
     
+
     this->name = other.name;
     this->bottomLeftCoords = other.bottomLeftCoords;
     this->width = other.width;
@@ -37,11 +39,12 @@ Block::Block(const Block &other){
 *
 ***********************************************************************************/
 Block::Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY, double width, double lenght){
-    
+
     this->name = blockName;
     this->bottomLeftCoords = make_pair(bottomLeftCoordX, bottomLeftCoordY);
     this->width = width;
     this->lenght = lenght;
+	
 }
 
 
@@ -149,7 +152,7 @@ void Block::setCurves(vector<Curve> & other){
 *
 ***********************************************************************************/
 void Block::addExit(BlockExit & other) {
-    if( find(exits.begin(), exits.end(), other) != exits.end()){
+    if( find(exits.begin(), exits.end(), other) == exits.end()){
         BlockExit inserted(other);
         exits.push_back(inserted);
     }
@@ -189,9 +192,14 @@ bool Block::operator==(const Block &other){
  * 
  * 
  **********************************************************************************/
-bool Block::isInBlock(Point &point)const{
+bool Block::isInBlock(const Point &point)const{
     return point.getCoordX() >= bottomLeftCoords.first && point.getCoordX() <= bottomLeftCoords.first + width &&
            point.getCoordY() >= bottomLeftCoords.second && point.getCoordY() <= bottomLeftCoords.second + lenght;
+}
+
+
+void Block::setName(const string &name){
+	this->name = name; 
 }
 
 

@@ -11,13 +11,15 @@
 #include "Order.h"
 #include "Warehouse.h"
 #include "ProductAllocationProhibition.h"
-
+#include "IsolatedFamily.h"
+using namespace std;
 
 vector<Product> InputData::products;
 vector<Client> InputData::clients;
 vector<Order> InputData::orders;
 vector<Parameter> InputData::parameters;
 vector<ProductAllocationProhibitions> InputData::prohibitions;
+vector<IsolatedFamily> InputData::isolatedFamilies;
 Warehouse InputData::warehouse;
 
 InputData::InputData(){
@@ -58,6 +60,7 @@ InputData::InputData(string  dataFile){
         
         cout<<"Reading allocation prohibitions...\n";
         prohibitions = ProductAllocationProhibitions::readAllProhibitionsData(file);
+		isolatedFamilies = IsolatedFamily::readIsolatedFamilyData(file);
         
         //cout<<"Reading parameters...\n";
         //parameters = Parameter::readParametersData(file);
@@ -111,6 +114,11 @@ void InputData::setWarehouse(Warehouse warehouse){
     
 }
 
+void InputData::setIsolatedFamilies(vector<IsolatedFamily> &_isolatedFamilies){
+	for(unsigned int i=0; i < _isolatedFamilies.size(); i++)
+		this->isolatedFamilies.push_back(IsolatedFamily(_isolatedFamilies[i]));
+}
+
 vector<Product> InputData::getProducts(){return products;}
 
 vector<Client> InputData::getClients(){ return clients;}
@@ -120,3 +128,5 @@ vector<Order> &InputData::getOrders() { return orders;}
 vector<Parameter> InputData::getParameters() { return parameters;}
 
 Warehouse & InputData::getWarehouse() { return warehouse; }
+
+vector<IsolatedFamily> InputData::getIsolatedFamily(){ return isolatedFamilies; }

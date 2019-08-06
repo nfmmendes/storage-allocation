@@ -36,13 +36,17 @@ class Block{
     
     
         string getName();
+		double getWidth(){ return this->width;}
+		double getLenght(){ return this->lenght;}
         vector<Shelf> getShelves();
         vector<BlockExit> getExits();
         vector<Corridor> getCorridors();
         vector<Curve> getCurves();
         pair<double,double> getBottomLeftCoords();
     
-        bool isInBlock(Point &point)const;
+        bool isInBlock(const Point &point)const;
+
+		void setName(const string &name);
 
         //Set corridors
         void setCorridors(vector<Corridor> & others);
