@@ -44,11 +44,15 @@ WarehousePack : ExpeditionPoint.h Cell.h Shelf.h  Warehouse.h BlockExit.h Corrid
 	$(CC) $(COMPILE_FLAGS) -c ExpeditionPoint.cpp Corridor.h Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp 
 
 
-Input: InputData.h Parameter.o Client.o Product.o Warehouse.o
+Input: InputData.h Parameter.o Client.o Product.o Warehouse.o 
 	$(CC) $(COMPILE_FLAGS) -c InputData.cpp
 
-GraphPack: Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h Transition.h
-	$(CC) $(COMPILE_FLAGS) -c Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.cpp Line.cpp Transition.cpp
+GraphPack: AbstractVertex.h DistanceMatrix.h Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h Transition.h DistanceMatrixCalculator.h DijkstraDistanceMatrixCalculator.h
+	$(CC) $(COMPILE_FLAGS) -c AbstractVertex.h DistanceMatrix.cpp Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.cpp DijkstraDistanceMatrixCalculator.cpp Line.cpp Transition.cpp
+
+
+HeuristicPack: AbstractSolution.h NeighborhoodStructure.h Heuristic.h Solution.h StorageILS.h StorageAllocationSolution.h
+	$(CC) $(COMPILE_FLAGS) -c AbstractSolution.h StorageAllocationSolution.cpp NeighborhoodStructure.h StorageILS.cpp
 
 Parameter: Parameter.h
 	$(CC) $(COMPILE_FLAGS) -c Parameter.cpp

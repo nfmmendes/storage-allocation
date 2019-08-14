@@ -3,7 +3,18 @@
 #include<iostream>
 #include<vector>
 #include<utility>
+#include<queue>
+#include<functional>
+#include<algorithm>
+#include<map>
+#include<list>
+#include "Vertex.h"
+# define INF 0x3f3f3f3f 
 using namespace std;
+using namespace QuickTSP;
+
+
+typedef pair<int, double> iPair; 
 
 
 
@@ -11,24 +22,83 @@ using namespace std;
  * 
  * 
  */
-DijkstraDistanceMatrixCalculator(){
+template <class Graph, class DistanceMatrix>
+DijkstraDistanceMatrixCalculator< Graph, DistanceMatrix>::DijkstraDistanceMatrixCalculator(DijkstraDistanceMatrixCalculator<Graph, DistanceMatrix> &other){
 
-}
-
-/**
- * 
- * 
- */
-DijkstraDistanceMatrixCalculator(DijkstraDistanceMatrixCalculator &other){
-
-}
+};
 
 /**
- * 
- * 
+ *  Based on the code presented on https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/ 
+ *  It is a very efficient implementation that works in O(n log n) for each source point (if there is more than one). 
  */
-template<class DistanceMatrix, class Graph>
-DistanceMatrix DijkstraDistanceMatrixCalculator::calculateMatrixDistance(Graph &graph){
+template <class Graph, class DistanceMatrix>
+DistanceMatrix DijkstraDistanceMatrixCalculator< Graph,  DistanceMatrix>::calculateMatrixDistance(Graph &graph, vector<Vertex> &sourceVertexes ){
 
+    vector<Vertex> vertexes = graph.getVertexes(); 
+    map<Vertex, int> indexVertex;
+
+    for(unsigned int i= 0; i<vertexes.size(); i++)
+        indexVertex[ vertexes[i] ] = i ;
+    
+
+
+    for(unsigned int i= 0; i<sourceVertexes.size(); i++){
+        
+
+        // Create a priority queue to store vertices that 
+        // are being preprocessed. This is weird syntax in C++. 
+        // Refer below link for details of this syntax 
+        // https://www.geeksforgeeks.org/implement-min-heap-using-stl/ 
+        priority_queue< iPair, vector <iPair> , greater<iPair> > pq; 
+    
+        // Create a vector for distances and initialize all 
+        // distances as infinite (INF) 
+        vector<int> dist(vertexes.size(), INF); 
+    
+        // Insert source itself in priority queue and initialize 
+        // its distance as 0. 
+        int src = indexVertex[sourceVertexes[i]]; 
+        pq.push(make_pair(0, src )); 
+        dist[src] = 0; 
+    
+        /* Looping till priority queue becomes empty (or all 
+        distances are not finalized) */
+        while (!pq.empty()) 
+        { 
+            // The first vertex in pair is the minimum distance 
+            // vertex, extract it from priority queue. 
+            // vertex label is stored in second of pair (it 
+            // has to be done this way to keep the vertices 
+            // sorted distance (distance must be first item 
+            // in pair) 
+            int u = pq.top().second; 
+            pq.pop(); 
+    
+            // Get the adjacent vertexes of vertex with index u
+            vector<Vertex> adjacentVertexes =  graph.getAdjacentVertexes(vertexes[u]); 
+            list<pair<int, double> > adj;
+
+            // Get the indexes of the adjacent vertexes
+            for(int j= 0; j<adjacentVertexes.size(); j++)
+                adj.push_back(make_pair( indexVertex[adjacentVertexes[j]] , adjacentVertexes[j].getValue()  ) );
+
+
+            // 'it' is used to get all adjacent vertices of a vertex 
+            for (list< pair<int, double> >::iterator it = adj.begin(); it !=  adj.end(); ++it) { 
+                // Get vertex label and weight of current adjacent 
+                // of u. 
+                int v = (*it).first; 
+                int weight = (*it).second; 
+    
+                //  If there is shorted path to v through u. 
+                if (dist[v] > dist[u] + weight) 
+                { 
+                    // Updating distance of v 
+                    dist[v] = dist[u] + weight; 
+                    pq.push(make_pair(dist[v], v)); 
+                } 
+            } 
+        }
+    }
 }
 

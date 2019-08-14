@@ -112,6 +112,18 @@ void Graph::removeArc(Vertex vertex,int i){
         this->arcsByVertex[vertex].erase(this->arcsByVertex[vertex].begin()+i);
 }
 
+vector<Vertex> Graph::getAdjacentVertexes(Vertex & v){
+    vector<Vertex> returned; 
+
+    vector<Arc> incidentArcs = this->arcsByVertex[v];
+
+    for(int i=0; i<incidentArcs.size();i++)
+        returned.push_back(incidentArcs[i].getEndVertex());
+
+    return returned; 
+}
+
+
 /**
  * 
  * Convert a set of arcs in a graph. The set of arcs

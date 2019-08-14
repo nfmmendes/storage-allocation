@@ -5,16 +5,19 @@
 #include<iostream>
 #include<vector>
 #include<utility>
+#include "Vertex.h"
 using namespace std;
+using namespace QuickTSP;
 
 
-template<class DistanceMatrix, class Graph>
-class DijkstraDistanceMatrixCalculator : DistanceMatrixCalculator {
+
+template<class Graph, class DistanceMatrix>
+class DijkstraDistanceMatrixCalculator : DistanceMatrixCalculator<Graph,  DistanceMatrix> {
 
     public:  
-        DijkstraDistanceMatrixCalculator();
+        DijkstraDistanceMatrixCalculator(){}
         DijkstraDistanceMatrixCalculator(DijkstraDistanceMatrixCalculator &other);
-        virtual DistanceMatrix calculateMatrixDistance(Graph &graph); 
+        virtual DistanceMatrix calculateMatrixDistance(Graph &graph, vector<Vertex> &sourceVertexes); 
 
 };
 
