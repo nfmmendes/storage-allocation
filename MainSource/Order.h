@@ -40,9 +40,9 @@ class Order{
         Order(vector< pair<Product, double> >items, Date dataDeadline, Time hourDeadline, string client);
     
     
-        void setorderItens(int i, Product &product, double quantity);
-        void removeorderItens(int i);
-        void addorderItens(Product &product, double quantity);
+        void setOrderItens(int i, Product &product, double quantity);
+        void removeOrderItens(int i);
+        void addOrderItens(Product &product, double quantity);
         void setOrders(vector<pair<Product, double> > orders);
     
         void setDateDeadline(Date &date);

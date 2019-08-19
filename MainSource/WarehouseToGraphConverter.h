@@ -24,7 +24,7 @@ namespace QuickTSP{
         private:
             Warehouse warehouse; 
             Graph graph;
-            map<Cell, Vertex> vertexes;
+            map<Cell, Vertex> vertexByCell;
             vector<Vertex> firstLevelVertexes;                  //Store the vertexes corresponding to cell first levels. We need
                                                                 // it because this vertexes will be connected after in the graph
             map<const string, Vertex> vertexByCode;             //!< Stores all vertex, indexed by code
@@ -56,6 +56,9 @@ namespace QuickTSP{
             WarehouseToGraphConverter(WarehouseToGraphConverter & other);
             WarehouseToGraphConverter(Warehouse &warehouse);
             void generateGraph(); 
+            Graph & getGraph();
+            Warehouse & getWarehouse();
+            map<Cell, Vertex> getVertexByCell();
         
     }; 
 }

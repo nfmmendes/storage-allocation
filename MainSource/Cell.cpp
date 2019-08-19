@@ -7,6 +7,9 @@
 #include"Cell.h"
 using namespace std;
 
+/**
+ * 
+ */
 Cell::Cell(const Cell & other){
     this->code = other.code;
     this->idShelf = other.idShelf;
@@ -15,6 +18,9 @@ Cell::Cell(const Cell & other){
     this->levels = other.levels;
 }
 
+/**
+ * 
+ */
 Cell::Cell(string code, long int IdShelf,int levels, int row, int column){
     this->code = code;
     this->idShelf = IdShelf;
@@ -23,9 +29,53 @@ Cell::Cell(string code, long int IdShelf,int levels, int row, int column){
     this->levels = levels;
 }
 
-bool Cell::operator==(Cell & other) const{
+/**
+ * 
+ */
+bool Cell::operator==(const Cell & other) const{
     return code == other.code && idShelf == other.idShelf && row == other.row && column == other.column && levels == other.levels;
 }
+
+/**
+ * 
+ */
+bool Cell::operator<=(const Cell & other) const{
+    if(*this == other)
+        return true; 
+
+    if(this->code < other.code)                         //Code <
+        return true;
+    else if(this->code == other.code){                  //Code ==
+        if(this->idShelf < other.idShelf)                  //Shelf <
+            return true;
+        else if(this->idShelf == other.idShelf){        //Shelf ==
+            if(this->row < other.row)                   //Row <
+                return true;
+            else if(this->row == other.row){            //Row == 
+                if(this->column < other.column){
+                    return true; 
+                }else if(this->column == other.column){
+                    return this->levels <= other.levels; 
+                }else                                   // Else column
+                    return false;                       
+            }else                                       // Else row
+                return false;                           
+        }else                                           // Else Shelf
+            return false;
+    }else                                               // Else Code
+        return false;
+
+}
+
+
+/**
+ * 
+ */
+bool Cell::operator<(const Cell & other) const{
+    if( *this == other)
+        return *this <= other && !(*this == other); 
+}
+
 
 void Cell::setCode(string value){ this->code = value;}
 void Cell::setIdShelf(long int value ){ if(value >= 0) this->idShelf = value;}
@@ -39,6 +89,9 @@ int Cell::getRow(){ return row;}
 int Cell::getColumn() { return column; }
 int Cell::getLevels() { return levels; }
 
+/**
+ * 
+ */
 void Cell::printCellInformation(){ 
 
 	cout<<"_____________________________\n";

@@ -28,8 +28,10 @@ class Cell{
         
         Cell(string code, long int IdShelf,int levels, int row, int column);
         
-        bool operator==(Cell & other) const;
-        
+        bool operator==(const Cell & other) const;
+        bool operator<=(const Cell & other) const;
+        bool operator<(const Cell & other) const;
+
         void setCode(string value);
         void setIdShelf(long int value );
         void setRow(int value);

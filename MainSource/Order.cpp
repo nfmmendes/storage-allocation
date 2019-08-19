@@ -38,19 +38,19 @@ Order::Order(vector< pair<Product, double> > items, Date dataDeadline, Time hour
 }
 
 
-void Order::setorderItens(int i, Product &product, double quantity) {
+void Order::setOrderItens(int i, Product &product, double quantity) {
     if(i >=0 && i<(int)this->orderItens.size())
         this->orderItens[i] = make_pair(product, quantity);
 }
 
 
-void Order::removeorderItens(int i){
+void Order::removeOrderItens(int i){
     if(i>=0 && i<(int)this->orderItens.size())
         this->orderItens.erase(this->orderItens.begin()+i);
 }
 
 
-void Order::addorderItens(Product &product, double quantity){
+void Order::addOrderItens(Product &product, double quantity){
     this->orderItens.push_back(make_pair(product,quantity));
 }
 

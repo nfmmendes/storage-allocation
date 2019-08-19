@@ -787,3 +787,24 @@ void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & ar
         arcs.insert(other);
 	}
 }
+
+/**
+ * 
+ */
+Graph & WarehouseToGraphConverter::getGraph(){
+    return this->graph;
+}
+
+/**
+ * 
+ */
+Warehouse & WarehouseToGraphConverter::getWarehouse(){
+    return this->warehouse;
+}
+
+/**
+ * 
+ */
+map<Cell, Vertex> WarehouseToGraphConverter::getVertexByCell(){
+    return this->vertexByCell;
+}

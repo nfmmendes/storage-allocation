@@ -24,6 +24,106 @@
 using namespace std; 
 
 
+//////////////////////////////////////////////////////////////////////////////////////////
+////                                 INSIDE SHELF SWAP
+////
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * 
+ */
+InsideShelfSwap::InsideShelfSwap(){
+
+}
+
+/**
+ * 
+ */
+InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial):base(initial){
+
+}
+
+/**
+ * 
+ */
+void InsideShelfSwap::setStartSolution(AbstractSolution *) const{
+
+}
+
+/**
+ * 
+ */
+vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
+
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////                                 INSIDE BLOCK SWAP
+////
+/////////////////////////////////////////////////////////////////////////////////////////
+InsideBlockSwap::InsideBlockSwap(){
+
+}
+
+InsideBlockSwap::InsideBlockSwap(StorageAllocationSolution *initial, int numNeigh, 
+                                 int randomSeed, vector<int> &products):base(initial){
+
+    }
+
+void InsideBlockSwap::setStartSolution(AbstractSolution *) const{
+
+}
+
+vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
+
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////                                 MOST FREQUENT PRODUCTS SWAP
+////
+/////////////////////////////////////////////////////////////////////////////////////////
+MostFrequentSwap::MostFrequentSwap(){
+
+}
+
+MostFrequentSwap::MostFrequentSwap(StorageAllocation *initial, int numNeigh, 
+                                  int randomSeed, vector<int> &products):base(initial){
+
+
+}
+
+
+void MostFrequentSwap::setStartSolution(AbstractSolution *) const{
+
+}
+
+AbstractSolution * MostFrequentSwap::getStartSolution() const{
+
+}
+
+vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
+
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////                    Storage allocation ILS region
+////
+/////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+StorageALlocationSolution * StorageILS::CreateInitialSolution(){
+
+}
+
 /**
  * 
  */
@@ -56,7 +156,14 @@ StorageILS::StorageILS(StorageILS &other){
  * 
  */
 StorageILS::StorageILS(DistanceMatrix *distances, Graph *graph, Warehouse *warehouse){
+    
+}
 
+/**
+ * 
+ */
+bool StorageILS::StopCriteriaReached(){
+    return this->numPertubations == MAX_PERTUBATIONS && this->numIterationsWithoutImprovement > MAX_ITERATIONS_WITHOUT_IMPROVEMENT;
 }
 
 /**
@@ -64,4 +171,10 @@ StorageILS::StorageILS(DistanceMatrix *distances, Graph *graph, Warehouse *wareh
  */
 StorageILS::virtual AbstractSolution * Execute(){
 
+    this->numPertubations = 0;
+    this->numIterationsWithoutImprovement = 0;
+
+    AbstractSolution * initialSolution = CreateInitialSolution();
+
 }
+
