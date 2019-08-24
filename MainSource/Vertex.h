@@ -11,7 +11,7 @@ namespace QuickTSP{
 
     /// This graphs represents a vertex in a graph. As the vertex can have many
     /// roles the object contains 3 fields that can be used in a free way
-    class Vertex : AbstractVertex{
+    class Vertex : public AbstractVertex{
         
         private:
             string label;

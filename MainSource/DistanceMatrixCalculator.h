@@ -18,7 +18,7 @@ class DistanceMatrixCalculator{
     public:
         DistanceMatrixCalculator();
         DistanceMatrixCalculator(DistanceMatrixCalculator<Graph, DistanceMatrix> &other);
-        virtual DistanceMatrix calculateMatrixDistance(Graph &graph, vector<AbstractVertex> &sourceVertexes)=0;
+        virtual DistanceMatrix & calculateMatrixDistance(Graph &graph, vector<AbstractVertex> sourceVertexes)=0;
      
 
 }; 

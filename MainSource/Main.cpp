@@ -10,6 +10,7 @@
 #include "VND.h"
 #include "InputData.h"
 #include "WarehouseToGraphConverter.h"
+#include "ProcessInputData.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -87,9 +88,9 @@ int main(int argc, char **argv){
         
 		printRandomSolution();
 		
-		WarehouseToGraphConverter converter(input.getWarehouse());
-		cout<<"Starting conversion of warehouse to graph\n";
-		converter.generateGraph();
+		ProcessInputData processInput(&input);
+		processInput.ExecuteProcessData();
+		
 		
         
     }else

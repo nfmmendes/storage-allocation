@@ -6,6 +6,7 @@
 #include "Graph.h"
 #include "Arc.h"
 #include "Vertex.h"
+#include "AbstractVertex.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -57,27 +58,50 @@ Graph & Graph::operator=(const Graph &other){
     return *this;
 }
 
-
+/**
+ *
+ */
 map<Vertex, vector<Arc> > Graph::getArcs() const{
     return arcsByVertex;
 }
 
+/**
+ *
+ */
+map<string, set<Vertex> > & Graph::getVertexesByType(){
+	map<string, set<Vertex> > returned; 
+	for(int i=0;i<this->vertexes.size();i++)
+		returned[vertexes[i].getType()].insert(vertexes[i]);
+	
+	return returned; 
+}
+
+/**
+ *
+ */
 vector<Vertex> Graph::getVertexes()const {
     return vertexes;
 }
 
-string Graph::getName()const
-{
+/**
+ *
+ */
+string Graph::getName()const{
     return name;
 }
 
-
+/**
+ *
+ */
 void Graph::setArcs(map<Vertex, vector<Arc> > arcs){
     this->arcsByVertex.clear();
     
     this->arcsByVertex = arcs;
 }
 
+/**
+ *
+ */
 void Graph::setVertexes(vector<Vertex> other){
     this->vertexes.clear();
     
@@ -85,33 +109,54 @@ void Graph::setVertexes(vector<Vertex> other){
         this->vertexes.push_back(Vertex(other[i]));
 }
 
+/**
+ *
+ */
 void Graph::addVertex(Vertex &other){
     this->vertexes.push_back(Vertex(other));
 }
 
+/**
+ *
+ */
 void Graph::addArc(Arc &arc){
     
     this->arcsByVertex[arc.getBeginVertex()].push_back(Arc(arc));
 }
 
+/**
+ *
+ */
 void Graph::removeVertex(Vertex &other){
     remove(this->vertexes.begin(), this->vertexes.end(), other);
 }
 
+/**
+ *
+ */
 void Graph::removeArc(Vertex vertex,Arc & arc){
     remove(this->arcsByVertex[vertex].begin(), this->arcsByVertex[vertex].end(), arc);
 }
 
+/**
+ *
+ */
 void Graph::removerVertex(int i){
     if(i >= 0 && i < (int)this->vertexes.size())
         this->vertexes.erase(this->vertexes.begin()+i);
 }
 
+/**
+ *
+ */
 void Graph::removeArc(Vertex vertex,int i){
     if(i >= 0 && i < (int)this->arcsByVertex[vertex].size())
         this->arcsByVertex[vertex].erase(this->arcsByVertex[vertex].begin()+i);
 }
 
+/**
+ *
+ */
 vector<Vertex> Graph::getAdjacentVertexes(Vertex & v){
     vector<Vertex> returned; 
 

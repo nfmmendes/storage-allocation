@@ -1,3 +1,6 @@
+#ifndef WAREHOUSE_TO_GRAPH_CONVERTER_H
+#define WAREHOUSE_TO_GRAPH_CONVERTER_H
+
 #include<iostream>
 #include<string>
 #include<cmath>
@@ -24,7 +27,7 @@ namespace QuickTSP{
         private:
             Warehouse warehouse; 
             Graph graph;
-            map<Cell, Vertex> vertexByCell;
+            map<pair<Cell, int>, Vertex> vertexByCell;
             vector<Vertex> firstLevelVertexes;                  //Store the vertexes corresponding to cell first levels. We need
                                                                 // it because this vertexes will be connected after in the graph
             map<const string, Vertex> vertexByCode;             //!< Stores all vertex, indexed by code
@@ -32,7 +35,7 @@ namespace QuickTSP{
             map<long int, vector<Point> > pointsByCorridor;   //!<Stores all points where a curve starts or finishes, divided by corridor
             map<Point, Vertex> vertexByPoint;
         
-            void initiliazeCellFirstLevel(vector<Vertex> & ,StringMatrix &,Vertex , Cell );
+            void initializeCellFirstLevel(vector<Vertex> & ,StringMatrix &,Vertex , Cell );
             void connectInternalNode(Vertex , set<Arc> &,const int , const int ,const int ,const int , double , double ,
                                      const vector<vector<string> > );
             void connectVertexesByTwoArcs(Vertex & first, string second,set<Arc> &arcs, double size);
@@ -47,7 +50,7 @@ namespace QuickTSP{
 			void InitializeAdjacentCorridors(Corridor *up,Corridor * down,Corridor * left,Corridor * right,const vector<Corridor>& adjacents,Shelf shelf);
             pair<Vertex, Vertex> createCellAndCorridorVertexes( const Corridor *corridor, pair<double,double> coords, string cellName, string position);
             void connectSingleCellToSingleCorridor(const Shelf &shelf, Corridor * corridor,set<Arc> &arcs, string cellName, string position,int row, int column);
-            pair<Vertex, Vertex> createCellAndCorridorVertexes(string cellNameA, string cellNameB);
+            pair<Vertex, Vertex> getInternalAndExternalCellsVertexes(string cellNameA, string cellNameB);
             void connectExpeditionPoint(ExpeditionPoint &expedition, set<Arc> &arcs, map<string, Block> &blocksByName);
             void connectBlockExits(BlockExit &exit, set<Arc> & arcs, map<string, Block> &blocksByName);
 
@@ -58,7 +61,9 @@ namespace QuickTSP{
             void generateGraph(); 
             Graph & getGraph();
             Warehouse & getWarehouse();
-            map<Cell, Vertex> getVertexByCell();
+            map<pair<Cell,int>, Vertex> getVertexByCell();
         
     }; 
 }
+
+#endif

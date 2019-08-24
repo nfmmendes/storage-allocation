@@ -8,12 +8,12 @@ CC = g++
 COMPILE_FLAGS = -O3 -std=c++11 -Wall -Wextra -g
 
 
-all: GraphPack Input WarehousePack Block Warehouse ProductAllocationProhibition QuickTSP GeneralClasses
+all: GraphPack Input WarehousePack Block Warehouse ProductAllocationProhibition QuickTSP GeneralClasses ProcessInputData.o InputData.o
 	$(CC) $(COMPILE_FLAGS) -o run main.cpp *.o
 	
 
-Input: InputData.h 
-	$(CC) $(COMPILE_FLAGS) -c InputData.cpp
+Input: ProcessInputData.h InputData.h 
+	$(CC) $(COMPILE_FLAGS) -c InputData.cpp ProcessInputData.cpp
 
 
 
@@ -51,7 +51,7 @@ GraphPack: AbstractVertex.h DistanceMatrix.h Point.h Vertex.h Arc.h Graph.h Hana
 	$(CC) $(COMPILE_FLAGS) -c AbstractVertex.h DistanceMatrix.cpp Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.cpp DijkstraDistanceMatrixCalculator.cpp Line.cpp Transition.cpp
 
 
-HeuristicPack: AbstractSolution.h NeighborhoodStructure.h Heuristic.h Solution.h StorageILS.h StorageAllocationSolution.h
+HeuristicPack: AbstractSolution.h NeighborhoodStructure.h Heuristic.h StorageILS.h StorageAllocationSolution.h
 	$(CC) $(COMPILE_FLAGS) -c AbstractSolution.h StorageAllocationSolution.cpp NeighborhoodStructure.h StorageILS.cpp
 
 Parameter: Parameter.h

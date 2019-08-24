@@ -13,7 +13,7 @@
 #include "Order.h"
 #include "ProductAllocationProhibition.h"
 #include "Parameter.h"
-#include "Solution.h"
+#include "AbstractSolution.h"
 
 class VND {
     
@@ -22,7 +22,7 @@ class VND {
         VND(Warehouse warehouse, vector<Order> orders, vector<ProductAllocationProhibitions> prohibitions, vector<Parameter> parameters);
         VND(const VND & other);
         void run();
-        Solution &getSolution();
+        AbstractSolution *getSolution();
         double getSolutionValue();
     
     
@@ -31,12 +31,12 @@ class VND {
         vector<Order> orders;
         vector<ProductAllocationProhibitions> prohibitions;
         vector<Parameter> parameters;
-        Solution bestSolution;
+        AbstractSolution * bestSolution;
         double bestSolutionValue;
-        void pertubation(Solution &solution);
-        void firstLocalSearch(Solution &solution);
-        void secondLocalSearch(Solution &solution);
-        void thirdLocalSearch(Solution &solution);
+        void pertubation(AbstractSolution *solution);
+        void firstLocalSearch(AbstractSolution *solution);
+        void secondLocalSearch(AbstractSolution *solution);
+        void thirdLocalSearch(AbstractSolution *solution);
         bool stopCriteria();
         bool pertubationCriteria();
     

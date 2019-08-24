@@ -40,6 +40,10 @@ WarehouseToGraphConverter::WarehouseToGraphConverter(Warehouse &warehouse){
     this->warehouse = *(new Warehouse(warehouse));
 }
 
+/**
+ *	This is the main function of the class. From this function all the other functions
+ *  used on the convertion process will be called and the user does not need to do anything else
+ */
 void WarehouseToGraphConverter::generateGraph(){
     
     
@@ -53,7 +57,6 @@ void WarehouseToGraphConverter::generateGraph(){
 	for(int i= 0; i<(int) blocks.size(); i++){
         blocksByName[blocks[i].getName()] = blocks[i];
 	}
-	
 	
     //This loop creates a subgraph of the final graph to each block. These blocks will be connected by block exits in
     //second loop
@@ -87,6 +90,9 @@ void WarehouseToGraphConverter::generateGraph(){
 			//cout<<"Connecting cells"<<endl;
             for(int k=0; k < (int) cells.size(); k++)
                 connectCellLevels(cells[k], cellPositions, arcs);
+			
+			//// FILL VERTEX BY CELL
+			//TODO:
         
             //Connects cells with corridors and internal nodes with border nodes in a shelf.
             for(int k=1; k< (int) numRows+1; k++){
@@ -121,16 +127,25 @@ void WarehouseToGraphConverter::generateGraph(){
         
     }
 	
+	
+	//Connect the block exits to the rest of the graph. It reduntant to connect
+	// block exits that goes to the extern part of the the warehouse, but we do it anyway
+	// It is important to remember that block exits does not belongs exclusivelly to one block
+	// We will consider here (and other parts of code) that the exit belongs to only one block (blockA) for 
+	// simplicity, but if it is needed this can be changed 
 	for(int i= 0; i<(int) blocks.size(); i++){
 		vector<BlockExit> blockExits = blocks[i].getExits(); 
 		for(int j=0; j<(int) blockExits.size();j++)
 			connectBlockExits(blockExits[j], arcs, blocksByName);
 	}
 		
-    
+    // The expedition points need to be inside a block. In this code, we does not consider cases where the products
+	// are transported to a extern part of the warehouse 
     for(unsigned int i=0; i<expeditionPoints.size();i++)
         connectExpeditionPoint(expeditionPoints[i], arcs, blocksByName);
 
+	// All the conversion process is done to construct arcs. Obviously that to have arcs we need vertexes, but as 
+	// the adjacence matrix is very sparse we prefer to use a list of arcs representation 
     this->graph = Graph::convertArcsToGraph(arcs);
 	cout<<"Conversion finished:\nNumber of arcs: \t"<<arcs.size()<<endl;
 }
@@ -147,23 +162,27 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
 		#if DEBUG_LEVEL > 0
 			cout<<"Connecting cell: \t"<<cell.getCode()<<" which has a single level\n";
 		#endif 
-        Vertex firstLevel = * (new Vertex( cell.getCode(), "UniqueLevelCell"));
-        initiliazeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
-        
-    }else if(numLevels > 0){
-        Vertex firstLevel(cell.getCode()+"_L1", "FirstLevelCell");
-        initiliazeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
-        
+        Vertex firstLevel( cell.getCode(), "UniqueLevelCell");			/// All the vertexes created based on cell position have 
+																		/// the world "Cell" in their type name
+        initializeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
+		
+    }else if(numLevels > 1){
+        Vertex firstLevel(cell.getCode()+"_L_1", "FirstLevelCell");
+        initializeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
+		vertexByCell[make_pair(cell,1)] = firstLevel;
 		#if DEBUG_LEVEL > 0
 			cout<<"Connecting cell levels of cell "<<cell.getCode()<<" which has " <<numLevels<<" levels\n";
 		#endif
 		
 		
         //Create the vertexes to represent the higher levels and the arcs to connect them
-        for(int l=1; l< (int) numLevels; l++){
-            Vertex vertex( cell.getCode()+"L"+to_string(l) , "UniqueLevelCell");
+        for(int l=2; l<= (int) numLevels; l++){
+            Vertex vertex( cell.getCode()+"_L_"+to_string(l) , "UpperLevelCell");		/// To the graph is irrelevant if a vertex
+																						/// represents a first level or not, to the converter
+																						/// and the algorithm, however, is not. Upper levels 
+																						/// can not connect directly with each other 
             vertexByCode[vertex.getLabel()] = vertex;
-            
+            vertexByCell[make_pair(cell,l)] = vertex;
             //We suppose that the pickers came from the lower level, take a product on the first or upper leves
             // and then come back (or stay) into the first level before go away. In this sense, all the inter-level
             // connections should be done in both senses (up-down and bottom-up)
@@ -179,7 +198,9 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
 
 
 /**
- *
+ * This function creates a connection between a shelf and a corridor. The connection is not done with the shelf itself, but with the
+ * cells in it. Although it looks the same, it don't, because a direct connection between a shelf and a corridor could indicate the
+ * existence of a shelf "entrance" that does not exist to the cases that we analyse 
  */
 void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,const vector<Corridor>& adjacentCorridor,
                                                        const StringMatrix &cellPositions, int numRows,int numColumns,set<Arc> &arcs ){
@@ -191,12 +212,27 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
     Corridor *corridorLeft=NULL;
     Corridor *corridorRight=NULL;
     
+	// Look for the shelf closest corridor. If it is a horizontal corridor we look for the closest horizontal corridors (one above and other 
+	// bellow). If it is a vertical shelf we pick one vertex on the left and other in the left 
 	InitializeAdjacentCorridors(corridorUp, corridorDown, corridorLeft, corridorRight, adjacentCorridor, shelf); 
 	
 	#if DEBUG_LEVEL > 0
 		if(corridorUp == corridorLeft && corridorRight == corridorDown && corridorLeft == corridorRight)
 			cout<<"There is a problem with adjacent corridors\t" << shelf.getId()<<" "<<shelf.getNumRows()<<" "<<shelf.getNumColumns() <<endl; 
 	#endif
+	
+	//Brutto pezzo di codice
+	//Comunque...
+	// The way that a shelf is connected to the corridors is different according to the format of the shelf
+	// A vertical shelf has more lines than columns  	while 		A horizontal shelf has more columns that lines 
+	//			**	|	***  |											******
+	//			**	|	***	 |											******
+	//			**	|	***  |											------------
+	//			**	|	***	 |											*********
+	//			**	|--------|											*********
+	// Considering the star blocks as shelf and the lines as corridors, is evident that vertical corridors should be connected 
+	// with vertical shelves and horizontal corridors with horizontal shelves. In case where we have squared shelves we do both.
+	// A vertical shelf can be connected by a corridor in its left or in its right (or both). 
 	
     //=====================     Vertical or squared shelf   ================================
     if(numColumns <= numRows){
@@ -208,8 +244,7 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors (a column to the rigth)
 				if(numColumns > 1){
-                    
-					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[k][1], cellPositions[k][2]);
+					pair<Vertex, Vertex> extremes = getInternalAndExternalCellsVertexes(cellPositions[k][1], cellPositions[k][2]);
 					createArcsCellToCorridor(extremes.first, extremes.second, cellWidth, arcs); 
 				}
             }
@@ -220,7 +255,7 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors (one column to right)
 				if(numColumns > 1){
-					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[k][numColumns], cellPositions[k][numColumns-1]);
+					pair<Vertex, Vertex> extremes = getInternalAndExternalCellsVertexes(cellPositions[k][numColumns], cellPositions[k][numColumns-1]);
 					createArcsCellToCorridor(extremes.first, extremes.second, cellWidth, arcs); 
 				}
             }
@@ -236,7 +271,7 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
 				if(shelf.getNumRows() > 1){
-					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[numRows][k], cellPositions[numRows-1][k]);
+					pair<Vertex, Vertex> extremes = getInternalAndExternalCellsVertexes(cellPositions[numRows][k], cellPositions[numRows-1][k]);
 					createArcsCellToCorridor(extremes.first, extremes.second, cellLength, arcs);
 				}				
             }
@@ -247,7 +282,7 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
             }else{
                 //The cell is considered an internal cell thus it will be connected with its neighbors
 				if(shelf.getNumRows() > 1){
-					pair<Vertex, Vertex> extremes = createCellAndCorridorVertexes(cellPositions[1][k], cellPositions[2][k]);
+					pair<Vertex, Vertex> extremes = getInternalAndExternalCellsVertexes(cellPositions[1][k], cellPositions[2][k]);
 					createArcsCellToCorridor(extremes.first, extremes.second, cellLength, arcs); 
 				}
             }
@@ -257,8 +292,10 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
 
 
 /**
- * 
- * 
+ * This function connects a cell (of a given shelf) to a corridor. The position parameter indicate the corridor position 
+ * relative to the shelf. To calculate the position of the cell and consequently the position of the vertex we consider the 
+ * cell central point, and to do it we need to know in which row and column the cell is, as its size and the shelf. 
+ * The arc will receave as value its length. 
  */
 void WarehouseToGraphConverter::connectSingleCellToSingleCorridor(const Shelf &shelf,Corridor * corridor, set<Arc> &arcs, 
                                                                string cellName, string position,int row, int column){
@@ -294,12 +331,15 @@ void WarehouseToGraphConverter::connectSingleCellToSingleCorridor(const Shelf &s
 
 
 /**
- * 
+ * Create or recover the 
  * 
  */
-pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(string cellNameA, string cellNameB){
+pair<Vertex, Vertex> WarehouseToGraphConverter::getInternalAndExternalCellsVertexes(string cellNameA, string cellNameB){
 
-    Vertex vertexCell(cellNameA, "CellVertex");
+	Vertex vertexCell(cellNameA, "CellVertex");
+	if(vertexByCode.find(cellNameA) != vertexByCode.end())
+		vertexCell = vertexByCode[cellNameA];
+	    
     Vertex cellOther;
     if(vertexByCode.find(cellNameB) != vertexByCode.end())
         cellOther = vertexByCode[cellNameB];
@@ -328,16 +368,18 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(co
     pointsByCorridor[corridor->getId()].push_back(corridorPoint);
     
     Vertex vertexCell(cellName, "CellVertex");
+	if(vertexByCode.find(cellName)!=vertexByCode.end())
+		vertexCell = vertexByCode[cellName]; 
+	else
+		vertexByCode[vertexCell.getLabel()] = vertexCell;
+	
     Vertex vertexCorridor("corridor_"+to_string(corridor->getId())+"_cell_"+cellName,"PickVertex");
-    vertexByCode[vertexCell.getLabel()] = vertexCell;
+    
     vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
 
 
     return make_pair(vertexCell, vertexCorridor); 
 }
-
-
-
 
 
 /**
@@ -655,7 +697,7 @@ void WarehouseToGraphConverter::connectVertexesByTwoArcs(Vertex & first, string 
  *   Auxiliary function to fill the vertexByCode, firstLevelVertex and cellPositions Structure
  *	 Those structures are very important to assure the connection between shelves, cells and corridors
  */
-void WarehouseToGraphConverter::initiliazeCellFirstLevel(vector<Vertex> & firstLevelVertexes,vector<vector<string> > &cellPositions,
+void WarehouseToGraphConverter::initializeCellFirstLevel(vector<Vertex> & firstLevelVertexes,vector<vector<string> > &cellPositions,
                                                          Vertex firstLevel, Cell cell){
 
                 vertexByCode[firstLevel.getLabel()] =  firstLevel;				//Dictionary to a quick recovery of vertexes 
@@ -702,7 +744,7 @@ void WarehouseToGraphConverter::connectExpeditionPoint(ExpeditionPoint &expediti
             closestVertex = it->second;
         }
     }
-    cout<<minDistance<<endl;
+    
     if(minDistance <= 1e19){
         //create arc here
         Vertex expeditionVertex("expedition_"+expeditionPoint.getCode(), "ExpeditionPointVertex",0);
@@ -805,6 +847,6 @@ Warehouse & WarehouseToGraphConverter::getWarehouse(){
 /**
  * 
  */
-map<Cell, Vertex> WarehouseToGraphConverter::getVertexByCell(){
+map<pair<Cell,int>, Vertex> WarehouseToGraphConverter::getVertexByCell(){
     return this->vertexByCell;
 }

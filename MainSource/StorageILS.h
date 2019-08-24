@@ -15,6 +15,9 @@
 #include "NeighborhoodStructure.h"
 #include "DistanceMatrix.h";
 #include "Warehouse.h"
+#include "Cell.h"
+#include "Block.h"
+#include "Shelf.h"
 #include "Graph.h"
 #include "Vertex.h"
 #include "Arc.h"
@@ -45,16 +48,16 @@ class InsideShelfSwap : NeighborhoodStructure{
                                         // the hardness of a company accepts a random behavior of the algorithm. It
                                         // also helps to debug the code, as the bug can be reproduced several times 
                                         // until its cause be discovered
-        vector<int> interchangeableProducts; 
+		Shelf & shelf; 
     public:
         InsideShelfSwap();
         InsideShelfSwap(AbstractSolution *initial, unsigned int numNeigh, 
-                        int randomSeed, vector<int> products):base(initial);
+                        int randomSeed, Shelf & shelf):base(initial);
         virtual void setStartSolution(AbstractSolution *) const;
         virtual AbstractSolution * getStartSolution() const {return this->startSolution; }
         virtual vector<AbstractSolution *> createNeighbors();
-
-        void setInterchangeableProducts(vector<int> prods) {this->interchageableProducts = products; }
+		
+		void setShelf(Shelf & shelf) { this->shelf = shelf;} 
         void setRandomSeed(int seet){ this->randomSeed = seed; }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
 
@@ -78,10 +81,10 @@ class InsideBlockSwap: NeighborhoodStructure{
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
         vector<int> interchangeableProducts; 
+		Block &block; 
     public:
         InsideBlockSwap();
-        InsideBlockSwap(StorageAllocationSolution *initial, int numNeigh, 
-                        int randomSeed, vector<int> &products):base(initial);
+        InsideBlockSwap(StorageAllocationSolution *initial, int numNeigh,  int randomSeed, Block &block):base(initial);
         virtual void setStartSolution(AbstractSolution *) const;
         virtual AbstractSolution * getStartSolution() const { return this->startSolution; }
 

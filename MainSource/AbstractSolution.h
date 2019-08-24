@@ -36,7 +36,7 @@ class AbstractSolution{
         //Data accessers 
         double getSolutionValue() const { return this->solutionValue; }
         double getRuntime() const  { return this->runtime; }
-        double getMinDelta() const { return this->minDekta; }
+        double getMinDelta() const { return this->minDelta; }
         double _isMaximization() const { return this->isMaximization; } 
 
         virtual void printSolution() const = 0;

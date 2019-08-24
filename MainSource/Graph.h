@@ -30,6 +30,7 @@ namespace QuickTSP{
                 Graph &operator=(const Graph &other);
             
                 map<Vertex, vector<Arc> > getArcs() const;
+				map<string, set<Vertex>> & getVertexesByType();
                 vector<Vertex> getVertexes() const;
                 string getName() const;
             

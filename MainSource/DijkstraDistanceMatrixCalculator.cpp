@@ -32,13 +32,13 @@ DijkstraDistanceMatrixCalculator< Graph, DistanceMatrix>::DijkstraDistanceMatrix
  *  It is a very efficient implementation that works in O(n log n) for each source point (if there is more than one). 
  */
 template <class Graph, class DistanceMatrix>
-DistanceMatrix DijkstraDistanceMatrixCalculator< Graph,  DistanceMatrix>::calculateMatrixDistance(Graph &graph, vector<Vertex> &sourceVertexes ){
+DistanceMatrix &DijkstraDistanceMatrixCalculator< Graph,DistanceMatrix>::calculateMatrixDistance(Graph &graph, vector<AbstractVertex> sourceVertexes){
 
     vector<Vertex> vertexes = graph.getVertexes(); 
     map<Vertex, int> indexVertex;
 
     for(unsigned int i= 0; i<vertexes.size(); i++)
-        indexVertex[ vertexes[i] ] = i ;
+        indexVertex[ (Vertex)vertexes[i] ] = i ;
     
 
 
@@ -57,7 +57,7 @@ DistanceMatrix DijkstraDistanceMatrixCalculator< Graph,  DistanceMatrix>::calcul
     
         // Insert source itself in priority queue and initialize 
         // its distance as 0. 
-        int src = indexVertex[sourceVertexes[i]]; 
+        int src = indexVertex[(Vertex)sourceVertexes[i]]; 
         pq.push(make_pair(0, src )); 
         dist[src] = 0; 
     

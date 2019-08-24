@@ -6,18 +6,19 @@
 #include<vector>
 #include<utility>
 #include "Vertex.h"
+#include "AbstractVertex.h"
 using namespace std;
 using namespace QuickTSP;
 
 
 
 template<class Graph, class DistanceMatrix>
-class DijkstraDistanceMatrixCalculator : DistanceMatrixCalculator<Graph,  DistanceMatrix> {
+class DijkstraDistanceMatrixCalculator : public DistanceMatrixCalculator<Graph,  DistanceMatrix> {
 
     public:  
         DijkstraDistanceMatrixCalculator(){}
         DijkstraDistanceMatrixCalculator(DijkstraDistanceMatrixCalculator &other);
-        virtual DistanceMatrix calculateMatrixDistance(Graph &graph, vector<Vertex> &sourceVertexes); 
+        DistanceMatrix &calculateMatrixDistance(Graph &graph, vector<AbstractVertex> sourceVertexes); 
 
 };
 
