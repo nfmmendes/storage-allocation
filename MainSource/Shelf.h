@@ -54,6 +54,10 @@ class Shelf{
 		
 		void printShelfInformation();
 		
+		bool operator<(const Shelf &other)const; 
+		bool operator==(const Shelf &other)const; 
+		bool operator!=(const Shelf &other)const; 
+		
 };
 
 #endif

@@ -42,6 +42,9 @@ class Curve{
         Point getEndingPoint() const ;
         long int getId() const;
         Curve &operator=(const Curve &other);
+		bool operator<(const Curve &other);
+		bool operator==(const Curve &other); 
+		bool operator!=(const Curve &other); 
 		
 		void printCurveInformation();
 };

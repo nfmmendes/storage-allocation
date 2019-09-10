@@ -79,6 +79,9 @@ class Corridor{
 		
         double getLength()const { return length; }
     
+		/**
+		 *
+		 */
 		pair<double, double> getEndCoords() const { 
 		
 			if(direction == HORIZONTAL){
@@ -95,6 +98,9 @@ class Corridor{
 		}
 		
 	
+		/**
+		 *
+		 */
         void orderCorridorPoints(vector<Point> & points)const{
             
             if(this->getDirection() ==  VERTICAL){
@@ -109,6 +115,9 @@ class Corridor{
             }
         }
     
+		/**
+		 *
+		 */
         Corridor & operator=(const Corridor &other){
             this->Id = other.Id;
             this->blockName = other.blockName;
@@ -119,7 +128,64 @@ class Corridor{
             
             return *this;
         }
+		
+		/**
+		 *
+		 */
+		bool operator==(const Corridor &other)const{
+			return this->Id == other.Id && this->blockName == other.blockName && direction == other.direction && this->sense != other.sense &&
+				   this->begin == other.begin && this->length == other.length; 
+		}
+		
+		/**
+		 *
+		 */
+		bool operator!=(const Corridor &other)const{
+			return !(*this == other); 
+		}
     
+	
+		/**
+		 *
+		 */
+		bool operator<(const Corridor &other)const{
+			
+			if(this->begin > other.begin)
+				return false;
+			else if(this->begin<other.begin)
+				return true;
+			
+			if(this->length > other.length)
+				return false; 
+			else if(this->length < other.length)
+				return true; 
+			
+			if(this->Id > other.Id)
+				return false; 
+			else if(this->Id < other.Id)
+				return true; 
+			
+			if(this->blockName > other.blockName)
+				return false;
+			else if(this->blockName < other.blockName)
+				return true;
+			
+			
+			if(this->direction > other.direction)
+				return false;
+			else if(this->direction < other.direction)
+				return true; 
+				
+			
+			if(this->sense > other.sense)
+				return false; 
+			else if(this->sense < other.sense)
+				return true; 
+			
+			return false; 
+				
+		}
+		
 		
 		void printCorridorInformation(){
 			cout<<"___________________________________\n";

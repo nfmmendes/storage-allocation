@@ -70,7 +70,7 @@ map<Vertex, vector<Arc> > Graph::getArcs() const{
  */
 map<string, set<Vertex> > & Graph::getVertexesByType(){
 	map<string, set<Vertex> > returned; 
-	for(int i=0;i<this->vertexes.size();i++)
+	for(unsigned int i=0;i<this->vertexes.size();i++)
 		returned[vertexes[i].getType()].insert(vertexes[i]);
 	
 	return returned; 
@@ -162,7 +162,7 @@ vector<Vertex> Graph::getAdjacentVertexes(Vertex & v){
 
     vector<Arc> incidentArcs = this->arcsByVertex[v];
 
-    for(int i=0; i<incidentArcs.size();i++)
+    for(unsigned int i=0; i<incidentArcs.size();i++)
         returned.push_back(incidentArcs[i].getEndVertex());
 
     return returned; 

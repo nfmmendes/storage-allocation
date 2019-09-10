@@ -8,14 +8,12 @@ CC = g++
 COMPILE_FLAGS = -O3 -std=c++11 -Wall -Wextra -g
 
 
-all: GraphPack Input WarehousePack Block Warehouse ProductAllocationProhibition QuickTSP GeneralClasses ProcessInputData.o InputData.o
+all: GraphPack Input WarehousePack Block Warehouse ProductAllocationProhibition QuickTSP GeneralClasses
 	$(CC) $(COMPILE_FLAGS) -o run main.cpp *.o
 	
 
-Input: ProcessInputData.h InputData.h 
+Input: ProcessInputData.h InputData.h
 	$(CC) $(COMPILE_FLAGS) -c InputData.cpp ProcessInputData.cpp
-
-
 
 #BASIC CLASSES (CAN BE USED IN ANY SOFTWARE. IT'S NOT ALGORITHM RELATED
 GeneralClasses: Point.h Date.h Time.h
@@ -43,16 +41,12 @@ Block : Block.h Cell.o Shelf.o Curve.o BlockExit.o
 WarehousePack : ExpeditionPoint.h Cell.h Shelf.h  Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h Order.h 
 	$(CC) $(COMPILE_FLAGS) -c ExpeditionPoint.cpp Corridor.h Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp 
 
-
-Input: InputData.h Parameter.o Client.o Product.o Warehouse.o 
-	$(CC) $(COMPILE_FLAGS) -c InputData.cpp
-
 GraphPack: AbstractVertex.h DistanceMatrix.h Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h Transition.h DistanceMatrixCalculator.h DijkstraDistanceMatrixCalculator.h
-	$(CC) $(COMPILE_FLAGS) -c AbstractVertex.h DistanceMatrix.cpp Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.cpp DijkstraDistanceMatrixCalculator.cpp Line.cpp Transition.cpp
+	$(CC) $(COMPILE_FLAGS) -c AbstractVertex.h DistanceMatrix.h Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.cpp DijkstraDistanceMatrixCalculator.h Line.cpp Transition.cpp
 
 
-HeuristicPack: AbstractSolution.h NeighborhoodStructure.h Heuristic.h StorageILS.h StorageAllocationSolution.h
-	$(CC) $(COMPILE_FLAGS) -c AbstractSolution.h StorageAllocationSolution.cpp NeighborhoodStructure.h StorageILS.cpp
+HeuristicPack: AbstractSolution.h NeighborhoodStructure.h Heuristic.h StorageILS.h StorageAllocationSolution.h StorageSolutionEvaluator.h
+	$(CC) $(COMPILE_FLAGS) -c AbstractSolution.h StorageAllocationSolution.cpp NeighborhoodStructure.h StorageILS.cpp StorageSolutionEvaluator.cpp
 
 Parameter: Parameter.h
 	$(CC) $(COMPILE_FLAGS) -c Parameter.cpp

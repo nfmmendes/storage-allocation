@@ -20,7 +20,8 @@ class StorageAllocationSolution : AbstractSolution{
 
 	private: 
 		static StorageSolutionEvaluator *evaluator; 
-		static int countSolutions = 0;
+		static vector<StorageAllocationSolution *> currentSolutions;
+		unsigned long long int solutionIndex; 
     protected: 
 		map<pair<Cell, int> , Product> productAllocation; 
 		map<Product, vector<PickingRoute *> > routesByProduct; 

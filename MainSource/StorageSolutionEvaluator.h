@@ -26,13 +26,14 @@ class StorageSolutionEvaluator(){
 																			  ///< the presence of a vertex. The key is always the 
 																			  ///< first vertex in the sequence.  
 		map<pair<Cell,int> , Vertex> vertexByCellPosition; 
-		DistanceMatrix *distances; 
-		void DoRouteEvaluation(vector<Vertex> & route);
-		void DoRouteEstimation(vector<Vertex> & solution);
+		DistanceMatrix<Vertex> *distances; 
+		double DoRouteEvaluation(vector<Vertex> & route);
+		double DoRouteEstimation(vector<Vertex> & route);
 	public:
 		StorageSolutionEvaluator()
 		StorageSolutionEvaluator(StorageSolutionEvaluation &sto);
-		StorageSolutionEvaluation(DistanceMatrix * distanceMatrix); 
+		StorageSolutionEvaluation(DistanceMatrix<Vertex> * distanceMatrix); 
+		double sumDistances(vector<Vertex> &sequence); 
 		void DoRouteEvaluation(AbstractSolution * solution);
 		void DoRouteEstimation(AbstractSolution * solution);
 		StorageSolutionEvaluator & operator=(const StorageSolutionEvaluator &other);

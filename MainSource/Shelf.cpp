@@ -74,3 +74,30 @@ void Shelf::printShelfInformation(){
 		this->cells[i].printCellInformation();
 	cout<<"_________________________\n";
 }
+
+bool Shelf::operator<(const Shelf &other)const{
+	if(this->Id > other.Id)
+		return false;
+	else if(this->Id < other.Id)
+		return true; 
+	
+	if(this->columns*this->rows > other.columns*other.rows)
+		return false; 
+	else if(this->columns*this->rows < other.columns*other.rows)
+		return true; 
+	
+	return this->bottomLeftCoords< other.bottomLeftCoords; 
+}
+
+
+bool Shelf::operator==(const Shelf &other)const{
+	return this->Id == other.Id && this->columns==other.columns && this->rows == other.rows && this->bottomLeftCoords == other.bottomLeftCoords &&
+		   this->blockName == other.blockName && this->cellLength == other.cellLength && this->cellWidth == other.cellWidth; 
+
+}
+
+bool Shelf::operator!=(const Shelf &other)const{
+	return !(*this == other); 
+	
+}
+

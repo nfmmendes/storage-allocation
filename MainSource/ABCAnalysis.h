@@ -21,7 +21,9 @@ class ABCAnalysis{
 
     private:
         map<Product, char> volumeClasses;
+		map<Product, double> productVolumes;
         map<Product, char> frequenceClasses;
+		map<Product, int> productFrequences; 
         vector<Order> orders;
         unsigned int numClasses;
         vector<double> thresholds; 
@@ -35,7 +37,9 @@ class ABCAnalysis{
         void setThresholds(vector<double> thre);
         vector<Order> getOrders() const;
         map<Product,char> getVolumeClasses() const;
+		map<Product, double> getProductVolumes() const;
         map<Product,char> getFrequenceClasses() const;
+		map<Product, int> getProductFrequences() const; 
         int getNumClasses() const;
         vector<double> getThresholds() const;
 

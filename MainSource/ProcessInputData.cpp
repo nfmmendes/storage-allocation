@@ -52,18 +52,18 @@ void ProcessInputData::CalculateMatrixDistances(){
 	Graph graph = converter->getGraph();
 	map<string, set<Vertex> > vertexesByType = graph.getVertexesByType();
 	
-	vector<AbstractVertex> desirableVertexes; 
+	vector<Vertex> desirableVertexes; 
 	for(map<string, set<Vertex> >::iterator it = vertexesByType.begin(); it!= vertexesByType.end();it++){
 		string key = it->first; 
 		//Verificar se key é um valor interessante
 		
 		set<Vertex> values = it->second;
 		for(set<Vertex>::iterator vt= values.begin(); vt!= values.end();vt++)
-			desirableVertexes.push_back((AbstractVertex)(*vt)); 
+			desirableVertexes.push_back((Vertex)(*vt)); 
 	}
 		
 	if(desirableVertexes.size()>0){
-		DijkstraDistanceMatrixCalculator<Graph, DistanceMatrix<Vertex> > dijkstra; 
+		DijkstraDistanceMatrixCalculator<Graph, Vertex > dijkstra; 
 		this->distanceMatrix = new DistanceMatrix<Vertex>(dijkstra.calculateMatrixDistance(graph, desirableVertexes)); 
 	}else{
 		throw exception(); // Put some message here

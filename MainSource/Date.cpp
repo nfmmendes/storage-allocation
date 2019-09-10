@@ -91,7 +91,9 @@ Date Date::Parse(string date, string format){
     return returned;
 }
 
-
+/**
+ *
+ */
 Date & Date::operator=(const Date &other){
     this->day = other.day;
     this->year = other.year;
@@ -99,29 +101,47 @@ Date & Date::operator=(const Date &other){
     return *this;
 }
 
+/**
+ *
+ */
 bool Date::operator==(Date &other){
     return this->day == other.day && this->month == other.month && this->year == other.year;
 }
 
+/**
+ *
+ */
 bool Date::operator!=(Date &other){
     return this->day != other.day || this->month != other.month || this->year != other.year;
 }
 
+/**
+ *
+ */
 bool Date::operator<=(Date &other){
     return year <= other.year || (this->year == other.year && this->month <= other.month) ||
     (this->year == other.year && this->month == other.month && this->day <= other.day);
 }
 
+/**
+ *
+ */
 bool Date::operator<(Date &other){
     return year < other.year || (this->year == other.year && this->month < other.month) ||
     (this->year == other.year && this->month == other.month && this->day < other.day);
 }
 
+/**
+ *
+ */
 bool Date::operator>=(Date &other){
     return year >= other.year || (this->year == other.year && this->month >= other.month) ||
     (this->year == other.year && this->month == other.month && this->day >= other.day);
 }
 
+/**
+ *
+ */
 bool Date::operator>(Date &other){
     return year > other.year || (this->year == other.year && this->month > other.month) ||
     (this->year == other.year && this->month == other.month && this->day > other.day);

@@ -13,6 +13,9 @@ Curve::Curve(const Curve & other){
     
 }
 
+/**
+ *
+ */
 Curve::Curve(long int id, long int startingCorridor, long int endingCorridor, Point startingPoint, Point endingPoint){
     this->Id = id;
     this->startingCorridorId = startingCorridor;
@@ -21,10 +24,16 @@ Curve::Curve(long int id, long int startingCorridor, long int endingCorridor, Po
     this->endingPoint = endingPoint;
 }
 
+/**
+ *
+ */
 void Curve::setStartingCorridorId(long int &startId){
     if(startId >= 0) this->startingCorridorId = startId;
 }
 
+/**
+ *
+ */
 void Curve::setEndingCorridorId(long int &endId){
     if(endId >= 0) this->endingCorridorId = endId;
 }
@@ -39,6 +48,9 @@ Point Curve::getStartingPoint() const { return startingPoint;}
 Point Curve::getEndingPoint() const { return endingPoint; }
 long int Curve::getId()const{ return Id; }
 
+/**
+ *
+ */
 Curve & Curve::operator=(const Curve &other){
     this->Id = other.Id;
     this->startingCorridorId = other.startingCorridorId;
@@ -47,6 +59,33 @@ Curve & Curve::operator=(const Curve &other){
     this->endingPoint = other.endingPoint;
     
     return *this;
+}
+
+/**
+ *
+ */
+bool Curve::operator==(const Curve &other){
+	return this->Id == other.Id && this->startingCorridorId == other.startingCorridorId && this->endingCorridorId == other.endingCorridorId && 
+		   this->startingPoint == other.startingPoint && this->endingPoint == other.endingPoint;
+}
+
+/**
+ *
+ */
+bool Curve::operator!=(const Curve &other){
+	return !(*this == other);
+}
+
+
+
+/**
+ *
+ */
+bool Curve::operator<(const Curve &other){
+	if(this->startingPoint > other.startingPoint)
+		return false;
+	else
+		return this->startingPoint < other.startingPoint || this->endingPoint < other.endingPoint; 
 }
 
 

@@ -7,10 +7,16 @@
 using namespace std;
 using namespace QuickTSP;
 
+/**
+ *
+ */
 Arc::Arc(){
     
 }
 
+/**
+ *
+ */
 Arc::Arc(const Arc &arc){
     this->label = arc.getLabel();
     this->value = arc.getValue();
@@ -18,6 +24,9 @@ Arc::Arc(const Arc &arc){
     this->endVertex = arc.getEndVertex();
 }
 
+/**
+ *
+ */
 Arc::Arc(string label, double value, Vertex &begin, Vertex &end, bool directed){
     this->label = label;
     this->value = value;
@@ -26,20 +35,31 @@ Arc::Arc(string label, double value, Vertex &begin, Vertex &end, bool directed){
     this->directed = directed;
 }
 
+/**
+ *
+ */
 void Arc::setLabel(string label){
     this->label = label;
 }
 
-
+/**
+ *
+ */
 void Arc::setValue(double value){
     this->value = value;
 }
 
+/**
+ *
+ */
 void Arc::setBeginVertex(Vertex& vertex){
     this->beginVertex = vertex;
     
 }
 
+/**
+ *
+ */
 void Arc::setEndVertex(Vertex& vertex){
     this->endVertex = vertex;
 }

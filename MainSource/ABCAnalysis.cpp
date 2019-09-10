@@ -66,8 +66,8 @@ ABCAnalysis::ABCAnalysis(vector<Order> &orders,unsigned int numClasses, vector<d
  */
 void ABCAnalysis::Execute(){
 
-    map<Product,int> frequenceByProduct;
-    map<Product, double> volumeByProduct;
+    map<Product,int> productFrequences;
+    map<Product, double> productVolumes;
     set<Product> products; 
     double totalVolume = 0;
     int totalFrequence =this->orders.size(); 
@@ -86,11 +86,11 @@ void ABCAnalysis::Execute(){
             totalVolume*= items[j].second;
             if(products.find(this->items[j].first) == products.end()){
                 products.insert(this->items[j].first);
-                frequenceByProduct[this->items[j].first] = 1; 
-                volumeByProduct[this->items[j].first] = this->items[i].second;
+                productFrequences[this->items[j].first] = 1; 
+                productVolumes[this->items[j].first] = this->items[i].second;
             }else{
-                frequenceByProduct[items[j].first]++;
-                frequenceByProduct[items[j].first]+= items[j].second;
+                productFrequences[items[j].first]++;
+                productVolumes[items[j].first]+= items[j].second;
             }
         }
     }
@@ -99,10 +99,10 @@ void ABCAnalysis::Execute(){
     vector<pair<int,Product> > frequences;
     vector<pair<double, Product> > volumes;
 
-    for(map<Product, int>::iterator it= frequenceByProduct.begin(); it!= frequenceByProduct.end(); it++)
+    for(map<Product, int>::iterator it= productFrequences.begin(); it!= productFrequences.end(); it++)
         frequences.push_back(make_pair(it->second, it->first));
 
-    for(map<Product, double>::iterator it= volumeByProduct.begin(); it!= volumeByProduct.end(); it++)
+    for(map<Product, double>::iterator it= productVolumes.begin(); it!= productVolumes.end(); it++)
         volumes.push_back(make_pair(it->second, it->first));
 
     //The products must be ordered in decreasing order because the most frequent/volumous products should 
@@ -217,6 +217,22 @@ map<Product,char> ABCAnalysis::getVolumeClasses(){
 /**
  * 
  */
+map<Product, double> ABCAnalysis::getProductVolumes() const{
+	map<Product, double> productVolumes;
+}
+
+
+/**
+ * 
+ */
 map<Product,char> ABCAnalysis::getFrequenceClasses(){
     return this->frequenceClasses; 
 }
+
+/**
+ * 
+ */
+map<Product, int> ABCAnalysis::getProductFrequences() const{
+	map<Product, int> productFrequences; 
+}
+

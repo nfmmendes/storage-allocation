@@ -9,6 +9,7 @@
 #include "InputData.h"
 #include "DistanceMatrix.h"
 #include "WarehouseToGraphConverter.h"
+#include "DijkstraDistanceMatrixCalculator.h"
 #include "Vertex.h"
 #include "AbstractVertex.h"
 using namespace std; 

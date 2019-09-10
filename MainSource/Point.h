@@ -37,6 +37,8 @@ using namespace std;
 			static vector<Point> removeDuplicates(vector<Point> & points);
         
             bool operator<(const Point &other)const;
+			bool operator>(const Point &other)const; 
+			bool operator==(const Point &other) const; 
         
             double getDistance(const Point &other);
         

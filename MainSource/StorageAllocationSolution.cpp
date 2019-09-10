@@ -64,8 +64,37 @@ void StorageAllocationSolution::removeAllocation(const Cell &cell, int level){
 /**
  * 
  */
-void StorageAllocationSolution::proceedSwap(map<Cell,int> &first, map<Cell,int> &second, bool useTSP){
+void StorageAllocationSolution::proceedSwap(map<Cell,int> &first, map<Cell,int> &second, bool useTSPEvaluator){
+		
+	Product firstProduct = productAllocation[first];
+	Product secondProduct = productAllocation[second]; 
 	
+	productAllocation[first] = second; 
+	productAllocation[second] = first;
+	
+	
+	vector<PickingRoute *> firstRoutes = routesByProduct[first];
+	vector<PickingRoute *> secondRoutes = routesByProduct[second];
+	
+	//if a same route has both products in the swap the evaluation don't need to be done
+	for(int i=0; i<firstRoutes.size(); i++){
+		if(find(secondRoutes.begin(),secondRoutes.end(), firstRoutes[i]->first) != secondRoutes.end())
+			continue; 
+		else if(useTSP)
+			firstRoutes[i]->second = evaluator->DoRouteEvaluation(firstRoutes[i]->first);
+		else
+			firstRoutes[i]->second = evaluator->DoRouteEvaluation(firstRoutes[i]->second);
+	}
+	
+	//if a same route has both products in the swap the evaluation don't need to be done	
+	for(int i=0; i<secondRoutes.size(); i++){
+		if(find(firstRoutes.begin(),firstRoutes.end(), secondRoutes[i]->first) != firstRoutes.end())
+			continue; 
+		else if(useTSP)
+			secondRoutes[i]->second = evaluator->DoRouteEvaluation(secondRoutes[i]->first);
+		else
+			secondRoutes[i]->second = evaluator->DoRouteEvaluation(secondRoutes[i]->second);
+	}
 }
 
 /**

@@ -391,22 +391,24 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *up,Corrido
 	
 	up = down = right = left = NULL;
 	
-	//Search and identify the adjacent corridors
-    for(unsigned int i=0;i< adjacents.size();i++)
-        if(adjacents[i].getDirection() == VERTICAL && adjacents[i].getBeginCoords().first < shelf.getBottomLeftCoordX())
-            left =  new Corridor(adjacents[i]);
-    
-    for(unsigned int i=0;i< adjacents.size();i++)
-        if(adjacents[i].getDirection() == VERTICAL && adjacents[i].getBeginCoords().first > shelf.getBottomLeftCoordX())
-            right =  new Corridor(adjacents[i]);
-    
-    for(unsigned int i=0;i<adjacents.size();i++)
-        if(adjacents[i].getDirection() == HORIZONTAL && adjacents[i].getBeginCoords().second > shelf.getBottomLeftCoordY())
-            up =  new Corridor(adjacents[i]);
-    
-    for(unsigned int i=0;i<adjacents.size();i++)
-        if(adjacents[i].getDirection() == HORIZONTAL && adjacents[i].getBeginCoords().second < shelf.getBottomLeftCoordY())
-            down =  new Corridor(adjacents[i]);
+	if(up == down){ //Just to remove a warning 
+		//Search and identify the adjacent corridors
+		for(unsigned int i=0;i< adjacents.size();i++)
+			if(adjacents[i].getDirection() == VERTICAL && adjacents[i].getBeginCoords().first < shelf.getBottomLeftCoordX())
+				left =  new Corridor(adjacents[i]);
+		
+		for(unsigned int i=0;i< adjacents.size();i++)
+			if(adjacents[i].getDirection() == VERTICAL && adjacents[i].getBeginCoords().first > shelf.getBottomLeftCoordX())
+				right =  new Corridor(adjacents[i]);
+		
+		for(unsigned int i=0;i<adjacents.size();i++)
+			if(adjacents[i].getDirection() == HORIZONTAL && adjacents[i].getBeginCoords().second > shelf.getBottomLeftCoordY())
+				up =  new Corridor(adjacents[i]);
+		
+		for(unsigned int i=0;i<adjacents.size();i++)
+			if(adjacents[i].getDirection() == HORIZONTAL && adjacents[i].getBeginCoords().second < shelf.getBottomLeftCoordY())
+				down =  new Corridor(adjacents[i]);
+	}
 }
 
 /**

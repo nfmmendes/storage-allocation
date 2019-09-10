@@ -8,17 +8,18 @@
 #include<cstdlib>
 #include<utility> 
 #include "AbstractVertex.h"
+#include "DistanceMatrix.h"
 using namespace std; 
 
 
-template <class Graph, class DistanceMatrix>
+template <class Graph, class Vertex>
 class DistanceMatrixCalculator{
 
         
     public:
-        DistanceMatrixCalculator();
-        DistanceMatrixCalculator(DistanceMatrixCalculator<Graph, DistanceMatrix> &other);
-        virtual DistanceMatrix & calculateMatrixDistance(Graph &graph, vector<AbstractVertex> sourceVertexes)=0;
+        DistanceMatrixCalculator(){}
+        DistanceMatrixCalculator(DistanceMatrixCalculator<Graph, Vertex > &other);
+        virtual DistanceMatrix<Vertex> & calculateMatrixDistance(Graph &graph, vector<Vertex> sourceVertexes)=0;
      
 
 }; 

@@ -181,11 +181,61 @@ void Block::removeExit(int index){
 
 
 /**********************************************************************************
-*	@brief TODO: Improve this
+*	
 *
 ***********************************************************************************/
 bool Block::operator==(const Block &other){
-    return this->name == other.name;
+	
+	if(! (this->name == other.name && fabs(this->lenght-other.lenght) <1e-5 && fabs(this->width - other.width)<1e-5))
+		return false; 
+	
+	if( this->bottomLeftCoords != other.bottomLeftCoords)
+		return false; 
+	
+	bool equalVertexes = this->shelves.size() == other.shelves.size();
+	bool equalExits = this->exits.size() == other.exits.size(); 
+	bool equalCorridors = this->corridors.size() == other.corridors.size(); 
+	bool equalCurves = this->curves.size() == other.curves.size(); 
+	
+	if(!(equalVertexes && equalExits && equalCorridors && equalCurves))
+		return false; 
+
+	vector<Shelf> otherShelves = other.shelves; 	
+	sort(this->shelves.begin(), this->shelves.end());
+	sort(otherShelves.begin(), otherShelves.end()); 	
+	
+	vector<BlockExit> otherExits = other.exits;
+	sort(this->exits.begin(), this->exits.end());
+	sort(otherExits.begin(), otherExits.end()); 
+	
+	vector<Corridor> otherCorridors = other.corridors; 
+	sort(this->corridors.begin(), this->corridors.end()); 
+	sort(otherCorridors.begin(), otherCorridors.end()); 
+	
+	vector<Curve> otherCurves = other.curves;
+	sort(this->curves.begin(), this->curves.end());
+	sort(otherCurves.begin(), otherCurves.end()); 
+	
+	
+	for(unsigned int i = 0; i< this->shelves.size(); i++)
+		if(this->shelves[i] != otherShelves[i])  
+			return false; 
+	
+	for(unsigned int i = 0; i< this->exits.size(); i++)
+		if(this->exits[i] != otherExits[i])
+			return false; 
+		
+	for(unsigned int i = 0; i < this->corridors.size(); i++)
+		if(this->corridors[i] != otherCorridors[i])
+			return false; 
+	
+	
+	for(unsigned int i=0; i < this->curves.size(); i++)
+		if(this->curves[i] != otherCurves[i])
+			return false; 
+		
+	return true;
+    
 }
 
 /**********************************************************************************
@@ -197,12 +247,16 @@ bool Block::isInBlock(const Point &point)const{
            point.getCoordY() >= bottomLeftCoords.second && point.getCoordY() <= bottomLeftCoords.second + lenght;
 }
 
-
+/**
+ *
+ */
 void Block::setName(const string &name){
 	this->name = name; 
 }
 
-
+/**
+ *
+ */
 void Block::printBlockInformation(){
 	
 	cout<<"_________________________________________\n"; 

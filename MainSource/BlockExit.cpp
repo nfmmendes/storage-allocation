@@ -40,8 +40,27 @@ void BlockExit::setBlockBName(double value) { blockBName = value; }
 
 bool BlockExit::operator==(const BlockExit &other) { return this->Id == other.Id; }
 bool BlockExit::operator!=(const BlockExit &other) { return this->Id != other.Id; }
-bool BlockExit::operator<(const BlockExit & other) const { return this->Id < other.Id;} //<! Allow the use of an object of this class
-// as a key in a map
+
+
+/**
+ * Allow the use of an object of this class as a key in a map
+ */
+bool BlockExit::operator<(const BlockExit & other) const { 
+		
+		if(this->Id > other.Id)
+			return false;
+		if(this->Id < other.Id)
+			return true; 
+	
+		pair<double,double> thisCoords= make_pair(coordX, coordY);
+		pair<double,double> otherCoords= make_pair(other.coordX, other.coordY);
+		
+		if(thisCoords > otherCoords)
+			return false;
+		else
+			return this->Id == other.Id && thisCoords < otherCoords;
+		
+	}  
 
 
 void BlockExit::printExitInformation(){

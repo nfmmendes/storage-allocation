@@ -51,7 +51,10 @@ void Point::setCoordY(double value){
 void Point::setCoordZ(double value){
     this->coordZ = value;
 }
-    
+   
+/**
+ *
+ */   
 void Point::setPoint(Point &point){
     this->label = point.label;
     this->coordX = point.coordX;
@@ -65,20 +68,30 @@ double Point::getCoordZ() const { return coordZ; }
 string Point::getLabel()  const { return label; }
 
 
-
+/**
+ *
+ */
 bool Point::isMinorX(const Point &a,const Point &b){
     return a.getCoordX() < b.getCoordX();
 }
 
+/**
+ *
+ */
 bool Point::isMinorY(const Point &a,const Point &b){
     return a.getCoordY() < b.getCoordY();
 }
 
+/**
+ *
+ */
 bool Point::isMinorZ(const Point &a,const Point &b){
     return a.getCoordZ() < b.getCoordZ();
 }
 
-
+/**
+ *
+ */
 bool Point::operator<(const Point &other)const{
     double distA = this->coordX*this->coordX + this->coordY*this->coordY + this->coordZ*this->coordZ;
     double distB = other.coordX*other.coordX + other.coordY*other.coordY + other.coordZ*other.coordZ;
@@ -95,6 +108,24 @@ bool Point::operator<(const Point &other)const{
         return this->label < other.label;
 }
 
+/**
+ *
+ */
+bool Point::operator>(const Point &other)const{
+	return !(*this < other && *this == other);
+}
+
+/**
+ *
+ */
+bool Point::operator==(const Point &other) const{
+	return this->label == other.label && fabs(this->coordX - other.coordX) <= 1e-10 &&  fabs(this->coordY - other.coordY)<=1e-10 && 
+										 fabs(this->coordZ - other.coordZ) <= 1e-10;
+}
+
+/**
+ *
+ */
 vector<Point>  Point::removeDuplicates(vector<Point> & points){
 	
 	sort(points.begin(), points.end()); 
@@ -122,7 +153,9 @@ vector<Point>  Point::removeDuplicates(vector<Point> & points){
 		
 }
 
-
+/**
+ *
+ */
 double Point::getDistance(const Point &other){
     return sqrt(pow(this->coordX-other.coordX,2)+pow(this->coordY-other.coordY,2)+ pow(this->coordZ,2));
 }
