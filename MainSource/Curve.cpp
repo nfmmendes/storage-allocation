@@ -1,9 +1,14 @@
 #include "Curve.h"
 
 
-
+/**
+ *	Default constructor 
+ */
 Curve::Curve(){}
 
+/**
+ *	Copy constructor 
+ */
 Curve::Curve(const Curve & other){
     this->Id = other.Id;
     this->startingPoint = other.startingPoint;
@@ -14,7 +19,12 @@ Curve::Curve(const Curve & other){
 }
 
 /**
- *
+ * Member constructor 
+ * @param id Curve id
+ * @param startingCorridor Id of corridor where the curve starts 
+ * @param endingCorridor Id of corridor where the curve ends 
+ * @param startingPoint The begining curve coordinates 
+ * @param endingPoint The ending curve coordinates 
  */
 Curve::Curve(long int id, long int startingCorridor, long int endingCorridor, Point startingPoint, Point endingPoint){
     this->Id = id;
@@ -25,14 +35,14 @@ Curve::Curve(long int id, long int startingCorridor, long int endingCorridor, Po
 }
 
 /**
- *
+ * 
  */
 void Curve::setStartingCorridorId(long int &startId){
     if(startId >= 0) this->startingCorridorId = startId;
 }
 
 /**
- *
+ * 
  */
 void Curve::setEndingCorridorId(long int &endId){
     if(endId >= 0) this->endingCorridorId = endId;
@@ -49,7 +59,8 @@ Point Curve::getEndingPoint() const { return endingPoint; }
 long int Curve::getId()const{ return Id; }
 
 /**
- *
+ * Assignment operator overload 
+ * @param other The curve in the right side of operator that will pass its value to the other object  
  */
 Curve & Curve::operator=(const Curve &other){
     this->Id = other.Id;
@@ -62,7 +73,8 @@ Curve & Curve::operator=(const Curve &other){
 }
 
 /**
- *
+ * Equals operator overload 
+ * @param other Curve in the right hand side of the operator 
  */
 bool Curve::operator==(const Curve &other){
 	return this->Id == other.Id && this->startingCorridorId == other.startingCorridorId && this->endingCorridorId == other.endingCorridorId && 
@@ -70,7 +82,8 @@ bool Curve::operator==(const Curve &other){
 }
 
 /**
- *
+ *	Not equal operator overload 
+ * @param other Curve in the right hand side of the operator 
  */
 bool Curve::operator!=(const Curve &other){
 	return !(*this == other);
@@ -79,7 +92,8 @@ bool Curve::operator!=(const Curve &other){
 
 
 /**
- *
+ * Less operator overload 
+ * @param other Curve in the right hand side of the operator 
  */
 bool Curve::operator<(const Curve &other){
 	if(this->startingPoint > other.startingPoint)
@@ -88,7 +102,9 @@ bool Curve::operator<(const Curve &other){
 		return this->startingPoint < other.startingPoint || this->endingPoint < other.endingPoint; 
 }
 
-
+/**
+ * Print main informations about the curve
+ */
 void Curve::printCurveInformation(){
 	
 	cout<<"____________________________________\n";

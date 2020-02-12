@@ -11,6 +11,7 @@
 #include "InputData.h"
 #include "WarehouseToGraphConverter.h"
 #include "ProcessInputData.h"
+#include "ABCAnalysis.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -73,6 +74,16 @@ void printRandomSolution(){
 }
 
 
+ABCAnalysis * createABCAnalysis(InputData &input){
+	
+	vector<Order> orders = input.getOrders();
+	const int numClasses = 3; 
+	vector<double> thresholds;
+	thresholds.push_back(30);	thresholds.push_back(70);
+	ABCAnalysis *analysis = new ABCAnalysis(orders,numClasses, thresholds); 
+	
+	return analysis;
+}
 
 
 int main(int argc, char **argv){
@@ -81,16 +92,23 @@ int main(int argc, char **argv){
         //Main input file name. This file will say which input files will be used
         string indexFileName = argv[1];
         InputData input(indexFileName);
+		
+		ABCAnalysis * abc = createABCAnalysis(input); 
+		abc->execute(); 
+		abc->printClassification(); 
 
         cout<<"Converting algorithm to graph\n";
         //TSP *router=NULL;
-        //VND *vnd=NULL;
+         ;
         
 		printRandomSolution();
 		
 		ProcessInputData processInput(&input);
 		processInput.ExecuteProcessData();
 		
+		cout<<"Initializing metaheuristic \n";
+		
+	//	VND *vnd= new VND(warehouse, input.getOrders(), input.getAllocationProhibitions(),input.getParameters()); 
 		
         
     }else

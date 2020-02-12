@@ -8,7 +8,7 @@ using namespace std;
 
 
 	/**
-	 *
+	 * Copy constructor 
 	 */
 	IsolatedFamily::IsolatedFamily(const IsolatedFamily &other){
 		this->Force = other.Force;
@@ -17,7 +17,10 @@ using namespace std;
 	}
 	
 	/**
-	 *
+	 * Member constructor 
+	 * @param f Isolation strongness 
+	 * @param l Isolation level
+	 * @param c isolation code 
 	 */
 	IsolatedFamily::IsolatedFamily(string f, string l, string c){
 		this->Force = f;

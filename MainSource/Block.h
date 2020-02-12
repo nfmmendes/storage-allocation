@@ -18,14 +18,14 @@ using namespace std;
 class Block{
 
     private: 
-        vector<Shelf> shelves;
-        vector<BlockExit> exits;
-        vector<Corridor> corridors;
-        vector<Curve> curves;
-        string name; 
-        double lenght;
-        double width; 
-        pair<double,double> bottomLeftCoords;
+        vector<Shelf> shelves;						///< Stores all shelves
+        vector<BlockExit> exits;					///< Store all the exists
+        vector<Corridor> corridors;					///< Store all the corridors 
+        vector<Curve> curves;						///< Store all the curves that conects two corridors 
+        string name; 								///< Name of block
+        double length;								///< Block length 
+        double width; 								///< Block width 
+        pair<double,double> bottomLeftCoords;		///< Bottom left extremety of the block 
         
     public:
         Block();
@@ -37,7 +37,7 @@ class Block{
     
         string getName();
 		double getWidth(){ return this->width;}
-		double getLenght(){ return this->lenght;}
+		double getLenght(){ return this->length;}
         vector<Shelf> getShelves();
         vector<BlockExit> getExits();
         vector<Corridor> getCorridors();

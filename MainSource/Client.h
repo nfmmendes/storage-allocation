@@ -17,24 +17,24 @@ using namespace std;
 class Client{
     
     private:
-        string name;
-        string type;
-        pair<double,double> coordinates;
+        string name;						///< Client name (or address) 
+        string type;						///< Client type 
+        pair<double,double> coordinates;	///< Coordinates for product deliveries (optional) 
     
     public:
         Client();
         // Member by member constructor
         Client(string name, string type,  pair<double, double> coordinates );
     
-            //Copy constructor
+        //Copy constructor
         Client(const Client &other);
     
-            //Set functions
+        //Set functions
         void setName(string value);
         void setType(string value);
         void setCoordinates(pair<double,double> value);
     
-            //Get functions
+        //Get functions
         string getName();
         string setType();
         pair<double, double> getCoordinates();
@@ -43,7 +43,7 @@ class Client{
         //Assignment operator
         Client & operator=(const Client &other);
         static vector<Client> readClientData(string fileName);
-        static vector<Client> readClientDataWithoutCoordinates(string fileName);
+        static vector<Client> readClientDataWithCoordinates(string fileName);
 
 };
 

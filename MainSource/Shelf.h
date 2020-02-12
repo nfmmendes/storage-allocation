@@ -14,14 +14,14 @@ using namespace std;
 class Shelf{
 
     private:
-        long int Id;
-        vector<Cell> cells;         //TODO: Remeber to make this kind of relationship be consistent in both senses 
-        pair<double,double> bottomLeftCoords;
-        string blockName;
-        int columns;
-        int rows; 
-        double cellLength;
-        double cellWidth; 
+        long int Id;							///< Shelf id
+        vector<Cell> cells;         			///< Cells inside the shelf TODO: Make this relationship be consistent in both senses 
+        pair<double,double> bottomLeftCoords;	///< Coordinates of shelf the bottom left extremity 
+        string blockName;						///< Name of block where the shelf is 
+        int columns;							///< Number of columns in the shelf
+        int rows; 								///< Number of rows in the shelf 
+        double cellLength;						///< Shelf cells length (In all the shelves is supposed that the cells have all the same size)
+        double cellWidth; 						///< Shelf cells width (In all the shelves is supposed that the cells have all the same size)
         
         
     public:

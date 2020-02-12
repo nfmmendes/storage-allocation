@@ -31,14 +31,14 @@ class Product{
             this->type = type;
         }
     
-        long int getID(){ return ID; }
+        long int getID()const { return ID; }
         string getName(){ return name; }
         string getType(){ return type; }
     
         void setID(long int Id){ if(Id >= 0 ) this->ID = Id; }
         void setName(string name){ this->name = name;}
         void setType(string type){ this->type = type;}
-    
+		bool operator<(const Product &other) const{ return this->ID <= other.ID; }
         static vector<Product> readProductsData(ifstream &file);
     
 };

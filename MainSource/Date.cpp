@@ -12,32 +12,35 @@ int Date::getDay() { return day; }
 int Date::getMonth() { return month; }
 int Date::getYear() { return year; }
 
-void Date::setDay(int value){ if(value <= 31 && value >= 1) day = value;  validatedate(*this); }
-void Date::setMonth(int value){ if(value <= 12 && value >= 1) month= value; validatedate(*this); }
+void Date::setDay(int value){ if(value <= 31 && value >= 1) day = value;  this->validateDate(); }
+void Date::setMonth(int value){ if(value <= 12 && value >= 1) month= value; this->validateDate(); }
 void Date::setYear(int value){ if(value >= 0) year = value; }
 
-
-void Date::validatedate(Date &date){
+/**
+ * Control if the data is valid or not based on the month and year (to leap years)
+ */
+void Date::validateDate(){
     if(month == 1 || month == 3 || month == 5 || month == 7 ||
        month == 8 || month == 10 || month == 12){
         if(day > 31)
-            throw("Invalid date (" + date.toString() +") ! The day value must be equals or minor than 31!");
+            throw("Invalid date (" + this->toString() +") ! The day value must be equals or minor than 31!");
         
     }else if(month == 4 || month == 6 || month == 9 || month == 11){
         
     }else if(month == 2){
         if(day >= 30)
-            throw("Invalid date (" + date.toString() +") ! The day value must be equals or minor than 29!");
+            throw("Invalid date (" + this->toString() +") ! The day value must be equals or minor than 29!");
         else if(year%4 == 0 && (year%100 != 0 || year%400 == 0) && day >29)
-            throw("Invalid date (" + date.toString() +") ! The day value must be equals or minor than 29!");
+            throw("Invalid date (" + this->toString() +") ! The day value must be equals or minor than 29!");
         else if(day >= 29)
-            throw("Invalid date (" + date.toString() +") ! The day value must be equals or minor than 28!");
+            throw("Invalid date (" + this->toString() +") ! The day value must be equals or minor than 28!");
     }
-    
-    
 }
 
-
+/**
+ *	Transform a date in a string with a given format
+ *  @date format Date string format (yyyy/MM/dd , dd/mm/yy, etc...) 
+ */
 string Date::toString(string format){
     
     if(format == "yyyy/MM/dd")
@@ -102,21 +105,24 @@ Date & Date::operator=(const Date &other){
 }
 
 /**
- *
+ * Equals operator overload 
+ * @param other The object in the right hand size of the operator
  */
 bool Date::operator==(Date &other){
     return this->day == other.day && this->month == other.month && this->year == other.year;
 }
 
 /**
- *
+ * Not equal operator overload 
+ * @param other The object in the right hand size of the operator
  */
 bool Date::operator!=(Date &other){
     return this->day != other.day || this->month != other.month || this->year != other.year;
 }
 
 /**
- *
+ * Less than or equal operator overload 
+ * @param other The object in the right hand size of the operator
  */
 bool Date::operator<=(Date &other){
     return year <= other.year || (this->year == other.year && this->month <= other.month) ||
@@ -124,7 +130,8 @@ bool Date::operator<=(Date &other){
 }
 
 /**
- *
+ *	Less than operator overload 
+ * @param other The object in the right hand size of the operator
  */
 bool Date::operator<(Date &other){
     return year < other.year || (this->year == other.year && this->month < other.month) ||
@@ -132,7 +139,8 @@ bool Date::operator<(Date &other){
 }
 
 /**
- *
+ *Greater than or equal operator 
+ * @param other The object in the right hand size of the operator
  */
 bool Date::operator>=(Date &other){
     return year >= other.year || (this->year == other.year && this->month >= other.month) ||
@@ -140,7 +148,7 @@ bool Date::operator>=(Date &other){
 }
 
 /**
- *
+ * Greater than operator overload 
  */
 bool Date::operator>(Date &other){
     return year > other.year || (this->year == other.year && this->month > other.month) ||

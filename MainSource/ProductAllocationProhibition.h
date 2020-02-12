@@ -19,10 +19,10 @@ using namespace std;
 
 class ProductAllocationProhibitions{
     private:
-        Product product;
-        vector<Shelf> forbiddenShelves;
-        vector<Cell> forbiddenCells;
-        vector<Block> forbiddenBlocks;
+        Product product;						///< Product to be allocated 
+        vector<Shelf> forbiddenShelves;			///< Shelves where the product can not be stored
+        vector<Cell> forbiddenCells;			///< Shelves where the product can not be stored 
+        vector<Block> forbiddenBlocks;			///< Blocks where the product can not be stored 
         static void recoverWarehouseData(const Warehouse warehouse,map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName);
     public:
         ProductAllocationProhibitions();

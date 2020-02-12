@@ -14,11 +14,11 @@ using namespace std;
 class Cell{
 
     private: 
-        string code;
-        long int idShelf;
-        int row;
-        int column; 
-        int levels;         //<! vertical sub-division
+        string code;		///< Cell code 
+        long int idShelf;	///< Id of shelf where the cell is located 
+        int row;			///< Row on shelf where the cell is located 
+        int column; 		///< Column on shelf where the cell is located 
+        int levels;         ///< Vertical sub-division
   
     public:
         Cell(){

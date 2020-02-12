@@ -12,8 +12,8 @@ all: GraphPack Input WarehousePack Block Warehouse ProductAllocationProhibition 
 	$(CC) $(COMPILE_FLAGS) -o run main.cpp *.o
 	
 
-Input: ProcessInputData.h InputData.h
-	$(CC) $(COMPILE_FLAGS) -c InputData.cpp ProcessInputData.cpp
+Input: ProcessInputData.h InputData.h ABCAnalysis.h 
+	$(CC) $(COMPILE_FLAGS) -c InputData.cpp ProcessInputData.cpp ABCAnalysis.cpp
 
 #BASIC CLASSES (CAN BE USED IN ANY SOFTWARE. IT'S NOT ALGORITHM RELATED
 GeneralClasses: Point.h Date.h Time.h

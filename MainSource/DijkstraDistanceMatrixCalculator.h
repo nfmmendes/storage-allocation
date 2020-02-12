@@ -10,6 +10,7 @@
 #include<algorithm>
 #include<map>
 #include<list>
+#include<exception>
 #include "DistanceMatrix.h"
 #include "AbstractVertex.h"
 #include "DistanceMatrixCalculator.h"
@@ -25,6 +26,7 @@ class DijkstraDistanceMatrixCalculator : public DistanceMatrixCalculator<Graph, 
         DijkstraDistanceMatrixCalculator(){}
         DijkstraDistanceMatrixCalculator(DijkstraDistanceMatrixCalculator &other);
         DistanceMatrix<Vertex> &calculateMatrixDistance(Graph &graph, vector<Vertex> sourceVertexes); 
+		DistanceMatrix<Vertex> distanceMatrix; 
 
 };
 
@@ -94,7 +96,7 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             list<pair<int, double> > adj;
 
             // Get the indexes of the adjacent vertexes
-            for(int j= 0; j<adjacentVertexes.size(); j++)
+            for(unsigned int j= 0; j<adjacentVertexes.size(); j++)
                 adj.push_back(make_pair( indexVertex[adjacentVertexes[j]] , adjacentVertexes[j].getValue()  ) );
 
 
@@ -115,6 +117,8 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             } 
         }
     }
+	
+	return distanceMatrix; 
 }
 
 

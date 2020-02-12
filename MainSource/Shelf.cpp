@@ -9,7 +9,14 @@
 using namespace std;
 
 
+/**
+ *	Default constructor 
+ */
 Shelf::Shelf(){}
+
+/**
+ *	Copy constructor 
+ */
 Shelf::Shelf(const Shelf &other){
     for(unsigned int i=0; i <other.cells.size(); i++){
         Cell inserted(other.cells[i]);
@@ -25,6 +32,9 @@ Shelf::Shelf(const Shelf &other){
     this->cellWidth = other.cellWidth;
 }
 
+/**
+ *	Member constructor
+ */
 Shelf::Shelf(long int Id,vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName,
       int columns, int rows, double cellLength, double cellWidth){
     
@@ -41,6 +51,7 @@ Shelf::Shelf(long int Id,vector<Cell> cells, pair<double, double> bottomLeftCoor
     this->cellLength = cellLength;
     this->cellWidth = cellWidth;
 }
+
 
 long int Shelf::getId() const { return Id;}
 double Shelf::getBottomLeftCoordX() const { return bottomLeftCoords.first; }
@@ -75,6 +86,11 @@ void Shelf::printShelfInformation(){
 	cout<<"_________________________\n";
 }
 
+/**
+ *	Less than operator overload (Binary operator) 
+ *	The shelves are compared first by id, after by number of rows, columns and finally position
+ *  @param other Shelf on the right hand side of the operator
+ */
 bool Shelf::operator<(const Shelf &other)const{
 	if(this->Id > other.Id)
 		return false;
@@ -89,13 +105,20 @@ bool Shelf::operator<(const Shelf &other)const{
 	return this->bottomLeftCoords< other.bottomLeftCoords; 
 }
 
-
+/**
+ *	Equals operator overload 
+ *  @param other The shelf on the right hand of the operator 
+ */
 bool Shelf::operator==(const Shelf &other)const{
 	return this->Id == other.Id && this->columns==other.columns && this->rows == other.rows && this->bottomLeftCoords == other.bottomLeftCoords &&
 		   this->blockName == other.blockName && this->cellLength == other.cellLength && this->cellWidth == other.cellWidth; 
 
 }
 
+/**
+ *	Not equals operator overload 
+ *  @param other The shelf on the right hand of the operator
+ */
 bool Shelf::operator!=(const Shelf &other)const{
 	return !(*this == other); 
 	

@@ -12,10 +12,10 @@ using namespace std;
 class AbstractSolution{
 
     protected:
-        double solutionValue;
-        double runtime;
-        double minDelta;
-        bool isMaximization;
+        double solutionValue;		///< Objective function value
+        double runtime;				///< Runtime to arrive in this solution  TODO: PUT THIS IN OTHER CLASS
+        double minDelta;			///< Min delta to consider this new different of other. It is used to compare and sort the solutions 
+        bool isMaximization;		///< Says if the problem is a maximization problem. It is used to order the solutions 
 
         
     public:

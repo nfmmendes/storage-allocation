@@ -8,32 +8,37 @@ using namespace std;
 
 Client::Client(){}
 
-// Member by member constructor
+/**
+ * Member by member constructor
+ **/
 Client::Client(string name, string type, pair<double, double> coordinates ){
     this->name = name;
     this->type = type;
     this->coordinates = coordinates;
 }
 
-//Copy constructor
+/**
+ * Copy constructor
+ * @param other Client to be copied 
+ */
 Client::Client(const Client &other){
     this->name = other.name;
     this->type = other.type;
     this->coordinates = other.coordinates;
 }
 
-//Set functions
 void Client::setName(string value){ this->name = value;}
 void Client::setType(string value){ this->type = value; }
 void Client::setCoordinates(pair<double,double> value){ this->coordinates =value; }
 
-//Get functions
 string Client::getName(){ return name;}
 string Client::setType() { return type;}
 pair<double, double> Client::getCoordinates(){ return coordinates;}
 
 
-//Assignment operator
+/**
+ *  Assignment operator
+ */
 Client & Client::operator=(const Client &other){
     this->name = other.name;
     this->type = other.type;
@@ -43,9 +48,10 @@ Client & Client::operator=(const Client &other){
     }
 
 
-
-
-
+/**
+ * Read the client data writen in a text file 
+ * @param fileName Write a file name 
+ */
 vector<Client> Client::readClientData(string fileName){
     vector<Client> clients;
     pair<double,double> coordinates;
@@ -65,7 +71,11 @@ vector<Client> Client::readClientData(string fileName){
     return clients;
 }
 
-vector<Client> Client::readClientDataWithoutCoordinates(string fileName){
+/**
+ *	Read client data including the coordinates of the position where they receave their produts 
+ *  @param fileName Name of file where the informations are stored 
+ */
+vector<Client> Client::readClientDataWithCoordinates(string fileName){
     vector<Client> clients;
     pair<double,double> coordinates;
     string _name, _type;

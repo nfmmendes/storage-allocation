@@ -20,21 +20,22 @@ using namespace std;
 class ABCAnalysis{
 
     private:
-        map<Product, char> volumeClasses;
-		map<Product, double> productVolumes;
-        map<Product, char> frequenceClasses;
-		map<Product, int> productFrequences; 
-        vector<Order> orders;
-        unsigned int numClasses;
-        vector<double> thresholds; 
+        map<Product, char> volumeClasses;			///< Store the volume class by product 
+		map<Product, double> productVolumes;		///< Store the volume by product
+		map<Product, char> frequenceClasses;		///< Store the frequence by classes 
+		map<Product, int> productFrequences; 		///< Store the product frequences 
+		vector<Order> orders;						///< Store the orders 
+        unsigned int numClasses;					///< Store the number of classes
+        vector<double> thresholds; 					///< Store the thresholds used to divide the classes 
 
     public: 
         ABCAnalysis();
         ABCAnalysis(vector<Order> &orders,unsigned int numClasses, vector<double> &thresholds);
-        void Execute();
-        void setOrders(vector<Orders> &orders);
+        void execute();
+		void printClassification();
+        void setOrders(vector<Order> &orders);
         void setNumClasses(int num);
-        void setThresholds(vector<double> thre);
+        void setThresholds(vector<double> &thre);
         vector<Order> getOrders() const;
         map<Product,char> getVolumeClasses() const;
 		map<Product, double> getProductVolumes() const;
@@ -43,7 +44,7 @@ class ABCAnalysis{
         int getNumClasses() const;
         vector<double> getThresholds() const;
 
-}
+};
 
 
 

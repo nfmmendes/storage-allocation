@@ -8,7 +8,7 @@
 using namespace std;
 
 /**
- * 
+ * Copy constructor
  */
 Cell::Cell(const Cell & other){
     this->code = other.code;
@@ -19,7 +19,12 @@ Cell::Cell(const Cell & other){
 }
 
 /**
- * 
+ * Member constructor 
+ * @param code    Cell code 
+ * @param idShelf Id of the shelf where the cell is  
+ * @param levels  Number of vertical divisions of the cell
+ * @param row 	  The shelf row where the cell is
+ * @param column  The column row where the cell is 
  */
 Cell::Cell(string code, long int IdShelf,int levels, int row, int column){
     this->code = code;
@@ -30,14 +35,15 @@ Cell::Cell(string code, long int IdShelf,int levels, int row, int column){
 }
 
 /**
- * 
+ * Equals operator overload 
  */
 bool Cell::operator==(const Cell & other) const{
     return code == other.code && idShelf == other.idShelf && row == other.row && column == other.column && levels == other.levels;
 }
 
 /**
- * 
+ * Less than or equal operator overload 
+ * @param other Cell in the right hand of the operator 
  */
 bool Cell::operator<=(const Cell & other) const{
     if(*this == other)
@@ -69,11 +75,11 @@ bool Cell::operator<=(const Cell & other) const{
 
 
 /**
- * 
+ * Less operator overload 
+ * @param other Cell in the right hand of the operator
  */
 bool Cell::operator<(const Cell & other) const{
-    if( *this == other)
-        return *this <= other && !(*this == other); 
+    return *this == other ? false: *this <= other; 
 }
 
 

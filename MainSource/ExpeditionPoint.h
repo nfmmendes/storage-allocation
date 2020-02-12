@@ -13,9 +13,9 @@ using namespace std;
 class ExpeditionPoint{
 
 	private: 
-		string code;
-		string blockCode;
-		pair<double,double> coordinates;
+		string code;							///< Code of the expedition point 
+		string blockCode;						///< Code of block where is located the expedition point (or from where the products come) 
+		pair<double,double> coordinates;		///< Coordinates of expedition point 
 	
 	public:
 		ExpeditionPoint();

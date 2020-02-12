@@ -6,11 +6,16 @@
 #include "ProductAllocationProhibition.h"
 using namespace std;
 
-
+/**
+ * Default constructor 
+ */
 ProductAllocationProhibitions::ProductAllocationProhibitions(){
     
 }
 
+/**
+ *	Copy constructor 
+ */
 ProductAllocationProhibitions::ProductAllocationProhibitions(const ProductAllocationProhibitions &other){
     this->product = other.product;
     
@@ -24,6 +29,9 @@ ProductAllocationProhibitions::ProductAllocationProhibitions(const ProductAlloca
         this->forbiddenBlocks.push_back(other.forbiddenBlocks[i]);
 }
 
+/**
+ *	Member constructor 
+ */
 ProductAllocationProhibitions::ProductAllocationProhibitions(Product &product,vector<Shelf>forbiddenShelves,vector<Cell> forbiddenCells,vector<Block> &blocks){
     
 	this->product = product; 
@@ -48,23 +56,44 @@ vector<Shelf> ProductAllocationProhibitions::getForbiddenShelves(){ return this-
 vector<Cell> ProductAllocationProhibitions::getForbiddenCells(){ return this->forbiddenCells; }
 vector<Block> ProductAllocationProhibitions::getForbiddenBlocks() { return this->forbiddenBlocks; }
 
+/**
+ *	Adds a cell to the pool of forbidden cells 
+ *  @param cell Cell to be inserted 
+ */ 
 void ProductAllocationProhibitions::addProhibition(Cell &cell){
     this->forbiddenCells.push_back(cell);
 }
 
+/**
+ *	Adds a shelf to the pool of forbidden shelves
+ *  @param shelf Shelf to be inserted  
+ */
 void ProductAllocationProhibitions::addProhibition(Shelf &shelf){
     this->forbiddenShelves.push_back(shelf);
 }
 
+
+/**
+ *	Adds a block to the pool of forbidden blocks 
+ *  @param block Block to be inserted 
+ */
 void ProductAllocationProhibitions::addProhibition(Block &block){
     this->forbiddenBlocks.push_back(block);
 }
 
+/**
+ *	Remove the i-esime cell from the pool of forbidden cells 
+ *  @param i Cell index 
+ */
 void ProductAllocationProhibitions::removeProductCellProhibition(int i){
     if(i>=0 && i<(int)forbiddenCells.size())
         this->forbiddenCells.erase(this->forbiddenCells.begin()+i);
 }
 
+/**
+ *	Remove the i-esime shelf from the pool of forbidden shelves
+ *  @param i Shelf index  
+ */
 void ProductAllocationProhibitions::removeProductShelfProhibition(int i){
     if(i>=0 && i<(int)forbiddenShelves.size())
         this->forbiddenShelves.erase(this->forbiddenShelves.begin()+i);
@@ -75,7 +104,10 @@ void ProductAllocationProhibitions::removeProductBlockProhibition(int i){
         this->forbiddenBlocks.erase(this->forbiddenBlocks.begin()+i);
 }
 
-
+/**
+ *	Read all the data concerning to individual product storage prohibitions 
+ *  @param file File stream object that references the file where the data is stored 
+ */
 vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProhibitionsData(ifstream &file){
     vector<ProductAllocationProhibitions> prohibitions;
     long int idShelve;
@@ -139,8 +171,6 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
 					prohibition.setForbiddenShelves(_shelves);
 					prohibition.setForbiddenBlocks(_blocks);
 					prohibition.setProduct(productsByCode[productCode]);
-					
-					//cout<<productCode<<" "<<_cells.size()<<" "<<_shelves.size()<<" "<<_blocks.size()<<endl;
 					
 					prohibitions.push_back(prohibition);
 				}

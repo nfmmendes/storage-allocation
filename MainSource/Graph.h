@@ -17,9 +17,9 @@ namespace QuickTSP{
     
         class Graph{
             private:
-                vector<Vertex> vertexes;
-                map<Vertex, vector<Arc> > arcsByVertex;
-                string name;
+                vector<Vertex> vertexes;					///< List of graph vertexes 
+                map<Vertex, vector<Arc> > arcsByVertex;		///< Arcs that are incident on each vertex	
+                string name;								///< Graph name 
             public:
                 Graph(){}
             
@@ -30,7 +30,7 @@ namespace QuickTSP{
                 Graph &operator=(const Graph &other);
             
                 map<Vertex, vector<Arc> > getArcs() const;
-				map<string, set<Vertex>> & getVertexesByType();
+				map<string, set<Vertex>> getVertexesByType();
                 vector<Vertex> getVertexes() const;
                 string getName() const;
             

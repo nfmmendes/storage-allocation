@@ -6,7 +6,14 @@
 #include "BlockExit.h"
 using namespace std;
 
+/**
+ * Default constructor 
+ */
 BlockExit::BlockExit(){}
+
+/**
+ *	Copy constructor
+ */
 BlockExit::BlockExit(const BlockExit &other){
     this->Id = other.Id;
     this->coordX = other.coordX;
@@ -15,6 +22,9 @@ BlockExit::BlockExit(const BlockExit &other){
     this->blockBName = other.blockBName;
 }
 
+/**
+ * Member constructor
+ */ 
 BlockExit::BlockExit(long int id, double coordX, double coordY, string blockA, string blockB){
     this->Id = id;
     this->coordX = coordX;
@@ -62,7 +72,9 @@ bool BlockExit::operator<(const BlockExit & other) const {
 		
 	}  
 
-
+/**
+ *	Print the exit main information 
+ */
 void BlockExit::printExitInformation(){
 	cout<<"_____________________________\n";
 	cout<<"Exit Id: \t"<<this->Id<<endl;

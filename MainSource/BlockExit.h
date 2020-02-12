@@ -8,17 +8,19 @@
 #include<utility>
 using namespace std;
 
-/// This class describes a block exit. These exits can connect one warehouse
-/// to another or just to a warehouse exit. In this implementation, a exit can
-/// not connect more than two blocks.
+/** 
+ *  This class describes a block exit. These exits can connect one warehouse
+ * to another or just to a warehouse exit. In this implementation, a exit can
+ * not connect more than two blocks.
+ */
 class BlockExit{
     
     private:
         long int Id;
-        double coordX;
-        double coordY;
-        string blockAName; 
-        string blockBName;
+        double coordX;					///< X-coordinate of central exit point 
+        double coordY;					///< Y-coordinate of central exit point  
+        string blockAName; 				///< First block of exit 
+        string blockBName;				///< Second block of exit. The second block can be empty if the exit goes out of warehouse
     public:
         BlockExit();
         BlockExit(const BlockExit &other);
@@ -31,8 +33,6 @@ class BlockExit{
         string getBlockAName();
         string getBlockBName();
         pair<double, double> getCoords();
-    
-    
     
         void setId(long int value);
         void setCoordX(double value);

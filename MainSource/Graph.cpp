@@ -68,7 +68,7 @@ map<Vertex, vector<Arc> > Graph::getArcs() const{
 /**
  *
  */
-map<string, set<Vertex> > & Graph::getVertexesByType(){
+map<string, set<Vertex> > Graph::getVertexesByType(){
 	map<string, set<Vertex> > returned; 
 	for(unsigned int i=0;i<this->vertexes.size();i++)
 		returned[vertexes[i].getType()].insert(vertexes[i]);
@@ -91,33 +91,49 @@ string Graph::getName()const{
 }
 
 /**
- *
+ * Set graph arcs 
+ * @param arcs New arcs of the graph. Those arcs 
  */
 void Graph::setArcs(map<Vertex, vector<Arc> > arcs){
     this->arcsByVertex.clear();
+	
     
     this->arcsByVertex = arcs;
 }
 
 /**
- *
+ *	Set the graph vertexes. This procedure replaces all the vertices and remove invalid arcs 
+ *	@param other List of the new vertexes 
  */
 void Graph::setVertexes(vector<Vertex> other){
     this->vertexes.clear();
     
-    for(unsigned int i=0; i<other.size();i++)
+	map<Vertex, bool> presentVertexes; 
+	
+	for(map<Vertex, vector<Arc> >::iterator it = this->arcsByVertex.begin(); it!= this->arcsByVertex.end();it++)
+		presentVertexes[it->first] = false; 
+	
+	
+    for(unsigned int i=0; i<other.size();i++){
+		presentVertexes[other[i]] = true; 
         this->vertexes.push_back(Vertex(other[i]));
+	}	
+	
+	for(map<Vertex, vector<Arc> >::iterator it = this->arcsByVertex.begin(); it!= this->arcsByVertex.end();it++)
+		if(presentVertexes[it->first] == false)
+			this->arcsByVertex[it->first].clear(); 
+	
 }
 
 /**
- *
+ * Add one vertex in the graph 
  */
 void Graph::addVertex(Vertex &other){
     this->vertexes.push_back(Vertex(other));
 }
 
 /**
- *
+ * insert one arc in the graph 
  */
 void Graph::addArc(Arc &arc){
     
@@ -155,7 +171,8 @@ void Graph::removeArc(Vertex vertex,int i){
 }
 
 /**
- *
+ * Get all the adjacent vertex of a vertex 
+ * @param vertex Vertex to return its adjacences 
  */
 vector<Vertex> Graph::getAdjacentVertexes(Vertex & v){
     vector<Vertex> returned; 

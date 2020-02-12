@@ -25,19 +25,19 @@ const string BOTH = "BOTH";
 
 
 
-///
-///     Class to represent corridors. This class is used to describe only retilinear corridors
-///     and not transversal ones 
-///
+/**
+ *     Class to represent corridors. This class is used to describe only retilinear corridors
+ *     and not transversal ones 
+ */
 class Corridor{
     
     private:
         long int Id;
-        string blockName;
-        string direction;       //! The values can be: horizontal or vertical
-        string sense;               //! The values can be: up_down, bottom_up, left_to_right, right_to_left, both
-        pair<double, double> begin;
-        double length;
+        string blockName;			  ///< Name of block where the corridor is 
+        string direction;       	  ///< Direction of The values can be: HORIZONTAL or VERTICAL
+        string sense;             	  ///< The values can be: UP_DOWN, BOTTOM_UP, LEFT_TO_RIGHT, RIGHT_TO_LEFT, BOTH
+        pair<double, double> begin;	  ///< Coordinates of the corridor begin
+        double length;				  ///< Length of corridor 
     
     public:
         Corridor(){}

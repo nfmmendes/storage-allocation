@@ -93,12 +93,12 @@ void ProcessInputData::ExecuteProcessData(){
  *
  */
 DistanceMatrix<Vertex> * ProcessInputData::getDistanceMatrix(){
-	
+	return distanceMatrix; 
 }
 
 /**
  *
  */
 WarehouseToGraphConverter * ProcessInputData::getWarehouseToGraphConverter(){
-	
+	return NULL; 
 }

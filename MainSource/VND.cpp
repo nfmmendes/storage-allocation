@@ -6,17 +6,33 @@
 //
 
 #include "VND.h"
+#include "IsolatedFamily.h"
 
-
+/**
+ *	Default constructor 
+ */
 VND::VND(){
     
 }
 
 
-VND::VND(Warehouse warehouse, vector<Order> orders, vector<ProductAllocationProhibitions> prohibitions, vector<Parameter> parameters){
-    
+/***
+ *	Member constructor 
+ *  @param warehouse
+ *	@param orders
+ *  @param prohibitions
+ *	@param isolated
+ *	@param param
+ */
+VND::VND(Warehouse &wh, vector<Order> &orders, vector<ProductAllocationProhibitions> &prohibitions, vector<IsolatedFamily> &isolated, vector<Parameter> &param){
+    this->warehouse = wh; 
+	this->orders = orders;
+	
 }
 
+/**
+ *	Copy constructor 
+ */
 VND::VND(const VND & other){
     
 }
