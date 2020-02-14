@@ -24,7 +24,7 @@ ProcessInputData::ProcessInputData(){
 /**
  *
  */
-ProcessInputData::ProcessInputData(InputData *input){
+ProcessInputData::ProcessInputData(InputData *input):warehouseToGraphConverter(input->getWarehouse()){
 	this->input = input;
 }
 
@@ -40,16 +40,15 @@ ProcessInputData::ProcessInputData(ProcessInputData & other){
  *
  */
 void ProcessInputData::CreateGraph(){
-	WarehouseToGraphConverter converter(input->getWarehouse());
 	cout<<"Starting conversion of warehouse to graph\n";
-	converter.generateGraph();
+	warehouseToGraphConverter.generateGraph();
 }
 
 /**
  * 
  */
 void ProcessInputData::CalculateMatrixDistances(){
-	Graph graph = converter->getGraph();
+	Graph graph = warehouseToGraphConverter.getGraph();
 	map<string, set<Vertex> > vertexesByType = graph.getVertexesByType();
 	
 	vector<Vertex> desirableVertexes; 
@@ -82,8 +81,6 @@ void ProcessInputData::CreateOptimizationAuxiliarStructures(){
  *
  */
 void ProcessInputData::ExecuteProcessData(){
-	
-	
 	this->CreateGraph(); 
 	this->CalculateMatrixDistances();
 }
@@ -100,5 +97,5 @@ DistanceMatrix<Vertex> * ProcessInputData::getDistanceMatrix(){
  *
  */
 WarehouseToGraphConverter * ProcessInputData::getWarehouseToGraphConverter(){
-	return NULL; 
+	return &warehouseToGraphConverter; 
 }

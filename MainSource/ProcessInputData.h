@@ -23,7 +23,7 @@ using namespace QuickTSP;
 		private:
 			InputData *input;
 			DistanceMatrix<Vertex> *distanceMatrix;
-			WarehouseToGraphConverter *converter;
+			WarehouseToGraphConverter warehouseToGraphConverter;
 			void CreateGraph();
 			void CalculateMatrixDistances();
 			void CreateOptimizationAuxiliarStructures();

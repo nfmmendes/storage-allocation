@@ -15,12 +15,21 @@
 #include "Parameter.h"
 #include "AbstractSolution.h"
 #include "IsolatedFamily.h"
+#include "Graph.h"
+#include "Product.h"
+#include "OptimizationConstraints.h"
+#include "DistanceMatrix.h"
+#include "StorageAllocationSolution.h"
+#include "Vertex.h"
+using namespace std;
+using namespace QuickTSP; 
+
 
 class VND {
     
     public:
         VND();
-        VND(Warehouse &wh, vector<Order> &orders, vector<ProductAllocationProhibitions> &prohibitions, vector<IsolatedFamily> &isolated, vector<Parameter> &param);
+        VND(vector<Product> & prods, Warehouse &wh, Graph &graph, DistanceMatrix<Vertex> distMatrix,vector<Order> &orders, OptimizationConstraints &cons);
         VND(const VND & other);
         void run();
         AbstractSolution *getSolution();
@@ -29,18 +38,20 @@ class VND {
     
     private:
         Warehouse warehouse;								///< Warehouse where the products will be stored 
+		Graph graph; 
+		DistanceMatrix<Vertex> distanceMatrix;
         vector<Order> orders;								///< Orders to be used in the evaluation
-        vector<ProductAllocationProhibitions> prohibitions;	///< Allocation prohibitions 
-        vector<Parameter> parameters;						///< Optimization parameters 
+        OptimizationConstraints constraints; 				///< Allocation constraints and parameters 
         AbstractSolution * bestSolution;					///< Best solution found
         double bestSolutionValue;							///< Best solution value
-        void pertubation(AbstractSolution *solution);		
-        void firstLocalSearch(AbstractSolution *solution); 	
-        void secondLocalSearch(AbstractSolution *solution);	
-        void thirdLocalSearch(AbstractSolution *solution);	
+		vector<Product> products; 							///< List of products to be allocated; 
+        void pertubation(AbstractSolution &solution);		
+        void firstLocalSearch(AbstractSolution &solution); 	
+        void secondLocalSearch(AbstractSolution &solution);	
+        void thirdLocalSearch(AbstractSolution &solution);	
         bool stopCriteria();								
         bool pertubationCriteria();
-    
+		void generateInitialSolution();
     
 };
 

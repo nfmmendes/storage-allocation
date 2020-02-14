@@ -3,7 +3,13 @@
 #include <vector>
 #include <string> 
 #include <cmath>
+#include "Vertex.h"
+#include "Arc.h"
+#include "StorageAllocationSolution.h"
+#include "AbstractSolution.h"
+#include "DistanceMatrix.h"
 using namespace std;
+using namespace QuickTSP; 
 
 /**
  * 

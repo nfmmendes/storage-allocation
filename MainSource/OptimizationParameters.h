@@ -1,7 +1,9 @@
 #ifndef OPTIMIZATION_PARAMETERS_H
 #define OPTIMIZATION_PARAMETERS_H
 
-
+/**
+ *	Class with constant data used as parameters of algorithm 
+ */
 class OptimizationParameters{
 	
 	public:

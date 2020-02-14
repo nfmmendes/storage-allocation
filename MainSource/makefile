@@ -12,16 +12,16 @@ all: GraphPack Input WarehousePack Block Warehouse ProductAllocationProhibition 
 	$(CC) $(COMPILE_FLAGS) -o run main.cpp *.o
 	
 
-Input: ProcessInputData.h InputData.h ABCAnalysis.h 
-	$(CC) $(COMPILE_FLAGS) -c InputData.cpp ProcessInputData.cpp ABCAnalysis.cpp
+Input: ProcessInputData.h InputData.h ABCAnalysis.h  OptimizationConstraints.h
+	$(CC) $(COMPILE_FLAGS) -c InputData.cpp ProcessInputData.cpp ABCAnalysis.cpp OptimizationConstraints.h
 
 #BASIC CLASSES (CAN BE USED IN ANY SOFTWARE. IT'S NOT ALGORITHM RELATED
 GeneralClasses: Point.h Date.h Time.h
 	$(CC) $(COMPILE_FLAGS)  -c Util.cpp Date.cpp Time.cpp
 
 #Classes to proceed the TSP algorithm
-QuickTSP : PathUnity.h TSP.h State.h WarehouseToGraphConverter.h Layer.h Parameter.h Transition.o Order.o
-	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp State.cpp WarehouseToGraphConverter.cpp Layer.cpp Parameter.cpp
+QuickTSP : PathUnity.h TSP.h State.h WarehouseToGraphConverter.h Layer.h Parameter.h Transition.o Order.o VND.h
+	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp State.cpp WarehouseToGraphConverter.cpp Layer.cpp Parameter.cpp VND.cpp
 
 
 Order : Order.h Product.o InputData.o 

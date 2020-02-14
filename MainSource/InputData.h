@@ -22,6 +22,7 @@
 #include "IsolatedFamily.h"
 using namespace std;
 
+
 //=======================================================================================
 //      This class allow to store all the input data of storage allocation problem
 //=======================================================================================
@@ -48,11 +49,12 @@ class InputData{
         void setWarehouse(Warehouse warehouse);
 		void setIsolatedFamilies(vector<IsolatedFamily> &isolatedFamilies);
     
-        vector<Product> getProducts();
+        vector<Product> &getProducts();
         vector<Client> getClients();
         vector<Order> &getOrders();
         vector<Parameter> getParameters();
 		vector<IsolatedFamily> getIsolatedFamily();
+		vector<ProductAllocationProhibitions> getAllocationProhibitions(); 
         Warehouse & getWarehouse();
     
 };

@@ -12,6 +12,7 @@
 #include "WarehouseToGraphConverter.h"
 #include "ProcessInputData.h"
 #include "ABCAnalysis.h"
+#include "OptimizationConstraints.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -108,7 +109,10 @@ int main(int argc, char **argv){
 		
 		cout<<"Initializing metaheuristic \n";
 		
-	//	VND *vnd= new VND(warehouse, input.getOrders(), input.getAllocationProhibitions(),input.getParameters()); 
+		Graph graph = processInput.getWarehouseToGraphConverter()->getGraph();
+		OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
+		Warehouse warehouse =  input.getWarehouse();
+		VND *vnd= new VND(input.getProducts(),warehouse, graph, *processInput.getDistanceMatrix(), input.getOrders(),cons); 
 		
         
     }else

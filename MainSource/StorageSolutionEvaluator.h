@@ -8,18 +8,18 @@
 #include<set>
 #include<vector>
 #include<map>
-#include "Vector.h"
+#include "Vertex.h"
 #include "Arc.h"
-#include "StorageSolutionSolution.h"
+#include "StorageAllocationSolution.h"
 #include "AbstractSolution.h"
 #include "DistanceMatrix.h"
 using namespace std;
-
+using namespace QuickTSP;
 
 /// This class is exclusivelly to evaluate the solutions provided by the a heuristic method
 /// All kind of evaluation are done in this class and it should be as independent as possible
 /// of the heuristic that call it 
-class StorageSolutionEvaluator(){
+class StorageSolutionEvaluator{
 
 	private:
 		map<Vertex, map<int, vector<PickingRoute> >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 

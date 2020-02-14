@@ -119,7 +119,7 @@ void InputData::setIsolatedFamilies(vector<IsolatedFamily> &_isolatedFamilies){
 		this->isolatedFamilies.push_back(IsolatedFamily(_isolatedFamilies[i]));
 }
 
-vector<Product> InputData::getProducts(){return products;}
+vector<Product> &InputData::getProducts(){return products;}
 
 vector<Client> InputData::getClients(){ return clients;}
 
@@ -130,3 +130,5 @@ vector<Parameter> InputData::getParameters() { return parameters;}
 Warehouse & InputData::getWarehouse() { return warehouse; }
 
 vector<IsolatedFamily> InputData::getIsolatedFamily(){ return isolatedFamilies; }
+
+vector<ProductAllocationProhibitions> InputData::getAllocationProhibitions(){ return prohibitions;	}

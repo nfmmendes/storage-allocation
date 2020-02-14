@@ -9,9 +9,12 @@
 #include<map>
 #include<utility>
 #include "AbstractSolution.h"
+#include "StorageSolutionEvaluator.h"
 #include "Product.h"
 #include "Cell.h"
+#include "Vertex.h"
 using namespace std;
+using namespace QuickTSP;
 
 //Represent a sequence of vertexes to be visited and the cost to visit them all
 typedef pair< vector<Vertex>, double> PickingRoute; 
