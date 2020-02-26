@@ -13,6 +13,7 @@
 #include "ProcessInputData.h"
 #include "ABCAnalysis.h"
 #include "OptimizationConstraints.h"
+#include "StorageAllocationSolution.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -113,7 +114,7 @@ int main(int argc, char **argv){
 		OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
 		Warehouse warehouse =  input.getWarehouse();
 		VND *vnd= new VND(input.getProducts(),warehouse, graph, *processInput.getDistanceMatrix(), input.getOrders(),cons); 
-		
+		vnd->run();
         
     }else
         cerr<<"Too few  arguments. Inform the index file name.";

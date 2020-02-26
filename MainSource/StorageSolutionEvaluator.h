@@ -8,13 +8,16 @@
 #include<set>
 #include<vector>
 #include<map>
+#include<utility>
 #include "Vertex.h"
 #include "Arc.h"
-#include "StorageAllocationSolution.h"
 #include "AbstractSolution.h"
 #include "DistanceMatrix.h"
+#include "Cell.h"
 using namespace std;
 using namespace QuickTSP;
+
+typedef struct pair< vector<Vertex>, double> PickingRoute; 
 
 /// This class is exclusivelly to evaluate the solutions provided by the a heuristic method
 /// All kind of evaluation are done in this class and it should be as independent as possible
@@ -22,22 +25,22 @@ using namespace QuickTSP;
 class StorageSolutionEvaluator{
 
 	private:
-		map<Vertex, map<int, vector<PickingRoute> >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
+		map<Vertex, map<int, vector<PickingRoute > >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
 																			  ///< the presence of a vertex. The key is always the 
 																			  ///< first vertex in the sequence.  
 		map<pair<Cell,int> , Vertex> vertexByCellPosition; 
 		DistanceMatrix<Vertex> *distances; 
-		double DoRouteEvaluation(vector<Vertex> & route);
-		double DoRouteEstimation(vector<Vertex> & route);
 	public:
-		StorageSolutionEvaluator()
-		StorageSolutionEvaluator(StorageSolutionEvaluation &sto);
+		StorageSolutionEvaluator();
+		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);
 		StorageSolutionEvaluation(DistanceMatrix<Vertex> * distanceMatrix); 
 		double sumDistances(vector<Vertex> &sequence); 
 		void DoRouteEvaluation(AbstractSolution * solution);
 		void DoRouteEstimation(AbstractSolution * solution);
+		double DoRouteEvaluation(vector<Vertex> & route);
+		double DoRouteEstimation(vector<Vertex> & route);
 		StorageSolutionEvaluator & operator=(const StorageSolutionEvaluator &other);
 		
-}
+};
 
 #endif

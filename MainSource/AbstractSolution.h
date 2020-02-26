@@ -20,12 +20,21 @@ class AbstractSolution{
         
     public:
         AbstractSolution(){}
-        AbstractSolution(double value, double time, double minDelta = 1e-06,double maximization = true){
+        AbstractSolution(AbstractSolution *other) {
+			this->solutionValue = other->solutionValue;
+			this->runtime = other->runtime;
+			this->minDelta = other->minDelta;
+			isMaximization = other->isMaximization; 
+		} 
+ 	    AbstractSolution(double value, double time, double minDelta = 1e-06,bool maximization = true){
             this->solutionValue = value;
             this->runtime = time;
             this->minDelta = minDelta;
             this->isMaximization = maximization; 
         }
+		
+		
+		virtual ~AbstractSolution(){};
 
         //Data modifiers 
         virtual void setSolutionValue(double value) =0;
@@ -40,7 +49,7 @@ class AbstractSolution{
         double _isMaximization() const { return this->isMaximization; } 
 
         virtual void printSolution() const = 0;
-        virtual void printToFile(const ofstream & out) const =0;
+        virtual void printToFile(ofstream & out) const =0;
 
         bool betterThan(const AbstractSolution &other){ 
             if(isMaximization) return this->solutionValue - other.solutionValue > minDelta; 

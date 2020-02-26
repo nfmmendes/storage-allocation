@@ -13,7 +13,7 @@
  
  
  
- Warehouse::Warehouse(Warehouse &other){
+ Warehouse::Warehouse(const Warehouse &other){
 	
 	this->name = other.name;
 	

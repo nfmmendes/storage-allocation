@@ -17,9 +17,9 @@ using namespace std;
 using namespace QuickTSP;
 
 //Represent a sequence of vertexes to be visited and the cost to visit them all
-typedef pair< vector<Vertex>, double> PickingRoute; 
+typedef struct pair< vector<Vertex>, double> PickingRoute; 
 
-class StorageAllocationSolution : AbstractSolution{
+class StorageAllocationSolution : public AbstractSolution{
 
 	private: 
 		static StorageSolutionEvaluator *evaluator; 
@@ -29,19 +29,23 @@ class StorageAllocationSolution : AbstractSolution{
 		map<pair<Cell, int> , Product> productAllocation; 
 		map<Product, vector<PickingRoute *> > routesByProduct; 
 		set<Product> notAllocatedProducts; 
-        virtual void setSolutionValue(double value);
-        virtual void setRuntime(double time); 
-        virtual void setMinDelta(double minDelta);
+        void setSolutionValue(double value) ;
+        void setRuntime(double time); 
+        void setMinDelta(double minDelta) ;
 		void updateSolutionValue(vector<PickingRoute> &oldRoutes, vector<PickingRoute> &newRoutes, bool evaluateSolutionWithTSP=false);
     public:
-		map< pair<Cell, int>, Product> & getProductAllocation() const;
+		StorageAllocationSolution();
+		StorageAllocationSolution(StorageAllocationSolution *other);
+		StorageAllocationSolution(double value, double time, double minDelta = 1e-06,bool maximization = true);
+		~StorageAllocationSolution();
+		map< pair<Cell, int>, Product> & getProductAllocations();
 		void setAllocation(const Cell &cell, int level, const Product &product); 
 		void removeAllocation(const Cell &cell, int level);
-		void proceedSwap(map<Cell,int> &first, map<Cell,int> &second, bool evaluateWithTSP, bool evaluateSolutionWithTSP=false);
+		void proceedSwap(pair<Cell,int> &first, pair<Cell,int> &second,bool evaluateSolutionWithTSP=false);
 		void evaluateSolutionWithTSP();
 		void evaluateSolutionWithoutTSP();
-        virtual void printSolution() const;
-        virtual void printToFile(const ofstream & out) const;
+        void printSolution() const ;
+        void printToFile(ofstream & out) const override;
 
 };
 

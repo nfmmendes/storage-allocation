@@ -66,10 +66,10 @@ vector<T> DistanceMatrix<T>::getKeys() const {
 
 template<class T>
 double DistanceMatrix<T>::getDistance(T &first, T &second) const {
-    typename std::vector<T>::iterator itFirst = keyIndex.find(first);
-    typename std::vector<T>::iterator itSecond = keyIndex.find(first);
+    auto itFirst = keyIndex.find(first);
+    auto itSecond = keyIndex.find(second);
 
-    if(itFirst != orderedKeys.end() && itSecond!= orderedKeys.end())
+    if(itFirst != keyIndex.end() && itSecond!= keyIndex.end())
         return distances[itFirst->second][itSecond->second] ;
 }
 

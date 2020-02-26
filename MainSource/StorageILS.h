@@ -13,7 +13,7 @@
 #include "StorageAllocationSolution.h"
 #include "Heuristic.h"
 #include "NeighborhoodStructure.h"
-#include "DistanceMatrix.h";
+#include "DistanceMatrix.h"
 #include "OptimizationParameters.h"
 #include "Warehouse.h"
 #include "Cell.h"
@@ -22,6 +22,8 @@
 #include "Graph.h"
 #include "Vertex.h"
 #include "Arc.h"
+#include "ABCAnalysis.h"
+#include "Order.h"
 #include <stdio.h>
 #include <iostream> 
 #include <vector>
@@ -36,7 +38,7 @@ using namespace std;
  * The list of products that can have their positions changed is given by the heuristic that is
  * using the neighborhood structure
  */
-class InsideShelfSwap : NeighborhoodStructure{
+class InsideShelfSwap :public NeighborhoodStructure{
 
     private: 
         unsigned int numberOfNeighbors;     // Max number of neighbors that will be created in this class when the 
@@ -47,13 +49,12 @@ class InsideShelfSwap : NeighborhoodStructure{
                                         // the hardness of a company accepts a random behavior of the algorithm. It
                                         // also helps to debug the code, as the bug can be reproduced several times 
                                         // until its cause be discovered
-		Shelf & shelf; 
+		Shelf shelf; 
     public:
         InsideShelfSwap();
-        InsideShelfSwap(AbstractSolution *initial, unsigned int numNeigh, int randomSeed, Shelf & shelf):base(initial);
-        virtual void setStartSolution(AbstractSolution *) const;
-        virtual AbstractSolution * getStartSolution() const {return this->startSolution; }
-        virtual vector<AbstractSolution *> createNeighbors();
+        InsideShelfSwap(AbstractSolution *initial, unsigned int numNeigh, int randomSeed, Shelf & shelf);
+        AbstractSolution * getStartSolution() const {return this->startSolution; }
+        vector<AbstractSolution *> createNeighbors();
 		
 		void setShelf(Shelf & shelf) { this->shelf = shelf;} 
         void setRandomSeed(int seed){ this->randomSeed = seed; }
@@ -66,7 +67,7 @@ class InsideShelfSwap : NeighborhoodStructure{
  * The list of producs that can have their position changed is given by the heuristic that is using the
  * neighborhood structure
  */
-class InsideBlockSwap: NeighborhoodStructure{
+class InsideBlockSwap:public NeighborhoodStructure{
 
 
     private:
@@ -78,18 +79,19 @@ class InsideBlockSwap: NeighborhoodStructure{
                                             // the hardness of a company accepts a random behavior of the algorithm. It
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
-		Block &block; 
+		Block block; 
+		vector<Product> interchangeableProducts; 
+		
     public:
         InsideBlockSwap();
-        InsideBlockSwap(StorageAllocationSolution *initial, int numNeigh,  int randomSeed, Block &block):base(initial);
-        virtual void setStartSolution(AbstractSolution *) const;
-        virtual AbstractSolution * getStartSolution() const { return this->startSolution; }
+        InsideBlockSwap(StorageAllocationSolution *initial, int numNeigh,  int randomSeed, Block &block);
+        AbstractSolution * getStartSolution() const { return this->startSolution; }
 
-        virtual vector<AbstractSolution *> createNeighbors();
+        vector<AbstractSolution *> createNeighbors();
 
-        void setRandomSeed(int seet){ this->randomSeed = seed; }
+        void setRandomSeed(int seed){ this->randomSeed = seed; }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
-        vector<int> getInterchangeableProducts() {return this->interchageableProducts; }
+        vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
         int getRandomSeed(){ return this->randomSeed; }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
 };
@@ -98,7 +100,7 @@ class InsideBlockSwap: NeighborhoodStructure{
  * It creates neighbors by swapping the position of the most frequent products. The list of 
  * the most frequent products is given 
  */
-class MostFrequentSwap : NeighborhoodStructure{
+class MostFrequentSwap :public NeighborhoodStructure{
 
     private:
         int numberOfNeighbors;              // Max number of neighbors that will be created in this class when the 
@@ -109,21 +111,19 @@ class MostFrequentSwap : NeighborhoodStructure{
                                             // the hardness of a company accepts a random behavior of the algorithm. It
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
-        vector<int> interchangeableProducts; 
+        vector<Product> interchangeableProducts; 
 
     public:
         MostFrequentSwap();
-        MostFrequentSwap(StorageAllocation *initial, int numNeigh, 
-                         int randomSeed, vector<int> &products):base(initial)
-        virtual void setStartSolution(AbstractSolution *) const;
-        virtual AbstractSolution * getStartSolution() const; 
-        virtual vector<AbstractSolution *> createNeighbors();
+        MostFrequentSwap(StorageAllocationSolution *initial, int numNeigh, int randomSeed, vector<Product> &products);
+        AbstractSolution * getStartSolution() const; 
+        vector<AbstractSolution *> createNeighbors();
 
 
-        void setInterchangeableProducts(vector<int> prods) {this->interchageableProducts = products; }
-        void setRandomSeed(int seet){ this->randomSeed = seed; }
+        void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
+        void setRandomSeed(int seed){ this->randomSeed = seed; }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
-        vector<int> getInterchangeableProducts() {return this->interchageableProducts; }
+        vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
         int getRandomSeed(){ return this->randomSeed; srand(this->randomSeed); }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
 };
@@ -135,7 +135,7 @@ class MostFrequentSwap : NeighborhoodStructure{
  *  2. Pertubate less frequent products
  *  3. Mix all the products
  */
-class StorageAllocationPertubation : NeighborhoodStructure {
+class StorageAllocationPertubation :public NeighborhoodStructure {
 
     private: 
         int strategy;
@@ -145,44 +145,44 @@ class StorageAllocationPertubation : NeighborhoodStructure {
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
         int numOfPertubationMoves; 
+		vector<Product> interchangeableProducts; 
     public:
-        virtual void setStartSolution(AbstractSolution *) const;
-        virtual AbstractSolution * getStartSolution() const; 
-        virtual vector<AbstractSolution *> createNeighbors();
+        AbstractSolution * getStartSolution() const; 
+        vector<AbstractSolution *> createNeighbors();
 
-        void setInterchangeableProducts(vector<int> prods) {this->interchageableProducts = products; }
-        void setRandomSeed(int seet){ this->randomSeed = seed; }
-        void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
-        vector<int> getInterchangeableProducts() {return this->interchageableProducts; }
+        void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
+        void setRandomSeed(int seed){ this->randomSeed = seed; }
+        void setNumberOfNeighbors(unsigned int val){ this->numOfPertubationMoves = val; }
+        vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
         int getRandomSeed(){ return this->randomSeed; }
-        unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }s
+        unsigned int getNumberOfNeighbors(){ return this->numOfPertubationMoves; }
 };
 
 /**
  * 
  */
-class StorageILS : Heuristic{
+class StorageILS :public Heuristic{
 
     private: 
-        DistanceMatrix *distanceMatrix; 
+        DistanceMatrix<Vertex> *distanceMatrix; 
         Graph *graph;
         Warehouse *warehouse; 
-		Vector<Order> orders; 
+		vector<Order> orders; 
         vector<NeighborhoodStructure *> neighborhoodStructures;
 		int numPertubations; 
         int numIterationsWithoutImprovement; 
 		
-        virtual bool StopCriteriaReached();
+        bool StopCriteriaReached();
         StorageAllocationSolution * ExecutePertubation(StorageAllocationSolution *);
         StorageAllocationSolution * CreateInitialSolution();
-        virtual void EvaluateSolution(AbstractSolution * solution); 
+        void EvaluateSolution(AbstractSolution * solution); 
 		void InitializeNeighborhoods();
 
     public:
         StorageILS();
         StorageILS(StorageILS &other);
-        StorageILS(DistanceMatrix *distances, Graph *graph, Warehouse *warehouse, vector<Order> &orders);
-        virtual AbstractSolution * Execute(); 
+        StorageILS(DistanceMatrix<Vertex> *distances, Graph *graph, Warehouse *warehouse, vector<Order> &orders);
+        AbstractSolution * Execute(); 
 
 };
 

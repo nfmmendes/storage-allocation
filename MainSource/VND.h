@@ -51,7 +51,8 @@ class VND {
         void thirdLocalSearch(AbstractSolution &solution);	
         bool stopCriteria();								
         bool pertubationCriteria();
-		void generateInitialSolution();
+		AbstractSolution * generateInitialSolution();
+		
     
 };
 

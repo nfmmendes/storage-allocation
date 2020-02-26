@@ -23,7 +23,7 @@ class Warehouse{
             vector<ExpeditionPoint> expeditionPoints;   /// Points where the products must be delivered after be picked on shelves
         public:
             Warehouse(){}
-            Warehouse(Warehouse &other);
+            Warehouse(const Warehouse &other);
             void ReadWarehouseData(ifstream & fileName);
             void WriteWarehouseData(string fileName);
             void InsertNewBlock(Block &b);
