@@ -25,7 +25,6 @@ class StorageAllocationSolution : public AbstractSolution{
 		static StorageSolutionEvaluator *evaluator; 
 		static vector<StorageAllocationSolution *> currentSolutions;
 		unsigned long long int solutionIndex; 
-    protected: 
 		map<pair<Cell, int> , Product> productAllocation; 
 		map<Product, vector<PickingRoute *> > routesByProduct; 
 		set<Product> notAllocatedProducts; 
@@ -46,6 +45,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		void evaluateSolutionWithoutTSP();
         void printSolution() const ;
         void printToFile(ofstream & out) const override;
+		StorageAllocationSolution & operator=(const StorageAllocationSolution &other); 
 
 };
 

@@ -5,6 +5,7 @@
 #include<map>
 #include<vector>
 #include<cmath>
+#include<iomanip>
 using namespace std; 
 
 
@@ -26,6 +27,7 @@ class DistanceMatrix{
         void setColumn(vector<double> &d, T&) ;
         void setRowOnIndex(vector<double> &d, int) ;
         void setColumnOnIndex(vector<double> &d, int);
+		void print(); 
 };
 
 
@@ -107,6 +109,26 @@ void DistanceMatrix<T>::setColumnOnIndex(vector<double> &d, int index)  {
     int maxAdvance = min(orderedKeys.size(), distances.size());
     for(int i=0; i<maxAdvance; i++)
         orderedKeys[i][index] = d[i];
+}
+
+
+template<class T> 
+void DistanceMatrix<T>::print(){
+	
+	cout<<setw(15)<<"*\n"; 
+	for(int i=0;i<orderedKeys.size();i++){
+		cout<<setw(15)<<orderedKeys[i]<<endl;
+	}
+	
+	for(int i=0; i< orderedKeys.size();i++){
+		int indexI = keyIndex[orderedKeys[i]]; 
+		for(int j=0; j< orderedKeys.size();j++)
+			cout<<setw(15)<<distances[indexI][keyIndex[ orderedKeys[j] ] ];
+		cout<<endl; 
+		
+	}
+		
+	
 }
 
 #endif

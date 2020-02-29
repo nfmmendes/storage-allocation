@@ -36,29 +36,34 @@ ABCAnalysis::ABCAnalysis(vector<Order> &orders,unsigned int numClasses, vector<d
     unsigned int distinctValues = 0;
     
     this->orders = orders;
-    
-    if(numClasses != thresholds.size()+1)
-        throw "The number of thresholds does not is not consistent with the number of classes";
-    
-
-    sort(thresholds.begin(), thresholds.end());
-    if(thresholds[0] <= 0)
-        throw "All the threshold values must be greater than zero";
+    try{
+		if(numClasses != thresholds.size()+1)
+			throw "The number of thresholds does not is not consistent with the number of classes";
 
 
-    if(thresholds.size()>0)
-        distinctValues = 1; 
-    else 
-        throw "Threshold values vector is empty";
+		sort(thresholds.begin(), thresholds.end());
+		if(thresholds[0] <= 0)
+			throw "All the threshold values must be greater than zero";
 
-    for(unsigned int i=0; i<thresholds.size()-1; i++)
-        if( fabs(thresholds[i]- thresholds[i+1]) >= 1e-3)
-            distinctValues++;
-    
-    if(distinctValues <= thresholds.size())
-        throw "The threshold vector has some repeated values";
-    else if(distinctValues + 1 != numClasses)
-        throw "The number of classes and the number of distinct thersholds are not consistent";
+
+		if(thresholds.size()>0)
+			distinctValues = 1; 
+		else 
+			throw "Threshold values vector is empty";
+
+		for(unsigned int i=0; i<thresholds.size()-1; i++){
+			if( fabs(thresholds[i]- thresholds[i+1]) >= 1e-3)
+				distinctValues++;
+		}
+
+		if(distinctValues < thresholds.size())
+			throw "The threshold vector has some repeated values";
+		else if(distinctValues + 1 != numClasses)
+			throw "The number of classes and the number of distinct thersholds are not consistent";
+	}catch(const char* message){
+		
+		cout<<message<<endl;
+	}
 
     this->numClasses = numClasses; 
     this->thresholds = thresholds; 
@@ -76,7 +81,7 @@ void ABCAnalysis::execute(){
     map<Product, double> productVolumes;
     set<Product> products; 
     double totalVolume = 0;
-    int totalFrequence =this->orders.size(); 
+    int totalFrequence = 0; 
 
     if(thresholds.size() == 0)
         throw "The thresholds must be setted before start this method";
@@ -88,8 +93,9 @@ void ABCAnalysis::execute(){
     //Get the frequences and volumes of all products
     for(unsigned int i=0; i<this->orders.size();i++){
         vector< pair<Product, double> > items = this->orders[i].getOrderItems();
+		totalFrequence += items.size();
         for(unsigned int j=0; j<items.size(); j++){
-            totalVolume*= items[j].second;
+            totalVolume += items[j].second;
             if(products.find(items[j].first) == products.end()){
                 products.insert(items[j].first);
                 productFrequences[items[j].first] = 1; 
@@ -108,16 +114,16 @@ void ABCAnalysis::execute(){
     for(map<Product, int>::iterator it= productFrequences.begin(); it!= productFrequences.end(); it++)
         frequences.push_back(make_pair(it->second, it->first));
 
-    for(map<Product, double>::iterator it= productVolumes.begin(); it!= productVolumes.end(); it++)
+    for(map<Product, double>::iterator it= productVolumes.begin(); it!= productVolumes.end(); it++){
         volumes.push_back(make_pair(it->second, it->first));
+	}
 
     //The products must be ordered in decreasing order because the most frequent/volumous products should 
     //be evaluated first 
-    sort(frequences.begin(), frequences.end());
+    sort(frequences.begin(), frequences.end(), [](const pair<int,Product> &a, const pair<int,Product>& b) {return a.first < b.first;});
     reverse(frequences.begin(), frequences.end());
-    sort(volumes.begin(), volumes.end());
+    sort(volumes.begin(), volumes.end(), [](const pair<double,Product> &a, const pair<double,Product>& b) {return a.first < b.first;});
     reverse(volumes.begin(), volumes.end());
-
 
     //Compute the thresholds that will be used on the classification
     vector<double> volumeThresholds; 
@@ -127,9 +133,13 @@ void ABCAnalysis::execute(){
 
     for(unsigned int i=0;i<numClasses; i++){
         //The thresholds are evaluated based on the total frequence/volume
-        volumeThresholds.push_back(totalVolume*this->thresholds[i]/100.0);
-        frequenceThresholds.push_back(totalFrequence*this->thresholds[i]/100.0);
+        volumeThresholds.push_back(totalVolume*this->thresholds[i]*1.0/100.0);
+        frequenceThresholds.push_back(totalFrequence*this->thresholds[i]*1.0/100.0);
     }
+
+	for(int i=0;i<numClasses;i++){
+		cout<<volumeThresholds[i]<<" "<<frequenceThresholds[i]<<endl;
+	}
 
     //Assign the classes. 
     char currentVolumeClass = 'A';
@@ -137,8 +147,9 @@ void ABCAnalysis::execute(){
     char currentFrequenceClass = 'A';
     unsigned int currentFrequenceClassIndex = 0;
     for(unsigned int i=0; i<products.size(); i++){
-        accumVolume += volumes[i].first;
+		accumVolume += volumes[i].first;
         accumFrequence += frequences[i].first;
+
         //Always remember. The number of thresholds is one unit lower than the number of classes
         //If the accumulated volume is bigger than the current threshold we should go to the next threshold/class
         if(currentVolumeClassIndex < numClasses-1 && accumVolume >= volumeThresholds[currentVolumeClassIndex]){            
@@ -151,10 +162,10 @@ void ABCAnalysis::execute(){
             currentFrequenceClassIndex++;
         }
 
-        this->volumeClasses[volumes[i].second] = currentVolumeClass;
-        this->frequenceClasses[frequences[i].second] = currentFrequenceClass;
-    }
+		this->volumeClasses[volumes[i].second] = currentVolumeClass;
+		this->frequenceClasses[frequences[i].second] = currentFrequenceClass;
 
+    }
 }
 
 
@@ -166,7 +177,7 @@ void ABCAnalysis::printClassification(){
 	
 	
 	cout<<setw(50)<<"Product "<<setw(15)<<"Freq. Class" << setw(15)<<"Vol. Class."<<endl;
-	cout<<"================================================================================";
+	cout<<"================================================================================\n";
 	for(set<Product>::iterator it = products.begin(); it != products.end();it++){
 		cout<<it->getID()<<" ";
 		

@@ -257,9 +257,14 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 /////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+/**
+ *	Create a initial product allocation based on the ABC class of each product and the distance 
+ *  between each cell and the closest delivery point  
+ */
 StorageAllocationSolution * StorageILS::CreateInitialSolution(){
-	return NULL; 
+	StorageAllocationSolution *initial = new StorageAllocationSolution();
+	
+	return initial; 
 }
 
 /**

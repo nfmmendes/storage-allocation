@@ -24,6 +24,15 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution *
 	this->runtime = other->runtime;
 	this->minDelta = other->minDelta;
 	isMaximization = other->isMaximization; 
+	
+	//unsigned long long int solutionIndex;  
+		
+	for(auto & key : other->notAllocatedProducts)
+		this->notAllocatedProducts.insert(key); 
+	for(auto & [key, value] : other->productAllocation)
+		this->productAllocation[key] = value; 
+	for(auto & [key, value] : other->routesByProduct)
+		this->routesByProduct[key] = value; 
 }
 
 
@@ -36,8 +45,10 @@ StorageAllocationSolution::StorageAllocationSolution(double value, double time, 
 
 
 StorageAllocationSolution::~StorageAllocationSolution(){
+	this->notAllocatedProducts.clear();
+	this->productAllocation.clear(); 
 	
-	
+	//TODO: PUT products by route
 }
 
 /**
@@ -164,3 +175,27 @@ void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRou
 	
 	this->solutionValue += (newSum - oldSum);  
 }
+
+/**
+ *	Overload of the operator = 
+ */
+StorageAllocationSolution & StorageAllocationSolution::operator=(const StorageAllocationSolution &other){
+	
+	this->solutionValue = other.solutionValue;
+	this->runtime = other.runtime;
+	this->minDelta = other.minDelta;
+	isMaximization = other.isMaximization; 
+	
+	this->notAllocatedProducts.clear();
+	this->productAllocation.clear(); 
+	
+	for(auto & key : other.notAllocatedProducts)
+		this->notAllocatedProducts.insert(key); 
+	for(auto & [key, value] : other.productAllocation)
+		this->productAllocation[key] = value; 
+	for(auto & [key, value] : other.routesByProduct)
+		this->routesByProduct[key] = value; 
+	
+	return *this; 
+}
+

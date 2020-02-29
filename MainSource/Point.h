@@ -18,7 +18,7 @@ using namespace std;
             
         public:
             Point();
-            Point(string label, double coordX, double coordY, double coordZ);
+            Point(string label, double coordX=0, double coordY=0, double coordZ=0);
             Point(const Point &point);
             void setCoordX(double value);
             void setCoordY(double value);
@@ -41,6 +41,10 @@ using namespace std;
 			bool operator==(const Point &other) const; 
         
             double getDistance(const Point &other);
+			friend ostream&operator<<(ostream &op, const Point &p){ 
+				op<<"Label :"<<p.label<<" ("<<p.coordX<<","<<p.coordY<<","<<p.coordZ<<")\n"; 
+				return op;
+			}
         
 };
 

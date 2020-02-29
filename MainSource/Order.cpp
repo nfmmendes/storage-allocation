@@ -85,7 +85,7 @@ vector<Order> Order::readOrdersData(ifstream &file){
     
     int numOrders;
     int numItems;
-    string productCode;
+    string productName;
     string clientCode;
     double quantity;
     Product product;
@@ -98,12 +98,11 @@ vector<Order> Order::readOrdersData(ifstream &file){
     vector<Product> products = input.getProducts();
     vector<Client> clients = input.getClients();
     
-    map<string,Product> productByCode;
-    
+    map<string,Product> productByName;    
     
     for(int i=0; i<(int)products.size(); i++)
-        productByCode[products[i].getName()] = products[i];
-    
+        productByName[products[i].getName()] = products[i];
+	
     for(int i=0; i<numOrders; i++){
         file>>numItems;
         file>>clientCode;
@@ -112,12 +111,12 @@ vector<Order> Order::readOrdersData(ifstream &file){
 		
         
         for(int j=0;j<numItems;j++){
-            file>>productCode>>quantity;
-            product = productByCode[productCode];
+            file>>productName>>quantity;
+            product = productByName[productName];
 			//cout<<productCode<<" "<<quantity<<endl;
             items.push_back(make_pair(product,quantity));
         }
-    
+
 		Date parsedDate; 
 		Time parsedTime;
 		
@@ -139,7 +138,6 @@ vector<Order> Order::readOrdersData(ifstream &file){
 		
 		
     }
-    
     
     return orders;
 }

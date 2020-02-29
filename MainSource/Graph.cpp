@@ -186,6 +186,16 @@ vector<Vertex> Graph::getAdjacentVertexes(Vertex & v){
 }
 
 
+void Graph::print(){
+	cout<<vertexes.size() <<" vertexes \n";
+	for(int i=0;i<vertexes.size();i++)
+		cout<<vertexes[i]<<endl;
+	
+	for(auto &[key,value] : arcsByVertex)
+		for(int i=0;i<value.size(); i++)
+			cout<<value[i]<<endl; 
+}
+
 /**
  * 
  * Convert a set of arcs in a graph. The set of arcs

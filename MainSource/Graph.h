@@ -43,7 +43,8 @@ namespace QuickTSP{
                 void removerVertex(int i);
                 void removeArc(Vertex vertex,int i);
                 vector<Vertex> getAdjacentVertexes(Vertex & v);
-                static Graph convertArcsToGraph(set<Arc> &arcs,string name=""); 
+                static Graph convertArcsToGraph(set<Arc> &arcs,string name="");
+				void print(); 
         };
     
 }

@@ -38,7 +38,8 @@ namespace QuickTSP{
         
                 ///This overload allows the use of an object of this class as a key to a map
             bool operator<(const Vertex &other)const;
-        
+			friend ostream &operator<<(ostream & pr, const Vertex &b){ pr<<b.type<<" label: "<<b.label; return pr;}
+		
     };
     
 }

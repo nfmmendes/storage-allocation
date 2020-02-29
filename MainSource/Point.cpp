@@ -93,19 +93,15 @@ bool Point::isMinorZ(const Point &a,const Point &b){
  *
  */
 bool Point::operator<(const Point &other)const{
-    double distA = this->coordX*this->coordX + this->coordY*this->coordY + this->coordZ*this->coordZ;
-    double distB = other.coordX*other.coordX + other.coordY*other.coordY + other.coordZ*other.coordZ;
-    
-    if(fabs(distA - distB) >= TOLERANCE)
-        return distA < distB;
-    else if(fabs(this->coordX - other.coordX) >= TOLERANCE)
-        return this->coordX < other.coordX;
-    else if(fabs(this->coordY - other.coordY) >= TOLERANCE)
-        return this->coordY < other.coordY;
-    else if(fabs(this->coordZ - other.coordZ) >= TOLERANCE)
-        return this->coordZ < other.coordZ;
-    else
-        return this->label < other.label;
+		
+	if(fabs(this->coordX - other.coordX) > TOLERANCE)
+		return this->coordX < other.coordX; 
+	if(fabs(this->coordY - other.coordY) > TOLERANCE)
+		return this->coordY < other.coordY; 
+	if(fabs(this->coordZ - other.coordZ) > TOLERANCE)
+		return this->coordZ < other.coordZ; 
+	
+	return false; 
 }
 
 /**
@@ -116,11 +112,11 @@ bool Point::operator>(const Point &other)const{
 }
 
 /**
- *
+ * Overload of == operator
+ * This operator considers only the points coordinates 
  */
 bool Point::operator==(const Point &other) const{
-	return this->label == other.label && fabs(this->coordX - other.coordX) <= 1e-10 &&  fabs(this->coordY - other.coordY)<=1e-10 && 
-										 fabs(this->coordZ - other.coordZ) <= 1e-10;
+	return fabs(this->coordX - other.coordX) <= 1e-6 &&  fabs(this->coordY - other.coordY)<=1e-6 && fabs(this->coordZ - other.coordZ) <= 1e-6;
 }
 
 /**

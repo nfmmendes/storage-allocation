@@ -48,6 +48,11 @@ namespace QuickTSP{
             Arc& operator=(const Arc & other);
             bool operator==(const Arc &other)const;
             bool operator<(const Arc &other) const;
+			
+			friend ostream& operator<<(ostream &pr, const Arc & a){
+				pr<<"Arc "<<a.label <<" value: "<<a.value<< endl<<a.beginVertex<<" \n"<<a.endVertex <<endl;
+				return pr;
+			}
             
     };
 }

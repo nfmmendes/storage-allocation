@@ -82,6 +82,8 @@ void ProcessInputData::CreateOptimizationAuxiliarStructures(){
  */
 void ProcessInputData::ExecuteProcessData(){
 	this->CreateGraph(); 
+	this->warehouseToGraphConverter.getGraph().print();
+	cout<<"Calculating distances \n"; 
 	this->CalculateMatrixDistances();
 }
 

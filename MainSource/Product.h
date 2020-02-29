@@ -21,6 +21,7 @@ class Product{
     public:
         Product(){}
         Product(const Product & other){
+			this->ID = other.ID;
             this->name = other.name;
             this->type = other.type;
         }
@@ -38,8 +39,9 @@ class Product{
         void setID(long int Id){ if(Id >= 0 ) this->ID = Id; }
         void setName(string name){ this->name = name;}
         void setType(string type){ this->type = type;}
-		bool operator<(const Product &other) const{ return this->ID <= other.ID; }
+		bool operator<(const Product &other) const{ return this->ID < other.ID; }
         static vector<Product> readProductsData(ifstream &file);
+		void print()const{ cout<<ID<<" "<<name<<" "<<type<<endl;}
     
 };
 

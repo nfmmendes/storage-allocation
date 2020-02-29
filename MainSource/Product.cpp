@@ -20,7 +20,6 @@ vector<Product> Product::readProductsData(ifstream &file){
 	cout<<numProducts<<endl;
     for(int i=0; i<numProducts; i++){
         file>>ID>>_name>>_type;
-		//cout<<ID<<" "<<_name<<" "<<_type<<endl;
         products.push_back(Product(ID, _name,_type));
     }
         

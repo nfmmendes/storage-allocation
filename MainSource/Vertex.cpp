@@ -33,10 +33,11 @@ bool Vertex::operator==(const Vertex & other)const {
 }
 
 bool Vertex::operator!=(const Vertex & other){
-    return label != other.label || type != other.type || value != other.value;
+    return label != other.label || type != other.type || fabs(value - other.value) > 0.0000000000001;
 }
 
 ///This overload allows the use of an object of this class as a key to a map
 bool Vertex::operator<(const Vertex &other)const{
     return label+type+to_string(value) < other.label+other.type+to_string(other.value);
 }
+
