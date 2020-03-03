@@ -18,8 +18,8 @@ Point::Point(){
     //Null values are not allowed
 Point::Point(string label, double coordX, double coordY, double coordZ){
     
-    if(label == "")
-        throw("Error");
+   // if(label == "")
+   //     throw("Error");
     
     this->label = label;
     this->coordX = coordX;
@@ -93,7 +93,6 @@ bool Point::isMinorZ(const Point &a,const Point &b){
  *
  */
 bool Point::operator<(const Point &other)const{
-		
 	if(fabs(this->coordX - other.coordX) > TOLERANCE)
 		return this->coordX < other.coordX; 
 	if(fabs(this->coordY - other.coordY) > TOLERANCE)
@@ -116,7 +115,7 @@ bool Point::operator>(const Point &other)const{
  * This operator considers only the points coordinates 
  */
 bool Point::operator==(const Point &other) const{
-	return fabs(this->coordX - other.coordX) <= 1e-6 &&  fabs(this->coordY - other.coordY)<=1e-6 && fabs(this->coordZ - other.coordZ) <= 1e-6;
+	return fabs(this->coordX - other.coordX) <= 1e-5 &&  fabs(this->coordY - other.coordY)<=1e-5 && fabs(this->coordZ - other.coordZ) <= 1e-5;
 }
 
 /**
