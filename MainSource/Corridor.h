@@ -85,7 +85,7 @@ class Corridor{
 		pair<double, double> getEndCoords() const { 
 		
 			if(direction == HORIZONTAL){
-				if( sense == LEFT_TO_RIGHT)
+				if( sense == LEFT_TO_RIGHT || sense == BOTH)
 					return make_pair<double,double>((double)begin.first + length, (double)begin.second);
 				else 
 					return make_pair<double,double>((double)begin.first - length, (double)begin.second); 				
