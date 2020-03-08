@@ -155,7 +155,7 @@
         //We assume that it will be few blocks and each block will have few shelves, so this part of code will
         //not harm the code performance
         for(int i=0;i<(int)blocks.size();i++){
-			cout<<"Shelves on block: " <<shelvesByBlock[blocks[i].getName()].size()<<endl;
+			cout<<"Shelves on block: \n" <<shelvesByBlock[blocks[i].getName()].size()<<endl;
             this->blocks[i].setShelves(shelvesByBlock[blocks[i].getName()]);
         }
         
@@ -183,7 +183,7 @@
 		cout<<"Reading cells...\n";
         //Read all data concerning cells
         file>>numCells;
-		cout<<numCells;
+		cout<<numCells<<endl;
         int row, column;
         string cellCode;
         int numLevels;

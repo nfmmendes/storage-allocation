@@ -98,13 +98,10 @@ int main(int argc, char **argv){
 		
 		ABCAnalysis * abc = createABCAnalysis(input); 
 		abc->execute(); 
-		abc->printClassification(); 
 
-        cout<<"Converting algorithm to graph\n";
-        //TSP *router=NULL;
-         ;
-        
 		printRandomSolution();
+        cout<<"Converting algorithm to graph\n";
+		
 		
 		ProcessInputData processInput(&input);
 		processInput.ExecuteProcessData();
@@ -112,7 +109,7 @@ int main(int argc, char **argv){
 		cout<<"Initializing metaheuristic \n";
 		
 		Graph graph = processInput.getWarehouseToGraphConverter()->getGraph();
-		graph.print(); 
+		
 		OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
 		Warehouse warehouse =  input.getWarehouse();
 		VND *vnd= new VND(input.getProducts(),warehouse, graph, *processInput.getDistanceMatrix(), input.getOrders(),cons); 

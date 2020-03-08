@@ -134,13 +134,17 @@ vector<Point>  Point::removeDuplicates(vector<Point> & points){
 		
 	vector<Point> returned; 
 	int cont = 0; 
-	for(int i=0; i< (int) points.size() && cont < (int) pointsToRemove.size(); i++){
-		if(pointsToRemove[cont] == i)
+	int tot = 0;
+	for(tot=0; tot< (int) points.size() && cont < (int) pointsToRemove.size(); tot++){
+		if(pointsToRemove[cont] == tot)
 			cont++;
 		else 
-			returned.push_back(points[i]);
+			returned.push_back(points[tot]);
 	}
 	
+	for(;tot <(int) points.size();tot++)
+		returned.push_back(points[tot]);
+
 	if(pointsToRemove.size() == 0)
 		return points; 
 	

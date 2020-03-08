@@ -94,7 +94,6 @@ void WarehouseToGraphConverter::generateGraph(){
                 for(int l=1; l< (int) numColumns+1;l++){
                     //It should verify if the matrix position stores a valid cell
                     Vertex vertex = vertexByCode[cellPositions[k][l]];
-                    //cout<<"point 2 :"<<vertex<<endl; 
                     //There are nodes that have not direct contact with a corridor (internal nodes)
                     //In this case, we define that the cell is accessible by the closest corridor
                     // (in terms of number of cells)
@@ -139,6 +138,17 @@ void WarehouseToGraphConverter::generateGraph(){
 	// All the conversion process is done to construct arcs. Obviously that to have arcs we need vertexes, but as 
 	// the adjacence matrix is very sparse we prefer to use a list of arcs representation 
     this->graph = Graph::convertArcsToGraph(arcs);
+	
+	map<Vertex, vector<Arc> > adj = this->graph.getArcs();
+	
+	for(auto &[key, value]: adj){
+		cout<<"___________________\t"<<key<<"\t_____________________\n";
+		for(int w=0;w<value.size();w++)
+			cout<<value[w]<<endl;
+	}
+	
+	
+	system("pause"); 
 	
 	cout<<"Conversion finished:\nNumber of arcs: \t"<<endl;
 }
@@ -299,17 +309,17 @@ void WarehouseToGraphConverter::connectSingleCellToSingleCorridor(const Shelf &s
     double cellLength = shelf.getCellLength();
     
     if(position == "LEFT"){
-        coordX = shelf.getBottomLeftCoords().first + 0.5*cellWidth;
+        coordX = corridor->getBeginCoords().first;
         coordY = shelf.getBottomLeftCoords().second + cellLength*(row-1) + 0.5*cellLength;
     }else if(position == "RIGHT"){
-        coordX = shelf.getBottomLeftCoords().first+ cellWidth*(column -1) + 0.5*cellWidth;
+		coordX = corridor->getBeginCoords().first; 
         coordY = shelf.getBottomLeftCoords().second + cellLength*(row-1) + 0.5*cellLength;
     }else if(position == "UP"){
-        coordX = shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth;
-        coordY = shelf.getBottomLeftCoords().second + 0.5*cellLength;
+		coordX = shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth;
+        coordY = corridor->getBeginCoords().second; 
     }else if(position == "DOWN"){
-        coordX = shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth;
-        coordY = shelf.getBottomLeftCoords().second + cellLength*(row - 1) + 0.5*cellLength;
+		coordX = shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth;
+        coordY = corridor->getBeginCoords().second; 
     }
                     
     pair<Vertex,Vertex> extremes = createCellAndCorridorVertexes(corridor, make_pair(coordX, coordY), cellName, position);
@@ -334,7 +344,6 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::getInternalAndExternalCellsVerte
 	
 	if(vertexByCode.find(cellNameA) != vertexByCode.end())
 		vertexCell = vertexByCode[cellNameA];
-	//cout<<"point 5 :"<<vertexCell<<endl;   
     
 	Vertex cellOther;
     if(vertexByCode.find(cellNameB) != vertexByCode.end()){
@@ -344,7 +353,6 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::getInternalAndExternalCellsVerte
         cellOther.setType("CellVertex"); 
     }
 
-	//cout<<"point 6 :"<<cellOther<<endl; 
     return make_pair(vertexCell, cellOther);				
 
 }
@@ -372,10 +380,14 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(co
 		vertexByCode[vertexCell.getLabel()] = vertexCell;
 	
     Vertex vertexCorridor("corridor_"+to_string(corridor->getId())+"_cell_"+cellName,"PickVertex");
-    //cout<<"point 7 :"<<vertexCell<<endl;
-	//cout<<"point 8 :"<<vertexCorridor<<endl; 
+
+	
     vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
-	vertexByPoint[corridorPoint] = vertexCorridor;
+	
+	if(vertexByPoint.find(corridorPoint) == vertexByPoint.end())
+		vertexByPoint[corridorPoint] = vertexCorridor;
+	else
+		vertexCorridor = vertexByPoint[corridorPoint]; 
 
     return make_pair(vertexCell, vertexCorridor); 
 }
@@ -392,25 +404,46 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 	
 	double shelfWidth = shelf.getCellWidth()*shelf.getNumColumns();
 	double shelfLength = shelf.getCellLength()*shelf.getNumRows(); 
+	
+	double extremeLeft = -1e100, extremeRight = 1e100, extremeUp = 1e100, extremeDown = -1e100; 
 
 	if(up == down){ //Just to remove a warning 
 		//Search and identify the adjacent corridors
+		//Get the most to the right left-corridor (so the closest corridor on left side)
 		for(unsigned int i=0;i< adjacents.size();i++){
-			if(adjacents[i].getDirection() == VERTICAL && adjacents[i].getBeginCoords().first < shelf.getBottomLeftCoordX())
+			double xValue = adjacents[i].getBeginCoords().first; 
+			if(adjacents[i].getDirection() == VERTICAL && xValue < shelf.getBottomLeftCoordX() && xValue > extremeLeft ){
 				left =  new Corridor(adjacents[i]);
+				extremeLeft = xValue; 
+			}
 		}
 
-		for(unsigned int i=0;i< adjacents.size();i++)
-			if(adjacents[i].getDirection() == VERTICAL && adjacents[i].getBeginCoords().first > shelf.getBottomLeftCoordX()+shelfWidth)
+		//Get the most to the left right-corridor (so the closest corridor on right side)
+		for(unsigned int i=0;i< adjacents.size();i++){
+			double xValue = adjacents[i].getBeginCoords().first; 
+			if(adjacents[i].getDirection() == VERTICAL && xValue > shelf.getBottomLeftCoordX()+shelfWidth && xValue < extremeRight){
 				right =  new Corridor(adjacents[i]);
-			
-		for(unsigned int i=0;i<adjacents.size();i++)
-			if(adjacents[i].getDirection() == HORIZONTAL && adjacents[i].getBeginCoords().second > shelf.getBottomLeftCoordY() + shelfLength)
-				up =  new Corridor(adjacents[i]);
+				extremeRight = xValue; 
+			}
+		}
 		
-		for(unsigned int i=0;i<adjacents.size();i++)
-			if(adjacents[i].getDirection() == HORIZONTAL && adjacents[i].getBeginCoords().second < shelf.getBottomLeftCoordY())
+		//Get the most to down up-corridor (so the closest corridor on up side)
+		for(unsigned int i=0;i<adjacents.size();i++){
+			double yValue = adjacents[i].getBeginCoords().second;
+			if(adjacents[i].getDirection() == HORIZONTAL && yValue > shelf.getBottomLeftCoordY() + shelfLength && yValue < extremeUp ){
+				up =  new Corridor(adjacents[i]);
+				extremeUp = yValue; 
+			}
+		}
+		
+		//Get the most to the up down-corridor (so the closest corridor on down side)
+		for(unsigned int i=0;i<adjacents.size();i++){
+			double yValue = adjacents[i].getBeginCoords().second;
+			if(adjacents[i].getDirection() == HORIZONTAL && yValue < shelf.getBottomLeftCoordY() && yValue > extremeDown){
 				down =  new Corridor(adjacents[i]);
+				extremeDown = yValue;
+			}
+		}
 	}
 }
 
@@ -435,9 +468,7 @@ void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, s
 	
     for(int i=0; i< (int)curves.size();i++){
         Vertex begin = vertexByPoint[curves[i].getStartingPoint()];
-		//cout<<"point 9 :"<<begin<<endl; 
         Vertex end = vertexByPoint[curves[i].getEndingPoint()];
-		//cout<<"point 10 :"<<end <<" "<<curves[i].getEndingPoint()<<endl; 
         
         double distance = curves[i].getStartingPoint().getDistance(curves[i].getEndingPoint());
         arcs.insert(Arc("arc_"+begin.getLabel()+ "_"+end.getLabel(),distance,begin, end));
@@ -462,16 +493,41 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
 	vector<Point> processedPoints = Point::removeDuplicates(points); 
 	corridor.orderCorridorPoints(processedPoints);
     
-	Vertex first("corridor_"+to_string(id)+"_point_0", "CorridorCurvePoint");
+	string vertexName = "corridor_"+to_string(id)+"_point_0"; 
+	Vertex first(vertexName, "CorridorCurvePoint");
+	
+	cout<<"Non processed points "<<endl; 
+	for(int i=0;i<points.size();i++)
+		cout<<points[i]<<endl;
+	
+	cout<<"Processed points\n"; 
+	for(int i=0;i<processedPoints.size();i++)
+		cout<<processedPoints[i]<<endl;
+	system("pause"); 
+	/*
+	for(auto &[key,value] : vertexByPoint)
+		cout<<key<<"\t"<<value<<"\t"<<endl; 	
+	system("pause"); 
+	*/
+	//Transform this if in a function
+	if(vertexByPoint.find(processedPoints[0]) != vertexByPoint.end())
+		first = vertexByPoint[processedPoints[0] ];
+	else 
+		vertexByPoint[processedPoints[0] ] = first; 
+	
 	vertexByCode[first.getLabel()] = first;
-	vertexByPoint[processedPoints[0] ] = first; 
 	
 	for(int k=1; k<(int)processedPoints.size(); k++){
 
 		Vertex second("corridor_"+to_string(id)+"_point_"+to_string(k), "CorridorCurvePoint");
-		//cout<<"point 11 :"<<second<<endl; 
+		
+		if(vertexByPoint.find(processedPoints[k]) != vertexByPoint.end())
+			second = vertexByPoint[processedPoints[k] ];
+		else 
+			vertexByPoint[processedPoints[k] ] = second; 
+		
 		vertexByCode[second.getLabel()] = second;
-		vertexByPoint[processedPoints[k] ] = second; 
+		
 		
 		double distance = sqrt(pow(processedPoints[k].getCoordX()-processedPoints[k-1].getCoordX(),2)+
 							   pow(processedPoints[k].getCoordY()-processedPoints[k-1].getCoordY(),2));
@@ -513,7 +569,8 @@ void WarehouseToGraphConverter::splitCorridorByCurves(const Curve &curve, map<lo
           })){
            pointsByCorridor[start].push_back(curveStartPoint);
        }
-       
+
+	
     //Find condition
     points = pointsByCorridor[end];
     if(!any_of(points.begin(), points.end(),[&curveEndingPoint](const Point &b){
@@ -612,14 +669,14 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
         for(int i=0;i<(int)corridors.size();i++){
             if(corridors[i].getDirection() ==  VERTICAL && doCorridorTranverse(corridors[i], shelf)){
                 double xCoordCorridor = corridors[i].getBeginCoords().first;
-                
+				
                 //If the corridor has a lower x coordinate so it is in the shelf left
-                if(xCoordCorridor - shelfCoords.first < -1*MIN_DIFF  && fabs(shelfCoords.first - xCoordCorridor) < minDistanceLeft){
-                    minDistanceLeft = fabs(shelfCoords.first - xCoordCorridor);
+                if(xCoordCorridor - shelfCoords.first < -1*MIN_DIFF  && shelfCoords.first - xCoordCorridor < minDistanceLeft){
+                    minDistanceLeft = shelfCoords.first - xCoordCorridor;
                     closestAtLeft = corridors[i];
                     left = true;
-                }else if(xCoordCorridor - shelfCoords.first > MIN_DIFF && fabs(shelfCoords.first - xCoordCorridor) < minDistanceRight){
-                    minDistanceRight = fabs(shelfCoords.first - xCoordCorridor);
+                }else if(xCoordCorridor - shelfCoords.first > MIN_DIFF && xCoordCorridor - shelfCoords.first  < minDistanceRight){
+                    minDistanceRight = xCoordCorridor - shelfCoords.first ;
                     closestAtRight = corridors[i];
                     right = true;
                 }else if(fabs(xCoordCorridor - shelfCoords.first) > MIN_DIFF){
@@ -638,12 +695,12 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
                 double yCoordCorridor = corridors[i].getBeginCoords().second;
                 
                 //If the corridor has a lower x coordinate so it is in the shelf left
-                if(yCoordCorridor - shelfCoords.second < -1*MIN_DIFF  && fabs(shelfCoords.second - yCoordCorridor) < minDistanceDown){
-                    minDistanceDown = fabs(shelfCoords.second - yCoordCorridor);
+                if(yCoordCorridor - shelfCoords.second < -1*MIN_DIFF  && shelfCoords.second - yCoordCorridor < minDistanceDown){
+                    minDistanceDown = shelfCoords.second - yCoordCorridor;
                     closestBellow = corridors[i];
                     down = true;
-                }else if(yCoordCorridor - shelfCoords.second > MIN_DIFF && fabs(shelfCoords.second - yCoordCorridor) < minDistanceOver){
-                    minDistanceOver = fabs(shelfCoords.second - yCoordCorridor);
+                }else if(yCoordCorridor - shelfCoords.second > MIN_DIFF &&  yCoordCorridor - shelfCoords.second < minDistanceOver){
+                    minDistanceOver =  yCoordCorridor - shelfCoords.second;
                     closestOver = corridors[i];
                     up = true;
                 }else if(fabs(yCoordCorridor - shelfCoords.second) < MIN_DIFF){
@@ -656,7 +713,7 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
     
     //Eventually a shelf does not have a corridor to access their products from a size (as in case of close to wall shelves)
     //It also prevents no initialized corridors be inserted in the solutions
-    if(left) closestAtAll.push_back(closestAtLeft);
+    if(left)closestAtAll.push_back(closestAtLeft); 
     if(right) closestAtAll.push_back(closestAtRight);
     if(up) closestAtAll.push_back(closestOver);
     if(down) closestAtAll.push_back(closestBellow);
@@ -678,9 +735,15 @@ bool WarehouseToGraphConverter::doCorridorTranverse(const Corridor &corridor,con
 	double shelfWidth = numLines*shelf.getCellWidth();
     
     if(numColumns < numLines && corridor.getDirection() == VERTICAL){
-        return coordCorridor.second <= shelfCoords.second && coordCorridor.second + len >= shelfCoords.second + shelfLen ;
+		if(corridor.getSense() == BOTTOM_UP || corridor.getSense()== BOTH)
+			return coordCorridor.second <= shelfCoords.second && coordCorridor.second + len >= shelfCoords.second + shelfLen;
+		else 
+			return coordCorridor.second >= shelfCoords.second + shelfLen && coordCorridor.second - len <= shelfCoords.second;
     }else if(numColumns > numLines && corridor.getDirection() == HORIZONTAL){
-        return coordCorridor.first <= shelfCoords.first && coordCorridor.first + len >= shelfCoords.first + shelfWidth;
+		if(corridor.getSense() == LEFT_TO_RIGHT || corridor.getSense() == BOTH)
+			return coordCorridor.first <= shelfCoords.first && coordCorridor.first + len >= shelfCoords.first + shelfWidth;
+		else 
+			return coordCorridor.first >= shelfCoords.first + shelfWidth && coordCorridor.first - len >= shelfCoords.first ;
     }else if(numColumns == numLines){
         if(corridor.getDirection() == HORIZONTAL)
             return coordCorridor.first <= shelfCoords.first && coordCorridor.first + len >= shelfCoords.first + shelfWidth;
@@ -697,7 +760,6 @@ bool WarehouseToGraphConverter::doCorridorTranverse(const Corridor &corridor,con
 void WarehouseToGraphConverter::connectVertexesByTwoArcs(Vertex & first, string second,set<Arc> &arcs, double size){
     
     Vertex secondVertex = vertexByCode[second];
-    //cout<<"point 13 :"<<secondVertex<<endl; 
     //Two arcs (in opposite senses) to each adjacent cell
     arcs.insert(Arc("arc_"+first.getLabel()+"_"+secondVertex.getLabel(), size, first, secondVertex));
     arcs.insert(Arc("arc_"+secondVertex.getLabel()+"_"+first.getLabel(), size, secondVertex, first));
@@ -737,7 +799,6 @@ void WarehouseToGraphConverter::connectExpeditionPoint(ExpeditionPoint &expediti
     double minDistance = 1e20;
     double distance = 0;
     
-    
     if(blocksByName.find(expeditionPoint.getBlockCode()) == blocksByName.end())
         return;
 
@@ -756,7 +817,8 @@ void WarehouseToGraphConverter::connectExpeditionPoint(ExpeditionPoint &expediti
             closestVertex = it->second;
         }
     }
-    //cout<<"point 1 :"<<closestVertex<<endl;
+
+
     if(minDistance <= 1e19){
         //create arc here
         Vertex expeditionVertex("expedition_"+expeditionPoint.getCode(), "ExpeditionPointVertex",0);
@@ -817,9 +879,6 @@ void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & ar
     }
 	
 	Vertex exitVertex("exit"+to_string(exit.getId()), "BlockExitVertex",0);
-	//cout<<"point 15 :"<<exitVertex<<endl; 
-	//cout<<"point 16 :"<<closestVertexA<<endl;
-	//cout<<"point 17 :\t"<<minDistanceB <<" "<<closestVertexB<<endl;
     if(minDistanceA <= 1e19){
         
         vertexByPoint[referencePoint] = exitVertex; 

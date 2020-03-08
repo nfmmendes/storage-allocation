@@ -14,8 +14,11 @@
 #include "DistanceMatrix.h"
 #include "AbstractVertex.h"
 #include "DistanceMatrixCalculator.h"
+#include "Arc.h"
+#include "Vertex.h"
 # define INF 0x3f3f3f3f 
 using namespace std;
+using namespace QuickTSP; 
 
 
 
@@ -52,16 +55,29 @@ template <class Graph, class Vertex >
 DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calculateMatrixDistance(Graph &graph, vector<Vertex> sourceVertexes){
 
     vector<Vertex> vertexes = graph.getVertexes(); 
+	map<Vertex, vector<Arc> > arcs = graph.getArcs();
     map<Vertex, int> indexVertex;
-
-    for(unsigned int i= 0; i<vertexes.size(); i++)
+	cout<<"Here\n"; 
+	cout<<sourceVertexes.size()<<endl; 
+    for(unsigned int i= 0; i<vertexes.size(); i++){
         indexVertex[ vertexes[i] ] = i ;
+		cout<<"Vertex index :"<<i<<"\t"<<vertexes[i]<<endl; 
+	}
     
+
+	/*
+	for(auto &[key,value]: arcs){
+		cout<<key<<endl;
+		cout<<"__________________________________________"<<endl;
+		for(int i=0;i<value.size();i++)
+			cout<<value[i]<<endl; 
+	}
+	*/
 
 
     for(unsigned int i= 0; i<sourceVertexes.size(); i++){
         
-
+		cout<<"Iteration : "<<i<<endl; 
         // Create a priority queue to store vertices that 
         // are being preprocessed. This is weird syntax in C++. 
         // Refer below link for details of this syntax 
@@ -91,13 +107,16 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             int u = pq.top().second; 
             pq.pop(); 
     
-            // Get the adjacent vertexes of vertex with index u
-            vector<Vertex> adjacentVertexes =  graph.getAdjacentVertexes(vertexes[u]); 
+            // Get the adjacent vertexes of vertex with index u 
+			vector<Arc> incidentArcs = arcs[vertexes[u] ];
             list<pair<int, double> > adj;
-
+		
+		//	cout<<"------------------> \t"<<vertexes[u]<<endl;
+		//	cout<<"Incidents :"<<incidentArcs.size()<<endl; 
+			
             // Get the indexes of the adjacent vertexes
-            for(unsigned int j= 0; j<adjacentVertexes.size(); j++)
-                adj.push_back(make_pair( indexVertex[adjacentVertexes[j]] , adjacentVertexes[j].getValue()  ) );
+            for(unsigned int j= 0; j<incidentArcs.size(); j++)
+                adj.push_back(make_pair( indexVertex[incidentArcs[j].getEndVertex()] , incidentArcs[j].getValue()  ) );
 
 
             // 'it' is used to get all adjacent vertices of a vertex 
@@ -106,16 +125,20 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
                 // of u. 
                 int v = (*it).first; 
                 int weight = (*it).second; 
-    
+				//cout<<u<<" "<<it->first<<" "<<dist[v]<<" "<<dist[u]<<" "<<weight<<endl;
                 //  If there is shorted path to v through u. 
-                if (dist[v] > dist[u] + weight) 
-                { 
+                if (dist[v] > dist[u] + weight) { 
                     // Updating distance of v 
-                    dist[v] = dist[u] + weight; 
+                    dist[v] = dist[u] + weight;
                     pq.push(make_pair(dist[v], v)); 
                 } 
             } 
         }
+		
+		for(int j=0;j<sourceVertexes.size();j++)
+			cout<<"("<<indexVertex[sourceVertexes[j] ]<<")"<<dist[indexVertex[sourceVertexes[j] ]]<<" ";
+		cout<<endl;
+		//system("pause"); 
     }
 	
 	return distanceMatrix; 

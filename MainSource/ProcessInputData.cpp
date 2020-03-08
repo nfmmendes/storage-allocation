@@ -55,12 +55,13 @@ void ProcessInputData::CalculateMatrixDistances(){
 	for(map<string, set<Vertex> >::iterator it = vertexesByType.begin(); it!= vertexesByType.end();it++){
 		string key = it->first; 
 		//Verificar se key é um valor interessante
-		
-		set<Vertex> values = it->second;
-		for(set<Vertex>::iterator vt= values.begin(); vt!= values.end();vt++)
-			desirableVertexes.push_back((Vertex)(*vt)); 
+		if(key == "UpperLevelCell" || key == "FirstLevelCell" || key == "UniqueLevelCell" || key == "ExpeditionPointVertex"){
+			set<Vertex> values = it->second;
+			for(set<Vertex>::iterator vt= values.begin(); vt!= values.end();vt++)
+				desirableVertexes.push_back((Vertex)(*vt)); 
+		}
 	}
-		
+	cout<<"DesirableVertexes : "<<desirableVertexes.size()<<endl;
 	if(desirableVertexes.size()>0){
 		DijkstraDistanceMatrixCalculator<Graph, Vertex > dijkstra; 
 		this->distanceMatrix = new DistanceMatrix<Vertex>(dijkstra.calculateMatrixDistance(graph, desirableVertexes)); 
@@ -82,9 +83,10 @@ void ProcessInputData::CreateOptimizationAuxiliarStructures(){
  */
 void ProcessInputData::ExecuteProcessData(){
 	this->CreateGraph(); 
-	this->warehouseToGraphConverter.getGraph().print();
+
 	cout<<"Calculating distances \n"; 
 	this->CalculateMatrixDistances();
+	this->distanceMatrix->print(); 
 }
 
 
