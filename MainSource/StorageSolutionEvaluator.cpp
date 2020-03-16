@@ -36,7 +36,7 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(const StorageSolutionEvaluato
 /**
  *
  */
-StorageSolutionEvaluator::StorageSolutionEvaluation(DistanceMatrix<Vertex> * distanceMatrix){
+StorageSolutionEvaluator::StorageSolutionEvaluator(DistanceMatrix<Vertex> * distanceMatrix){
 	
 	this->distances = distanceMatrix;
 }

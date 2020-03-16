@@ -6,6 +6,8 @@
 #include<vector>
 #include<cmath>
 #include<iomanip>
+#include<set>
+#include<map>
 using namespace std; 
 
 
@@ -19,6 +21,8 @@ class DistanceMatrix{
     public:
         DistanceMatrix(){}
         DistanceMatrix(DistanceMatrix<T> & other);
+		DistanceMatrix(map<pair<T,T> , double> & distances);  
+		DistanceMatrix<T> & buildMatrix(map<pair<T,T> , double> & distances);
         vector<T> getKeys() const;
         vector<vector< double > > getDistances()const;
         map<T, int> getElementsMap() const;
@@ -29,6 +33,41 @@ class DistanceMatrix{
         void setColumnOnIndex(vector<double> &d, int);
 		void print(); 
 };
+
+
+template<class T>
+DistanceMatrix<T>::DistanceMatrix(map<pair<T,T> , double> & distancesPairs){
+	this->buildMatrix(distancesPairs);
+}
+
+template<class T> 
+DistanceMatrix<T> & DistanceMatrix<T>::buildMatrix(map<pair<T,T> , double> &distancesPairs){
+	set<T> keys; 
+	for(auto &mapPair : distancesPairs){
+		keys.insert(mapPair.first.first);
+		keys.insert(mapPair.first.second); 
+	}
+	
+	for(auto it = keys.begin(); it != keys.end();it++){
+		keyIndex[*it] = orderedKeys.size();
+		orderedKeys.push_back(*it); 
+	}
+	
+	distances.resize(orderedKeys.size());
+	for(unsigned int i=0;i<distances.size(); i++)
+		distances[i].resize(distances.size()); 
+	
+	int firstIndex, secondIndex; 
+	for(auto &[key, value] : distancesPairs){
+		firstIndex = keyIndex[key.first]; 
+		secondIndex = keyIndex[key.second]; 
+		
+		distances[firstIndex][secondIndex] = value; 	
+	}
+	
+	return *this; 
+}
+
 
 
 
@@ -72,7 +111,10 @@ double DistanceMatrix<T>::getDistance(T &first, T &second) const {
     auto itSecond = keyIndex.find(second);
 
     if(itFirst != keyIndex.end() && itSecond!= keyIndex.end())
-        return distances[itFirst->second][itSecond->second] ;
+		return distances[itFirst->second][itSecond->second] ;
+	
+	
+	return -1;
 }
 
 template<class T>
@@ -116,13 +158,13 @@ template<class T>
 void DistanceMatrix<T>::print(){
 	
 	cout<<setw(15)<<"*\n"; 
-	for(int i=0;i<orderedKeys.size();i++){
+	for(unsigned int i=0;i<orderedKeys.size();i++){
 		cout<<setw(15)<<orderedKeys[i]<<endl;
 	}
 	
-	for(int i=0; i< orderedKeys.size();i++){
+	for(unsigned int i=0; i< orderedKeys.size();i++){
 		int indexI = keyIndex[orderedKeys[i]]; 
-		for(int j=0; j< orderedKeys.size();j++)
+		for(unsigned int j=0; j< orderedKeys.size();j++)
 			cout<<setw(15)<<distances[indexI][keyIndex[ orderedKeys[j] ] ];
 		cout<<endl; 
 		

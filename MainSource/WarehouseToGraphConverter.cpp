@@ -111,8 +111,6 @@ void WarehouseToGraphConverter::generateGraph(){
         //This will allow to create arcs in the interior of corridors
         for(int j = 0; j<(int)curves.size(); j++)
             splitCorridorByCurves(curves[j], curvesByCorridor);
-		for(auto & [corridor, points] : pointsByCorridor)
-			cout<<"Corridor "<<corridor<<" "<<points.size()<<endl;
 		cout<<"Creating arcs on corridors\n"; 
         for(int j=0; j< (int)corridors.size(); j++)
             createArcsOnCorridors(corridors[j],arcs);
@@ -139,17 +137,7 @@ void WarehouseToGraphConverter::generateGraph(){
 	// the adjacence matrix is very sparse we prefer to use a list of arcs representation 
     this->graph = Graph::convertArcsToGraph(arcs);
 	
-	map<Vertex, vector<Arc> > adj = this->graph.getArcs();
-	
-	for(auto &[key, value]: adj){
-		cout<<"___________________\t"<<key<<"\t_____________________\n";
-		for(int w=0;w<value.size();w++)
-			cout<<value[w]<<endl;
-	}
-	
-	
-	system("pause"); 
-	
+	//this->graph.print();
 	cout<<"Conversion finished:\nNumber of arcs: \t"<<endl;
 }
 
@@ -308,23 +296,17 @@ void WarehouseToGraphConverter::connectSingleCellToSingleCorridor(const Shelf &s
     double cellWidth = shelf.getCellWidth();
     double cellLength = shelf.getCellLength();
     
-    if(position == "LEFT"){
+    if(position == "LEFT" || position == "RIGHT"){
         coordX = corridor->getBeginCoords().first;
         coordY = shelf.getBottomLeftCoords().second + cellLength*(row-1) + 0.5*cellLength;
-    }else if(position == "RIGHT"){
-		coordX = corridor->getBeginCoords().first; 
-        coordY = shelf.getBottomLeftCoords().second + cellLength*(row-1) + 0.5*cellLength;
-    }else if(position == "UP"){
-		coordX = shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth;
-        coordY = corridor->getBeginCoords().second; 
-    }else if(position == "DOWN"){
+    }else if(position == "UP" || position == "DOWN"){
 		coordX = shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth;
         coordY = corridor->getBeginCoords().second; 
     }
                     
     pair<Vertex,Vertex> extremes = createCellAndCorridorVertexes(corridor, make_pair(coordX, coordY), cellName, position);
-    double corridorCoordX = corridor->getBeginCoords().first;
-    double corridorCoordY = corridor->getBeginCoords().second;
+    double corridorCoordX = shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth;
+    double corridorCoordY = shelf.getBottomLeftCoords().second + cellLength*(row-1) + 0.5*cellLength;
 
     if(position == "LEFT" || position == "RIGHT"){
         createArcsCellToCorridor(extremes.first, extremes.second, fabs(corridorCoordX-coordX), arcs);
@@ -455,6 +437,10 @@ void WarehouseToGraphConverter::createArcsCellToCorridor(Vertex vertexCell, Vert
 	
 	Arc leaving("arc("+ vertexCell.getLabel() + ","+ vertexCorridor.getLabel() +")", value, vertexCell, vertexCorridor);
 	Arc picking("arc("+ vertexCorridor.getLabel() + ","+ vertexCell.getLabel() +")", value, vertexCorridor, vertexCell);
+	//cout<<"Leaving \n";
+	//cout<<leaving<<endl;
+	//cout<<"Picking \n"; 
+	//cout<<picking<<endl;
 	arcs.insert(leaving);
 	arcs.insert(picking);
 }
@@ -469,7 +455,7 @@ void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, s
     for(int i=0; i< (int)curves.size();i++){
         Vertex begin = vertexByPoint[curves[i].getStartingPoint()];
         Vertex end = vertexByPoint[curves[i].getEndingPoint()];
-        
+		
         double distance = curves[i].getStartingPoint().getDistance(curves[i].getEndingPoint());
         arcs.insert(Arc("arc_"+begin.getLabel()+ "_"+end.getLabel(),distance,begin, end));
     }
@@ -496,19 +482,6 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
 	string vertexName = "corridor_"+to_string(id)+"_point_0"; 
 	Vertex first(vertexName, "CorridorCurvePoint");
 	
-	cout<<"Non processed points "<<endl; 
-	for(int i=0;i<points.size();i++)
-		cout<<points[i]<<endl;
-	
-	cout<<"Processed points\n"; 
-	for(int i=0;i<processedPoints.size();i++)
-		cout<<processedPoints[i]<<endl;
-	system("pause"); 
-	/*
-	for(auto &[key,value] : vertexByPoint)
-		cout<<key<<"\t"<<value<<"\t"<<endl; 	
-	system("pause"); 
-	*/
 	//Transform this if in a function
 	if(vertexByPoint.find(processedPoints[0]) != vertexByPoint.end())
 		first = vertexByPoint[processedPoints[0] ];

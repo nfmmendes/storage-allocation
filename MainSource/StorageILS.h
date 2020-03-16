@@ -19,7 +19,7 @@
 #include "Cell.h"
 #include "Block.h"
 #include "Shelf.h"
-#include "Graph.h"
+#include "OptimizationConstraints.h"
 #include "Vertex.h"
 #include "Arc.h"
 #include "ABCAnalysis.h"
@@ -163,9 +163,10 @@ class StorageAllocationPertubation :public NeighborhoodStructure {
  */
 class StorageILS :public Heuristic{
 
-    private: 
+    private:
+		OptimizationConstraints constraints;
+		vector<Product> products; 
         DistanceMatrix<Vertex> *distanceMatrix; 
-        Graph *graph;
         Warehouse *warehouse; 
 		vector<Order> orders; 
         vector<NeighborhoodStructure *> neighborhoodStructures;
@@ -181,7 +182,7 @@ class StorageILS :public Heuristic{
     public:
         StorageILS();
         StorageILS(StorageILS &other);
-        StorageILS(DistanceMatrix<Vertex> *distances, Graph *graph, Warehouse *warehouse, vector<Order> &orders);
+		StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,vector<Order> &orders, OptimizationConstraints &cons);
         AbstractSolution * Execute(); 
 
 };

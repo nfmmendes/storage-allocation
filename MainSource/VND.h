@@ -29,7 +29,7 @@ class VND {
     
     public:
         VND();
-        VND(vector<Product> & prods, Warehouse &wh, Graph &graph, DistanceMatrix<Vertex> distMatrix,vector<Order> &orders, OptimizationConstraints &cons);
+        VND(vector<Product> & prods, Warehouse &wh, DistanceMatrix<Vertex> distMatrix,vector<Order> &orders, OptimizationConstraints &cons);
         VND(const VND & other);
         void run();
         AbstractSolution *getSolution();
@@ -38,7 +38,6 @@ class VND {
     
     private:
         Warehouse warehouse;								///< Warehouse where the products will be stored 
-		Graph graph; 
 		DistanceMatrix<Vertex> distanceMatrix;
         vector<Order> orders;								///< Orders to be used in the evaluation
         OptimizationConstraints constraints; 				///< Allocation constraints and parameters 

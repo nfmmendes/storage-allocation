@@ -163,7 +163,9 @@ Time Time::Parse(string time, string format){
             returned.setSecond(stoi(firstSplit[2]));
         }
         
-    }else if(format == "HH:MM:SS AM/PM"){/*
+    }else if(format == "HH:MM:SS AM/PM"){
+		cout<<"*"<<pos<<endl;
+		/*
         vector<string> firstSplit;
 		Util::splitString(firstSplit,time,":");
         

@@ -8,6 +8,7 @@
 #include<queue>
 #include<functional>
 #include<algorithm>
+#include<iomanip>
 #include<map>
 #include<list>
 #include<exception>
@@ -57,27 +58,14 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
     vector<Vertex> vertexes = graph.getVertexes(); 
 	map<Vertex, vector<Arc> > arcs = graph.getArcs();
     map<Vertex, int> indexVertex;
-	cout<<"Here\n"; 
-	cout<<sourceVertexes.size()<<endl; 
-    for(unsigned int i= 0; i<vertexes.size(); i++){
-        indexVertex[ vertexes[i] ] = i ;
-		cout<<"Vertex index :"<<i<<"\t"<<vertexes[i]<<endl; 
-	}
-    
+	
+    for(unsigned int i= 0; i<vertexes.size(); i++)
+		indexVertex[ vertexes[i] ] = i;
 
-	/*
-	for(auto &[key,value]: arcs){
-		cout<<key<<endl;
-		cout<<"__________________________________________"<<endl;
-		for(int i=0;i<value.size();i++)
-			cout<<value[i]<<endl; 
-	}
-	*/
-
+	map<pair<Vertex,Vertex> , double> distancePairs; 
 
     for(unsigned int i= 0; i<sourceVertexes.size(); i++){
         
-		cout<<"Iteration : "<<i<<endl; 
         // Create a priority queue to store vertices that 
         // are being preprocessed. This is weird syntax in C++. 
         // Refer below link for details of this syntax 
@@ -111,8 +99,6 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
 			vector<Arc> incidentArcs = arcs[vertexes[u] ];
             list<pair<int, double> > adj;
 		
-		//	cout<<"------------------> \t"<<vertexes[u]<<endl;
-		//	cout<<"Incidents :"<<incidentArcs.size()<<endl; 
 			
             // Get the indexes of the adjacent vertexes
             for(unsigned int j= 0; j<incidentArcs.size(); j++)
@@ -125,7 +111,8 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
                 // of u. 
                 int v = (*it).first; 
                 int weight = (*it).second; 
-				//cout<<u<<" "<<it->first<<" "<<dist[v]<<" "<<dist[u]<<" "<<weight<<endl;
+				
+				//cout<<vertexes[v].getLabel()<<" "<<it->first<<" "<<dist[v]<<" "<<dist[u]<<" "<<weight<<endl;
                 //  If there is shorted path to v through u. 
                 if (dist[v] > dist[u] + weight) { 
                     // Updating distance of v 
@@ -135,13 +122,18 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             } 
         }
 		
-		for(int j=0;j<sourceVertexes.size();j++)
-			cout<<"("<<indexVertex[sourceVertexes[j] ]<<")"<<dist[indexVertex[sourceVertexes[j] ]]<<" ";
+		cout<<setw(20)<<sourceVertexes[i].getLabel()<<"\t"; 
+		for(unsigned int j=0;j<sourceVertexes.size();j++){
+			distancePairs[make_pair(sourceVertexes[i], sourceVertexes[j])] = dist[indexVertex[sourceVertexes[j] ]]; 
+			cout<<setw(4)<<dist[indexVertex[sourceVertexes[j] ]]<<" ";
+		}
 		cout<<endl;
-		//system("pause"); 
+		
     }
 	
-	return distanceMatrix; 
+	
+	
+	return distanceMatrix.buildMatrix(distancePairs); 
 }
 
 

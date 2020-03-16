@@ -33,7 +33,7 @@ class StorageSolutionEvaluator{
 	public:
 		StorageSolutionEvaluator();
 		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);
-		StorageSolutionEvaluation(DistanceMatrix<Vertex> * distanceMatrix); 
+		StorageSolutionEvaluator(DistanceMatrix<Vertex> * distanceMatrix); 
 		double sumDistances(vector<Vertex> &sequence); 
 		void DoRouteEvaluation(AbstractSolution * solution);
 		void DoRouteEstimation(AbstractSolution * solution);

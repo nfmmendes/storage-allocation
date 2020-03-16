@@ -14,7 +14,7 @@
 #include "NeighborhoodStructure.h"
 #include "DistanceMatrix.h"
 #include "Warehouse.h"
-#include "Graph.h"
+#include "OptimizationConstraints.h"
 #include "Vertex.h"
 #include "Order.h"
 #include "Arc.h"
@@ -249,12 +249,19 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 
 
 
-
-
 //////////////////////////////////////////////////////////////////////////////////////////
 ////                    Storage allocation ILS region
 ////
 /////////////////////////////////////////////////////////////////////////////////////////
+StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,vector<Order> &orders, OptimizationConstraints &cons){
+	this->distanceMatrix = &distMatrix; 
+	this->warehouse = &wh; 
+	this->orders= orders; 
+	this->constraints = cons; 
+	this->products = prods; 
+	InitializeNeighborhoods(); 
+	
+}
 
 
 /**
@@ -296,21 +303,9 @@ void StorageILS::EvaluateSolution(AbstractSolution * solution){
  */
 StorageILS::StorageILS(StorageILS &other){
 	this->distanceMatrix = other.distanceMatrix;
-	this->graph = other.graph; 
 	this->warehouse = other.warehouse;
 	this->orders = other.orders; 
 	InitializeNeighborhoods();
-}
-
-/**
- * 
- */
-StorageILS::StorageILS(DistanceMatrix<Vertex> *distances, Graph *graph, Warehouse *warehouse, vector<Order> &orders){
-    this->distanceMatrix = distances; 
-	this->graph = graph; 
-	this->warehouse = warehouse; 
-	this->orders= orders; 
-	InitializeNeighborhoods(); 
 }
 
 /**
@@ -351,6 +346,7 @@ AbstractSolution * StorageILS::Execute(){
     AbstractSolution * initialSolution = CreateInitialSolution();
 	
 	bestGlobalSolution = new StorageAllocationSolution( *( (StorageAllocationSolution *) initialSolution));
+	currentSolution = new StorageAllocationSolution(bestGlobalSolution); 
 	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue();
 	
 	int randomSeed= 1;

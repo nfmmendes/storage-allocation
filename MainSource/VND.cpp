@@ -8,7 +8,6 @@
 #include "IsolatedFamily.h"
 #include "AbstractVertex.h"
 #include "StorageAllocationSolution.h"
-#include "Graph.h"
 #include "Product.h"
 #include "Order.h"
 #include "Vertex.h"
@@ -32,14 +31,12 @@ VND::VND(){
  *	@param isolated
  *	@param param
  */
-VND::VND(vector<Product> & prods, Warehouse &wh, Graph &graph, DistanceMatrix<Vertex> distMatrix,vector<Order> &orders, OptimizationConstraints &cons){
+VND::VND(vector<Product> & prods, Warehouse &wh, DistanceMatrix<Vertex> distMatrix,vector<Order> &orders, OptimizationConstraints &cons){
     this->products = prods;	
 	this->warehouse = wh; 
 	this->orders = orders;
 	this->constraints = cons;
 	this->distanceMatrix = distMatrix;
-	this->graph = graph; 
-	
 }
 
 /**
@@ -55,7 +52,6 @@ VND::VND(const VND & other){
     
 	this->warehouse = * (new Warehouse(other.warehouse)); 
 	this->constraints = other.constraints;
-	this->graph = other.graph; 
 }
 
 

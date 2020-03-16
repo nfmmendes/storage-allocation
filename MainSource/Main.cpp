@@ -14,6 +14,7 @@
 #include "ABCAnalysis.h"
 #include "OptimizationConstraints.h"
 #include "StorageAllocationSolution.h"
+#include "StorageILS.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -112,8 +113,10 @@ int main(int argc, char **argv){
 		
 		OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
 		Warehouse warehouse =  input.getWarehouse();
-		VND *vnd= new VND(input.getProducts(),warehouse, graph, *processInput.getDistanceMatrix(), input.getOrders(),cons); 
-		vnd->run();
+		VND vnd(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), input.getOrders(),cons); 
+		StorageILS ils(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), input.getOrders(),cons);
+		vnd.run();
+		ils.Execute();
         
     }else
         cerr<<"Too few  arguments. Inform the index file name.";

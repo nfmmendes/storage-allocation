@@ -105,12 +105,12 @@ class Corridor{
             
             if(this->getDirection() ==  VERTICAL){
                 sort(points.begin(), points.end(), Point::isMinorY);
-                if(this->getSense() == RIGHT_TO_LEFT)
+                if(this->getSense() == UP_DOWN)
                     reverse(points.begin(), points.end());
                 
             }else if(this->getDirection() == HORIZONTAL){
                 sort(points.begin(), points.end(), Point::isMinorX);
-                if(this->getSense() == UP_DOWN)
+                if(this->getSense() == RIGHT_TO_LEFT)
                     reverse(points.begin(), points.end());
             }
         }

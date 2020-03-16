@@ -15,7 +15,7 @@ Graph::Graph(const Graph &graph){
     this->name = graph.name;
 	
     for(unsigned int i=0;i<graph.vertexes.size();i++)
-        this->vertexes.push_back(Vertex(graph.vertexes[i]));
+		this->vertexes.push_back(Vertex(graph.vertexes[i]));
 	
 	map<Vertex, vector<Arc> > otherArcs = graph.getArcs(); 
 	
@@ -190,9 +190,9 @@ void Graph::print(){
 	for(unsigned int i=0;i<vertexes.size();i++)
 		cout<<vertexes[i]<<endl;
 	
-	for(auto &[key,value] : arcsByVertex)
-		for(unsigned int i=0;i<value.size(); i++)
-			cout<<value[i]<<endl; 
+	for(auto & mapPair : arcsByVertex)
+		for(unsigned int i=0;i<mapPair.second.size(); i++)
+			cout<<mapPair.second[i]<<endl; 
 }
 
 /**
