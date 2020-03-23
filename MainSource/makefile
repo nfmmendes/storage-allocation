@@ -20,8 +20,8 @@ GeneralClasses: Point.h Date.h Time.h
 	$(CC) $(COMPILE_FLAGS)  -c Util.cpp Date.cpp Time.cpp
 
 #Classes to proceed the TSP algorithm
-QuickTSP : PathUnity.h TSP.h State.h WarehouseToGraphConverter.h Layer.h Parameter.h Transition.o Order.o 
-	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp State.cpp WarehouseToGraphConverter.cpp Layer.cpp Parameter.cpp
+QuickTSP : PathUnity.h TSP.h QuickTSP.h State.h WarehouseToGraphConverter.h Layer.h Parameter.h Transition.o Order.o Vertex.o 
+	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp QuickTSP.cpp State.cpp WarehouseToGraphConverter.cpp Layer.cpp Parameter.cpp
 
 
 Order : Order.h Product.o InputData.o 

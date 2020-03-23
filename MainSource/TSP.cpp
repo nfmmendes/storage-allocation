@@ -1,36 +1,75 @@
-#include<iostream>
-#include<cmath>
-#include<ctime>
-#include<vector>
-#include "HananGraph.h"
-#include "PathUnity.h"
-#include "Order.h"
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <utility>
+#include <map>
 #include "TSP.h"
+#include "DistanceMatrix.h"
 using namespace std;
-using namespace QuickTSP;
 
-TSP::TSP() {
-    
+
+TSP::TSP(){
+	
+	
 }
 
-TSP::TSP(const TSP &other){
-    this->graph = other.graph;
-    
-    for(unsigned int i=0; i< other.solution.size();i++)
-        this->solution.push_back(other.solution[i]);
+TSP(DistanceMatrix<Vertex> distanceMatrix){
+	
+	
 }
 
-TSP::TSP(HananGraph &graph,vector<Order> &orders){
-    this->graph = graph;
-    this->orders = orders;
+
+DistanceMatrix<Vertex> TSP::getDistanceMatrix() const{
+	
+	
 }
 
-void TSP::setHananGraph(HananGraph &graph){ this->graph = graph;}
-void TSP::setOrders(vector<Order>& orders){ this->orders = orders;}
-HananGraph TSP::getHananGraph() { return this->graph; }
-vector<Order> & TSP::getOrders() { return this->orders;}
-vector<PathUnity> TSP::getSolution()    {return this->solution; }
 
-void TSP::Run(){
-    
+void TSP::setDistanceMatrix(DistanceMatrix<Vertex> matrix){
+	
+	
+}
+
+
+
+
+
+pair<double , vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> points){
+	
+	vector<Vertex> currentOrder = points; 
+	vector<Vertex> solution = points;
+	double bestCost = std::numeric_limits<double>::max(); 
+	
+	do {
+		double sum = 0.0;
+		for(unsigned int i=1;i<currentOrder.size(); i++)
+			sum += distanceMatrix.getDistance(currentOrder[i-1], currentOrder[i]); 
+		
+		if(sum < bestCost){
+			bestCost = sum; 
+			solution= currentOrder; 
+		}
+	} while ( std::next_permutation(currentOrder.begin(),currentOrder.end()) );
+	
+	return make_pair(bestCost, solution); 
+}
+
+
+pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> points){
+	
+	vector<Vertex> currentOrder = points; 
+	vector<Vertex> solution = points;
+	double bestCost = std::numeric_limits<double>::max(); 
+	
+	return make_pair(bestCost, solution); 
+}
+
+pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> points){
+	
+	vector<Vertex> currentOrder = points; 
+	vector<Vertex> solution = points;
+	double bestCost = std::numeric_limits<double>::max(); 
+	
+	return make_pair(bestCost, solution); 
+	
 }
