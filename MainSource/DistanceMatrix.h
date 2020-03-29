@@ -26,7 +26,7 @@ class DistanceMatrix{
         vector<T> getKeys() const;
         vector<vector< double > > getDistances()const;
         map<T, int> getElementsMap() const;
-        double getDistance(T &first, T &second) const; 
+        double getDistance(const T &first,const T &second) const; 
         void setRow(vector<double> &d, T &);
         void setColumn(vector<double> &d, T&) ;
         void setRowOnIndex(vector<double> &d, int) ;
@@ -106,7 +106,7 @@ vector<T> DistanceMatrix<T>::getKeys() const {
 
 
 template<class T>
-double DistanceMatrix<T>::getDistance(T &first, T &second) const {
+double DistanceMatrix<T>::getDistance(const T &first,const T &second) const {
     auto itFirst = keyIndex.find(first);
     auto itSecond = keyIndex.find(second);
 

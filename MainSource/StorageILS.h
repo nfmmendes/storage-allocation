@@ -167,6 +167,7 @@ class StorageILS :public Heuristic{
 		OptimizationConstraints constraints;
 		vector<Product> products; 
         DistanceMatrix<Vertex> *distanceMatrix; 
+		map<pair<Cell, int>, Vertex> vertexByCell;
         Warehouse *warehouse; 
 		vector<Order> orders; 
         vector<NeighborhoodStructure *> neighborhoodStructures;
@@ -182,7 +183,8 @@ class StorageILS :public Heuristic{
     public:
         StorageILS();
         StorageILS(StorageILS &other);
-		StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,vector<Order> &orders, OptimizationConstraints &cons);
+		StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,
+				   map<pair<Cell, int>, Vertex> vertexByCell,vector<Order> &orders, OptimizationConstraints &cons);
         AbstractSolution * Execute(); 
 
 };

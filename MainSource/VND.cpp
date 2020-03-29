@@ -27,15 +27,18 @@ VND::VND(){
  *	Member constructor 
  *  @param warehouse
  *	@param orders
+ *  @param vertexByCell
  *  @param prohibitions
  *	@param isolated
  *	@param param
  */
-VND::VND(vector<Product> & prods, Warehouse &wh, DistanceMatrix<Vertex> distMatrix,vector<Order> &orders, OptimizationConstraints &cons){
+VND::VND(vector<Product> & prods, Warehouse &wh, DistanceMatrix<Vertex> distMatrix, map<pair<Cell, int>, Vertex> &vertexByCell,
+		 vector<Order> &orders, OptimizationConstraints &cons){
     this->products = prods;	
 	this->warehouse = wh; 
 	this->orders = orders;
 	this->constraints = cons;
+	this->vertexByCell = vertexByCell; 
 	this->distanceMatrix = distMatrix;
 }
 

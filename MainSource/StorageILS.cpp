@@ -253,10 +253,12 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 ////                    Storage allocation ILS region
 ////
 /////////////////////////////////////////////////////////////////////////////////////////
-StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,vector<Order> &orders, OptimizationConstraints &cons){
+StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,
+					   map<pair<Cell, int>, Vertex> vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
 	this->distanceMatrix = &distMatrix; 
 	this->warehouse = &wh; 
 	this->orders= orders; 
+	this->vertexByCell = vertexByCell; 
 	this->constraints = cons; 
 	this->products = prods; 
 	InitializeNeighborhoods(); 
