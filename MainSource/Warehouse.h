@@ -36,9 +36,12 @@ class Warehouse{
             void RemoveProductAllocation(int i); 
             
             string getName() const ;
+			map<string, Block> getBlocksByName();  
             vector<Block> getBlocks() const ;
 			vector<ExpeditionPoint> getExpeditionPoints();
             vector<pair<Product, Cell> > getProductAllocation() const;
+			
+			pair<Block, Shelf> getBlockAndShelf(Cell & cell);
             
             void setName(string &name);
             void setBlocks(vector<Block>& blocks);

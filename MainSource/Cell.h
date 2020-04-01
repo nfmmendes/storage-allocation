@@ -38,11 +38,11 @@ class Cell{
         void setColumn(int value);
         void setLevels(int value);
         
-        string getCode();
-        long int getIdShelf();
-        int getRow();
-        int getColumn();
-        int getLevels();
+        string getCode()const;
+        long int getIdShelf()const;
+        int getRow() const;
+        int getColumn() const;
+        int getLevels() const;
 		
 		void printCellInformation();
 };

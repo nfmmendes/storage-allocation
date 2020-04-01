@@ -4,6 +4,7 @@
 #include<vector>
 #include<algorithm>
 #include<utility>
+#include<map>
 #include "Shelf.h"
 #include "BlockExit.h"
 #include "Corridor.h"
@@ -83,12 +84,20 @@ bool Block::hasValidConfiguration(){
 /**
  * Define the name of the block
  */
-string Block::getName() { return name; }
+string Block::getName() const { return name; }
 
 /**
-*	Return the shelves of the block 
-*/
+ *	Return the shelves of the block 
+ */
 vector<Shelf> Block::getShelves() {return shelves; }
+
+
+/**
+ * 
+ **/
+map<long int, Shelf> Block::getShelvesById(){
+	return shelvesById;
+}
 
 /**
  *	Return the exits of the block 
@@ -132,6 +141,9 @@ void Block::setShelves(vector<Shelf > & others){
     this->shelves.clear();
     for(unsigned int i=0; i<others.size();i++)
         this->shelves.push_back(Shelf(others[i]));
+	
+	std::transform(shelves.begin(), shelves.end(), std::inserter(shelvesById, shelvesById.end()),
+               [](const Shelf &s) { return std::make_pair(s.getId(), s); });
     
 }
 
@@ -143,40 +155,6 @@ void Block::setCurves(vector<Curve> & others){
     this->curves.clear();
     for(unsigned int i=0; i < others.size(); i++)
         this->curves.push_back(Curve(others[i]));
-}
-
-
-/**
- *	Add a exit in a block (if it was not inserted a exit with same Id yet)
- *	@param other Exit to be added in the block 
- *  TODO: Control if the exit is valid 
- **/
-void Block::addExit(BlockExit & other) {
-    if( find(exits.begin(), exits.end(), other) == exits.end()){
-        BlockExit inserted(other);
-        exits.push_back(inserted);
-    }
-}
-
-/**
- *	Removes the exit with id equals to Id in the block of exits
- *  @param id Id of the exit that will be removed 
- **/
-void Block::removeExitWithId(long int Id){
-    for(unsigned int i=0; i<this->exits.size();i++)
-        if(this->exits[i].getId() == Id){
-            this->exits.erase(this->exits.begin()+i);
-            break;
-        }
-}
-
-/**
-*	Removes the exit with the index i in the block list of exits
-*   
-**/
-void Block::removeExit(int index){
-    if(index >= 0 && index < (int)this->exits.size())
-        this->exits.erase(this->exits.begin()+index);
 }
 
 
@@ -241,47 +219,171 @@ bool Block::operator==(const Block &other){
     
 }
 
-/**
- * Controls if a point is inside or in the border of a block based on the position and size of this block 
- * @param point Point that will be checked 
- **/
-bool Block::isInBlock(const Point &point)const{
-    return point.getCoordX() >= bottomLeftCoords.first && point.getCoordX() <= bottomLeftCoords.first + width &&
-           point.getCoordY() >= bottomLeftCoords.second && point.getCoordY() <= bottomLeftCoords.second + length;
-}
+	/**
+	 *	Add a shelf in the block. If a shelf with the same ID already exists, it will be replaced 
+	 *  @param Shelf to be added 
+	 */
+	Block & Block::addShelf(Shelf &shelf){
+		unsigned int i=0; 
+		for( ; i<shelves.size() && shelves[i].getId() != shelf.getId(); i++);
+		
+		if(i != shelves.size())
+			this->shelves.push_back(shelf); 
+		else
+			this->shelves[i] = shelf; 
+		
+		shelvesById[shelf.getId()] = shelf; 
+		return *this; 
+	}
+	
+	/**
+	 * Add an exit in the block. If an exit with the same ID already exists, it will be replaced
+	 * @param exit Exit to be added 
+	 **/
+	Block & Block::addExit(BlockExit &exit){
+		unsigned int i=0; 
+		for( ; i<exits.size() && exits[i].getId() != exit.getId(); i++);
+		
+		if(i != exits.size())
+			this->exits.push_back(exit); 
+		else 
+			this->exits[i] = exit; 
+		
+		return *this;
+	}
+	
+	/**
+	 *
+	 */
+	Block & Block::addCorridor(Corridor &corridor){
+		unsigned int i=0; 
+		for( ; i<corridors.size() && corridors[i].getId() != corridor.getId(); i++);
+		
+		if(i != corridors.size())
+			this->corridors.push_back(corridor); 
+		else 
+			this->corridors[i] = corridor; 
+		
+		
+		return *this;
+	}
+	
+	/**
+	 *
+	 */
+	Block & Block::addCurve(Curve & curve){
+		
+		unsigned int i=0; 
+		for( ; i<curves.size() && curves[i].getId() != curve.getId(); i++);
+		
+		if(i != curves.size())
+			this->curves.push_back(curve); 
+		else 
+			this->curves[i] = curve; 
+		
+		return *this; 
+	} 
+		
+	/**
+	 * Remove (if exists) a shelf in the block 
+	 **/
+	Block & Block::removeShelf(Shelf &shelf){
+		unsigned int i=0; 
+		for( ; i<shelves.size() && shelves[i].getId() != shelf.getId(); i++);
+		
+		if(i != shelves.size())
+			this->shelves.erase(this->shelves.begin()+i); 
+		
+		
+		shelvesById.erase(shelf.getId());
+		
+		return *this; 
+	}
+	
+	/**
+	 * Remove (if exists) an exit in the block
+	 **/
+	Block & Block::removeExit(BlockExit &exit){
+		unsigned int i=0; 
+		for( ; i<exits.size() && exits[i].getId() != exit.getId(); i++);
+		
+		if(i != exits.size())
+			this->exits.erase(this->exits.begin()+i); 
+		
+		return *this; 
+	}
+	
+	/**
+	 * Remove (if exists) a corridor in the block
+	 **/
+	Block & Block::removeCorridor(Corridor &corridor){
+		
+		unsigned int i=0; 
+		for( ; i<corridors.size() && corridors[i].getId() != corridor.getId(); i++);
+		
+		if(i != corridors.size())
+			this->corridors.erase(this->corridors.begin()+i); 
+		
+		return *this; 
+	}
+	
+	/**
+	 *	Remove (if exists) a curve on the block
+	 **/
+	Block & Block::removeCuver(Curve & curve){
 
-/**
- * Set the block name 
- * @param name New block name 
- */
-void Block::setName(const string &name){
-	this->name = name; 
-}
+		unsigned int i=0; 
+		for( ; i<curves.size() && curves[i].getId() != curve.getId(); i++);
+		
+		if(i != curves.size())
+			this->curves.erase(this->curves.begin()+i); 
 
-/**
- *
- */
-void Block::printBlockInformation(){
 	
-	cout<<"_________________________________________\n"; 
-	cout<<"Block: \t"<<this->getName()<<endl;
-	cout<<"\n\tNumber of shelves: \t"<<this->shelves.size()<<endl;
-	cout<<"Number of exits: \t"<<this->exits.size()<<endl;
-	cout<<"Number of corridor: \t"<<this->corridors.size()<<endl;
-	cout<<"Number of curves: \t"<<this->curves.size()<<endl; 
-	
-	for(unsigned int i=0;i<this->shelves.size();i++)
-		this->shelves[i].printShelfInformation();
-	
-	for(unsigned int i=0;i<this->exits.size();i++)
-		this->exits[i].printExitInformation();
-	
-	for(unsigned int i=0;i<this->corridors.size();i++)
-		this->corridors[i].printCorridorInformation();
-	
-	for(unsigned int i=0;i<this->curves.size();i++)
-		this->curves[i].printCurveInformation(); 
-	
-	cout<<"_________________________________________\n";
-	cout<<endl; 
-}
+		return *this; 
+	}
+
+	/**
+	 * Controls if a point is inside or in the border of a block based on the position and size of this block 
+	 * @param point Point that will be checked 
+	 **/
+	bool Block::isInBlock(const Point &point)const{
+		return point.getCoordX() >= bottomLeftCoords.first && point.getCoordX() <= bottomLeftCoords.first + width &&
+			   point.getCoordY() >= bottomLeftCoords.second && point.getCoordY() <= bottomLeftCoords.second + length;
+	}
+
+	/**
+	 * Set the block name 
+	 * @param name New block name 
+	 */
+	void Block::setName(const string &name){
+		this->name = name; 
+	}
+
+
+	/**
+	 *
+	 */
+	void Block::printBlockInformation(){
+		
+		cout<<"_________________________________________\n"; 
+		cout<<"Block: \t"<<this->getName()<<endl;
+		cout<<"\n\tNumber of shelves: \t"<<this->shelves.size()<<endl;
+		cout<<"Number of exits: \t"<<this->exits.size()<<endl;
+		cout<<"Number of corridor: \t"<<this->corridors.size()<<endl;
+		cout<<"Number of curves: \t"<<this->curves.size()<<endl; 
+		
+		for(unsigned int i=0;i<this->shelves.size();i++)
+			this->shelves[i].printShelfInformation();
+		
+		for(unsigned int i=0;i<this->exits.size();i++)
+			this->exits[i].printExitInformation();
+		
+		for(unsigned int i=0;i<this->corridors.size();i++)
+			this->corridors[i].printCorridorInformation();
+		
+		for(unsigned int i=0;i<this->curves.size();i++)
+			this->curves[i].printCurveInformation(); 
+		
+		cout<<"_________________________________________\n";
+		cout<<endl; 
+	}

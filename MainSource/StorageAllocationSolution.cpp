@@ -89,7 +89,7 @@ void StorageAllocationSolution::printToFile(ofstream & out) const{
 /**
  * 
  */
-map<pair<Cell,int>, Product> & StorageAllocationSolution::getProductAllocations(){
+map<Product, pair<Cell,int> > & StorageAllocationSolution::getProductAllocations(){
 	return this->productAllocation;
 }
 
@@ -97,27 +97,26 @@ map<pair<Cell,int>, Product> & StorageAllocationSolution::getProductAllocations(
  * 
  */
 void StorageAllocationSolution::setAllocation(const Cell &cell, int level, const Product &product){
-	this->productAllocation[make_pair(cell,level)] = product; 
+	this->productAllocation[product] =  make_pair(cell,level); 
 }
 
 /**
  * 
  */
-void StorageAllocationSolution::removeAllocation(const Cell &cell, int level){
-	this->productAllocation.erase(make_pair(cell, level));	
+void StorageAllocationSolution::removeAllocation(Product &product){	
+	this->productAllocation.erase(product);	
 }
 
 /**
  * 
  */
-void StorageAllocationSolution::proceedSwap(pair<Cell,int> &first, pair<Cell,int> &second, bool useTSPEvaluator){
+void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const Product &secondProduct, bool useTSPEvaluator){
 		
-	Product firstProduct = productAllocation[first];
-	Product secondProduct = productAllocation[second]; 
+	pair<Cell,int> first = productAllocation[firstProduct];
+	pair<Cell,int> second	= productAllocation[secondProduct];
 	
-	productAllocation[first] = secondProduct; 
-	productAllocation[second] = firstProduct;
-	
+	productAllocation[firstProduct] = second; 
+	productAllocation[secondProduct] = first;
 	
 	vector<PickingRoute *> firstRoutes = routesByProduct[firstProduct];
 	vector<PickingRoute *> secondRoutes = routesByProduct[secondProduct];

@@ -89,11 +89,11 @@ void Cell::setRow(int value){ if(value >= 0)this->row = value; }
 void Cell::setColumn(int value) { if(value >=0) this->column = value;}
 void Cell::setLevels(int value){ if(value > 0) this->levels = value; }
 
-string Cell::getCode(){ return code;}
-long int Cell::getIdShelf() { return idShelf;}
-int Cell::getRow(){ return row;}
-int Cell::getColumn() { return column; }
-int Cell::getLevels() { return levels; }
+string Cell::getCode() const{ return code;}
+long int Cell::getIdShelf() const { return idShelf;}
+int Cell::getRow() const { return row;}
+int Cell::getColumn() const { return column; }
+int Cell::getLevels() const { return levels; }
 
 /**
  * 

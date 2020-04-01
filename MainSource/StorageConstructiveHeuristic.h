@@ -14,6 +14,7 @@
 #include "Order.h"
 #include "OptimizationConstraints.h"
 #include "StorageAllocationSolution.h"
+#include "ProductAllocationProhibition.h"
 using namespace std;
 using namespace QuickTSP; 
 
@@ -27,9 +28,20 @@ class StorageConstructiveHeuristic : public Heuristic  {
         DistanceMatrix<Vertex> *distanceMatrix; 
         Warehouse *warehouse; 
 		vector<Order> orders; 
-		set<string> restrictedFamilies; 
+		
+		//Auxiliary data structures
+		set<string> isolatedFamilies; 
 		set<string> restrictedProducts; 
+		map<string, vector<Product> > productsByFamily; 
+		map<string, vector<IsolatedFamily> > familyIsolationsByFamilyCode; 
+		map<string, ProductAllocationProhibitions > productAllocationsByProductName; 
+		map<Vertex, pair<Cell, int> > cellByVertex;
 		map<string, vector<Vertex> > vertexByType; 
+		set<string> storageVertexTypes; 
+		map<string, Block> blocksByName; 
+		map<long int, Shelf> shelvesById; 
+		map<Vertex, Vertex> closestStartPoint;
+		map<Vertex, Vertex> closestEndPoint; 
 		
 		bool StopCriteriaReached();
         void EvaluateSolution(AbstractSolution * solution); 
@@ -38,7 +50,8 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		vector<Vertex> getStorageVertexesOrderedByDistance();
 		bool hasConstraints(Product &product);
 		void InitializeAuxiliaryDataStructures();
-		bool isNotForbiddenStore(Product &product, Vertex &vertex);
+		bool isForbiddenStore(Product &product, Vertex &vertex);
+		vector<Vertex> getStorageVertexes(map<string,vector<Vertex> > &vertexByType);
     public: 
         StorageAllocationSolution * Execute();
 		StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,map<pair<Cell, int>, Vertex> vertexByCell,

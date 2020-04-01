@@ -4,6 +4,7 @@
 #include<iostream>
 #include<cmath>
 #include<ctime>
+#include<map>
 #include<vector>
 #include<algorithm>
 #include<utility>
@@ -19,6 +20,7 @@ class Block{
 
     private: 
         vector<Shelf> shelves;						///< Stores all shelves
+		map<long int, Shelf> shelvesById;			///< Stores a map connecting a shelf id to the object
         vector<BlockExit> exits;					///< Store all the exists
         vector<Corridor> corridors;					///< Store all the corridors 
         vector<Curve> curves;						///< Store all the curves that conects two corridors 
@@ -35,10 +37,25 @@ class Block{
         bool hasValidConfiguration();
     
     
-        string getName();
+		Block & addShelf(Shelf &shelf); 
+		Block & addExit(BlockExit &exit);
+		Block & addCorridor(Corridor &corridor); 
+		Block & addCurve(Curve & curve); 
+		
+		Block & removeShelf(Shelf &shelf); 
+		Block & removeExit(BlockExit &exit);
+		Block & removeCorridor(Corridor &corridor); 
+		Block & removeCuver(Curve & curve); 
+		
+	
+	
+	
+        string getName() const;
 		double getWidth(){ return this->width;}
 		double getLenght(){ return this->length;}
         vector<Shelf> getShelves();
+		map<long int, Shelf> getShelvesById(); 
+		
         vector<BlockExit> getExits();
         vector<Corridor> getCorridors();
         vector<Curve> getCurves();
@@ -48,22 +65,13 @@ class Block{
 
 		void setName(const string &name);
 
-        //Set corridors
+        ///Set corridors
         void setCorridors(vector<Corridor> & others);
     
-        //Set all the shelves of a block
+        ///Set all the shelves of a block
         void setShelves(vector<Shelf > & other);
     
         void setCurves(vector<Curve> &other);
-    
-        ///Add a exit in a block (if it was not inserted a exit with same Id yet)
-        void addExit(BlockExit & other);
-    
-        /// Removes the exit with id equals to Id in the block of exits
-        void removeExitWithId(long int Id);
-    
-        /// Removes the exit with the index i in the block list of exits
-        void removeExit(int index);
     
         //TODO: Improve this
         bool operator==(const Block &other);

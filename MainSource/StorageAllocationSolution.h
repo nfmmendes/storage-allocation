@@ -25,10 +25,10 @@ class StorageAllocationSolution : public AbstractSolution{
 		static StorageSolutionEvaluator *evaluator; 
 		static vector<StorageAllocationSolution *> currentSolutions;
 		unsigned long long int solutionIndex; 
-		map<pair<Cell, int> , Product> productAllocation; 
+		map<Product, pair<Cell, int> > productAllocation; 
 		map<Product, vector<PickingRoute *> > routesByProduct; 
 		set<Product> notAllocatedProducts; 
-        void setSolutionValue(double value) ;
+        void setSolutionValue(double value);
         void setRuntime(double time); 
         void setMinDelta(double minDelta) ;
 		void updateSolutionValue(vector<PickingRoute> &oldRoutes, vector<PickingRoute> &newRoutes, bool evaluateSolutionWithTSP=false);
@@ -37,10 +37,10 @@ class StorageAllocationSolution : public AbstractSolution{
 		StorageAllocationSolution(StorageAllocationSolution *other);
 		StorageAllocationSolution(double value, double time, double minDelta = 1e-06,bool maximization = true);
 		~StorageAllocationSolution();
-		map< pair<Cell, int>, Product> & getProductAllocations();
+		map<Product, pair<Cell, int> > & getProductAllocations();
 		void setAllocation(const Cell &cell, int level, const Product &product); 
-		void removeAllocation(const Cell &cell, int level);
-		void proceedSwap(pair<Cell,int> &first, pair<Cell,int> &second,bool evaluateSolutionWithTSP=false);
+		void removeAllocation(Product &product);
+		void proceedSwap(const Product &firstProduct, const Product &secondProduct,bool evaluateSolutionWithTSP=false);
 		void evaluateSolutionWithTSP();
 		void evaluateSolutionWithoutTSP();
         void printSolution() const ;

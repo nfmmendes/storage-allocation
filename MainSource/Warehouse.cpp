@@ -6,7 +6,7 @@
 #include<utility>
 #include<vector>
 #include<cstdlib>
- #include "Warehouse.h"
+#include "Warehouse.h"
  
  using namespace std;
  
@@ -26,10 +26,10 @@
  }
  
  
- ///////////////////////////////////////////////////////////////////
- ///
- ///
- ///////////////////////////////////////////////////////////////////
+ /**
+  *
+  *
+  **/
  void Warehouse::ReadWarehouseData(ifstream &file){
     
     
@@ -225,10 +225,10 @@
     }
  }
  
- ///////////////////////////////////////////////////////////////////
- ///
- ///
- ///////////////////////////////////////////////////////////////////
+ /**
+  *
+  *
+  **/
  void Warehouse::WriteWarehouseData(string fileName){
      
      ofstream file;
@@ -236,16 +236,16 @@
      file.close();
  }
  
- ///////////////////////////////////////////////////////////////////
- ///    Insert the data of a new block in the warehouse
- ///////////////////////////////////////////////////////////////////
+ /**
+  *    Insert the data of a new block in the warehouse
+  **/
 void Warehouse::InsertNewBlock(Block &b){
     this->blocks.push_back(Block(b));
 }
  
-///////////////////////////////////////////////////////////////////
-///     Remove a block "b" in the blocks list
-/////////////////////////////////////////////////////////////////// 
+/**
+ *     Remove a block "b" in the blocks list
+ **/
 void Warehouse::RemoveBlock(Block &b){
     remove(this->blocks.begin(), this->blocks.end(),b);
 }
@@ -258,12 +258,12 @@ void Warehouse::RemoveBlock(int i){
         this->blocks.erase(this->blocks.begin()+i);
 }
 
-///////////////////////////////////////////////////////////////////
-///         Sets the product allocation in a warehouse
-///     In this procedure is created a copy of the data,
-///       so the original one will be not referecend by the
-///             warehouse object
-/////////////////////////////////////////////////////////////////// 
+/**
+ *         Sets the product allocation in a warehouse
+ *     In this procedure is created a copy of the data,
+ *       so the original one will be not referecend by the
+ *             warehouse object
+ **/
 void Warehouse::setProductAllocation(vector<pair<Product, Cell> > & productAllocation){
     this->productAllocation.clear();
     
@@ -271,16 +271,16 @@ void Warehouse::setProductAllocation(vector<pair<Product, Cell> > & productAlloc
         this->productAllocation.push_back(make_pair(productAllocation[i].first, productAllocation[i].second));
 }
 
-///////////////////////////////////////////////////////////////////
-///     Inserts a new product allocation on the warehouse
-/////////////////////////////////////////////////////////////////// 
+/**
+ *     Inserts a new product allocation on the warehouse
+ **/
 void Warehouse::AddProductAllocation(pair<Product, Cell> & productAllocation){
     this->productAllocation.push_back(make_pair(productAllocation.first, productAllocation.second));
 }
 
-///////////////////////////////////////////////////////////////////
-///     Remove a allocation of a product
-/////////////////////////////////////////////////////////////////// 
+/**
+ *     Remove a allocation of a product
+ **/
 void Warehouse::RemoveProductAllocation(Cell &cell){
     vector<pair<Product,Cell> >::iterator it = this->productAllocation.begin();
     for(;it != this->productAllocation.end(); it++)
@@ -291,44 +291,54 @@ void Warehouse::RemoveProductAllocation(Cell &cell){
 }
 
 
-///////////////////////////////////////////////////////////////////
-///
-///
-/////////////////////////////////////////////////////////////////// 
+/**
+ *
+ **/
 void Warehouse::RemoveProductAllocation(int i){
     
     if(i >= 0 && i < (int) this->productAllocation.size())
         this->productAllocation.erase(this->productAllocation.begin()+i);
 }
             
-///////////////////////////////////////////////////////////////////
-///
-///
-///////////////////////////////////////////////////////////////////            
+/**
+ *
+ **/
 string Warehouse::getName() const { return this->name;}
 
-///////////////////////////////////////////////////////////////////
-///
-/////////////////////////////////////////////////////////////////// 
+/**
+ *
+ **/
 vector<Block> Warehouse::getBlocks() const { return this->blocks;}
 
-///////////////////////////////////////////////////////////////////
-///
-/////////////////////////////////////////////////////////////////// 
-vector<pair<Product, Cell> > Warehouse::getProductAllocation() const {
+/**
+ *
+ **/
+map<string, Block> Warehouse::getBlocksByName(){
+	map<string, Block> result; 
+	
+	for(unsigned int i = 0; i< this->blocks.size(); i++)
+		result[blocks[i].getName()] = blocks[i];
+	
+	return result; 
+}
+
+/**
+ *
+ **/
+ vector<pair<Product, Cell> > Warehouse::getProductAllocation() const {
     return this->productAllocation;
 }
 
-///////////////////////////////////////////////////////////////////
-///
-///////////////////////////////////////////////////////////////////             
+/**
+ *
+ **/
 void Warehouse::setName(string &name){
     this->name = name;
 }
 
-///////////////////////////////////////////////////////////////////
-///
-///////////////////////////////////////////////////////////////////             
+/**
+ *
+ **/
 void Warehouse::setBlocks(vector<Block>& blocks){
     this->blocks.clear();
     
@@ -336,11 +346,24 @@ void Warehouse::setBlocks(vector<Block>& blocks){
         this->blocks.push_back(Block(blocks[i]));
 }
 
-
+/**
+ *
+ **/
 vector<ExpeditionPoint> Warehouse::getExpeditionPoints(){
     return this->expeditionPoints;
 }
 
+
+pair<Block, Shelf> Warehouse::getBlockAndShelf(Cell & cell){
+	pair<Block,Shelf> result; 
+	
+	return result; 
+}
+
+
+/**
+ *
+ **/
 void Warehouse::printWarehouseInformation(){
 	
 	cout<<"Printing warehouse information...\n\n\n";

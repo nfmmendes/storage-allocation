@@ -108,18 +108,22 @@ int main(int argc, char **argv){
 		ProcessInputData processInput(&input);
 		processInput.ExecuteProcessData();
 		
-		cout<<"Initializing metaheuristic \n";
+		
 		
 		Graph graph = processInput.getWarehouseToGraphConverter()->getGraph();
-		
 		OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
 		Warehouse warehouse =  input.getWarehouse();
 		map<pair<Cell, int>, Vertex> vertexByCell = processInput.getWarehouseToGraphConverter()->getVertexByCell();
+		
+		cout<<"Initializing metaheuristic \n";
 		StorageConstructiveHeuristic constr(input.getProducts(),warehouse,*processInput.getDistanceMatrix(),vertexByCell, input.getOrders(),cons); 
-		VND vnd(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell , input.getOrders(),cons); 
-		StorageILS ils(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);
-		vnd.run();
-		ils.Execute();
+		
+		
+		
+		//VND vnd(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell , input.getOrders(),cons); 
+		//StorageILS ils(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);
+		//vnd.run();
+		//ils.Execute();
         
     }else
         cerr<<"Too few  arguments. Inform the index file name.";

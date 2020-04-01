@@ -19,6 +19,20 @@ using namespace std;
 #define DEBUG_LEVEL -1
 #define MIN_DIFF 0.000001
 
+
+
+const string WarehouseToGraphConverter::BLOCK_EXIT_VERTEX = "BlockExitVertex";
+const string WarehouseToGraphConverter::CORRIDOR_CURVE_POINT  = "CorridorCurvePoint";
+const string WarehouseToGraphConverter::EXPEDITION_POINT_VERTEX = "ExpeditionPointVertex";
+const string WarehouseToGraphConverter::FIRST_LEVEL_CELL = "FirstLevelCell";
+const string WarehouseToGraphConverter::PICK_VERTEX = "PickVertex";
+const string WarehouseToGraphConverter::UNIQUE_LEVEL_CELL = "UniqueLevelCell";
+const string WarehouseToGraphConverter::UPPER_LEVEL_CELL = "UpperLevelCell";
+
+
+
+
+
 WarehouseToGraphConverter::WarehouseToGraphConverter(){
     
 }
@@ -153,14 +167,14 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
 		#if DEBUG_LEVEL > 0
 			cout<<"Connecting cell: \t"<<cell.getCode()<<" which has a single level\n";
 		#endif 
-        Vertex firstLevel( cell.getCode(), "UniqueLevelCell");			/// All the vertexes created based on cell position have 
+        Vertex firstLevel( cell.getCode(), UNIQUE_LEVEL_CELL);			/// All the vertexes created based on cell position have 
 		//cout<<"point 3 :"<<firstLevel<<endl; 
 		
 		/// the world "Cell" in their type name
         initializeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
 		
     }else if(numLevels > 1){
-        Vertex firstLevel(cell.getCode()+"_L_1", "FirstLevelCell");
+        Vertex firstLevel(cell.getCode()+"_L_1", FIRST_LEVEL_CELL);
 		//cout<<"point 4 :"<<firstLevel<<endl; 
         initializeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
 		vertexByCell[make_pair(cell,1)] = firstLevel;
@@ -171,7 +185,7 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
 		
         //Create the vertexes to represent the higher levels and the arcs to connect them
         for(int l=2; l<= (int) numLevels; l++){
-            Vertex vertex( cell.getCode()+"_L_"+to_string(l) , "UpperLevelCell");		/// To the graph is irrelevant if a vertex
+            Vertex vertex( cell.getCode()+"_L_"+to_string(l) , UPPER_LEVEL_CELL);		/// To the graph is irrelevant if a vertex
 																									/// can not connect directly with each other 
             vertexByCode[vertex.getLabel()] = vertex;
             vertexByCell[make_pair(cell,l)] = vertex;
@@ -361,7 +375,7 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(co
 	else
 		vertexByCode[vertexCell.getLabel()] = vertexCell;
 	
-    Vertex vertexCorridor("corridor_"+to_string(corridor->getId())+"_cell_"+cellName,"PickVertex");
+    Vertex vertexCorridor("corridor_"+to_string(corridor->getId())+"_cell_"+cellName,PICK_VERTEX);
 
 	
     vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
@@ -480,7 +494,7 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
 	corridor.orderCorridorPoints(processedPoints);
     
 	string vertexName = "corridor_"+to_string(id)+"_point_0"; 
-	Vertex first(vertexName, "CorridorCurvePoint");
+	Vertex first(vertexName, CORRIDOR_CURVE_POINT);
 	
 	//Transform this if in a function
 	if(vertexByPoint.find(processedPoints[0]) != vertexByPoint.end())
@@ -492,7 +506,7 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
 	
 	for(int k=1; k<(int)processedPoints.size(); k++){
 
-		Vertex second("corridor_"+to_string(id)+"_point_"+to_string(k), "CorridorCurvePoint");
+		Vertex second("corridor_"+to_string(id)+"_point_"+to_string(k), CORRIDOR_CURVE_POINT);
 		
 		if(vertexByPoint.find(processedPoints[k]) != vertexByPoint.end())
 			second = vertexByPoint[processedPoints[k] ];
@@ -794,7 +808,7 @@ void WarehouseToGraphConverter::connectExpeditionPoint(ExpeditionPoint &expediti
 
     if(minDistance <= 1e19){
         //create arc here
-        Vertex expeditionVertex("expedition_"+expeditionPoint.getCode(), "ExpeditionPointVertex",0);
+        Vertex expeditionVertex("expedition_"+expeditionPoint.getCode(), EXPEDITION_POINT_VERTEX,0);
         vertexByPoint[referencePoint] = expeditionVertex; 
         vertexByCode[expeditionVertex.getLabel()] = expeditionVertex; 
 
@@ -851,7 +865,7 @@ void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & ar
 		}
     }
 	
-	Vertex exitVertex("exit"+to_string(exit.getId()), "BlockExitVertex",0);
+	Vertex exitVertex("exit"+to_string(exit.getId()), BLOCK_EXIT_VERTEX,0);
     if(minDistanceA <= 1e19){
         
         vertexByPoint[referencePoint] = exitVertex; 

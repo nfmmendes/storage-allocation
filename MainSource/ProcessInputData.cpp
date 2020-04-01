@@ -55,7 +55,8 @@ void ProcessInputData::CalculateMatrixDistances(){
 	for(map<string, set<Vertex> >::iterator it = vertexesByType.begin(); it!= vertexesByType.end();it++){
 		string key = it->first; 
 		//Verificar se key é um valor interessante
-		if(key == "UpperLevelCell" || key == "FirstLevelCell" || key == "UniqueLevelCell" || key == "ExpeditionPointVertex"){
+		if(key == WarehouseToGraphConverter::UPPER_LEVEL_CELL  ||  key == WarehouseToGraphConverter::FIRST_LEVEL_CELL  || 
+		   key == WarehouseToGraphConverter::UNIQUE_LEVEL_CELL ||  key == WarehouseToGraphConverter::EXPEDITION_POINT_VERTEX){
 			set<Vertex> values = it->second;
 			for(set<Vertex>::iterator vt= values.begin(); vt!= values.end();vt++)
 				desirableVertexes.push_back((Vertex)(*vt)); 

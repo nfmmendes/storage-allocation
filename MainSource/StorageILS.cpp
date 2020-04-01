@@ -59,20 +59,17 @@ InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, unsigned int numNeig
  * 
  */
 vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
-	map<pair<Cell,int>, Product > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
+	map<Product , pair<Cell,int> > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
 	vector<Cell> cells = this->shelf.getCells(); 
 	map<pair<Cell, int> , Product> shelfAllocations; 
 	vector<AbstractSolution *> solutions; 
 	
 	
-	//Get all allocations of the shelf
-	for(unsigned int i=0;i<cells.size();i++){
-		int numLevels = cells[i].getLevels();
-		for(int j=0;j<numLevels; j++){
-			pair<Cell, int> key(cells[i],j); 
-			if(allocations.find(key) != allocations.end())
-				shelfAllocations[key] = allocations[key];
-		}
+	for(const auto &[product, position] : allocations){
+		if(position.first.getIdShelf() != shelf.getId())
+			continue; 
+		int numLevels = position.second;
+		shelfAllocations[position] = product;
 	}
 	
 	//It is not possible to do swaps 
@@ -101,14 +98,14 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 		
 		map< pair<Cell, int> , Product>::iterator it = shelfAllocations.begin();
 		advance(it,first); 
-		pair<Cell,int> firstAllocation = it->first; 
+		Product firstProduct = it->second; 
 		
 		it = shelfAllocations.begin(); 
 		advance(it,second); 
-		pair<Cell,int> secondAllocation = it->first; 
+		Product secondProduct = it->second; 
 		
 		StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution); 
-		newSolution->proceedSwap(firstAllocation, secondAllocation); 
+		newSolution->proceedSwap(firstProduct, secondProduct); 
 	}
 	
 	return solutions;
@@ -142,7 +139,7 @@ InsideBlockSwap::InsideBlockSwap(StorageAllocationSolution *initial, int numNeig
  * 
  */
 vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
-	map<pair<Cell,int>, Product > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
+	map<Product, pair<Cell,int> > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
 	map<pair<Cell, int> , Product> blockAllocations; 
 	vector<Shelf> shelves = this->block.getShelves(); 
 	vector<AbstractSolution *> solutions; 
@@ -204,11 +201,7 @@ AbstractSolution * MostFrequentSwap::getStartSolution() const{
 vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 
 	vector<AbstractSolution *> solutions;
-	map<pair<Cell,int>, Product > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
-	map<Product, pair<Cell,int> > productPosition; 
-	
-	for(map<pair<Cell, int> , Product >::iterator it=allocations.begin();it != allocations.end(); it++)
-		productPosition[it->second] = it->first; 
+	map< Product, pair<Cell,int> > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
 	
 	if(this->interchangeableProducts.size()<3)
 		return solutions; 
@@ -233,14 +226,9 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 		
 		if( ((unsigned int)countTries) >= interchangeableProducts.size()*interchangeableProducts.size())
 			break;
-		
-		//Here we can suppose that all products in the intercheableProduct vector are allocated in the warehouses,
-		//thus in the productPosition map
-		pair<Cell,int> firstAllocation  = productPosition[this->interchangeableProducts[first]];
-		pair<Cell,int> secondAllocation = productPosition[this->interchangeableProducts[second]];
 			
 		StorageAllocationSolution * newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution);
-		newSolution->proceedSwap(firstAllocation, secondAllocation); 
+		newSolution->proceedSwap(this->interchangeableProducts[first], this->interchangeableProducts[second]); 
 		
 		solutions.push_back(newSolution);
 	}

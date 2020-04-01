@@ -63,6 +63,17 @@ namespace QuickTSP{
             Warehouse & getWarehouse();
             map<pair<Cell,int>, Vertex> getVertexByCell();
         
+		
+		
+			//Vertex types 
+			const static string BLOCK_EXIT_VERTEX;
+			const static string CORRIDOR_CURVE_POINT;
+			const static string EXPEDITION_POINT_VERTEX;
+			const static string FIRST_LEVEL_CELL;
+			const static string PICK_VERTEX;
+			const static string UNIQUE_LEVEL_CELL;
+			const static string UPPER_LEVEL_CELL;
+
     }; 
 }
 
