@@ -139,7 +139,7 @@ void Block::setCorridors(vector<Corridor> & others){
 **/
 void Block::setShelves(vector<Shelf > & others){
     this->shelves.clear();
-    for(unsigned int i=0; i<others.size();i++)
+	for(unsigned int i=0; i<others.size();i++)
         this->shelves.push_back(Shelf(others[i]));
 	
 	std::transform(shelves.begin(), shelves.end(), std::inserter(shelvesById, shelvesById.end()),
@@ -156,6 +156,15 @@ void Block::setCurves(vector<Curve> & others){
     for(unsigned int i=0; i < others.size(); i++)
         this->curves.push_back(Curve(others[i]));
 }
+
+
+/**
+ *
+ **/
+bool Block::operator<(const Block &other) const{
+	return this->name < other.name; 
+}
+
 
 
 /**
@@ -350,6 +359,7 @@ bool Block::operator==(const Block &other){
 		return point.getCoordX() >= bottomLeftCoords.first && point.getCoordX() <= bottomLeftCoords.first + width &&
 			   point.getCoordY() >= bottomLeftCoords.second && point.getCoordY() <= bottomLeftCoords.second + length;
 	}
+
 
 	/**
 	 * Set the block name 

@@ -58,7 +58,7 @@ double Shelf::getBottomLeftCoordX() const { return bottomLeftCoords.first; }
 double Shelf::getBottomLeftCoordY() const { return bottomLeftCoords.second; }
 pair<double,double> Shelf::getBottomLeftCoords() const { return bottomLeftCoords; }
 vector<Cell> Shelf::getCells(){ return cells;}
-string Shelf::getBlockName(){ return blockName; }
+string Shelf::getBlockName() const{ return blockName; }
 int Shelf::getNumColumns() const { return columns;}
 int Shelf::getNumRows() const { return rows;}
 double Shelf::getCellLength()const { return cellLength;}

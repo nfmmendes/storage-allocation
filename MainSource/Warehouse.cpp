@@ -353,12 +353,13 @@ vector<ExpeditionPoint> Warehouse::getExpeditionPoints(){
     return this->expeditionPoints;
 }
 
-
+/*
 pair<Block, Shelf> Warehouse::getBlockAndShelf(Cell & cell){
 	pair<Block,Shelf> result; 
 	
 	return result; 
 }
+*/
 
 
 /**

@@ -19,6 +19,7 @@ class IsolatedFamily{
 		string Code;		///< Family code'
 		
 	public:
+		IsolatedFamily(){}
 		IsolatedFamily(const IsolatedFamily &other);
 		IsolatedFamily(string f, string l, string c);
 		string getForce() const;

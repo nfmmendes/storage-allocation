@@ -19,7 +19,9 @@ using namespace std;
 using namespace QuickTSP; 
 
 
-
+/***
+ *
+ **/
 StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,
 														   map<pair<Cell, int>, Vertex> vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
 	this->distanceMatrix = &distMatrix; 
@@ -41,21 +43,26 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 	vector<IsolatedFamily> isolatedFamiliesList = constraints.getIsolatedFamilies(); 
 	vector<ProductAllocationProhibitions> prohibitions = constraints.getProduAllocationProhibitions();
 	
+	//Initialize isolated families structures
 	for(unsigned int i=0; i< isolatedFamiliesList.size(); i++){
-		familyIsolationsByFamilyCode[isolatedFamiliesList[i].getCode()].push_back(isolatedFamiliesList[i]);
+		familyIsolationsByFamilyCode[isolatedFamiliesList[i].getCode()] = isolatedFamiliesList[i];
 		isolatedFamilies.insert(isolatedFamiliesList[i].getCode());
 	}		
 	
+	//Initialize product allocation prohibitions structures 
 	for(unsigned int i= 0;i< prohibitions.size(); i++){
 		productAllocationsByProductName[prohibitions[i].getProduct().getName()] = prohibitions[i];
 		restrictedProducts.insert(prohibitions[i].getProduct().getName());
 	}
 	
+	//Initialize structures to recover quickly information about store positions on graph
 	for(auto &[key, value] : vertexByCell){
 		cellByVertex[value] = key; 
 		vertexByType[value.getType()].push_back(value); 
 	}
 	
+	
+	//Decompose the warehouse layout to quick search in the algorithm
 	vector<Block> blocks = warehouse->getBlocks(); 
 	std::transform(blocks.begin(), blocks.end(), std::inserter(blocksByName, blocksByName.end()),
 				   [](const Block &b) { return std::make_pair(b.getName(), b); });
@@ -65,17 +72,49 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 			shelvesById[shelves[i].getId()] = shelves[i]; 
 	}
 	
-	
-	
-	for(unsigned int i=0;i<products.size();i++){
+	//Group products by family
+	for(unsigned int i=0;i<products.size();i++)
 		productsByFamily[products[i].getType()].push_back(products[i]);
-	}
 	
+	InitializeClosestDeliveryPoint(); 	
 	
 	storageVertexTypes.insert(WarehouseToGraphConverter::UPPER_LEVEL_CELL);
 	storageVertexTypes.insert(WarehouseToGraphConverter::UNIQUE_LEVEL_CELL);
 	storageVertexTypes.insert(WarehouseToGraphConverter::FIRST_LEVEL_CELL);
+}
+
+
+/**
+ *
+ **/
+void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 	
+	vector<Vertex> storagePoints = getStoragePoints(); 
+	vector<Vertex> expeditionPoints = vertexByType[WarehouseToGraphConverter::EXPEDITION_POINT_VERTEX]; 
+	
+	for(unsigned int i=0;i<storagePoints.size();i++){
+		double minStartDistance = 1e100;
+		double minEndDistance = 1e100; 
+		Vertex bestStart, bestEnd; 
+		
+		for(unsigned int j=0;j<expeditionPoints.size();j++){
+			double startDistance = distanceMatrix->getDistance(expeditionPoints[j], storagePoints[i]);
+			double endDistance = distanceMatrix->getDistance(storagePoints[i], expeditionPoints[j]); 
+			
+			if(startDistance < minStartDistance){
+				minStartDistance = startDistance; 
+				bestStart = expeditionPoints[j]; 
+			}
+			
+			if(endDistance < minEndDistance){
+				minEndDistance = endDistance; 
+				bestEnd = expeditionPoints[j]; 
+			}
+		}
+		closestStartPoint[storagePoints[i]] = bestStart;
+		closestEndPoint[storagePoints[i] ] = bestEnd; 
+		
+	}
 }
 
 
@@ -126,11 +165,25 @@ bool StorageConstructiveHeuristic::isForbiddenStore(Product &product, Vertex &ve
 	return false; 
 }
 
-bool StorageConstructiveHeuristic::hasConstraints(Product &prod){
-	return restrictedProducts.find(prod.getName()) == restrictedProducts.end() || 
-		   isolatedFamilies.find(prod.getType()) == isolatedFamilies.end();
+/**
+ *
+ **/
+bool StorageConstructiveHeuristic::isIsolatedFamily(Product &product){
+	return isolatedFamilies.find(product.getType()) != isolatedFamilies.end();
 }
 
+/**
+ *
+ **/
+bool StorageConstructiveHeuristic::hasConstraints(Product &prod){
+	return restrictedProducts.find(prod.getName()) != restrictedProducts.end() || 
+		   isolatedFamilies.find(prod.getType()) != isolatedFamilies.end();
+}
+
+
+/**
+ *
+ **/
 void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution){	
 	
 	TSP tsp(*distanceMatrix); 
@@ -146,21 +199,49 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 		
 		for(unsigned int j = 0; j<items.size();j++){
 			if(vertexByCell.find(productAllocation[items[j].first ]) != vertexByCell.end())
-				storagePoints.push_back(productAllocation[items[j].first ]);
+				storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
 			else 
 				penalty += 5000; 
 		}
 		
 	}
+}
+
+void StorageConstructiveHeuristic::allocatedHardIsolatedFamilies(map<Vertex, Product> & allocations){
+	
 		
+	set<Product> notUsedProducts = getNonUsedProducts(allocations); 
+	set<Cell> notUsedCells = getNonUsedCells(allocations);
+	set<Cell> usedCells; 
+	for(const auto & [key, value] : vertexByCell) { 
+		(void) value; 
+		if(notUsedCells.find(key.first) == notUsedCells.end() ) 
+			usedCells.insert(key.first);
+	}
+	
+	set<Shelf> notUsedShelves = getNonUsedShelves(usedCells);
+	set<Shelf> usedShelves; 
+	for(const auto & shelf : notUsedShelves) if(notUsedShelves.find(shelf) == notUsedShelves.end() ) usedShelves.insert(shelf);
+	
+	set<Block> notUsedBlocks = getNonUsedBlocks(usedShelves); 
 	
 }
 
+
+
+
+/**
+ *
+ **/
 StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	
 	map<string, vector<Vertex> > vertexByType = getVertexesByType(); 	///< Store the vertex classification
 	map<Vertex,Product> allocation; 									///< Store the product allocation on the vertexes
 	vector<bool> usedVertex; 											///< Stores if vertex is used or not
+	set<Product> allocatedProducts; 
+	map<Cell, set<string> > familiesByCell; 
+	map<Shelf, set<string> > familiesByShelf;
+	map<Block, set<string> > familiesByBlock;  
 	
 	vector<Vertex> storePoints = getStorageVertexes(vertexByType);
 	
@@ -170,23 +251,48 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	
 	int lastOnSequence = 0; 
 	usedVertex.resize(vertexByCell.size(), false); 
-	for(auto & item : productsByFrequence){
+	
+	for(unsigned int i=0;i<productsByFrequence.size();i++){
+		auto & item  = productsByFrequence[i]; 
 		if(!hasConstraints(item.first)){
 			while(usedVertex[lastOnSequence])lastOnSequence++;
 			usedVertex[lastOnSequence] = true; 
 			allocation[vertexesOrderedByDistance[lastOnSequence]] = item.first; 
+		}else if(isIsolatedFamily(item.first)){
+			IsolatedFamily isolation = familyIsolationsByFamilyCode[item.first.getType()]; 
+			string level = isolation.getLevel(); 
+			string force = isolation.getForce();
+			
+			unsigned int tryInsertIndex = lastOnSequence; 
+			while(isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex]) 
+				tryInsertIndex++;
+			
+			if(force == "WEAK"){
+				usedVertex[tryInsertIndex] = true;
+				allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
+			}else if(force == "STRONG"){
+				if(cellByVertex[vertexesOrderedByDistance[tryInsertIndex]].first.getLevels() == 1 && level == "CELL"){
+					usedVertex[tryInsertIndex] = true; 
+					allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
+				}else				
+					continue;
+			}
+			
 		}else{
 			unsigned int tryInsertIndex = lastOnSequence; 
 			while(isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex]) 
 				tryInsertIndex++;
 			
 			if(tryInsertIndex < vertexesOrderedByDistance.size()){
-				usedVertex[tryInsertIndex];
+				usedVertex[tryInsertIndex] = true;
 				allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
 			}
 		}
 		
 	} 
+	
+	allocatedHardIsolatedFamilies(allocation);
+	
 	
 	int countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
 	cout<<countNotAllocated<<endl;
@@ -194,7 +300,6 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	
 	return NULL; 
 }
-
 
 
 /**
@@ -216,15 +321,51 @@ vector<Vertex> StorageConstructiveHeuristic::getStorageVertexes(map<string,vecto
 }
 
 
+set<Product>  StorageConstructiveHeuristic::getNonUsedProducts(const map<Vertex,Product> allocations){
+	set<Product> result;
+	
+	for(unsigned int i=0;i<products.size(); i++)
+		result.insert(products[i]);
+	
+	for(const auto &[key, value]: allocations){
+		result.erase(value); 
+		(void)key; 
+	}
+	
+	return result; 
+}
+
+
 /**
  *
+ **/
+vector<Vertex> StorageConstructiveHeuristic::getStoragePoints(){
+	
+	storageVertexTypes.insert(WarehouseToGraphConverter::UPPER_LEVEL_CELL);
+	storageVertexTypes.insert(WarehouseToGraphConverter::UNIQUE_LEVEL_CELL);
+	storageVertexTypes.insert(WarehouseToGraphConverter::FIRST_LEVEL_CELL);
+	
+	vector<Vertex> result;
+	
+	for( auto &[key, value] : vertexByCell){
+		(void) key; //just to avoid warning 
+		if(storageVertexTypes.find(value.getType()) != storageVertexTypes.end() )
+			result.push_back(value);
+	}
+	
+	return result; 
+}
+
+
+
+/**
  * 
- */
+ **/
 vector<Vertex> StorageConstructiveHeuristic::getStorageVertexesOrderedByDistance(){
 	
 	vector<pair< double,Vertex> > vertexesOrderedByDistance; 
 	vector<Vertex> expeditionPoints = vertexByType["ExpeditionPointVertex"];
-	vector<Vertex> storagePoints; 
+	vector<Vertex> storagePoints = getStoragePoints(); 
 	
 	for(unsigned i=0;i<storagePoints.size(); i++){
 		double lowerDistance = 1e200; 
@@ -240,6 +381,8 @@ vector<Vertex> StorageConstructiveHeuristic::getStorageVertexesOrderedByDistance
 	vector<Vertex> result;
 	for(unsigned int i=0;i< vertexesOrderedByDistance.size(); i++)
 		result.push_back(vertexesOrderedByDistance[i].second); 
+	
+	
 	
 	return result;
 }
@@ -297,3 +440,56 @@ map<string, vector<Vertex> > StorageConstructiveHeuristic::getVertexesByType(){
 	return result;
 
 }
+
+/**
+ *
+ **/
+set<Cell> StorageConstructiveHeuristic::getNonUsedCells(const map<Vertex,Product> &allocations){
+	set<Cell> result; 
+	
+	for(const auto &[key,value] : vertexByCell){
+		(void) value; 
+		result.insert(key.first);
+	}
+	
+	for(const auto &[key, value] : allocations){
+		(void) value;
+		result.erase(cellByVertex[key].first); 
+	}
+	
+	return result; 
+}
+
+/**
+ *
+ **/
+set<Shelf> StorageConstructiveHeuristic::getNonUsedShelves(const set<Cell> &usedCells){
+	set<Shelf> result; 
+	
+	for(const auto &[key, value] : shelvesById){
+		(void) key;
+		result.insert(value); 
+	}
+	
+	for(const auto &cell : usedCells){
+		result.erase(shelvesById[cell.getIdShelf()]);
+	}
+
+	return result; 
+}
+
+
+/**
+ *
+ **/
+set<Block> StorageConstructiveHeuristic::getNonUsedBlocks(const set<Shelf> &usedShelves){
+	set<Block> result; 
+	
+	for(const auto &block : blocksByName)
+		result.insert(block.second);
+	
+	for(const auto &shelf : usedShelves)
+		result.erase(blocksByName[shelf.getBlockName()]); 
+
+	return result;
+} 

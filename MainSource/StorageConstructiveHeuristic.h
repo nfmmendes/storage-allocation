@@ -33,7 +33,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		set<string> isolatedFamilies; 
 		set<string> restrictedProducts; 
 		map<string, vector<Product> > productsByFamily; 
-		map<string, vector<IsolatedFamily> > familyIsolationsByFamilyCode; 
+		map<string, IsolatedFamily > familyIsolationsByFamilyCode; 
 		map<string, ProductAllocationProhibitions > productAllocationsByProductName; 
 		map<Vertex, pair<Cell, int> > cellByVertex;
 		map<string, vector<Vertex> > vertexByType; 
@@ -46,12 +46,21 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		bool StopCriteriaReached();
         void EvaluateSolution(AbstractSolution * solution); 
 		map<string, vector<Vertex> > getVertexesByType();
-		vector<pair<Product,int> > getProductOrderByFrequence(); 
+		vector<pair<Product,int> > getProductOrderByFrequence();
+		vector<Vertex> getStoragePoints(); 
+		bool isIsolatedFamily(Product &product);
 		vector<Vertex> getStorageVertexesOrderedByDistance();
 		bool hasConstraints(Product &product);
 		void InitializeAuxiliaryDataStructures();
 		bool isForbiddenStore(Product &product, Vertex &vertex);
 		vector<Vertex> getStorageVertexes(map<string,vector<Vertex> > &vertexByType);
+		void InitializeClosestDeliveryPoint();
+		set<Product> getNonUsedProducts(const map<Vertex,Product> allocations); 
+		set<Cell> getNonUsedCells(const map<Vertex,Product> &allocations); 
+		set<Shelf> getNonUsedShelves(const set<Cell> &usedCells);
+		set<Block> getNonUsedBlocks(const set<Shelf> &usedShelves); 
+		void allocatedHardIsolatedFamilies(map<Vertex, Product> & allocations);
+		
     public: 
         StorageAllocationSolution * Execute();
 		StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,map<pair<Cell, int>, Vertex> vertexByCell,

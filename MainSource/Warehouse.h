@@ -41,7 +41,7 @@ class Warehouse{
 			vector<ExpeditionPoint> getExpeditionPoints();
             vector<pair<Product, Cell> > getProductAllocation() const;
 			
-			pair<Block, Shelf> getBlockAndShelf(Cell & cell);
+		//	pair<Block, Shelf> getBlockAndShelf(Cell & cell);
             
             void setName(string &name);
             void setBlocks(vector<Block>& blocks);
