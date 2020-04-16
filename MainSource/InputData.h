@@ -18,7 +18,10 @@
 #include "Order.h"
 #include "Parameter.h"
 #include "Warehouse.h"
+#include "ProductAllocationProhibition.h"
+#include "IsolatedFamily.h"
 using namespace std;
+
 
 //=======================================================================================
 //      This class allow to store all the input data of storage allocation problem
@@ -27,29 +30,31 @@ class InputData{
     
     private:
         static vector<Product> products;
-        static vector<Clients> clients;
-        static vector<Orders> orders;
+        static vector<Client> clients;
+        static vector<Order> orders;
         static vector<Parameter> parameters;
+        static vector<ProductAllocationProhibitions> prohibitions;
+		static vector<IsolatedFamily> isolatedFamilies; 
         static Warehouse warehouse;
-        bool alreadyCreated; 
+        bool alreadyCreated = false; 
     
     public:
         InputData();
-        InputData(vector<Product> products, vector<Clients> clients, vector<Orders> orders,
-                  vector<Parameter> paramters, Warehouse warehouse);
-    
         InputData(string  metadataFile);
-        InputData(string productsFile, string clientsFile, string ordersFile, string parametersFile, string warehouseFile);
     
         void setProducts(vector<Product> products);
-        void setClients(vector<Clients> clients);
+        void setClients(vector<Client> clients);
         void setOrders(vector<Order> orders);
+        void setParameters(vector<Parameter> parameters);
         void setWarehouse(Warehouse warehouse);
+		void setIsolatedFamilies(vector<IsolatedFamily> &isolatedFamilies);
     
-        vector<Product> getProducts();
-        vector<Clients> getClients();
-        vector<Orders> getOrders();
+        vector<Product> &getProducts();
+        vector<Client> getClients();
+        vector<Order> &getOrders();
         vector<Parameter> getParameters();
+		vector<IsolatedFamily> getIsolatedFamily();
+		vector<ProductAllocationProhibitions> getAllocationProhibitions(); 
         Warehouse & getWarehouse();
     
 };

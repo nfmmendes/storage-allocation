@@ -17,52 +17,33 @@ using namespace std;
 class Client{
     
     private:
-        string name;
-        long int Id;
-        string type;
-        pair<double,double> coordinates;
+        string name;						///< Client name (or address) 
+        string type;						///< Client type 
+        pair<double,double> coordinates;	///< Coordinates for product deliveries (optional) 
     
     public:
-        Client(){}
-    
+        Client();
         // Member by member constructor
-        Client(string name, string type, long int idClient, pair<double, double> coordinates ){
-            this->name = name;
-            this->type = type;
-            this->Id = idClient;
-            this->coordinates = coordinates;
-        }
+        Client(string name, string type,  pair<double, double> coordinates );
     
         //Copy constructor
-        Client(const Client &other){
-            this->name = other.name;
-            this->Id = other.Id;
-            this->type = other.type;
-            this->coordinates = other.coordinates;
-        }
+        Client(const Client &other);
     
         //Set functions
-        void setName(string value){ this->name = value;}
-        void setId(long int value){ if(value>0) this->Id = value;}
-        void setType(string value){ this->type = value; }
-        void setCoordinates(pair<double,double> value){ this->coordinates =value; }
+        void setName(string value);
+        void setType(string value);
+        void setCoordinates(pair<double,double> value);
     
         //Get functions
-        string getName(){ return name;}
-        long int getId() { return Id;}
-        string setType() { return type;}
-        pair<double, double> getCoordinates(){ return coordinates;}
+        string getName();
+        string setType();
+        pair<double, double> getCoordinates();
     
     
         //Assignment operator
-        Client & operator=(const Client &other){
-            this->name = other.name;
-            this->type = other.type;
-            this->Id = other.Id;
-            this->coordinates = other.coordinates;
-            
-            return *this;
-        }
+        Client & operator=(const Client &other);
+        static vector<Client> readClientData(string fileName);
+        static vector<Client> readClientDataWithCoordinates(string fileName);
 
 };
 

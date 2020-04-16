@@ -1,8 +1,9 @@
-#ifndef Util_hpp
-#define Util_hpp
+#ifndef Util_h
+#define Util_h
 
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 
@@ -11,7 +12,7 @@ class Util{
     public:
     
         Util(){}
-        static vector<string> splitString(string originalString, string delimiter);
+        static void splitString(vector<string>& returned ,string originalString, string delimiter);
 };
 
 #endif 

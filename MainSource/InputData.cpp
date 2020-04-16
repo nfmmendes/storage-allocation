@@ -4,75 +4,75 @@
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
+#include "Parameter.h"
 #include "InputData.h"
+#include "Product.h"
+#include "Client.h"
+#include "Order.h"
+#include "Warehouse.h"
+#include "ProductAllocationProhibition.h"
+#include "IsolatedFamily.h"
+using namespace std;
 
-
-InputData::alredyCreated = false;
+vector<Product> InputData::products;
+vector<Client> InputData::clients;
+vector<Order> InputData::orders;
+vector<Parameter> InputData::parameters;
+vector<ProductAllocationProhibitions> InputData::prohibitions;
+vector<IsolatedFamily> InputData::isolatedFamilies;
+Warehouse InputData::warehouse;
 
 InputData::InputData(){
-    alredyCreated = true;
+    alreadyCreated = true;
 }
 
 
-InputData::InputData(vector<Product> products, vector<Clients> clients, vector<Orders> orders,
-                     vector<Parameter>parameters,  Warehouse warehouse){
-    if(!alredyCreated){
-        alredyCreated = true;
-        setProducts(products);
-        setClients(clients);
-        setOrders(orders);
-        setWarehouse(warehouse);
-        setParameters(parameters);
-    }
-    
-}
 
-
-InputData::InputData(string  metadataFile){
+InputData::InputData(string  dataFile){
     
     ///Input file names
     string warehouseDescriptionFileName;
     string productsFileName;
     string clientsFileName;
     string ordersFileName;
+    string prohibitionsFileName;
     string parametersFileName;
     
-    //Data structures
-    
+    //Data structures    
     
     
     //READ THE INPUT
     ifstream file;
-    file.open(metadataFile, ios::in);
+    file.open(dataFile, ios::in);
     if(file.is_open()){
         cout<<"Starting the input reading...\n";
-        file>>warehouseDescriptionFileName;
-        file>>productsFileName
-        file>>ordersFileName;
-        file>>parametersFileName;
+        
+        
+        cout<<"Reading warehouse data...\n";
+        warehouse.ReadWarehouseData(file);
+        
+        cout<<"Reading products data..\n";
+        products = Product::readProductsData(file);
+        
+        cout<<"Reading order data...\n";
+        orders = Order::readOrdersData(file);
+        
+        
+        cout<<"Reading allocation prohibitions...\n";
+        prohibitions = ProductAllocationProhibitions::readAllProhibitionsData(file);
+		isolatedFamilies = IsolatedFamily::readIsolatedFamilyData(file);
+        
+        //cout<<"Reading parameters...\n";
+        //parameters = Parameter::readParametersData(file);
         
         file.close();
         
-        cout<<"Reading warehouse data...\n";
-        warehouse = new Warehouse();
-        warehouse->ReadWarehouseData(warehouseDescriptionFileName);
-        
-        cout<<"Reading order data...\n";
-        Order::readOrdersData(ordersFileName);
-        
-        cout<<"Reading parameters...\n";
-        
     }else{
         cerr<<"The file could not be open!\n Verifiy if it exists or if the you passed the right path.";
-        return 1;
     }
 }
 
 
-InputData::InputData(string productsFile, string clientsFile, string ordersFile, string warehouseFile){
-    
-    
-}
 
 void InputData::setProducts(vector<Product> products){
     InputData::products.clear();
@@ -82,7 +82,7 @@ void InputData::setProducts(vector<Product> products){
     
 }
 
-void InputData::setClients(vector<Clients> clients){
+void InputData::setClients(vector<Client> clients){
     InputData::clients.clear();
     
     for(unsigned int i=0; i<clients.size(); i++)
@@ -105,7 +105,7 @@ void InputData::setParameters(vector<Parameter> parameters){
     InputData::parameters.clear();
     
     for(unsigned int i=0; i< parameters.size(); i++)
-        InputData::orders.push_back(Parameter(parameters[i]));
+        InputData::parameters.push_back(Parameter(parameters[i]));
     
 }
 
@@ -114,12 +114,21 @@ void InputData::setWarehouse(Warehouse warehouse){
     
 }
 
-vector<Product> InputData::getProducts(){return products;}
+void InputData::setIsolatedFamilies(vector<IsolatedFamily> &_isolatedFamilies){
+	for(unsigned int i=0; i < _isolatedFamilies.size(); i++)
+		this->isolatedFamilies.push_back(IsolatedFamily(_isolatedFamilies[i]));
+}
 
-vector<Clients> InputData::getClients(){ return clients;}
+vector<Product> &InputData::getProducts(){return products;}
 
-vector<Orders> InputData::getOrders() { return orders;}
+vector<Client> InputData::getClients(){ return clients;}
 
-vector<Parameter> getParameters() { return parameters;}
+vector<Order> &InputData::getOrders() { return orders;}
+
+vector<Parameter> InputData::getParameters() { return parameters;}
 
 Warehouse & InputData::getWarehouse() { return warehouse; }
+
+vector<IsolatedFamily> InputData::getIsolatedFamily(){ return isolatedFamilies; }
+
+vector<ProductAllocationProhibitions> InputData::getAllocationProhibitions(){ return prohibitions;	}

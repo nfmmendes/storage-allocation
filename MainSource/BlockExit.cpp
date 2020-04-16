@@ -6,7 +6,14 @@
 #include "BlockExit.h"
 using namespace std;
 
+/**
+ * Default constructor 
+ */
 BlockExit::BlockExit(){}
+
+/**
+ *	Copy constructor
+ */
 BlockExit::BlockExit(const BlockExit &other){
     this->Id = other.Id;
     this->coordX = other.coordX;
@@ -15,6 +22,9 @@ BlockExit::BlockExit(const BlockExit &other){
     this->blockBName = other.blockBName;
 }
 
+/**
+ * Member constructor
+ */ 
 BlockExit::BlockExit(long int id, double coordX, double coordY, string blockA, string blockB){
     this->Id = id;
     this->coordX = coordX;
@@ -40,5 +50,49 @@ void BlockExit::setBlockBName(double value) { blockBName = value; }
 
 bool BlockExit::operator==(const BlockExit &other) { return this->Id == other.Id; }
 bool BlockExit::operator!=(const BlockExit &other) { return this->Id != other.Id; }
-bool BlockExit::operator<(const BlockExit & other) const { return this->Id < other.Id;} //<! Allow the use of an object of this class
-// as a key in a map
+
+
+/**
+ * Allow the use of an object of this class as a key in a map
+ */
+bool BlockExit::operator<(const BlockExit & other) const { 
+		
+		if(this->Id > other.Id)
+			return false;
+		if(this->Id < other.Id)
+			return true; 
+	
+		pair<double,double> thisCoords= make_pair(coordX, coordY);
+		pair<double,double> otherCoords= make_pair(other.coordX, other.coordY);
+		
+		if(thisCoords > otherCoords)
+			return false;
+		else
+			return this->Id == other.Id && thisCoords < otherCoords;
+		
+}
+
+/**
+ *
+ **/
+BlockExit & BlockExit::operator=(const BlockExit &other){
+	this->Id = other.Id;
+    this->coordX = other.coordX;
+    this->coordY = other.coordY;
+    this->blockAName = other.blockAName;
+    this->blockBName = other.blockBName;
+	
+	return *this; 
+}  
+
+/**
+ *	Print the exit main information 
+ */
+void BlockExit::printExitInformation(){
+	cout<<"_____________________________\n";
+	cout<<"Exit Id: \t"<<this->Id<<endl;
+	cout<<"Block start: \t"<<this->blockAName<<"\t Block finish:\t"<<(this->blockBName!= "" ? this->blockBName : "No block")<<endl;
+	cout<<"Exit coordinates: \t(x="<<this->coordX<<",y="<<this->coordY<<")"<<endl; 
+	cout<<"_____________________________\n";
+	
+}

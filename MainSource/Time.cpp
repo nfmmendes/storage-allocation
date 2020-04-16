@@ -1,6 +1,7 @@
 #include<iostream>
 #include<string>
 #include<cstdlib>
+#include<vector>
 #include "Time.h"
 #include "Util.h"
 using namespace std;
@@ -40,8 +41,8 @@ void Time::setMillisecond(int value) { if (value <= 999 && value >= 0) milliseco
 
 string Time::toString(string format){
     
-    if(format == "HH:mm:ss")
-        return to_string(hour) +"/" + to_string(minute)+"/" + to_string(second);
+    if(format == "HH:MM:SS")
+        return to_string(hour) +":" + to_string(minute)+":" + to_string(second);
     return "";
 }
 
@@ -136,21 +137,25 @@ Time Time::Parse(string time, string format){
     size_t pos = 0;
     
     if(format == "HH:MM:SS.mmmm"){
-        vector<string> firstSplit = Util::splitString(time,":");
-        string last = *firstSplit.last();
-        vector<string> secondSplit = Util::splitString(time, ".");
+        vector<string> firstSplit;
+		Util::splitString(firstSplit, time,":");
+        string last = firstSplit[firstSplit.size()-1];
+        vector<string> secondSplit;
+		Util::splitString(secondSplit,time, ".");
         
         if(firstSplit.size() == 3){
             returned.setHour(stoi(firstSplit[0]) );
             returned.setMinute(stoi(firstSplit[1]));
             
-            if(secondSplit.size == 1)
-                returned.setSecond(secondSplit[0]);
+            if(secondSplit.size() == 1)
+                returned.setSecond(stoi(secondSplit[0]));
             if(secondSplit.size() == 2)
-                returned.setMillisecond(secondSplit[1]);
+                returned.setMillisecond(stoi(secondSplit[1]));
         }
     }else if(format =="HH:MM:SS"){
-        vector<string> firstSplit = Util::splitString(time,":");
+        vector<string> firstSplit;
+
+		Util::splitString(firstSplit,time,":");
         
         if(firstSplit.size() == 3){
             returned.setHour(stoi(firstSplit[0]) );
@@ -158,21 +163,26 @@ Time Time::Parse(string time, string format){
             returned.setSecond(stoi(firstSplit[2]));
         }
         
-    }else if(format == "hh:mm:ss am/pm"){
-        vector<string> firstSplit = Util::splitString(time, ":");
+    }else if(format == "HH:MM:SS AM/PM"){
+		cout<<"*"<<pos<<endl;
+		/*
+        vector<string> firstSplit;
+		Util::splitString(firstSplit,time,":");
         
         if(firstSplit.size()==3){
-            if((pos = originalString.find("PM")) != std::string::npos || (pos = originalString.find("pm")) != std::string::npos)
+            if((pos = time.find("PM")) != std::string::npos || (pos = time.find("pm")) != std::string::npos)
                 returned.setHour(stoi(firstSplit[0])%12+12);
             else
                 returned.setHour(stoi(firstSplit[0])%12);
             
             returned.setMinute(stoi(firstSplit[1]));
             
-            vector<string> secondSplit = Util::splitString(firstSplit[2],"pm");
+            vector<string> secondSplit;
+			//Corrigir isso depois
+			//Util::splitString(secondSplit,firstSplit[2]," ");
             returned.setSecond(stoi(secondSplit[0]));
         }
-        
+     */   
     }
     
     return returned;

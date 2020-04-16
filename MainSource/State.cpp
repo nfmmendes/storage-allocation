@@ -49,6 +49,7 @@ void State::adjustComponent(Transition &t){
     
 }
 
+
 void State::addTransition(Transition &t){
     //Verify the components of state
     this->adjustParity(t.getBeginVertex());

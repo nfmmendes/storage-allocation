@@ -9,14 +9,16 @@ using namespace std;
 const string monthName[13] = {"", "January", "February", "March", "April", "May", "June", "July",
     "August", "September", "October", "November", "December"};
 
-///Class to represent the date (without time)
-///The aritmetic operations ware not implemented yet
+/**
+ * Class to represent the date (without time)
+ * The aritmetic operations ware not implemented yet
+ */
 class Date{
     
     private:
-        int day;
-        int month;
-        int year;
+        int day;		///< Day 
+        int month;		///< Month
+        int year;		///< Year 
     
         
     public:
@@ -31,7 +33,7 @@ class Date{
         void setYear(int value);
     
     
-        void validatedate(Date &date);
+        void validateDate();
     
     
         string toString(string format="yyyy/MM/dd");

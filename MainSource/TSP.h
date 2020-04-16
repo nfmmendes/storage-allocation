@@ -1,32 +1,38 @@
-#include<iostream>
-#include<cmath>
-#include<ctime>
-#include<vector>
-#include "HananGraph.h"
-#include "PathUnity.h"
-#include "Order.h"
-using namespace std;
+#ifndef TSP_H
+#define TSP_H
 
-    
-namespace QuickTSP{
-        class TSP{
-            private: 
-                HananGraph graph;
-                vector<Order> orders;
-                vector<PathUnity> solution;
-            public:
-                TSP();
-            
-                TSP(TSP &other);
-            
-                TSP(HananGraph &graph,vector<Order> &orders);
-                
-                void setHananGraph(HananGraph &graph);
-                void setOrders(vector<Order>& orders);
-                HananGraph getHananGraph();
-                vector<Order> & getOrders();
-                vector<PathUnity> getSolution();
-                
-                void Run();
-        };
-}
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <utility>
+#include <map>
+#include "DistanceMatrix.h"
+#include "Vertex.h"
+using namespace std;
+using namespace QuickTSP; 
+
+
+class TSP {
+
+	private:
+		DistanceMatrix<Vertex> distanceMatrix; 
+		bool distanceMatrixSet = false; 
+
+	public:
+		TSP();
+		TSP(DistanceMatrix<Vertex> distanceMatrix);
+		DistanceMatrix<Vertex> getDistanceMatrix(); 
+		void setDistanceMatrix(DistanceMatrix<Vertex> matrix);
+		TSP(const TSP &other);
+		pair<double , vector<Vertex> > bruteForceTSP(const vector<Vertex> points);
+		pair<double , vector<Vertex> > closestNeighborTSP(const vector<Vertex> points);
+		pair<double , vector<Vertex> > quickLocalSearchTSP(const vector<Vertex> points); 
+		
+	
+
+
+}; 
+
+
+
+#endif

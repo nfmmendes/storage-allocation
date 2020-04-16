@@ -20,13 +20,14 @@ namespace QuickTSP{
             string label;
             double value; 
             Vertex beginVertex;
-            Vertex endVertex; 
+            Vertex endVertex;
+            bool directed;  
         
         public:
             Arc();
             Arc(const Arc &arc);
                 
-            Arc(string label, double value, Vertex &begin, Vertex &end);
+            Arc(string label, double value, Vertex &begin, Vertex &end, bool directed=true);
             
             void setLabel(string label);
                 
@@ -46,6 +47,12 @@ namespace QuickTSP{
         
             Arc& operator=(const Arc & other);
             bool operator==(const Arc &other)const;
+            bool operator<(const Arc &other) const;
+			
+			friend ostream& operator<<(ostream &pr, const Arc & a){
+				pr<<"Arc "<<a.label <<" value: "<<a.value<< endl<<a.beginVertex<<" \n"<<a.endVertex <<endl;
+				return pr;
+			}
             
     };
 }
