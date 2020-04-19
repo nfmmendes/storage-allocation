@@ -7,7 +7,8 @@ using namespace QuickTSP;
 
 
 
-Vertex::Vertex(){}
+Vertex::Vertex(){
+}
 Vertex::Vertex(const Vertex &other){
     this->label = other.label;
     this->type = other.type;
@@ -38,9 +39,11 @@ bool Vertex::operator!=(const Vertex & other){
 }
 
 Vertex & Vertex::operator=(const Vertex &other){
+	
 	this->label = other.label;
     this->type = other.type;
     this->value = other.value;
+	
 	return *this; 
 }
 

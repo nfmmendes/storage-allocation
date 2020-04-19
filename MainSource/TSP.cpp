@@ -32,7 +32,7 @@ void TSP::setDistanceMatrix(DistanceMatrix<Vertex> matrix){
 }
 
 
-pair<double , vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> points){
+pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
 	
 	vector<Vertex> currentOrder = points; 
 	vector<Vertex> solution = points;
@@ -42,6 +42,10 @@ pair<double , vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> points){
 		double sum = 0.0;
 		for(unsigned int i=1;i<currentOrder.size(); i++)
 			sum += distanceMatrix.getDistance(currentOrder[i-1], currentOrder[i]); 
+		
+		sum += distanceMatrix.getDistance(bestStart[currentOrder[0] ] , currentOrder[0] );
+		sum += distanceMatrix.getDistance(bestStart[currentOrder[0] ] , currentOrder[0] );
+		sum += distanceMatrix.getDistance(currentOrder[currentOrder.size()-1] , bestEnd[ currentOrder[currentOrder.size()-1] ] );
 		
 		if(sum < bestCost){
 			bestCost = sum; 
@@ -57,7 +61,7 @@ pair<double , vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> points){
  *  @param points Vector of vertexes that need to be visited. The first point is the the departure and the last the destination
  *				  The first and last point does not need to be the same
  */
-pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> points){
+pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart,map<Vertex,Vertex> &bestEnd){
 	
 	
 	if(points.size() <=3){
@@ -104,7 +108,7 @@ pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> poin
 /**
  *
  */
-pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> points){
+pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
 	
 	vector<Vertex> currentOrder = points; 
 	vector<Vertex> solution = points;

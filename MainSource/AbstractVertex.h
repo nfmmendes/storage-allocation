@@ -4,6 +4,8 @@
 
 class AbstractVertex {
 
+	public:
+		AbstractVertex(){}
 };
 
 

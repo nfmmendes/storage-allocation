@@ -2,7 +2,7 @@
 BIN_NAME = StorageAllocation
 
 #COMPILER 
-CC = g++
+CC = g++ -g
 
 #FLAGS TO THE COMPILER
 COMPILE_FLAGS = -O3 -std=c++1z -Wall -Wextra -g

@@ -61,10 +61,11 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		set<Shelf> getNonUsedShelves(const set<Cell> &usedCells);
 		set<Block> getNonUsedBlocks(const set<Shelf> &usedShelves); 
 		void allocateStronglyIsolatedFamilies(map<Vertex, Product> & allocations , vector<bool> &usedVertex);
+		double getBetterRouteWithTwoPoints(vector<pair<Product, double> > &items, map<Product, pair<Cell,int> > &productAllocation );
 		
     public: 
         StorageAllocationSolution * Execute();
-		StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,map<pair<Cell, int>, Vertex> vertexByCell,
+		StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> &distMatrix,map<pair<Cell, int>, Vertex> vertexByCell,
 										  vector<Order> &orders, OptimizationConstraints &cons);
 };
 

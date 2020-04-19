@@ -49,9 +49,11 @@ DistanceMatrix<T> & DistanceMatrix<T>::buildMatrix(map<pair<T,T> , double> &dist
 		keys.insert(mapPair.first.second); 
 	}
 	
+	T aux; 
 	for(auto it = keys.begin(); it != keys.end();it++){
 		keyIndex[*it] = orderedKeys.size();
-		orderedKeys.push_back(*it); 
+		aux = *it; 
+		orderedKeys.push_back(aux); 
 	}
 	
 	distances.resize(orderedKeys.size());
@@ -127,8 +129,6 @@ vector<vector< double > > DistanceMatrix<T>::getDistances() const {
 
 template<class T>
 vector<T> & DistanceMatrix<T>::getKeys() {
-	cout<<"Here\n";
-	cout<<orderedKeys.size()<<endl;
     return orderedKeys; 
 }
 
@@ -185,7 +185,7 @@ void DistanceMatrix<T>::setColumnOnIndex(vector<double> &d, int index)  {
 template<class T> 
 void DistanceMatrix<T>::print(){
 	
-	cout<<setw(15)<<"*\n"; 
+	cout<<setw(15)<<"****************\n"; 
 	for(unsigned int i=0;i<orderedKeys.size();i++){
 		cout<<setw(15)<<orderedKeys[i]<<endl;
 	}

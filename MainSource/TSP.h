@@ -24,9 +24,9 @@ class TSP {
 		DistanceMatrix<Vertex> getDistanceMatrix(); 
 		void setDistanceMatrix(DistanceMatrix<Vertex> matrix);
 		TSP(const TSP &other);
-		pair<double , vector<Vertex> > bruteForceTSP(const vector<Vertex> points);
-		pair<double , vector<Vertex> > closestNeighborTSP(const vector<Vertex> points);
-		pair<double , vector<Vertex> > quickLocalSearchTSP(const vector<Vertex> points); 
+		pair<double , vector<Vertex> > bruteForceTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd);
+		pair<double , vector<Vertex> > closestNeighborTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd);
+		pair<double , vector<Vertex> > quickLocalSearchTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd); 
 		
 	
 
