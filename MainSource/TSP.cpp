@@ -8,30 +8,46 @@
 using namespace std;
 
 
-
+/**
+ * Default constructor
+ **/
 TSP::TSP(){
 	
 	
 }
 
-TSP::TSP(DistanceMatrix<Vertex> distanceMatrix){
+/**
+ * Copy constructor
+ **/
+TSP::TSP(DistanceMatrix<Vertex> &distanceMatrix){
 	this->distanceMatrix = distanceMatrix; 
 	this->distanceMatrixSet = true;
 	
 }
 
+/**
+ *
+ **/
 DistanceMatrix<Vertex> TSP::getDistanceMatrix(){
 	return distanceMatrix; 
 	
 }
 
-
+/**
+ *
+ **/
 void TSP::setDistanceMatrix(DistanceMatrix<Vertex> matrix){
 	this->distanceMatrix = matrix; 
 	this->distanceMatrixSet = true; 
 }
 
-
+/**
+ *	Evaluate the best route testing all the possible options
+ *  @param points Vector of vertexes that need to be visited. The first point is the the departure and the last the destination
+ *				  The first and last point does not need to be the same
+ *  @param bestStart Map the closest delivery point for each storage point in the sense delivery point --> storage point
+ *  @param bestEnd Map the closest delivery point for each storage point in the sense storage point --> delivery point 
+ **/
 pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
 	
 	vector<Vertex> currentOrder = points; 
@@ -43,7 +59,6 @@ pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> points, map
 		for(unsigned int i=1;i<currentOrder.size(); i++)
 			sum += distanceMatrix.getDistance(currentOrder[i-1], currentOrder[i]); 
 		
-		sum += distanceMatrix.getDistance(bestStart[currentOrder[0] ] , currentOrder[0] );
 		sum += distanceMatrix.getDistance(bestStart[currentOrder[0] ] , currentOrder[0] );
 		sum += distanceMatrix.getDistance(currentOrder[currentOrder.size()-1] , bestEnd[ currentOrder[currentOrder.size()-1] ] );
 		
@@ -60,22 +75,36 @@ pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> points, map
  *	Evaluate the best route based on the closest neighbor algorithm
  *  @param points Vector of vertexes that need to be visited. The first point is the the departure and the last the destination
  *				  The first and last point does not need to be the same
+ *  @param bestStart Map the closest delivery point for each storage point in the sense delivery point --> storage point
+ *  @param bestEnd Map the closest delivery point for each storage point in the sense storage point --> delivery point 
  */
 pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart,map<Vertex,Vertex> &bestEnd){
 	
-	
-	if(points.size() <=3){
-		double cost = points.size() >2? distanceMatrix.getDistance(points[0], points[1]) + distanceMatrix.getDistance(points[1], points[2]) :0;
-		return make_pair(cost, points);
-	}
 	
 	vector<Vertex> solution;
 	set<Vertex> remainingPoints; 
 	Vertex previousPoint; 
 	double sumCost = 0; 
 	
-	for(unsigned int i=1; i< remainingPoints.size()-1; i++)
+	double minStartCost = 1e100; 
+	int bestVertexToInit = 0; 
+	double distance; 
+	
+	for(unsigned int i=0; i< points.size(); i++){
+		distance = distanceMatrix.getDistance(bestStart[points[i] ],  points[i]);
+		//find the closest point to a delivery point 
+		if(distance < minStartCost){
+			minStartCost = distance; 
+			bestVertexToInit = i; 
+		}
+			
 		remainingPoints.insert(points[i]); 
+	}
+	
+	
+	sumCost = minStartCost; 
+	solution.push_back(points[bestVertexToInit]); 
+	remainingPoints.erase(points[bestVertexToInit]); 
 	
 	solution.push_back(points[0]);
 	previousPoint =  solution[0]; 
@@ -100,20 +129,28 @@ pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> poin
 		remainingPoints.erase(remainingPoints.find(bestPoint)); 
 	}
 	
-	sumCost += distanceMatrix.getDistance(previousPoint, points[points.size()-1]);
+	sumCost += distanceMatrix.getDistance(previousPoint, bestEnd[previousPoint]);
 	
 	return make_pair(sumCost, solution); 
 }
 
 /**
  *
- */
+ **/
 pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
 	
 	vector<Vertex> currentOrder = points; 
 	vector<Vertex> solution = points;
 	double bestCost = std::numeric_limits<double>::max(); 
 	
+	
+	Vertex firstVertex = currentOrder[0]; 
+	Vertex lastVertex = currentOrder[currentOrder.size()-1];
+	double distance = distanceMatrix.getDistance(bestStart[firstVertex],firstVertex) + distanceMatrix.getDistance(lastVertex,bestEnd[lastVertex]) ;
+	
+	if(distance < bestCost)
+		bestCost = distance; 
+
 	return make_pair(bestCost, solution); 
 	
 }

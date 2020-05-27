@@ -20,7 +20,7 @@ class TSP {
 
 	public:
 		TSP();
-		TSP(DistanceMatrix<Vertex> distanceMatrix);
+		TSP(DistanceMatrix<Vertex> &distanceMatrix);
 		DistanceMatrix<Vertex> getDistanceMatrix(); 
 		void setDistanceMatrix(DistanceMatrix<Vertex> matrix);
 		TSP(const TSP &other);

@@ -5,7 +5,7 @@ BIN_NAME = StorageAllocation
 CC = g++ -g
 
 #FLAGS TO THE COMPILER
-COMPILE_FLAGS = -O3 -std=c++1z -Wall -Wextra -g
+COMPILE_FLAGS = -O3 -std=c++1z -Wall -Wextra
 
 
 all: GraphPack Input Parameter Evaluator WarehousePack Block Warehouse ProductAllocationProhibition QuickTSP GeneralClasses HeuristicPack

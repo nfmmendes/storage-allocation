@@ -14,6 +14,8 @@
 #include "AbstractSolution.h"
 #include "DistanceMatrix.h"
 #include "Cell.h"
+#include "Product.h"
+#include "Order.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -26,10 +28,10 @@ class StorageSolutionEvaluator{
 
 	private:
 		map<Vertex, map<int, vector<PickingRoute > >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
-																			  ///< the presence of a vertex. The key is always the 
-																			  ///< first vertex in the sequence.  
+																			   ///< the presence of a vertex and then by size.  
 		map<pair<Cell,int> , Vertex> vertexByCellPosition; 
 		DistanceMatrix<Vertex> *distances; 
+		double getBetterRouteWithTwoPoints(vector<Vertex>& vertexes, map<Vertex, Vertex> & closestStartPoint,map<Vertex, Vertex> & closestEndPoint );
 	public:
 		StorageSolutionEvaluator();
 		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);
@@ -39,7 +41,11 @@ class StorageSolutionEvaluator{
 		void DoRouteEstimation(AbstractSolution * solution);
 		double DoRouteEvaluation(vector<Vertex> & route);
 		double DoRouteEstimation(vector<Vertex> & route);
+		double DoFullEvaluationWithTSP(vector<PickingRoute> &vertexesVisits, map<Vertex, Vertex> & closestStartPoint,
+									   map<Vertex, Vertex> &closestEndPoint);
+		double searchSequenceOnCache(vector<Vertex> &vertexes);
 		StorageSolutionEvaluator & operator=(const StorageSolutionEvaluator &other);
+		map<Product, int> getRequestsByProduct(vector<Order> &orders);
 		
 };
 

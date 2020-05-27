@@ -41,8 +41,8 @@ class Product{
 		}
     
         long int getID()const { return ID; }
-        string getName(){ return name; }
-        string getType(){ return type; }
+        string getName()const{ return name; }
+        string getType()const{ return type; }
     
         void setID(long int Id){ if(Id >= 0 ) this->ID = Id; }
         void setName(string name){ this->name = name;}

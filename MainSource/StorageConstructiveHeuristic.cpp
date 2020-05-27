@@ -196,6 +196,9 @@ bool StorageConstructiveHeuristic::hasConstraints(Product &prod){
 		   isolatedFamilies.find(prod.getType()) != isolatedFamilies.end();
 }
 
+/**
+ *
+ **/
 double StorageConstructiveHeuristic::getBetterRouteWithTwoPoints(vector<pair<Product, double> > &items, 
 																 map<Product, pair<Cell,int> > &productAllocation){
 																	 
@@ -215,7 +218,7 @@ double StorageConstructiveHeuristic::getBetterRouteWithTwoPoints(vector<pair<Pro
 
 
 /**
- *
+ * Full evaluate a solution 
  **/
 void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution){	
 	
@@ -229,8 +232,6 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 	
 	for(unsigned int i=0;i< orders.size();i++){
 		items = orders[i].getOrderItems(); 
-		storagePoints.clear();
-		
 		
 		if(items.size() == 1) {
 			Vertex location = vertexByCell[ productAllocation[items[0].first ] ]; 
@@ -241,6 +242,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			totalDistance += this->getBetterRouteWithTwoPoints(items, productAllocation);
 			
 		}else{
+			//If some item is not allocated it should be penalized 
 			for(unsigned int j = 0; j<items.size();j++){
 				if(vertexByCell.find(productAllocation[items[j].first ]) != vertexByCell.end())
 					storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
@@ -251,9 +253,9 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			pair<double, vector<Vertex> > route; 
 			if(storagePoints.size() < 6) //This is just a limit to use the brute force TSP algorithm
 				route = tsp.bruteForceTSP(storagePoints, closestStartPoint, closestEndPoint); 
-			else if(storagePoints.size() < 12)
+			else if(storagePoints.size() < 12) //This is a limit to use 
 				route = tsp.quickLocalSearchTSP(storagePoints, closestStartPoint, closestEndPoint);
-			else 
+			else //All the other cases will use a closest neighbor inserction procedure 
 				route = tsp.closestNeighborTSP(storagePoints, closestStartPoint, closestEndPoint);
 			
 			totalDistance += route.first; 
@@ -310,7 +312,7 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 	sort(familiesOrderedByFrequence.begin(), familiesOrderedByFrequence.end()); 
 
 	for(unsigned int i = 0; i<familiesOrderedByFrequence.size(); i++){
-		
+		/*** CONTINUE FROM HERE ***/
 	}
 	
 }
@@ -439,7 +441,7 @@ vector<Vertex> StorageConstructiveHeuristic::getStoragePoints(){
 	vector<Vertex> result;
 	
 	for( auto &[key, value] : vertexByCell){
-		(void) key; //just to avoid warning 
+		(void) key; //Only to clean warnings about not using this variable
 		if(storageVertexTypes.find(value.getType()) != storageVertexTypes.end() )
 			result.push_back(value);
 	}
@@ -539,12 +541,12 @@ set<Cell> StorageConstructiveHeuristic::getNonUsedCells(const map<Vertex,Product
 	set<Cell> result; 
 	
 	for(const auto &[key,value] : vertexByCell){
-		(void) value; 
+		(void) value; //Only to clean warnings about not using this variable
 		result.insert(key.first);
 	}
 	
 	for(const auto &[key, value] : allocations){
-		(void) value;
+		(void) value; //Only to clean warnings about not using this variable
 		result.erase(cellByVertex[key].first); 
 	}
 	
@@ -558,13 +560,12 @@ set<Shelf> StorageConstructiveHeuristic::getNonUsedShelves(const set<Cell> &used
 	set<Shelf> result; 
 	
 	for(const auto &[key, value] : shelvesById){
-		(void) key;
+		(void) key; 	//Only to clean warnings about not using this variable
 		result.insert(value); 
 	}
 	
-	for(const auto &cell : usedCells){
+	for(const auto &cell : usedCells)
 		result.erase(shelvesById[cell.getIdShelf()]);
-	}
 
 	return result; 
 }
