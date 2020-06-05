@@ -429,3 +429,11 @@ bool Block::operator==(const Block &other){
 	}
 
 
+int Block::getNumberOfAvailablePositions(){
+	int total = 0; 
+	
+	for(unsigned int i=0;i<shelves.size();i++)
+		total += shelves[i].getNumberOfAvailablePositions(); 
+	
+	return total; 
+}

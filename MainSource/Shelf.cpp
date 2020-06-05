@@ -86,6 +86,14 @@ void Shelf::printShelfInformation(){
 	cout<<"_________________________\n";
 }
 
+int Shelf::getNumberOfAvailablePositions(){
+	int total = 0;
+	for(unsigned int i=0;i<cells.size();i++)
+		total+= cells[i].getLevels();
+	
+	return total; 
+}
+
 /**
  *	Less than operator overload (Binary operator) 
  *	The shelves are compared first by id, after by number of rows, columns and finally position

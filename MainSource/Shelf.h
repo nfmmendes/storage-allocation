@@ -53,6 +53,7 @@ class Shelf{
         void setCellWidth(double value);
 		
 		void printShelfInformation();
+		int getNumberOfAvailablePositions(); 
 		
 		bool operator<(const Shelf &other)const; 
 		bool operator==(const Shelf &other)const; 

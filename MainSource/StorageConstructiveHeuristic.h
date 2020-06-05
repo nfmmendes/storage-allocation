@@ -42,7 +42,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		map<long int, Shelf> shelvesById; 
 		map<Vertex, Vertex> closestStartPoint;
 		map<Vertex, Vertex> closestEndPoint; 
-		vector<pair< Product , int> > productsByFrequence;
+		vector<pair< Product , int> > productsSortedByFrequence;
 		
 		bool StopCriteriaReached();
         void EvaluateSolution(AbstractSolution * solution); 
@@ -56,12 +56,14 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		bool isForbiddenStore(Product &product, Vertex &vertex);
 		vector<Vertex> getStorageVertexes(map<string,vector<Vertex> > &vertexByType);
 		void InitializeClosestDeliveryPoint();
-		set<Product> getNonUsedProducts(const map<Vertex,Product> allocations); 
-		set<Cell> getNonUsedCells(const map<Vertex,Product> &allocations); 
-		set<Shelf> getNonUsedShelves(const set<Cell> &usedCells);
-		set<Block> getNonUsedBlocks(const set<Shelf> &usedShelves); 
-		void allocateStronglyIsolatedFamilies(map<Vertex, Product> & allocations , vector<bool> &usedVertex);
+		set<Product> getNotUsedProducts(const map<Vertex,Product> allocations); 
+		set<Cell> getNotUsedCells(const map<Vertex,Product> &allocations); 
+		set<Shelf> getNotUsedShelves(const set<Cell> &usedCells);
+		set<Block> getNotUsedBlocks(const set<Shelf> &usedShelves); 
+		void allocateStronglyIsolatedFamilies(map<Vertex, Product> & allocations , vector<bool> &usedVertexes);
 		double getBetterRouteWithTwoPoints(vector<pair<Product, double> > &items, map<Product, pair<Cell,int> > &productAllocation );
+		tuple <map<string, queue<Product> >, map<string, int> > getProductAndFrequenceByFamily(set<Product> &notUsedProducts); 
+		vector<pair<int, string > > orderFamilyByFrequence(const map<string, int> &frequenceByFamily);
 		
     public: 
         StorageAllocationSolution * Execute();

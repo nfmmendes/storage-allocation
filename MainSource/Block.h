@@ -78,6 +78,7 @@ class Block{
 		bool operator<(const Block &other)const ;
 		Block & operator=(const Block &other);
 		
+		int getNumberOfAvailablePositions(); 
 		void printBlockInformation();
 };
 

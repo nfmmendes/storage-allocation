@@ -68,7 +68,7 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 	for(const auto &[product, position] : allocations){
 		if(position.first.getIdShelf() != shelf.getId())
 			continue; 
-		int numLevels = position.second;
+		//int numLevels = position.second;
 		shelfAllocations[position] = product;
 	}
 	

@@ -80,7 +80,7 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 	for(unsigned int i=0;i<products.size();i++)
 		productsByFamily[products[i].getType()].push_back(products[i]);
 	
-	productsByFrequence = getProductOrderByFrequence();
+	productsSortedByFrequence = getProductOrderByFrequence();
 	
 	
 	InitializeClosestDeliveryPoint(); 	
@@ -264,16 +264,56 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 }
 
 /**
+ * Return the frequence and the not used products of each product family
+ * @param notUsedProducts Set of products that where not allocated yet in the warehouse 
+ * @return Two maps in a tuple, the first is a map with the products ordered by frequence, from the most frequent to the last frequent. The second	
+ *	       map has the frequence of each family. Both maps have as keys the family name
+ **/
+tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuristic::getProductAndFrequenceByFamily(set<Product> &notUsedProducts){
+	map<string, queue<Product> > productsByFamily; 
+	map<string, int> frequenceByFamily; 
+	
+	for(unsigned int i=0; i< productsSortedByFrequence.size();i++){
+		string familyName = productsSortedByFrequence[i].first.getType(); 
+		if(frequenceByFamily.find(familyName) == frequenceByFamily.end())
+			frequenceByFamily[familyName] = productsSortedByFrequence[i].second;
+		else
+			frequenceByFamily[familyName] += productsSortedByFrequence[i].second;
+		
+		if(notUsedProducts.find(productsSortedByFrequence[i].first) != notUsedProducts.end())
+			productsByFamily[familyName].push(productsSortedByFrequence[i].first); 
+	}
+	
+	return {productsByFamily,  frequenceByFamily};
+}
+
+/**
+ * Order the families by number of requests 
+ **/
+vector<pair<int, string > > StorageConstructiveHeuristic::orderFamilyByFrequence(const map<string, int> &frequenceByFamily){
+	vector<pair < int, string > > familiesOrderedByFrequence; 
+	
+	
+	for(const auto &[family,frequence] :  frequenceByFamily)
+		familiesOrderedByFrequence.push_back(make_pair(frequence,family));
+	
+	sort(familiesOrderedByFrequence.begin(), familiesOrderedByFrequence.end());
+	
+	return familiesOrderedByFrequence; 
+}
+
+
+/**
  * Allocate products that belongs to strongly isolated families and were not allocated in the initial solution 
  * @param allocations Maps all the already allocated products to its positions 
  * @param usedVertex Lists which vertex were already used or not 
  **/
-void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,Product> & allocations, vector<bool> &usedVertex){
+void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,Product> & allocations, vector<bool> &usedVertexes){
 	
 	//First of all it is needed to know which cells were used (or not) as well as the shelves and blocks, in this way we are 
 	//able to evaluate available positions for the isolated families 
-	set<Product> notUsedProducts = getNonUsedProducts(allocations); 
-	set<Cell> notUsedCells = getNonUsedCells(allocations);
+	set<Product> notAllocatedProducts = getNotUsedProducts(allocations); 
+	set<Cell> notUsedCells = getNotUsedCells(allocations);
 	set<Cell> usedCells; 
 	for(const auto & [key, value] : vertexByCell) { 
 		(void) value; 
@@ -281,40 +321,212 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 			usedCells.insert(key.first);
 	}
 	
-	set<Shelf> notUsedShelves = getNonUsedShelves(usedCells);
+	set<Shelf> notUsedShelves = getNotUsedShelves(usedCells);
 	set<Shelf> usedShelves; 
 	for(const auto & shelf : notUsedShelves) if(notUsedShelves.find(shelf) == notUsedShelves.end() ) usedShelves.insert(shelf);
 	
-	set<Block> notUsedBlocks = getNonUsedBlocks(usedShelves); 
+	set<Block> notUsedBlocks = getNotUsedBlocks(usedShelves); 
 	
-	//After it is needed to know which products were not allocated in each family and put them in frequence order 
-	//It is also useful to know the total frequence of each family, then we can try allocated those with a higher 
-	//number of requests first 
-	map<string, queue<Product> > productsByFamily; 
-	map<string, int> frequenceByFamily; 
+	// After it is needed to know which products were not allocated in each family and put them in frequence order 
+	// It is also useful to know the total frequence of each family, then we can try allocated those with a higher 
+    // number of requests first
+	auto [productsByFamily, frequenceByFamily] = getProductAndFrequenceByFamily(notAllocatedProducts); 
 	
-	for(unsigned int i=0; i< productsByFrequence.size();i++){
-		string familyName = productsByFrequence[i].first.getType(); 
-		if(frequenceByFamily.find(familyName) == frequenceByFamily.end())
-			frequenceByFamily[familyName] = productsByFrequence[i].second;
-		else
-			frequenceByFamily[familyName] += productsByFrequence[i].second;
-		
-		if(notUsedProducts.find(productsByFrequence[i].first) != notUsedProducts.end())
-			productsByFamily[familyName].push(productsByFrequence[i].first); 
-	}
+	vector< pair<int, string> > familiesOrderedByFrequence = orderFamilyByFrequence(frequenceByFamily); 
+	map<string, vector<string> > familiesByIsolationLevel;
+	map<Product, int> frequenceByProduct;
 	
-	//Order the families by number of requests 
-	vector< pair<int, string> > familiesOrderedByFrequence; 
-	for(const auto &[family,frequence] :  frequenceByFamily)
-		familiesOrderedByFrequence.push_back(make_pair(frequence,family));
+	for(unsigned int i=0; i<productsSortedByFrequence.size();i++)
+		frequenceByProduct[productsSortedByFrequence[i].first ] = productsSortedByFrequence[i].second; 
 	
-	sort(familiesOrderedByFrequence.begin(), familiesOrderedByFrequence.end()); 
+	//Allocate families with "BLOCK" isolation level
+	for(auto [code, family] : familyIsolationsByFamilyCode)
+		familiesByIsolationLevel[family.getLevel()].push_back(code); 
 
-	for(unsigned int i = 0; i<familiesOrderedByFrequence.size(); i++){
-		/*** CONTINUE FROM HERE ***/
+	set<Shelf> newUsedShelves; 
+	for(auto block: notUsedBlocks){
+		string bestFamily; 
+		int maxFrequence=0; 
+		map<Vertex,Product> bestAllocation; 
+		
+		map<long int, Shelf> shelves = block.getShelvesById(); 
+		vector<Vertex> vertexes; 
+		for(auto [id, shelf] : shelves){
+			vector<Cell> shelfCells =  shelf.getCells();
+			for(unsigned i=0;i<shelfCells.size();i++){
+				for(int j=0;j<shelfCells[i].getLevels();j++)
+					vertexes.push_back(vertexByCell[make_pair(shelfCells[i],j)]); 
+			}
+		}
+		
+		//Order the vertexes in the block by distance from the closest delivery point 
+		//Maybe it could be pre-evaluated 
+		sort(vertexes.begin(), vertexes.end(), [this](const Vertex &a,const Vertex &b){
+			return this->distanceMatrix->getDistance(this->closestStartPoint[a], a) <= this->distanceMatrix->getDistance(this->closestStartPoint[b], b); 
+		});
+		
+		
+		int contFrequence = 0;
+		map<Vertex,Product> currentAllocation; 
+		for(auto code : familiesByIsolationLevel["Block"]){
+			queue<Product> products = productsByFamily[code];
+			while(products.size() > 0){
+				auto prod = products.front();
+				products.pop(); 
+				int cont =0; 
+				int tryInsert=0; 
+				while((isForbiddenStore(prod, vertexes[tryInsert%vertexes.size()]) || usedVertexes[tryInsert]) && (unsigned)cont++ < vertexes.size()) 
+					tryInsert++;
+				
+				if(cont < (int) vertexes.size()){
+					currentAllocation[vertexes[tryInsert] ] = prod; 
+					usedVertexes[tryInsert] = true;
+					contFrequence += frequenceByProduct[prod];
+				}
+			}
+			
+			if(contFrequence> maxFrequence){
+				maxFrequence = contFrequence; 
+				bestFamily = code; 
+				bestAllocation = currentAllocation; 
+			}
+			
+		}
+		
+		if(maxFrequence > 0){
+			vector<Shelf> blockShelves= block.getShelves(); 
+			//Remove all the shelves of the block (they cannot be used by other family
+			for(unsigned int i=0;i<blockShelves.size(); i++)
+				if(notUsedShelves.find(blockShelves[i]) != notUsedShelves.end())
+					notUsedShelves.erase(blockShelves[i]); 
+			//Remove all the products already used in the family (they are removed in the same order they were evaluated)
+			for(unsigned int i=0;i<bestAllocation.size();i++)
+				productsByFamily[bestFamily].pop(); 
+			for(auto &[vertex, prod] : bestAllocation)
+				allocations[vertex] = prod; 
+			
+			notUsedBlocks.erase(block); 
+		}
 	}
-	
+
+	//Allocate families with "SHELF" isolation level
+	for(auto shelf : notUsedShelves){
+		string bestFamily; 
+		int maxFrequence=0; 
+		map<Vertex,Product> bestAllocation; 
+		vector<Vertex> vertexes;
+		vector<Cell> shelfCells =  shelf.getCells();
+		for(unsigned i=0;i<shelfCells.size();i++)
+			for(int j=0;j<shelfCells[i].getLevels();j++)
+					vertexes.push_back(vertexByCell[make_pair(shelfCells[i],j)]); 
+		
+		//Order the vertexes in the block by distance from the closest delivery point 
+		//Maybe it could be pre-evaluated 
+		sort(vertexes.begin(), vertexes.end(), [this](const Vertex &a,const Vertex &b){
+			return this->distanceMatrix->getDistance(this->closestStartPoint[a], a) <= this->distanceMatrix->getDistance(this->closestStartPoint[b], b); 
+		});
+		
+		int contFrequence = 0;
+		map<Vertex,Product> currentAllocation; 
+		for(auto code : familiesByIsolationLevel["SHELF"]){
+			
+			queue<Product> products = productsByFamily[code];
+			while(products.size() > 0){
+				auto prod = products.front();
+				products.pop(); 
+				int cont =0; 
+				int tryInsert=0; 
+				while((isForbiddenStore(prod, vertexes[tryInsert%vertexes.size()]) || usedVertexes[tryInsert]) && (unsigned)cont++ < vertexes.size()) 
+					tryInsert++;
+				
+				if(cont < (int) vertexes.size()){
+					currentAllocation[vertexes[tryInsert] ] = prod; 
+					usedVertexes[tryInsert] = true;
+					contFrequence += frequenceByProduct[prod];
+				}
+			}
+			
+			if(contFrequence> maxFrequence){
+				maxFrequence = contFrequence; 
+				bestFamily = code; 
+				bestAllocation = currentAllocation; 
+			}
+
+		}
+		
+		if(maxFrequence > 0){
+			vector<Cell> shelfCells = shelf.getCells(); 
+			//Remove all cells of this shelf from the list of not used cells
+			for(unsigned int i=0;i<shelfCells.size(); i++)
+				if(notUsedCells.find(shelfCells[i]) != notUsedCells.end())
+					notUsedCells.erase(shelfCells[i]);
+			
+			for(unsigned int i=0;i<bestAllocation.size();i++)
+				productsByFamily[bestFamily].pop(); 
+			for(auto &[vertex, prod] : bestAllocation)
+				allocations[vertex] = prod; 
+			
+			notUsedShelves.erase(shelf);
+		}
+	}
+
+
+	for(auto cell : notUsedCells){
+		string bestFamily; 
+		int maxFrequence=0; 
+		map<Vertex,Product> bestAllocation; 
+
+		vector<Vertex> vertexes;
+		
+		for(int j=0;j<cell.getLevels();j++)
+			vertexes.push_back(vertexByCell[make_pair(cell,j)]); 
+		
+		//Order the vertexes in the block by distance from the closest delivery point 
+		//Maybe it could be pre-evaluated 
+		sort(vertexes.begin(), vertexes.end(), [this](const Vertex &a,const Vertex &b){
+			return this->distanceMatrix->getDistance(this->closestStartPoint[a], a) <= this->distanceMatrix->getDistance(this->closestStartPoint[b], b); 
+		});
+			
+
+		int contFrequence = 0;
+		map<Vertex,Product> currentAllocation; 
+		for(auto code : familiesByIsolationLevel["CELLS"]){
+			
+		
+			queue<Product> products = productsByFamily[code];
+			while(products.size() > 0){
+				auto prod = products.front();
+				products.pop(); 
+				int cont =0; 
+				int tryInsert=0; 
+				while((isForbiddenStore(prod, vertexes[tryInsert%vertexes.size()]) || usedVertexes[tryInsert]) && (unsigned)cont++ < vertexes.size()) 
+					tryInsert++;
+				
+				if(cont < (int) vertexes.size()){
+					currentAllocation[vertexes[tryInsert] ] = prod; 
+					usedVertexes[tryInsert] = true;
+					contFrequence += frequenceByProduct[prod];
+				}
+			}
+			
+			if(contFrequence> maxFrequence){
+				maxFrequence = contFrequence; 
+				bestFamily = code; 
+				bestAllocation = currentAllocation; 
+			}
+
+		}
+		
+		if(maxFrequence > 0){
+			
+			for(unsigned int i=0;i<bestAllocation.size();i++)
+				productsByFamily[bestFamily].pop(); 
+			for(auto &[vertex, prod] : bestAllocation)
+				allocations[vertex] = prod; 
+			
+			notUsedCells.erase(cell);
+		}
+	}
 }
 
 
@@ -329,61 +541,66 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	
 	vector<bool> usedVertex; 											///< Stores if vertex is used or not
 	set<Product> allocatedProducts; 
-	map<Cell, set<string> > familiesByCell; 
-	map<Shelf, set<string> > familiesByShelf;
-	map<Block, set<string> > familiesByBlock;  
+	map<Cell, set<string> > familiesByCell; 							///< Stores all the families that have constraints by cell
+	map<Shelf, set<string> > familiesByShelf;							///< Stores all the shelves that have constraints by shelf
+	map<Block, set<string> > familiesByBlock;  							///< Stores all families that have constraints by block
 	
 	vector<Vertex> storePoints = getStorageVertexes(vertexByType);
 	vector<Vertex> vertexesOrderedByDistance = getStorageVertexesOrderedByDistance(); 
 	
-	if(productsByFrequence.size() == 0)
-		productsByFrequence = getProductOrderByFrequence();
-	
+	if(productsSortedByFrequence.size() == 0)
+		productsSortedByFrequence = getProductOrderByFrequence();
 	
 	int lastOnSequence = 0; 
-	usedVertex.resize(vertexByCell.size(), false); 
+	unsigned int countTries = 0; 
+	unsigned int numPositions = vertexesOrderedByDistance.size(); 
+	usedVertex.resize(numPositions, false); 
 	
-	for(unsigned int i=0;i<productsByFrequence.size();i++){
-		auto & item  = productsByFrequence[i]; 
-		if(!hasConstraints(item.first)){
-			while(usedVertex[lastOnSequence])lastOnSequence++;
-			usedVertex[lastOnSequence] = true; 
-			allocation[vertexesOrderedByDistance[lastOnSequence]] = item.first; 
+	for(unsigned int i=0;i<productsSortedByFrequence.size();i++){
+		auto & item  = productsSortedByFrequence[i]; 
+		if(!hasConstraints(item.first)){								// All the products that have not a allocation constraint are inserted in 
+																		// the first available cell
+			while(usedVertex[lastOnSequence%numPositions])lastOnSequence++;
+			usedVertex[lastOnSequence%numPositions] = true; 
+			allocation[vertexesOrderedByDistance[lastOnSequence%numPositions]] = item.first; 
 		}else if(isIsolatedFamily(item.first)){
 			IsolatedFamily isolation = familyIsolationsByFamilyCode[item.first.getType()]; 
 			string level = isolation.getLevel(); 
 			string force = isolation.getForce();
+		
+			unsigned int tryInsertIndex = lastOnSequence%numPositions; 	
 			
-			unsigned int tryInsertIndex = lastOnSequence; 
-			while(isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex]) 
-				tryInsertIndex++;
+			//Looks for the first not forbidden available position			
+			while(isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex] || numPositions> countTries++)
+				tryInsertIndex = (tryInsertIndex+1)%numPositions;
 			
-			if(force == "WEAK"){
-				usedVertex[tryInsertIndex] = true;
-				allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
-			}else if(force == "STRONG"){
-				if(cellByVertex[vertexesOrderedByDistance[tryInsertIndex]].first.getLevels() == 1 && level == "CELL"){
-					usedVertex[tryInsertIndex] = true; 
+			if(countTries > numPositions){ //It means that all the positions were tested and no insertion is possible 			
+				if(force == "WEAK"){							// If it is a weak isolation, we perform the allocation anyway
+					usedVertex[tryInsertIndex] = true;
 					allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
-				}else				
-					continue;
+				}else if(force == "STRONG"){ //If we have an strong isolation by cell but just one product can be inserted in each cell, so it is
+											 //ok to insert the product there 
+					if(cellByVertex[vertexesOrderedByDistance[tryInsertIndex]].first.getLevels() == 1 && level == "CELL"){
+						usedVertex[tryInsertIndex] = true; 
+						allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
+					}
+				}
 			}
 			
-		}else{
-			unsigned int tryInsertIndex = lastOnSequence; 
-			while(isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex]) 
-				tryInsertIndex++;
+		}else{ //Forbidden allocation products 
+			unsigned int tryInsertIndex = lastOnSequence%numPositions; 
+			while(isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex] || numPositions > countTries++)
+				tryInsertIndex = (tryInsertIndex+1)%numPositions;
 			
-			if(tryInsertIndex < vertexesOrderedByDistance.size()){
+			if(countTries <= vertexByCell.size()){
 				usedVertex[tryInsertIndex] = true;
 				allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
 			}
 		}
-		
+		countTries = 0;
 	} 
 	
 	allocateStronglyIsolatedFamilies(allocation, usedVertex);
-	
 
 	int countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
 	cout<<"Not allocated:\t" <<countNotAllocated<<endl;
@@ -414,7 +631,7 @@ vector<Vertex> StorageConstructiveHeuristic::getStorageVertexes(map<string,vecto
  * Get the list of products non allocated in the warehouse after an initial allocation 
  * @param allocations initial allocation 
  **/ 
-set<Product>  StorageConstructiveHeuristic::getNonUsedProducts(const map<Vertex,Product> allocations){
+set<Product>  StorageConstructiveHeuristic::getNotUsedProducts(const map<Vertex,Product> allocations){
 	set<Product> result;
 	
 	for(unsigned int i=0;i<products.size(); i++)
@@ -537,7 +754,7 @@ map<string, vector<Vertex> > StorageConstructiveHeuristic::getVertexesByType(){
 /**
  * Get the set of non used cells after an initial allocation of products
  **/
-set<Cell> StorageConstructiveHeuristic::getNonUsedCells(const map<Vertex,Product> &allocations){
+set<Cell> StorageConstructiveHeuristic::getNotUsedCells(const map<Vertex,Product> &allocations){
 	set<Cell> result; 
 	
 	for(const auto &[key,value] : vertexByCell){
@@ -556,7 +773,7 @@ set<Cell> StorageConstructiveHeuristic::getNonUsedCells(const map<Vertex,Product
 /** 
  * Get the set of non used shelves after an initial allocation of products
  **/
-set<Shelf> StorageConstructiveHeuristic::getNonUsedShelves(const set<Cell> &usedCells){
+set<Shelf> StorageConstructiveHeuristic::getNotUsedShelves(const set<Cell> &usedCells){
 	set<Shelf> result; 
 	
 	for(const auto &[key, value] : shelvesById){
@@ -574,7 +791,7 @@ set<Shelf> StorageConstructiveHeuristic::getNonUsedShelves(const set<Cell> &used
 /**
  * Get the set of non used blocks after an initial allocation of products 
  **/
-set<Block> StorageConstructiveHeuristic::getNonUsedBlocks(const set<Shelf> &usedShelves){
+set<Block> StorageConstructiveHeuristic::getNotUsedBlocks(const set<Shelf> &usedShelves){
 	set<Block> result; 
 	
 	for(const auto &block : blocksByName)
