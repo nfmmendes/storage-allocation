@@ -162,7 +162,7 @@
 			cout<<"Shelves on block: \n" <<shelvesByBlock[blocks[i].getName()].size()<<endl;
             this->blocks[i].setShelves(shelvesByBlock[blocks[i].getName()]);
         }
-        
+		
         cout<<"Reading corridors...\n";
         //Read all data concerning corridors
         file>>numCorridors;

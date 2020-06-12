@@ -23,9 +23,11 @@ Block::Block(){}
  */
 Block::Block(const Block &other){
 	
-    for(unsigned int i = 0; i< other.shelves.size();i++)
+    for(unsigned int i = 0; i< other.shelves.size();i++){
         this->shelves.push_back(Shelf(other.shelves[i]));
-    
+		shelvesById[other.shelves[i].getId()]= other.shelves[i];
+	}
+	
     for(unsigned int i=0; i < other.exits.size(); i++)
         this->exits.push_back(BlockExit(other.exits[i]));
     
@@ -96,6 +98,7 @@ vector<Shelf> Block::getShelves() {return shelves; }
  * 
  **/
 map<long int, Shelf> Block::getShelvesById(){
+	
 	return shelvesById;
 }
 
@@ -144,6 +147,7 @@ void Block::setShelves(vector<Shelf > & others){
 	
 	std::transform(shelves.begin(), shelves.end(), std::inserter(shelvesById, shelvesById.end()),
                [](const Shelf &s) { return std::make_pair(s.getId(), s); });
+	cout<<"SIZE \t"<<this->shelves.size()<<endl;
     
 }
 
@@ -172,19 +176,19 @@ bool Block::operator<(const Block &other) const{
 *	@param other The block in the right side of the operator 
 */
 bool Block::operator==(const Block &other){
-	
+
 	if(! (this->name == other.name && fabs(this->length-other.length) <1e-5 && fabs(this->width - other.width)<1e-5))
 		return false; 
-	
+
 	if( this->bottomLeftCoords != other.bottomLeftCoords)
 		return false; 
-	
+
 	//If the blocks don't have the same number of exits, corridors and curves they are not equals 
 	bool equalVertexes = this->shelves.size() == other.shelves.size();
 	bool equalExits = this->exits.size() == other.exits.size(); 
 	bool equalCorridors = this->corridors.size() == other.corridors.size(); 
 	bool equalCurves = this->curves.size() == other.curves.size(); 
-	
+
 	if(!(equalVertexes && equalExits && equalCorridors && equalCurves))
 		return false; 
 
@@ -193,24 +197,24 @@ bool Block::operator==(const Block &other){
 	vector<Shelf> otherShelves = other.shelves; 	
 	sort(this->shelves.begin(), this->shelves.end());
 	sort(otherShelves.begin(), otherShelves.end()); 	
-	
+
 	vector<BlockExit> otherExits = other.exits;
 	sort(this->exits.begin(), this->exits.end());
 	sort(otherExits.begin(), otherExits.end()); 
-	
+
 	vector<Corridor> otherCorridors = other.corridors; 
 	sort(this->corridors.begin(), this->corridors.end()); 
 	sort(otherCorridors.begin(), otherCorridors.end()); 
-	
+
 	vector<Curve> otherCurves = other.curves;
 	sort(this->curves.begin(), this->curves.end());
 	sort(otherCurves.begin(), otherCurves.end()); 
-	
+
 	
 	for(unsigned int i = 0; i< this->shelves.size(); i++)
 		if(this->shelves[i] != otherShelves[i])  
 			return false; 
-	
+
 	for(unsigned int i = 0; i< this->exits.size(); i++)
 		if(this->exits[i] != otherExits[i])
 			return false; 
@@ -219,11 +223,10 @@ bool Block::operator==(const Block &other){
 		if(this->corridors[i] != otherCorridors[i])
 			return false; 
 	
-	
 	for(unsigned int i=0; i < this->curves.size(); i++)
 		if(this->curves[i] != otherCurves[i])
 			return false; 
-		
+	
 	return true;
     
 }
@@ -376,8 +379,10 @@ bool Block::operator==(const Block &other){
 	Block & Block::operator=(const Block &other){
 		
 		this->shelves.clear();
-		for(unsigned int i = 0; i< other.shelves.size();i++)
+		for(unsigned int i = 0; i< other.shelves.size();i++){
 			this->shelves.push_back(Shelf(other.shelves[i]));
+			shelvesById[other.shelves[i].getId()]= this->shelves[this->shelves.size()-1];
+		}
     
 		this->exits.clear();
 		for(unsigned int i=0; i < other.exits.size(); i++)
@@ -396,6 +401,8 @@ bool Block::operator==(const Block &other){
 		this->bottomLeftCoords = other.bottomLeftCoords;
 		this->width = other.width;
 		this->length = other.length;
+		
+	
 		
 		return *this;
 	}

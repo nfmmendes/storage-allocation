@@ -43,6 +43,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		map<Vertex, Vertex> closestStartPoint;
 		map<Vertex, Vertex> closestEndPoint; 
 		vector<pair< Product , int> > productsSortedByFrequence;
+		map<Product, int> frequenceByProduct;
 		
 		bool StopCriteriaReached();
         void EvaluateSolution(AbstractSolution * solution); 
@@ -64,6 +65,10 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		double getBetterRouteWithTwoPoints(vector<pair<Product, double> > &items, map<Product, pair<Cell,int> > &productAllocation );
 		tuple <map<string, queue<Product> >, map<string, int> > getProductAndFrequenceByFamily(set<Product> &notUsedProducts); 
 		vector<pair<int, string > > orderFamilyByFrequence(const map<string, int> &frequenceByFamily);
+		tuple<int, map<Vertex,Product> > testFamilyAllocation(queue<Product> products, vector<Vertex> &vertexes,vector<bool> &usedVertexes);
+		bool AllocateBestFamily(map<Vertex, Product> & allocations, vector<bool> &usedVertexes, vector<Vertex> vertexes, 
+				  vector<string> familyCodes,  map<string, queue<Product> >  &orderedProductsByFamily);
+		tuple<set<Cell> , set<Shelf> , set<Block> > getNonUsedStructures(const map<Vertex,Product> &allocations);
 		
     public: 
         StorageAllocationSolution * Execute();
