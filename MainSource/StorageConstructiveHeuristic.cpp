@@ -520,8 +520,9 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	} 
 	
 	int countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
-	allocateStronglyIsolatedFamilies(allocation, usedVertex);
 	cout<<"Not allocated:\t" <<countNotAllocated<<endl;
+	allocateStronglyIsolatedFamilies(allocation, usedVertex);
+	
 
 	countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
 	cout<<"Not allocated:\t" <<countNotAllocated<<endl;
@@ -702,8 +703,7 @@ set<Shelf> StorageConstructiveHeuristic::getNotUsedShelves(const set<Cell> &used
 		result.insert(value); 
 	}
 	
-	for(const auto &cell : usedCells){
-		cout<<"shelf "<<cell.getIdShelf()<<endl; 
+	for(const auto &cell : usedCells){ 
 		result.erase(shelvesById[cell.getIdShelf()]);
 	}
 
@@ -719,10 +719,8 @@ set<Block> StorageConstructiveHeuristic::getNotUsedBlocks(const set<Shelf> &used
 	
 	for(const auto &block : blocksByName)
 		result.insert(block.second);
-	cout<<usedShelves.size()<<"___"<<result.size()<<endl; 
-	for(set<Shelf>::iterator it = usedShelves.begin(); it != usedShelves.end(); it++)
-		cout<<it->getBlockName()<<endl; 
-	for(const auto &shelf : usedShelves){
+
+	for(const auto &shelf : usedShelves)
 		result.erase(blocksByName[shelf.getBlockName()]); 
 	
 	return result;
