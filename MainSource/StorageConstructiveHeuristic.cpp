@@ -149,6 +149,7 @@ bool StorageConstructiveHeuristic::isForbiddenStore(Product &product, Vertex &ve
 		return true; 
 	else if(productAllocationsByProductName.find(product.getName()) !=  productAllocationsByProductName.end()){
 		ProductAllocationProhibitions allocationProhibition = productAllocationsByProductName[product.getName()];
+		
 		pair<Cell,int> location = cellByVertex[vertex]; 
 		Cell cell = location.first; 
 		long int shelfId = cell.getIdShelf(); 
@@ -172,11 +173,8 @@ bool StorageConstructiveHeuristic::isForbiddenStore(Product &product, Vertex &ve
 		if(forbiddenShelves.size() > 0)
 			result = count_if(forbiddenShelves.begin(),forbiddenShelves.end(), [shelfId](Shelf &shelf){return shelf.getId() == shelfId;}) >0;
 		if(forbiddenBlocks.size() >0)
-			result = count_if(forbiddenBlocks.begin(),forbiddenBlocks.end(), [&block](Block &itBlock){return itBlock.getName() == block.getName();}) >0;
-		
+			result = count_if(forbiddenBlocks.begin(),forbiddenBlocks.end(), [&block](Block &itBlock){return itBlock.getName() == block.getName();}) >0; 
 		return result; 
-	
-		
 	}
 	
 	//If the cell exists and there is not an allocation prohibition to the product, then the allocation is always permitted
@@ -263,6 +261,8 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			totalDistance += route.first; 
 		}
 	}
+	
+	solution->setSolutionValue(totalDistance+penalty);
 }
 
 /**
@@ -295,7 +295,6 @@ tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuri
 vector<pair<int, string > > StorageConstructiveHeuristic::orderFamilyByFrequence(const map<string, int> &frequenceByFamily){
 	vector<pair < int, string > > familiesOrderedByFrequence; 
 	
-	
 	for(const auto &[family,frequence] :  frequenceByFamily)
 		familiesOrderedByFrequence.push_back(make_pair(frequence,family));
 	
@@ -305,22 +304,21 @@ vector<pair<int, string > > StorageConstructiveHeuristic::orderFamilyByFrequence
 }
 
 
-tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAllocation(queue<Product> products, vector<Vertex> &vertexes,  vector<bool> &usedVertexes){
+tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAllocation(queue<Product> products, vector<Vertex> &vertexes){
 	
 	int contFrequence = 0;
 	map<Vertex,Product> currentAllocation; 
-	
+
 	while(products.size() > 0){
 		auto prod = products.front();
 		products.pop(); 
 		int cont =0; 
 		int tryInsert=0; 
-		while((isForbiddenStore(prod, vertexes[tryInsert%vertexes.size()]) || usedVertexes[tryInsert]) && (unsigned)cont++ < vertexes.size()) 
+		while(isForbiddenStore(prod, vertexes[tryInsert%vertexes.size()]) && (unsigned)cont++ < vertexes.size())
 			tryInsert++;
 		
 		if(cont < (int) vertexes.size()){
 			currentAllocation[vertexes[tryInsert] ] = prod; 
-			usedVertexes[tryInsert] = true;
 			contFrequence += frequenceByProduct[prod];
 		}
 	}
@@ -328,7 +326,7 @@ tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAlloca
 	return {contFrequence, currentAllocation};
 }
 
-bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & allocations, vector<bool> &usedVertexes, vector<Vertex> vertexes, 
+bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & allocations, vector<Vertex> vertexes, 
 										vector<string> familyCodes,  map<string, queue<Product> > &orderedProductsByFamily){
 	
 	//Order the vertexes in the block by distance from the closest delivery point 
@@ -337,13 +335,13 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 		return this->distanceMatrix->getDistance(this->closestStartPoint[a], a) <= this->distanceMatrix->getDistance(this->closestStartPoint[b], b); 
 	});
 
-
 	string bestFamily; 
 	int maxFrequence=0; 
-	map<Vertex,Product> bestAllocation; 
+	map<Vertex,Product> bestAllocation;  
 	
 	for(auto code : familyCodes){
-		auto [contFrequence, currentAllocation] = testFamilyAllocation(orderedProductsByFamily[code], vertexes, usedVertexes); 
+		auto [contFrequence, currentAllocation] = testFamilyAllocation(orderedProductsByFamily[code], vertexes); 
+		
 		if(contFrequence> maxFrequence){
 			maxFrequence = contFrequence; 
 			bestFamily = code; 
@@ -368,7 +366,7 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
  * @param allocations Maps all the already allocated products to its positions 
  * @param usedVertex Lists which vertex were already used or not 
  **/
-void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,Product> & allocations, vector<bool> &usedVertexes){
+void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,Product> & allocations){
 	
 	//First of all it is needed to know which cells were used (or not) as well as the shelves and blocks, in this way we are 
 	//able to evaluate available positions for the isolated families 
@@ -395,11 +393,11 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 			vector<Cell> shelfCells =  shelf.getCells();
 			for(unsigned i=0;i<shelfCells.size();i++){
 				for(int j=0;j<shelfCells[i].getLevels();j++)
-					vertexes.push_back(vertexByCell[make_pair(shelfCells[i],j)]); 
+					vertexes.push_back(vertexByCell[make_pair(shelfCells[i],j+1)]); 
 			}
 		}
 		
-		bool allocated = AllocateBestFamily(allocations, usedVertexes, vertexes, familiesByIsolationLevel["BLOCK"], orderedProductsByFamily); 
+		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel["BLOCK"], orderedProductsByFamily); 
 		if(allocated){
 			vector<Shelf> blockShelves= block.getShelves(); 
 			//Remove all the shelves of the block (they cannot be used by other family
@@ -416,11 +414,12 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 		
 		vector<Cell> shelfCells =  shelf.getCells();
 		vector<Vertex> vertexes;
+		
 		for(unsigned i=0;i<shelfCells.size();i++)
 			for(int j=0;j<shelfCells[i].getLevels();j++)
-					vertexes.push_back(vertexByCell[make_pair(shelfCells[i],j)]); 
+				vertexes.push_back(vertexByCell[make_pair(shelfCells[i],j+1)]); 
 		
-		bool allocated = AllocateBestFamily(allocations, usedVertexes, vertexes, familiesByIsolationLevel["SHELF"], orderedProductsByFamily);
+		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel["SHELF"], orderedProductsByFamily);
 		if(allocated){
 			vector<Cell> shelfCells = shelf.getCells(); 
 			//Remove all cells of this shelf from the list of not used cells
@@ -432,14 +431,13 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 		}
 	}
 
-
 	for(auto cell : notUsedCells){
 		
 		vector<Vertex> vertexes;
 		for(int j=0;j<cell.getLevels();j++)
-			vertexes.push_back(vertexByCell[make_pair(cell,j)]); 
+			vertexes.push_back(vertexByCell[make_pair(cell,j+1)]); 
 		
-		bool allocated = AllocateBestFamily(allocations, usedVertexes, vertexes, familiesByIsolationLevel["CELL"], orderedProductsByFamily);
+		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel["CELL"], orderedProductsByFamily);
 		if(allocated > 0)
 			notUsedCells.erase(cell);
 	}
@@ -474,9 +472,10 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	unsigned int countTries = 0; 
 	unsigned int numPositions = vertexesOrderedByDistance.size(); 
 	usedVertex.resize(numPositions, false); 
-	
+	cout<<"NUM PRODUCTS \n"<<productsSortedByFrequence.size()<<endl;
 	for(unsigned int i=0;i<productsSortedByFrequence.size();i++){
 		auto & item  = productsSortedByFrequence[i]; 
+		item.first.print();
 		if(!hasConstraints(item.first)){								// All the products that have not a allocation constraint are inserted in 
 																		// the first available cell
 			while(usedVertex[lastOnSequence%numPositions])lastOnSequence++;
@@ -519,15 +518,23 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 		countTries = 0;
 	} 
 	
-	int countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
-	cout<<"Not allocated:\t" <<countNotAllocated<<endl;
-	allocateStronglyIsolatedFamilies(allocation, usedVertex);
+	//int countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
+	cout<<"Allocated:\t" <<allocation.size()<<endl;
+	allocateStronglyIsolatedFamilies(allocation);
 	
 
-	countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
-	cout<<"Not allocated:\t" <<countNotAllocated<<endl;
+	//countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
+	cout<<"Allocated:\t" <<allocation.size()<<endl;
 	
-	return NULL; 
+	solution = new StorageAllocationSolution(0.0, 0.0, 1e-02,false); 
+	map<Product, pair<Cell, int> > allocationByProduct; 
+	for(auto & [vertex, product] : allocation)
+		allocationByProduct[product] = cellByVertex[vertex]; 
+	
+	solution->setAllocation(allocationByProduct); 
+	EvaluateSolution(solution);
+	solution->printSolution(); 
+	return solution; 
 }
 
 
@@ -546,7 +553,6 @@ vector<Vertex> StorageConstructiveHeuristic::getStorageVertexes(map<string,vecto
 	}
 	
 	return result; 
-	
 }
 
 /**
@@ -613,8 +619,6 @@ vector<Vertex> StorageConstructiveHeuristic::getStorageVertexesOrderedByDistance
 	vector<Vertex> result;
 	for(unsigned int i=0;i< vertexesOrderedByDistance.size(); i++)
 		result.push_back(vertexesOrderedByDistance[i].second); 
-	
-	
 	
 	return result;
 }
@@ -703,9 +707,8 @@ set<Shelf> StorageConstructiveHeuristic::getNotUsedShelves(const set<Cell> &used
 		result.insert(value); 
 	}
 	
-	for(const auto &cell : usedCells){ 
+	for(const auto &cell : usedCells)
 		result.erase(shelvesById[cell.getIdShelf()]);
-	}
 
 	return result; 
 }

@@ -168,6 +168,7 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
 			cout<<"Connecting cell: \t"<<cell.getCode()<<" which has a single level\n";
 		#endif 
         Vertex firstLevel( cell.getCode(), UNIQUE_LEVEL_CELL);			/// All the vertexes created based on cell position have 
+		vertexByCell[make_pair(cell,1)] = firstLevel;
 		//cout<<"point 3 :"<<firstLevel<<endl; 
 		
 		/// the world "Cell" in their type name

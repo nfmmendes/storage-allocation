@@ -117,7 +117,7 @@ int main(int argc, char **argv){
 		
 		cout<<"Initializing metaheuristic \n";
 		StorageConstructiveHeuristic constr(input.getProducts(),warehouse,*processInput.getDistanceMatrix(),vertexByCell, input.getOrders(),cons); 
-		constr.Execute();
+		StorageAllocationSolution constructiveSolution = constr.Execute();
 		
 		
 		//VND vnd(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell , input.getOrders(),cons); 
