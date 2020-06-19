@@ -274,7 +274,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuristic::getProductAndFrequenceByFamily(set<Product> &notUsedProducts){
 	map<string, queue<Product> > productsByFamily; 
 	map<string, int> frequenceByFamily; 
-	
+	cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
 	for(unsigned int i=0; i< productsSortedByFrequence.size();i++){
 		string familyName = productsSortedByFrequence[i].first.getType(); 
 		if(frequenceByFamily.find(familyName) == frequenceByFamily.end())
@@ -282,8 +282,10 @@ tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuri
 		else
 			frequenceByFamily[familyName] += productsSortedByFrequence[i].second;
 		
-		if(notUsedProducts.find(productsSortedByFrequence[i].first) != notUsedProducts.end())
+		if(notUsedProducts.find(productsSortedByFrequence[i].first) != notUsedProducts.end()){
+			cout<<productsSortedByFrequence[i].first.getName()<<endl;
 			productsByFamily[familyName].push(productsSortedByFrequence[i].first); 
+		}
 	}
 	
 	return {productsByFamily,  frequenceByFamily};
@@ -311,6 +313,7 @@ tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAlloca
 
 	while(products.size() > 0){
 		auto prod = products.front();
+		cout<<"......"<<prod.getName()<<endl;
 		products.pop(); 
 		int cont =0; 
 		int tryInsert=0; 
@@ -322,7 +325,7 @@ tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAlloca
 			contFrequence += frequenceByProduct[prod];
 		}
 	}
-	
+	cout<<"_____________________________________________\n"; 
 	return {contFrequence, currentAllocation};
 }
 
@@ -350,9 +353,20 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 	}
 	
 	if(maxFrequence > 0){
-		//Remove all the products already used in the family (they are removed in the same order they were evaluated)
-		for(unsigned int i=0;i<bestAllocation.size();i++)
-			orderedProductsByFamily[bestFamily].pop(); 
+		set<Product> allocatedProducts;
+		for(auto &[vertex, prod] : bestAllocation)
+			allocatedProducts.insert(prod);
+		queue<Product> remainingOrderedProducts; 
+		//cout<<"Before "<<orderedProductsByFamily[bestFamily].size()<<endl;
+		while(orderedProductsByFamily[bestFamily].size() > 0){
+			//cout<<"During "<<orderedProductsByFamily[bestFamily].size()<<endl;
+			Product prod = orderedProductsByFamily[bestFamily].front(); 
+			if(allocatedProducts.find(prod)== allocatedProducts.end()) 
+				remainingOrderedProducts.push(prod); 
+			orderedProductsByFamily[bestFamily].pop();
+		}
+		//cout<<"After "<<remainingOrderedProducts.size()<<" "<<allocatedProducts.size()<<endl;
+		orderedProductsByFamily[bestFamily] = remainingOrderedProducts; 
 		for(auto &[vertex, prod] : bestAllocation)
 			allocations[vertex] = prod; 	 
 	}
@@ -528,8 +542,10 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	
 	solution = new StorageAllocationSolution(0.0, 0.0, 1e-02,false); 
 	map<Product, pair<Cell, int> > allocationByProduct; 
-	for(auto & [vertex, product] : allocation)
+	for(auto & [vertex, product] : allocation){
+		cout<<product.getName()<<endl;
 		allocationByProduct[product] = cellByVertex[vertex]; 
+	}
 	
 	solution->setAllocation(allocationByProduct); 
 	EvaluateSolution(solution);
