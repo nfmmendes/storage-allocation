@@ -6,6 +6,7 @@
 #include<set>
 #include<iomanip>
 #include<vector>
+#include<queue>
 #include "Product.h"
 #include "Heuristic.h"
 #include "Vertex.h"

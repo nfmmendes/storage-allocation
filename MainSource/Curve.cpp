@@ -95,7 +95,7 @@ bool Curve::operator!=(const Curve &other){
  * Less operator overload 
  * @param other Curve in the right hand side of the operator 
  */
-bool Curve::operator<(const Curve &other){
+bool Curve::operator<(const Curve &other) const{
 	if(this->startingPoint > other.startingPoint)
 		return false;
 	else

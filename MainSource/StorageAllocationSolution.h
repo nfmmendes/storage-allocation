@@ -30,9 +30,9 @@ class StorageAllocationSolution : public AbstractSolution{
 		map<Product, pair<Cell, int> > productsAllocation; 
 		map<Product, vector<PickingRoute *> > routesByProduct; 
 		set<Product> notAllocatedProducts; 
-        void setSolutionValue(double value);
-        void setRuntime(double time); 
-        void setMinDelta(double minDelta) ;
+        void setSolutionValue(double value) override;
+        void setRuntime(double time) override; 
+        void setMinDelta(double minDelta) override ;
 		void updateSolutionValue(vector<PickingRoute> &oldRoutes, vector<PickingRoute> &newRoutes, bool evaluateSolutionWithTSP=false);
     public:
 		StorageAllocationSolution();
@@ -49,7 +49,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		void proceedSwap(const Product &firstProduct, const Product &secondProduct,bool evaluateSolutionWithTSP=false);
 		void evaluateSolutionWithTSP(vector<Order> &orders,OptimizationConstraints &constraints);
 		void evaluateSolutionWithoutTSP(vector<Order> &orders, OptimizationConstraints &constraints);
-        void printSolution()const;
+        void printSolution()const override;
         void printToFile(ofstream & out) const override;
 		StorageAllocationSolution & operator=(const StorageAllocationSolution &other); 
 

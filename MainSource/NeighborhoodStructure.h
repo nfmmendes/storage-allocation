@@ -14,6 +14,7 @@ class NeighborhoodStructure{
         
     public:
         NeighborhoodStructure(){}
+        virtual ~NeighborhoodStructure(){}
         NeighborhoodStructure(AbstractSolution *solution) { this->startSolution = solution; }
         void setStartSolution(AbstractSolution *solution) { this->startSolution = solution; }
         virtual AbstractSolution * getStartSolution() const = 0; 

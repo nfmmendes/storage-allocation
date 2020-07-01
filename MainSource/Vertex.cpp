@@ -27,8 +27,8 @@ void Vertex::setType(string value) { this->type = value; }
 void Vertex::setValue(double value) { this->value = value; }
 
 string Vertex::getLabel() const { return this->label; }
-string Vertex::getType(){ return this->type; }
-double Vertex::getValue() { return this->value; }
+string Vertex::getType() const { return this->type; }
+double Vertex::getValue() const { return this->value; }
 
 bool Vertex::operator==(const Vertex & other)const {
     return label == other.label && type == other.type && fabs(value - other.value) <= 0.0000000000001;

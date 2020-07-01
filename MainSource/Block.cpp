@@ -3,8 +3,13 @@
 #include<ctime>
 #include<vector>
 #include<algorithm>
-#include<utility>
+#include<iomanip>
+#include<queue>
 #include<map>
+#include<cctype>
+#include<utility>
+#include<string>
+#include<exception> 
 #include "Shelf.h"
 #include "BlockExit.h"
 #include "Corridor.h"
@@ -145,10 +150,10 @@ void Block::setShelves(vector<Shelf > & others){
 	for(unsigned int i=0; i<others.size();i++)
         this->shelves.push_back(Shelf(others[i]));
 	
-	std::transform(shelves.begin(), shelves.end(), std::inserter(shelvesById, shelvesById.end()),
-               [](const Shelf &s) { return std::make_pair(s.getId(), s); });
-	cout<<"SIZE \t"<<this->shelves.size()<<endl;
-    
+	//std::transform(shelves.begin(), shelves.end(), std::inserter(shelvesById, shelvesById.end()),
+      //         [](const Shelf &s) { return std::make_pair(s.getId(), s); });
+    for(auto shelf : shelves )
+		shelvesById[shelf.getId()] = shelf;
 }
 
 /**

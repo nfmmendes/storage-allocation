@@ -10,6 +10,7 @@
 #include "Order.h"
 #include "StorageAllocationSolution.h"
 #include "StorageAllocationSolution.h"
+#include "StorageConstructiveHeuristic.h"
 #include "Heuristic.h"
 #include "NeighborhoodStructure.h"
 #include "DistanceMatrix.h"
@@ -41,6 +42,10 @@ InsideShelfSwap::InsideShelfSwap(){
 	this->numberOfNeighbors = 5;
 	this->randomSeed = 1;
 	
+}
+
+InsideShelfSwap::~InsideShelfSwap(){
+
 }
 
 /**
@@ -123,6 +128,11 @@ InsideBlockSwap::InsideBlockSwap(){
 	this->randomSeed = 1;
 }
 
+InsideBlockSwap::~InsideBlockSwap(){
+
+
+}
+
 /**
  * 
  */
@@ -175,6 +185,11 @@ MostFrequentSwap::MostFrequentSwap(){
 	this->startSolution = NULL; 
 	this->numberOfNeighbors = 5;
 	this->randomSeed = 1;
+}
+
+MostFrequentSwap::~MostFrequentSwap(){
+
+	
 }
 
 /**
@@ -241,7 +256,7 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 ////                    Storage allocation ILS region
 ////
 /////////////////////////////////////////////////////////////////////////////////////////
-StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,
+StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> &distMatrix,
 					   map<pair<Cell, int>, Vertex> vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
 	this->distanceMatrix = &distMatrix; 
 	this->warehouse = &wh; 
@@ -261,6 +276,11 @@ StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Ver
 StorageAllocationSolution * StorageILS::CreateInitialSolution(){
 	StorageAllocationSolution *initial = new StorageAllocationSolution();
 	
+	
+	StorageConstructiveHeuristic constr(this->products,*warehouse,*distanceMatrix,vertexByCell, orders,constraints); 
+	StorageAllocationSolution constructiveSolution = constr.Execute();
+
+
 	return initial; 
 }
 
@@ -269,7 +289,7 @@ StorageAllocationSolution * StorageILS::CreateInitialSolution(){
  */
 StorageAllocationSolution * StorageILS::ExecutePertubation(StorageAllocationSolution *_currentSolution){
 	double value = _currentSolution->getSolutionValue();
-	cout<<value<<endl;
+//	cout<<value<<endl;
 	return NULL;
 }
 
@@ -278,7 +298,7 @@ StorageAllocationSolution * StorageILS::ExecutePertubation(StorageAllocationSolu
  */
 void StorageILS::EvaluateSolution(AbstractSolution * solution){
 	double value = solution->getSolutionValue(); 
-	cout<<value<<endl;
+	//cout<<value<<endl;
 }
 
 /**
@@ -393,7 +413,8 @@ AbstractSolution * StorageILS::Execute(){
 			}else if(typeName == "InsideBlockSwap"){
 			}else if(typeName == "MostFrequentSwap"){
 			}
-
+			this->numPertubations++;
+			this->numIterationsWithoutImprovement++;
 			delete currentSolution;
 			currentSolution = new StorageAllocationSolution(bestLocalSearchSolution);
 		}

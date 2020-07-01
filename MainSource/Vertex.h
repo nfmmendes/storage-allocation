@@ -29,8 +29,8 @@ namespace QuickTSP{
             void setValue(double value);
         
             string getLabel() const ;
-            string getType();
-            double getValue();
+            string getType() const;
+            double getValue() const;
         
             bool operator==(const Vertex & other)const;
         

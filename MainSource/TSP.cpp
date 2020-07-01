@@ -135,22 +135,44 @@ pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> poin
 }
 
 /**
- *
+ *  Return a route with a good cost (without warranty of optimality) for a average size sequence of points 
  **/
 pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
-	
-	vector<Vertex> currentOrder = points; 
+	 cout<<"Aqui\n";
 	vector<Vertex> solution = points;
 	double bestCost = std::numeric_limits<double>::max(); 
-	
-	
-	Vertex firstVertex = currentOrder[0]; 
-	Vertex lastVertex = currentOrder[currentOrder.size()-1];
-	double distance = distanceMatrix.getDistance(bestStart[firstVertex],firstVertex) + distanceMatrix.getDistance(lastVertex,bestEnd[lastVertex]) ;
-	
-	if(distance < bestCost)
-		bestCost = distance; 
+		
+	pair<double, vector<Vertex> > currentOrder = closestNeighborTSP(points, bestStart, bestEnd);
+	bestCost = currentOrder.first; 
+   
+	for(unsigned int i=1; i+1< currentOrder.second.size(); i++){
+		double costReduction = 0; 
+		int changingPoint =0;
 
+		for(unsigned int j=1; j+2<currentOrder.second.size(); j++){
+			double oldCost = distanceMatrix.getDistance(currentOrder.second[j-1], currentOrder.second[j]) +
+							 distanceMatrix.getDistance(currentOrder.second[j], currentOrder.second[j+1]) +
+							 distanceMatrix.getDistance(currentOrder.second[j+1], currentOrder.second[j+2]);
+			double newCost = distanceMatrix.getDistance(currentOrder.second[j-1], currentOrder.second[j+1]) +
+							 distanceMatrix.getDistance(currentOrder.second[j+1], currentOrder.second[j]) +
+							 distanceMatrix.getDistance(currentOrder.second[j], currentOrder.second[j+2]);
+			
+			if(newCost - oldCost < costReduction){
+				costReduction = oldCost - newCost;
+				changingPoint = j; 
+				break; 
+			}
+		}
+
+		if(costReduction < 0){
+			currentOrder.first -= costReduction;
+			auto elem = currentOrder.second[changingPoint+1];
+			currentOrder.second[changingPoint+1] = currentOrder.second[changingPoint];
+			currentOrder.second[changingPoint] = elem; 
+			i--; 
+		}  
+	}
+	cout<<"End\n";
 	return make_pair(bestCost, solution); 
 	
 }

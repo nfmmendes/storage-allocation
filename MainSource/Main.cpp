@@ -43,7 +43,7 @@ void printRandomSolution(){
 	vector<Block> blocks = input.getWarehouse().getBlocks();
 	vector<Product> products = input.getProducts(); 
 	
-	random_shuffle(products.begin(), products.end());
+	//random_shuffle(products.begin(), products.end());
 	
 	while(allocated == true && productIndex < (int)products.size()){
 			allocated = false; 
@@ -103,12 +103,9 @@ int main(int argc, char **argv){
 
 		printRandomSolution();
         cout<<"Converting algorithm to graph\n";
-		
-		
+			
 		ProcessInputData processInput(&input);
 		processInput.ExecuteProcessData();
-		
-		
 		
 		Graph graph = processInput.getWarehouseToGraphConverter()->getGraph();
 		OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
@@ -116,14 +113,13 @@ int main(int argc, char **argv){
 		map<pair<Cell, int>, Vertex> vertexByCell = processInput.getWarehouseToGraphConverter()->getVertexByCell();
 		
 		cout<<"Initializing metaheuristic \n";
-		StorageConstructiveHeuristic constr(input.getProducts(),warehouse,*processInput.getDistanceMatrix(),vertexByCell, input.getOrders(),cons); 
-		StorageAllocationSolution constructiveSolution = constr.Execute();
-		
+	//	StorageConstructiveHeuristic constr(input.getProducts(),warehouse,*processInput.getDistanceMatrix(),vertexByCell, input.getOrders(),cons); 
+	//	StorageAllocationSolution constructiveSolution = constr.Execute();
 		
 		//VND vnd(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell , input.getOrders(),cons); 
-		//StorageILS ils(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);
+		StorageILS ils(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);
 		//vnd.run();
-		//ils.Execute();
+		ils.Execute();
         
     }else
         cerr<<"Too few  arguments. Inform the index file name.";

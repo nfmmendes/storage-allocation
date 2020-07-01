@@ -52,6 +52,7 @@ class InsideShelfSwap :public NeighborhoodStructure{
 		Shelf shelf; 
     public:
         InsideShelfSwap();
+        ~InsideShelfSwap();
         InsideShelfSwap(AbstractSolution *initial, unsigned int numNeigh, int randomSeed, Shelf & shelf);
         AbstractSolution * getStartSolution() const {return this->startSolution; }
         vector<AbstractSolution *> createNeighbors();
@@ -84,6 +85,7 @@ class InsideBlockSwap:public NeighborhoodStructure{
 		
     public:
         InsideBlockSwap();
+        ~InsideBlockSwap();
         InsideBlockSwap(StorageAllocationSolution *initial, int numNeigh,  int randomSeed, Block &block);
         AbstractSolution * getStartSolution() const { return this->startSolution; }
 
@@ -115,6 +117,7 @@ class MostFrequentSwap :public NeighborhoodStructure{
 
     public:
         MostFrequentSwap();
+        ~MostFrequentSwap();
         MostFrequentSwap(StorageAllocationSolution *initial, int numNeigh, int randomSeed, vector<Product> &products);
         AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
@@ -149,6 +152,8 @@ class StorageAllocationPertubation :public NeighborhoodStructure {
     public:
         AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
+        StorageAllocationPertubation(){}
+        ~StorageAllocationPertubation(){}
 
         void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
         void setRandomSeed(int seed){ this->randomSeed = seed; }
@@ -183,7 +188,7 @@ class StorageILS :public Heuristic{
     public:
         StorageILS();
         StorageILS(StorageILS &other);
-		StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> distMatrix,
+		StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> &distMatrix,
 				   map<pair<Cell, int>, Vertex> vertexByCell,vector<Order> &orders, OptimizationConstraints &cons);
         AbstractSolution * Execute(); 
 

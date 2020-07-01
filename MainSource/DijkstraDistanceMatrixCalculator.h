@@ -45,7 +45,7 @@ typedef pair<int, double> iPair;
  */
 template <class Graph, class Vertex>
 DijkstraDistanceMatrixCalculator<Graph, Vertex>::DijkstraDistanceMatrixCalculator(DijkstraDistanceMatrixCalculator<Graph,Vertex> &other){
-
+    this = &other;
 };
 
 /**

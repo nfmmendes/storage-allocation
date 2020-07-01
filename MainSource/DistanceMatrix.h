@@ -137,11 +137,10 @@ template<class T>
 double DistanceMatrix<T>::getDistance(const T &first,const T &second) const {
     auto itFirst = keyIndex.find(first);
     auto itSecond = keyIndex.find(second);
-
+   
     if(itFirst != keyIndex.end() && itSecond!= keyIndex.end())
 		return distances[itFirst->second][itSecond->second] ;
-	
-	
+
 	return -1;
 }
 

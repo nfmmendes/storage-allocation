@@ -60,12 +60,14 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 	}
 	
 	//Initialize structures to recover quickly information about store positions on graph
-	for(auto &[key, value] : vertexByCell){
-		cellByVertex[value] = key; 
-		vertexByType[value.getType()].push_back(value); 
-	}
+	for(auto &[key, value] : vertexByCell)
+		cellByVertex[value] = key;
 	
+	vector<Vertex> allVertexes = distanceMatrix->getKeys();
+	for(auto key : allVertexes)
+		vertexByType[key.getType()].push_back(key); 
 	
+
 	//Decompose the warehouse layout to quick search in the algorithm
 	vector<Block> blocks = warehouse->getBlocks(); 
 	std::transform(blocks.begin(), blocks.end(), std::inserter(blocksByName, blocksByName.end()),
@@ -101,17 +103,23 @@ void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 	
 	vector<Vertex> storagePoints = getStoragePoints(); 
 	vector<Vertex> expeditionPoints = vertexByType[WarehouseToGraphConverter::EXPEDITION_POINT_VERTEX]; 
+
+	for(auto [key,value] : vertexByType)
+		for(auto vertex : value)
+			cout<<key<<"\t"<<vertex.getLabel()<<endl;
+
+
 	TSP tsp(*this->distanceMatrix);
 	
 	for(unsigned int i=0;i<storagePoints.size();i++){
 		double minStartDistance = 1e100;
 		double minEndDistance = 1e100; 
 		Vertex bestStart, bestEnd; 
-		
+
 		for(unsigned int j=0;j<expeditionPoints.size();j++){
 			double startDistance = distanceMatrix->getDistance(expeditionPoints[j], storagePoints[i]);
 			double endDistance = distanceMatrix->getDistance(storagePoints[i], expeditionPoints[j]); 
-			
+
 			if(startDistance < minStartDistance){
 				minStartDistance = startDistance; 
 				bestStart = expeditionPoints[j]; 
@@ -122,10 +130,12 @@ void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 				bestEnd = expeditionPoints[j]; 
 			}
 		}
+		
 		closestStartPoint[storagePoints[i]] = bestStart;
 		closestEndPoint[storagePoints[i] ] = bestEnd; 
 		
-	}
+	}	
+
 }
 
 
@@ -313,7 +323,7 @@ tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAlloca
 
 	while(products.size() > 0){
 		auto prod = products.front();
-		cout<<"......"<<prod.getName()<<endl;
+
 		products.pop(); 
 		int cont =0; 
 		int tryInsert=0; 
@@ -325,23 +335,22 @@ tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAlloca
 			contFrequence += frequenceByProduct[prod];
 		}
 	}
-	cout<<"_____________________________________________\n"; 
+	
 	return {contFrequence, currentAllocation};
 }
 
 bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & allocations, vector<Vertex> vertexes, 
 										vector<string> familyCodes,  map<string, queue<Product> > &orderedProductsByFamily){
-	
+
 	//Order the vertexes in the block by distance from the closest delivery point 
 	//Maybe it could be pre-evaluated 
 	sort(vertexes.begin(), vertexes.end(), [this](const Vertex &a,const Vertex &b){
 		return this->distanceMatrix->getDistance(this->closestStartPoint[a], a) <= this->distanceMatrix->getDistance(this->closestStartPoint[b], b); 
 	});
-
 	string bestFamily; 
 	int maxFrequence=0; 
 	map<Vertex,Product> bestAllocation;  
-	
+
 	for(auto code : familyCodes){
 		auto [contFrequence, currentAllocation] = testFamilyAllocation(orderedProductsByFamily[code], vertexes); 
 		
@@ -351,7 +360,7 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 			bestAllocation = currentAllocation; 
 		}
 	}
-	
+
 	if(maxFrequence > 0){
 		set<Product> allocatedProducts;
 		for(auto &[vertex, prod] : bestAllocation)
@@ -370,7 +379,7 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 		for(auto &[vertex, prod] : bestAllocation)
 			allocations[vertex] = prod; 	 
 	}
-	
+
 	return false;
 }
 
@@ -386,7 +395,7 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 	//able to evaluate available positions for the isolated families 
 	set<Product> notAllocatedProducts = getNotUsedProducts(allocations); 
 	auto [notUsedCells, notUsedShelves, notUsedBlocks] = getNonUsedStructures(allocations);
-	
+
 	// After it is needed to know which products were not allocated in each family and put them in frequence order 
 	// It is also useful to know the total frequence of each family, then we can try allocated those with a higher 
     // number of requests first
@@ -455,6 +464,7 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 		if(allocated > 0)
 			notUsedCells.erase(cell);
 	}
+
 }
 
 
@@ -532,18 +542,17 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 		countTries = 0;
 	} 
 	
-	//int countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
+	int countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
 	cout<<"Allocated:\t" <<allocation.size()<<endl;
 	allocateStronglyIsolatedFamilies(allocation);
 	
 
-	//countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
+	countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
 	cout<<"Allocated:\t" <<allocation.size()<<endl;
 	
 	solution = new StorageAllocationSolution(0.0, 0.0, 1e-02,false); 
 	map<Product, pair<Cell, int> > allocationByProduct; 
 	for(auto & [vertex, product] : allocation){
-		cout<<product.getName()<<endl;
 		allocationByProduct[product] = cellByVertex[vertex]; 
 	}
 	
