@@ -50,8 +50,8 @@ class Block{
 	
 	
         string getName() const;
-		double getWidth(){ return this->width;}
-		double getLenght(){ return this->length;}
+		double getWidth();
+		double getLenght();
         vector<Shelf> getShelves();
 		map<long int, Shelf> getShelvesById(); 
 		

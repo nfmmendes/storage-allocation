@@ -134,7 +134,7 @@ vector<Order> Order::readOrdersData(ifstream &file){
 		
 
 		orders.push_back(Order(items,parsedDate,parsedTime,clientCode));
-		
+		items.clear();
 		
 		
     }

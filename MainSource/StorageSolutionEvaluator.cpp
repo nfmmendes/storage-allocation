@@ -12,18 +12,11 @@
 #include "DistanceMatrix.h"
 #include "OptimizationParameters.h"
 #include "StorageSolutionEvaluator.h"
+#include "WarehouseToGraphConverter.h"
 #include "TSP.h"
 #include "Order.h"
 using namespace std;
 using namespace QuickTSP;
-
-/**
- *
- */
-StorageSolutionEvaluator::StorageSolutionEvaluator(){
-
-}
-
 
 
 /**
@@ -33,6 +26,9 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(const StorageSolutionEvaluato
 	this->routesByVertexAndSize = sto.routesByVertexAndSize;
 	this->vertexByCellPosition = sto.vertexByCellPosition;
 	this->distances = sto.distances;
+
+	for(auto &[key,value] : sto.closestStartPoint)	this->closestStartPoint[key] = value;
+	for(auto &[key, value] : sto.closestEndPoint)	this->closestEndPoint[key] = value;
 }
 
 /**
@@ -41,6 +37,7 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(const StorageSolutionEvaluato
 StorageSolutionEvaluator::StorageSolutionEvaluator(DistanceMatrix<Vertex> * distances){
 	
 	this->distances = distances;
+	InitializeClosestDeliveryPoint();
 }
 
 /**
@@ -55,10 +52,58 @@ StorageSolutionEvaluator & StorageSolutionEvaluator::operator=(const StorageSolu
 
 
 /**
+ * Set the closest expedition point of each storage point in both senses, storage -> expedition, expedition -> storage
+ **/
+void StorageSolutionEvaluator::InitializeClosestDeliveryPoint(){
+	
+	vector<Vertex> storagePoints;  
+	vector<Vertex> expeditionPoints; 
+	vector<Vertex> allVertexes = distances->getKeys(); 
+
+	for(Vertex &vertex : allVertexes){
+		if(vertex.getType() == WarehouseToGraphConverter::EXPEDITION_POINT_VERTEX)
+			expeditionPoints.push_back(vertex);
+		else //All the non expedition points in this case are storage points (TEST IT)
+			storagePoints.push_back(vertex);
+	}
+
+	cout<<"****** "<<storagePoints.size()<<endl; 
+	closestStartPoint.clear();
+	closestEndPoint.clear(); 
+	
+	for(unsigned int i=0;i<storagePoints.size();i++){
+		double minStartDistance = 1e100;
+		double minEndDistance = 1e100; 
+		Vertex bestStart, bestEnd; 
+
+		for(unsigned int j=0;j<expeditionPoints.size();j++){
+			double startDistance = distances->getDistance(expeditionPoints[j], storagePoints[i]);
+			double endDistance = distances->getDistance(storagePoints[i], expeditionPoints[j]); 
+
+			if(startDistance < minStartDistance){
+				minStartDistance = startDistance; 
+				bestStart = expeditionPoints[j]; 
+			}
+			
+			if(endDistance < minEndDistance){
+				minEndDistance = endDistance; 
+				bestEnd = expeditionPoints[j]; 
+			}
+		}
+		
+		closestStartPoint[storagePoints[i]] = bestStart;
+		closestEndPoint[storagePoints[i] ] = bestEnd; 
+		
+	}	
+
+}
+
+
+
+/**
  *
  **/
-double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(vector<Vertex>& vertexes, map<Vertex, Vertex> & closestStartPoint,
-															 map<Vertex, Vertex> & closestEndPoint ){
+double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(vector<Vertex>& vertexes){
 	
 	Vertex location = vertexes[0]; 
 	Vertex begin = closestStartPoint[location];
@@ -78,8 +123,7 @@ double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(vector<Vertex>& ver
 /**
  * 
  **/
-double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute> &vertexesVisits, map<Vertex, Vertex> & closestStartPoint,
-														map<Vertex, Vertex> &closestEndPoint){
+double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute> &vertexesVisits){
 
 	TSP tsp(*distances); 
 	vector<pair<Product, double> > items; 
@@ -128,27 +172,30 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute> &v
  */
 double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex> & route){
 
-	
 	TSP tsp(*distances); 
-	vector<Vertex> bestRoute = route; 
-	vector<Vertex> currentRoute = route; 
-	double lowestValue = 1e10; 
+	vector<pair<Product, double> > items; 
+	double penalty = 0.0; 
+	double totalDistance =0.0;
 	
-	if(route.size() <= OptimizationParameters::ALL_PERMUTATIONS_TSP_THRESHOLD){
-		while(next_permutation(currentRoute.begin()+1, currentRoute.end()-1)){
-			double distance = sumDistances(currentRoute); 
-			if(lowestValue < distance){
-				bestRoute = currentRoute; 
-				lowestValue = distance; 
-			}
-		}
-	}else if( route.size() <= OptimizationParameters::INSERTION_TSP_THRESHOLD){
-		
-	}else{
-		
-	}
-		
-	return lowestValue; 
+	pair<double, vector<Vertex> > routeEvaluation; 
+	if(items.size() == 1){
+		Vertex location = route[0]; 
+		Vertex begin = closestStartPoint[ location ];
+		Vertex end =   closestEndPoint[ location ] ; 
+		totalDistance = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end);
+
+	}else if(items.size() == 2){
+			//totalDistance = this->getBetterRouteWithTwoPoints(items, productAllocation);	
+	}if(route.size() < 6) //This is just a limit to use the brute force TSP algorithm
+		routeEvaluation = tsp.bruteForceTSP(route, closestStartPoint, closestEndPoint); 
+	else if(route.size() < 12) //This is a limit to use 
+		routeEvaluation = tsp.quickLocalSearchTSP(route, closestStartPoint, closestEndPoint);
+	else //All the other cases will use a closest neighbor inserction procedure 
+		routeEvaluation = tsp.closestNeighborTSP(route, closestStartPoint, closestEndPoint);
+
+		totalDistance += routeEvaluation.first; 		
+	
+	return totalDistance; 
 }
 
 /**
@@ -156,7 +203,7 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex> & route){
  */ 
 double StorageSolutionEvaluator::DoRouteEstimation(vector<Vertex> & solution){
 	int solutionValue = solution.size();
-	cout<<solutionValue<<endl;
+	//cout<<solutionValue<<endl;
 	return 0;
 }
 

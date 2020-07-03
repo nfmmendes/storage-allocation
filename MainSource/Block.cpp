@@ -3,13 +3,7 @@
 #include<ctime>
 #include<vector>
 #include<algorithm>
-#include<iomanip>
-#include<queue>
-#include<map>
-#include<cctype>
-#include<utility>
-#include<string>
-#include<exception> 
+#include<functional>
 #include "Shelf.h"
 #include "BlockExit.h"
 #include "Corridor.h"
@@ -42,7 +36,6 @@ Block::Block(const Block &other){
     for(unsigned int i=0;i < other.curves.size();i++)
         this->curves.push_back(Curve(other.curves[i]));
     
-
     this->name = other.name;
     this->bottomLeftCoords = other.bottomLeftCoords;
     this->width = other.width;
@@ -98,6 +91,9 @@ string Block::getName() const { return name; }
  */
 vector<Shelf> Block::getShelves() {return shelves; }
 
+
+double Block::getWidth(){ return this->width;}
+double Block::getLenght(){ return this->length;}
 
 /**
  * 

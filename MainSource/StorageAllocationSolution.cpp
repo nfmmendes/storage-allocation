@@ -15,7 +15,7 @@ using namespace std;
 using namespace QuickTSP; 
 
 
-StorageSolutionEvaluator * StorageAllocationSolution::evaluator = new StorageSolutionEvaluator();
+StorageSolutionEvaluator * StorageAllocationSolution::Evaluator = NULL;
 
 /**
  * Default constructor. Creates an empty solution 
@@ -76,6 +76,13 @@ StorageAllocationSolution::StorageAllocationSolution(double value, double time, 
 	isMaximization = maximization; 
 }
 
+
+void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> distanceMatrix){
+	if(Evaluator != NULL)
+		delete Evaluator;
+	Evaluator = new StorageSolutionEvaluator(&distanceMatrix);
+}
+
 /**
  * Destructor
  **/
@@ -104,6 +111,7 @@ void StorageAllocationSolution::setRuntime(double time){
  * 
  **/
 void StorageAllocationSolution::setSolutionValue(double value){
+	cout<<"Value ="<<value<<endl;
     this->solutionValue = value; 
 }
 
@@ -174,9 +182,9 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 		if(find(secondRoutes.begin(),secondRoutes.end(), firstRoutes[i]) != secondRoutes.end())
 			continue; 
 		else if(useTSPEvaluator)
-			firstRoutes[i]->second = evaluator->DoRouteEvaluation(firstRoutes[i]->first);
+			firstRoutes[i]->second = Evaluator->DoRouteEvaluation(firstRoutes[i]->first);
 		else
-			firstRoutes[i]->second = evaluator->DoRouteEstimation(firstRoutes[i]->first);
+			firstRoutes[i]->second = Evaluator->DoRouteEstimation(firstRoutes[i]->first);
 	}
 	
 	//if a same route has both products in the swap the evaluation don't need to be done	
@@ -184,9 +192,9 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 		if(find(firstRoutes.begin(),firstRoutes.end(), secondRoutes[i]) != firstRoutes.end())
 			continue; 
 		else if(useTSPEvaluator)
-			secondRoutes[i]->second = evaluator->DoRouteEvaluation(secondRoutes[i]->first);
+			secondRoutes[i]->second = Evaluator->DoRouteEvaluation(secondRoutes[i]->first);
 		else
-			secondRoutes[i]->second = evaluator->DoRouteEstimation(secondRoutes[i]->first);
+			secondRoutes[i]->second = Evaluator->DoRouteEstimation(secondRoutes[i]->first);
 	}
 }
 
@@ -198,7 +206,7 @@ void StorageAllocationSolution::evaluateSolutionWithTSP(vector<Order> &orders, O
 	double nonAllocatedPenalty = 0.0; 
 	//double distance = 0.0;
 	//double penalties = 0.0; 
-	map<Product, int> requestsByProduct = evaluator->getRequestsByProduct(orders); 
+	map<Product, int> requestsByProduct = Evaluator->getRequestsByProduct(orders); 
 	
 	for(auto & product : notAllocatedProducts){
 		if(requestsByProduct.find(product) != requestsByProduct.end())
@@ -219,7 +227,7 @@ void StorageAllocationSolution::evaluateSolutionWithoutTSP(vector<Order> &orders
 	double nonAllocatedPenalty = 0.0; 
 	//double distance = 0.0;
 	//double penalties = 0.0; 
-	map<Product, int> requestsByProduct = evaluator->getRequestsByProduct(orders);
+	map<Product, int> requestsByProduct = Evaluator->getRequestsByProduct(orders);
 	
 	for(auto & product : notAllocatedProducts){
 		if(requestsByProduct.find(product) != requestsByProduct.end())
@@ -260,9 +268,9 @@ void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRou
 	
 	for(unsigned int i=0;i<newRoutes.size();i++)
 		if(useTSP)
-			newSum += StorageAllocationSolution::evaluator->DoRouteEvaluation(newRoutes[i].first);
+			newSum += StorageAllocationSolution::Evaluator->DoRouteEvaluation(newRoutes[i].first);
 		else
-			newSum += StorageAllocationSolution::evaluator->DoRouteEstimation(newRoutes[i].first);
+			newSum += StorageAllocationSolution::Evaluator->DoRouteEstimation(newRoutes[i].first);
 	
 	this->solutionValue += (newSum - oldSum);  
 }

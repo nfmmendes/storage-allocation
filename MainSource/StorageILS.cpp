@@ -322,8 +322,9 @@ StorageILS::StorageILS(StorageILS &other){
  * 
  */
 bool StorageILS::StopCriteriaReached(){
-    return this->numPertubations == OptimizationParameters::MAX_PERTUBATIONS && 
-		   this->numIterationsWithoutImprovement > OptimizationParameters::MAX_ITERATIONS_WITHOUT_IMPROVEMENT;
+	
+    return this->numPertubations >= OptimizationParameters::MAX_PERTUBATIONS && 
+		   this->numIterationsWithoutImprovement >= OptimizationParameters::MAX_ITERATIONS_WITHOUT_IMPROVEMENT;
 }
 
 
@@ -358,7 +359,7 @@ AbstractSolution * StorageILS::Execute(){
 	bestGlobalSolution = new StorageAllocationSolution( *( (StorageAllocationSolution *) initialSolution));
 	currentSolution = new StorageAllocationSolution(bestGlobalSolution); 
 	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue();
-	
+	cout<<"Best value :"<<bestGlobalSolutionValue<<endl; 
 	int randomSeed= 1;
 	
 	while(!StopCriteriaReached()){
@@ -368,7 +369,7 @@ AbstractSolution * StorageILS::Execute(){
 			string typeName = typeid(*this->neighborhoodStructures[i]).name();
 			StorageAllocationSolution *bestLocalSearchSolution = new StorageAllocationSolution(*currentSolution);
 			double bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue();
-			cout<<bestLocalSearchSolutionValue<<endl;
+		//	cout<<bestLocalSearchSolutionValue<<endl;
 			if(typeName == "InsideShelfSwap"){
 				vector<Block> blocks = this->warehouse->getBlocks(); 
 				

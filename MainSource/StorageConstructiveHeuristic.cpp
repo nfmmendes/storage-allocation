@@ -103,13 +103,6 @@ void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 	
 	vector<Vertex> storagePoints = getStoragePoints(); 
 	vector<Vertex> expeditionPoints = vertexByType[WarehouseToGraphConverter::EXPEDITION_POINT_VERTEX]; 
-
-	for(auto [key,value] : vertexByType)
-		for(auto vertex : value)
-			cout<<key<<"\t"<<vertex.getLabel()<<endl;
-
-
-	TSP tsp(*this->distanceMatrix);
 	
 	for(unsigned int i=0;i<storagePoints.size();i++){
 		double minStartDistance = 1e100;
@@ -253,14 +246,19 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			
 		}else{
 			//If some item is not allocated it should be penalized 
+			
 			for(unsigned int j = 0; j<items.size();j++){
-				if(vertexByCell.find(productAllocation[items[j].first ]) != vertexByCell.end())
+				auto position = productAllocation[items[j].first ];
+			
+				if(vertexByCell.find(position) != vertexByCell.end())
 					storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
 				else 
 					penalty += 5000; 
 			}
 			
 			pair<double, vector<Vertex> > route; 
+			if(storagePoints.size() == 0) 
+				continue; 
 			if(storagePoints.size() < 6) //This is just a limit to use the brute force TSP algorithm
 				route = tsp.bruteForceTSP(storagePoints, closestStartPoint, closestEndPoint); 
 			else if(storagePoints.size() < 12) //This is a limit to use 
@@ -270,9 +268,12 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			
 			totalDistance += route.first; 
 		}
+
+		cout<<"_________________"<<totalDistance<<"______________"<<penalty<<endl;
 	}
 	
 	solution->setSolutionValue(totalDistance+penalty);
+	cout<<"___..___..___..___..__"<<solution->getSolutionValue()<<endl;
 }
 
 /**
@@ -500,20 +501,21 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	for(unsigned int i=0;i<productsSortedByFrequence.size();i++){
 		auto & item  = productsSortedByFrequence[i]; 
 		item.first.print();
+		
 		if(!hasConstraints(item.first)){								// All the products that have not a allocation constraint are inserted in 
-																		// the first available cell
-			while(usedVertex[lastOnSequence%numPositions])lastOnSequence++;
+														// the first available cell
+			while(usedVertex[lastOnSequence%numPositions] && numPositions> countTries++)lastOnSequence++;
 			usedVertex[lastOnSequence%numPositions] = true; 
 			allocation[vertexesOrderedByDistance[lastOnSequence%numPositions]] = item.first; 
 		}else if(isIsolatedFamily(item.first)){
 			IsolatedFamily isolation = familyIsolationsByFamilyCode[item.first.getType()]; 
 			string level = isolation.getLevel(); 
 			string force = isolation.getForce();
-		
+			
 			unsigned int tryInsertIndex = lastOnSequence%numPositions; 	
 			
 			//Looks for the first not forbidden available position			
-			while(isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex] || numPositions> countTries++)
+			while((isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex]) && numPositions> countTries++)
 				tryInsertIndex = (tryInsertIndex+1)%numPositions;
 			
 			if(countTries > numPositions){ //It means that all the positions were tested and no insertion is possible 			
@@ -531,9 +533,9 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 			
 		}else{ //Forbidden allocation products 
 			unsigned int tryInsertIndex = lastOnSequence%numPositions; 
-			while(isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex] || numPositions > countTries++)
+			while((isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex]) && numPositions > countTries++)
 				tryInsertIndex = (tryInsertIndex+1)%numPositions;
-			
+
 			if(countTries <= vertexByCell.size()){
 				usedVertex[tryInsertIndex] = true;
 				allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 

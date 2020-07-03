@@ -12,6 +12,7 @@
 #include "AbstractSolution.h"
 #include "StorageSolutionEvaluator.h"
 #include "OptimizationConstraints.h"
+#include "DistanceMatrix.h"
 #include "Product.h"
 #include "Cell.h"
 #include "Vertex.h"
@@ -24,7 +25,7 @@ typedef struct pair< vector<Vertex>, double> PickingRoute;
 class StorageAllocationSolution : public AbstractSolution{
 
 	private: 
-		static StorageSolutionEvaluator *evaluator; 
+		static StorageSolutionEvaluator *Evaluator; 
 		static vector<StorageAllocationSolution *> currentSolutions;
 		unsigned long long int solutionIndex; 
 		map<Product, pair<Cell, int> > productsAllocation; 
@@ -40,6 +41,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		StorageAllocationSolution(StorageAllocationSolution &other);
 		StorageAllocationSolution(double value, double time, double minDelta = 1e-06,bool maximization = true);
 		~StorageAllocationSolution();
+		static void setEvaluator(DistanceMatrix<Vertex> distanceMatrix);
 		map<Product, pair<Cell, int> > & getProductAllocations();
 		set<Product> & getNonAllocatedProducts()const; 
 		void setAllocation(const Cell &cell, int level, const Product &product); 

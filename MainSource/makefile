@@ -41,7 +41,7 @@ Evaluator: Parameter StorageSolutionEvaluator.h  Warehouse StorageAllocationSolu
 Warehouse : Block.o Cell.o Shelf.o BlockExit.o
 	$(CC) $(COMPILE_FLAGS) -c Warehouse.cpp
 
-Block : Block.h WarehousePack
+Block : WarehousePack Block.h 
 	$(CC) $(COMPILE_FLAGS) -c Block.cpp 
 
 GraphPack: AbstractVertex.h DistanceMatrix.h Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h Transition.h DistanceMatrixCalculator.h DijkstraDistanceMatrixCalculator.h
