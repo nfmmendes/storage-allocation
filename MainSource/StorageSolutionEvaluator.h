@@ -39,7 +39,7 @@ class StorageSolutionEvaluator{
 		double getBetterRouteWithTwoPoints(vector<Vertex>& vertexes);
 	public:
 		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);
-		StorageSolutionEvaluator(DistanceMatrix<Vertex> * distanceMatrix); 
+		StorageSolutionEvaluator(DistanceMatrix<Vertex> * distanceMatrix, map<pair<Cell,int> , Vertex > &vertexByPosition); 
 		double sumDistances(vector<Vertex> &sequence); 
 		void DoRouteEvaluation(AbstractSolution * solution);
 		void DoRouteEstimation(AbstractSolution * solution);

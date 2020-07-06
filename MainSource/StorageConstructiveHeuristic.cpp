@@ -268,12 +268,10 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			
 			totalDistance += route.first; 
 		}
-
-		cout<<"_________________"<<totalDistance<<"______________"<<penalty<<endl;
 	}
 	
 	solution->setSolutionValue(totalDistance+penalty);
-	cout<<"___..___..___..___..__"<<solution->getSolutionValue()<<endl;
+	
 }
 
 /**
@@ -285,7 +283,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuristic::getProductAndFrequenceByFamily(set<Product> &notUsedProducts){
 	map<string, queue<Product> > productsByFamily; 
 	map<string, int> frequenceByFamily; 
-	cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
+	
 	for(unsigned int i=0; i< productsSortedByFrequence.size();i++){
 		string familyName = productsSortedByFrequence[i].first.getType(); 
 		if(frequenceByFamily.find(familyName) == frequenceByFamily.end())
@@ -293,10 +291,8 @@ tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuri
 		else
 			frequenceByFamily[familyName] += productsSortedByFrequence[i].second;
 		
-		if(notUsedProducts.find(productsSortedByFrequence[i].first) != notUsedProducts.end()){
-			cout<<productsSortedByFrequence[i].first.getName()<<endl;
+		if(notUsedProducts.find(productsSortedByFrequence[i].first) != notUsedProducts.end())
 			productsByFamily[familyName].push(productsSortedByFrequence[i].first); 
-		}
 	}
 	
 	return {productsByFamily,  frequenceByFamily};
@@ -558,7 +554,7 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 		allocationByProduct[product] = cellByVertex[vertex]; 
 	}
 	
-	solution->setAllocation(allocationByProduct); 
+	solution->setAllocation(allocationByProduct,orders); 
 	EvaluateSolution(solution);
 	solution->printSolution(); 
 	return solution; 

@@ -95,6 +95,7 @@ class InsideBlockSwap:public NeighborhoodStructure{
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
         vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
         int getRandomSeed(){ return this->randomSeed; }
+        void setBlock(Block &other){ this->block = other; }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
 };
 
@@ -184,7 +185,9 @@ class StorageILS :public Heuristic{
         StorageAllocationSolution * CreateInitialSolution();
         void EvaluateSolution(AbstractSolution * solution); 
 		void InitializeNeighborhoods();
-
+        void SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure,int randomSeed);
+        void SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
+        void SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
     public:
         StorageILS();
         StorageILS(StorageILS &other);

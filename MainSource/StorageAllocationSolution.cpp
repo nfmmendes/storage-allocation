@@ -77,10 +77,10 @@ StorageAllocationSolution::StorageAllocationSolution(double value, double time, 
 }
 
 
-void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> distanceMatrix){
+void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> distanceMatrix, map<pair<Cell,int> , Vertex > &vertexByPosition){
 	if(Evaluator != NULL)
 		delete Evaluator;
-	Evaluator = new StorageSolutionEvaluator(&distanceMatrix);
+	Evaluator = new StorageSolutionEvaluator(&distanceMatrix,vertexByPosition);
 }
 
 /**
@@ -111,7 +111,6 @@ void StorageAllocationSolution::setRuntime(double time){
  * 
  **/
 void StorageAllocationSolution::setSolutionValue(double value){
-	cout<<"Value ="<<value<<endl;
     this->solutionValue = value; 
 }
 
@@ -198,56 +197,16 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	}
 }
 
-/**
- * 
- */
-void StorageAllocationSolution::evaluateSolutionWithTSP(vector<Order> &orders, OptimizationConstraints &constraints){
-	
-	double nonAllocatedPenalty = 0.0; 
-	//double distance = 0.0;
-	//double penalties = 0.0; 
-	map<Product, int> requestsByProduct = Evaluator->getRequestsByProduct(orders); 
-	
-	for(auto & product : notAllocatedProducts){
-		if(requestsByProduct.find(product) != requestsByProduct.end())
-			nonAllocatedPenalty += OptimizationParameters::NON_ALLOCATED_PRODUCT_PENALTY*requestsByProduct[product]; 
-	}
-	
-	for(auto & order : orders){
-		vector<pair<Product, double> > orderItens = order.getOrderItems(); 
-		(void) orderItens; 
-	}
-}
-
-/**
- * 
- */
-void StorageAllocationSolution::evaluateSolutionWithoutTSP(vector<Order> &orders, OptimizationConstraints &constraints ){
-	
-	double nonAllocatedPenalty = 0.0; 
-	//double distance = 0.0;
-	//double penalties = 0.0; 
-	map<Product, int> requestsByProduct = Evaluator->getRequestsByProduct(orders);
-	
-	for(auto & product : notAllocatedProducts){
-		if(requestsByProduct.find(product) != requestsByProduct.end())
-			nonAllocatedPenalty += OptimizationParameters::NON_ALLOCATED_PRODUCT_PENALTY*requestsByProduct[product]; 
-	}
-	
-	for(auto & order : orders){
-		vector<pair<Product, double> > orderItens = order.getOrderItems(); 
-		(void) orderItens; 
-		
-	}
-}
 
 /**
  * Set the allocations on warehouse 
  **/
-void StorageAllocationSolution::setAllocation(const map<Product, pair<Cell,int> > &allocations){
+void StorageAllocationSolution::setAllocation(const map<Product, pair<Cell,int> > &allocations, vector<Order> &orders){
 	
 	for(auto &[product,allocation] : allocations)
 		this->productsAllocation[product] = allocation; 
+
+	
 }
 
 

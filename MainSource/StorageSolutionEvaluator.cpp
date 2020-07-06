@@ -34,10 +34,13 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(const StorageSolutionEvaluato
 /**
  *
  */
-StorageSolutionEvaluator::StorageSolutionEvaluator(DistanceMatrix<Vertex> * distances){
+StorageSolutionEvaluator::StorageSolutionEvaluator(DistanceMatrix<Vertex> * distances,map<pair<Cell,int> , Vertex > &vertexByPosition){
 	
 	this->distances = distances;
 	InitializeClosestDeliveryPoint();
+
+	for(auto & [key, value] : vertexByPosition)
+		vertexByCellPosition[key] = value; 
 }
 
 /**
