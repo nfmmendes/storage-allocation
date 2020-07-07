@@ -36,9 +36,9 @@ class StorageSolutionEvaluator{
 		map<Vertex, Vertex> closestEndPoint;
 		OptimizationConstraints optimizationConstraints;
 
-		double getBetterRouteWithTwoPoints(vector<Vertex>& vertexes, map<Vertex, Vertex> & closestStartPoint,map<Vertex, Vertex> & closestEndPoint );
-		void InitializeClosestDeliveryPoint();
 		double getBetterRouteWithTwoPoints(vector<Vertex>& vertexes);
+		void InitializeClosestDeliveryPoint();
+
 	public:
 		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);
 		StorageSolutionEvaluator(DistanceMatrix<Vertex> * distanceMatrix,const map<pair<Cell,int> , Vertex > &vertexByPosition,const OptimizationConstraints &constraints); 

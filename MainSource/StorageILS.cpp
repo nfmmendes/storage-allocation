@@ -250,7 +250,17 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 	return solutions; 
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+////                    Storage allocation pertubation region
+////
+/////////////////////////////////////////////////////////////////////////////////////////
+AbstractSolution * StorageAllocationPertubation::getStartSolution() const{
+	return this->startSolution; 
+} 
 
+vector<AbstractSolution *> StorageAllocationPertubation::createNeighbors(){
+			
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ////                    Storage allocation ILS region

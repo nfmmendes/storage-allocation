@@ -149,7 +149,7 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute> &v
 			totalDistance += vertexesVisits[i].second; 
 			
 		}else if(items.size() == 2){
-			vertexesVisits[i].second = this->getBetterRouteWithTwoPoints(vertexes, closestStartPoint, closestEndPoint );
+			vertexesVisits[i].second = this->getBetterRouteWithTwoPoints(vertexes);
 			totalDistance += vertexesVisits[i].second;
 			
 		}else{
@@ -190,7 +190,7 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex> & route){
 		totalDistance = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end);
 
 	}else if(items.size() == 2){
-			//totalDistance = this->getBetterRouteWithTwoPoints(items, productAllocation);	
+			//totalDistance = this->getBetterRouteWithTwoPoints(items);	
 	}if(route.size() < 6) //This is just a limit to use the brute force TSP algorithm
 		routeEvaluation = tsp.bruteForceTSP(route, closestStartPoint, closestEndPoint); 
 	else if(route.size() < 12) //This is a limit to use 
