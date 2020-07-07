@@ -77,10 +77,10 @@ StorageAllocationSolution::StorageAllocationSolution(double value, double time, 
 }
 
 
-void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> distanceMatrix, map<pair<Cell,int> , Vertex > &vertexByPosition){
+void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> distanceMatrix, map<pair<Cell,int> , Vertex > &vertexByPosition, OptimizationConstraints &constraints){
 	if(Evaluator != NULL)
 		delete Evaluator;
-	Evaluator = new StorageSolutionEvaluator(&distanceMatrix,vertexByPosition);
+	Evaluator = new StorageSolutionEvaluator(&distanceMatrix,vertexByPosition,constraints);
 }
 
 /**
@@ -89,8 +89,14 @@ void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> distanceMatr
 StorageAllocationSolution::~StorageAllocationSolution(){
 	this->notAllocatedProducts.clear();
 	this->productsAllocation.clear(); 
-	
-	//TODO: PUT products by route
+
+	for(auto [key,value] : this->routesByProduct){
+		for(int i=0; i<value.size();i++){
+			if(true /*Maybe insert a test here in the future if the cache of routes is implemented*/)
+				delete value[i];
+		}
+	}
+
 }
 
 /**
@@ -201,12 +207,28 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 /**
  * Set the allocations on warehouse 
  **/
-void StorageAllocationSolution::setAllocation(const map<Product, pair<Cell,int> > &allocations, vector<Order> &orders){
+void StorageAllocationSolution::setAllocation(map<Product, pair<Cell,int> > &allocations,const vector<Order> &orders){
 	
 	for(auto &[product,allocation] : allocations)
 		this->productsAllocation[product] = allocation; 
 
-	
+	for(const Order & order : orders){
+		vector<pair<Product,double> > items = order.getOrderItems();
+		vector<pair<Cell,int> > positions; 
+
+		for( int i=0; i< items.size(); i++ ){
+			if(allocations.find(items[i].first) != allocations.end() )
+				positions.push_back(allocations[items[i].first]); 
+		}
+
+		PickingRoute vertexes = StorageAllocationSolution::Evaluator->getVertexes(positions); 
+		for(auto &[product, quantity] : items ){
+			this->routesByProduct[product].push_back(new PickingRoute());
+			PickingRoute *inserted = this->routesByProduct[product][this->routesByProduct[product].size()-1];
+			for(int i=0;i<vertexes.first.size();i++)
+				inserted->first.push_back(vertexes.first[i]);
+		}
+	}
 }
 
 

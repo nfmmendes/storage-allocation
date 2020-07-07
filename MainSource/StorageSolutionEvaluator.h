@@ -16,6 +16,7 @@
 #include "Cell.h"
 #include "Product.h"
 #include "Order.h"
+#include "OptimizationConstraints.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -33,13 +34,14 @@ class StorageSolutionEvaluator{
 		DistanceMatrix<Vertex> *distances; 
 		map<Vertex, Vertex> closestStartPoint;
 		map<Vertex, Vertex> closestEndPoint;
+		OptimizationConstraints optimizationConstraints;
 
 		double getBetterRouteWithTwoPoints(vector<Vertex>& vertexes, map<Vertex, Vertex> & closestStartPoint,map<Vertex, Vertex> & closestEndPoint );
 		void InitializeClosestDeliveryPoint();
 		double getBetterRouteWithTwoPoints(vector<Vertex>& vertexes);
 	public:
 		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);
-		StorageSolutionEvaluator(DistanceMatrix<Vertex> * distanceMatrix, map<pair<Cell,int> , Vertex > &vertexByPosition); 
+		StorageSolutionEvaluator(DistanceMatrix<Vertex> * distanceMatrix,const map<pair<Cell,int> , Vertex > &vertexByPosition,const OptimizationConstraints &constraints); 
 		double sumDistances(vector<Vertex> &sequence); 
 		void DoRouteEvaluation(AbstractSolution * solution);
 		void DoRouteEstimation(AbstractSolution * solution);
@@ -49,6 +51,7 @@ class StorageSolutionEvaluator{
 		double searchSequenceOnCache(vector<Vertex> &vertexes);
 		StorageSolutionEvaluator & operator=(const StorageSolutionEvaluator &other);
 		map<Product, int> getRequestsByProduct(vector<Order> &orders);
+		PickingRoute getVertexes(vector<pair<Cell, int> > &positions);
 		
 };
 

@@ -66,7 +66,7 @@ void Order::setOrders(vector<pair<Product, double> > orders){
 /**
  *  Return all the items of an order with their respective quantities
  */
-vector<pair<Product, double> > & Order::getOrderItems(){
+const vector<pair<Product, double> > & Order::getOrderItems()const {
     return this->orderItens;
 }
 

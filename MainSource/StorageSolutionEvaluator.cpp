@@ -26,7 +26,7 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(const StorageSolutionEvaluato
 	this->routesByVertexAndSize = sto.routesByVertexAndSize;
 	this->vertexByCellPosition = sto.vertexByCellPosition;
 	this->distances = sto.distances;
-
+	this->optimizationConstraints = sto.optimizationConstraints; 
 	for(auto &[key,value] : sto.closestStartPoint)	this->closestStartPoint[key] = value;
 	for(auto &[key, value] : sto.closestEndPoint)	this->closestEndPoint[key] = value;
 }
@@ -34,9 +34,11 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(const StorageSolutionEvaluato
 /**
  *
  */
-StorageSolutionEvaluator::StorageSolutionEvaluator(DistanceMatrix<Vertex> * distances,map<pair<Cell,int> , Vertex > &vertexByPosition){
+StorageSolutionEvaluator::StorageSolutionEvaluator(DistanceMatrix<Vertex> * distances,const map<pair<Cell,int> , Vertex > &vertexByPosition, 
+												   const OptimizationConstraints & constraints){
 	
 	this->distances = distances;
+	this->optimizationConstraints = constraints;
 	InitializeClosestDeliveryPoint();
 
 	for(auto & [key, value] : vertexByPosition)
@@ -172,7 +174,7 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute> &v
 }
 /**
  *
- */
+ **/
 double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex> & route){
 
 	TSP tsp(*distances); 
@@ -198,14 +200,14 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex> & route){
 
 		totalDistance += routeEvaluation.first; 		
 	
-	return totalDistance; 
+	return totalDistance+penalty; 
 }
 
 /**
  *
  */ 
 double StorageSolutionEvaluator::DoRouteEstimation(vector<Vertex> & solution){
-	int solutionValue = solution.size();
+	//int solutionSize = solution.size();
 	//cout<<solutionValue<<endl;
 	return 0;
 }
@@ -289,3 +291,12 @@ double StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex> &vertexes)
 	return -1;
 }
 
+PickingRoute StorageSolutionEvaluator::getVertexes(vector<pair<Cell, int> > &positions){
+	PickingRoute value; 
+	for(unsigned int i=0; i<positions.size(); i++){
+		if(this->vertexByCellPosition.find(positions[i]) != this->vertexByCellPosition.end())
+			value.first.push_back(this->vertexByCellPosition[positions[i]]);
+	}
+
+	return value; 
+}

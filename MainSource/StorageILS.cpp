@@ -59,46 +59,46 @@ InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, unsigned int numNeig
 	//this->products = products; 
 }
 
+bool InsideShelfSwap::ChooseTwoProductIndexes(int &first, int &second, int allocationsSize, const set<pair<int,int> > & swapsDone){
+	first = rand()%allocationsSize;
+	second = rand()%allocationsSize; 
+	
+	int countTries = 0; 
+	while(swapsDone.find(make_pair(first, second)) != swapsDone.end() || swapsDone.find(make_pair(second,first)) != swapsDone.end() || second == first){
+		first = rand()%allocationsSize;
+		second = rand()%allocationsSize; 
+		if( countTries >= allocationsSize*allocationsSize)
+			break;
+	}
+
+	return countTries < allocationsSize*allocationsSize;
+}
+
 
 /**
  * 
  */
 vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 	map<Product , pair<Cell,int> > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
-	vector<Cell> cells = this->shelf.getCells(); 
 	map<pair<Cell, int> , Product> shelfAllocations; 
 	vector<AbstractSolution *> solutions; 
-	
+	srand(this->randomSeed); 
 	
 	for(const auto &[product, position] : allocations){
-		if(position.first.getIdShelf() != shelf.getId())
-			continue; 
-		//int numLevels = position.second;
-		shelfAllocations[position] = product;
+		if(position.first.getIdShelf() == shelf.getId())
+			shelfAllocations[position] = product;
 	}
 	
 	//It is not possible to do swaps 
+	int allocationsSize = shelfAllocations.size();
 	if(shelfAllocations.size() <=2)
 		return solutions;
 	
-	srand(this->randomSeed); 
-	set<pair<int,int> > swapsDone; 
 	
-	int allocationsSize = shelfAllocations.size();
+	set<pair<int,int> > swapsDone; 
 	int first, second; 
-	for(unsigned int i=0; i< min(numberOfNeighbors, ((unsigned int) allocationsSize*allocationsSize) ); i++){
-	    first = rand()%allocationsSize;
-		second = rand()%allocationsSize; 
-		
-		int countTries = 0; 
-		while(swapsDone.find(make_pair(first, second)) != swapsDone.end() || swapsDone.find(make_pair(second,first)) != swapsDone.end() || second == first){
-			first = rand()%allocationsSize;
-			second = rand()%allocationsSize; 
-			if( ((unsigned int) countTries) >= shelfAllocations.size()*shelfAllocations.size())
-				break;
-		}
-		
-		if(((unsigned int) countTries) >= shelfAllocations.size()*shelfAllocations.size())
+	for(unsigned int i=0; i< min(numberOfNeighbors, ((unsigned int) (allocationsSize-1)*allocationsSize) ); i++){
+		if(!ChooseTwoProductIndexes(first ,second,allocationsSize, swapsDone))
 			break;
 		
 		map< pair<Cell, int> , Product>::iterator it = shelfAllocations.begin();
@@ -224,22 +224,22 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 	int first; 
 	int second; 
 	set<pair<int,int> >swapsDone; 
-	
+	int numInterchangeableProducts = this->interchangeableProducts.size(); 
 	
 	for(int i=0;i<this->numberOfNeighbors;i++){
-		first = rand()%this->interchangeableProducts.size(); 
-		second = rand()%this->interchangeableProducts.size(); 
+		first = rand()%numInterchangeableProducts; 
+		second = rand()%numInterchangeableProducts; 
 		
 		int countTries = 0; 
 		while(swapsDone.find(make_pair(first, second)) != swapsDone.end() || swapsDone.find(make_pair(second,first)) != swapsDone.end() || second == first){
-			first = rand()%this->interchangeableProducts.size(); 
-			second = rand()%this->interchangeableProducts.size(); 
+			first = rand()%numInterchangeableProducts; 
+			second = rand()%numInterchangeableProducts; 
 			//If anti-loop
-			if(  ((unsigned int)countTries) >=  interchangeableProducts.size()*interchangeableProducts.size())
+			if( countTries >=  numInterchangeableProducts*numInterchangeableProducts)
 				break;
 		}
 		
-		if( ((unsigned int)countTries) >= interchangeableProducts.size()*interchangeableProducts.size())
+		if( countTries >= numInterchangeableProducts)
 			break;
 			
 		StorageAllocationSolution * newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution);
@@ -288,7 +288,7 @@ StorageAllocationSolution * StorageILS::CreateInitialSolution(){
  * 
  */
 StorageAllocationSolution * StorageILS::ExecutePertubation(StorageAllocationSolution *_currentSolution){
-	double value = _currentSolution->getSolutionValue();
+	//double value = _currentSolution->getSolutionValue();
 //	cout<<value<<endl;
 	return NULL;
 }
@@ -297,7 +297,7 @@ StorageAllocationSolution * StorageILS::ExecutePertubation(StorageAllocationSolu
  * 
  */
 void StorageILS::EvaluateSolution(AbstractSolution * solution){
-	double value = solution->getSolutionValue(); 
+	//double value = solution->getSolutionValue(); 
 	//cout<<value<<endl;
 }
 
@@ -338,8 +338,19 @@ void StorageILS::InitializeNeighborhoods(){
 	
 }
 
+/**
+ * Class constructor
+ **/
 void StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
-
+	
+	int maxNumberSwaps = 0.10*products.size(); 
+	for(int i=0; i <maxNumberSwaps; i++){
+		vector<AbstractSolution *> neighbors;
+		((MostFrequentSwap *) neighborhoodStructure)->setRandomSeed(randomSeed*products.size()+i);
+		neighborhoodStructure->setStartSolution(currentSolution); 
+		neighbors = ((InsideShelfSwap *) neighborhoodStructure)->createNeighbors(); 
+	}
+	
 }
 
 

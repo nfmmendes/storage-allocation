@@ -48,7 +48,7 @@ class Order{
         void setDateDeadline(Date &date);
         void setTimeDeadline(Time &time);
     
-        vector<pair<Product, double> > & getOrderItems();
+        const vector<pair<Product, double> > & getOrderItems() const;
         static vector<Order> readOrdersData(ifstream &file);
     
 };

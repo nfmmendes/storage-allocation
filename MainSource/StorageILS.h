@@ -53,6 +53,7 @@ class InsideShelfSwap :public NeighborhoodStructure{
     public:
         InsideShelfSwap();
         ~InsideShelfSwap();
+        bool ChooseTwoProductIndexes(int &first, int &second, int allocationsSize, const set<pair<int,int> > & swapsDone);
         InsideShelfSwap(AbstractSolution *initial, unsigned int numNeigh, int randomSeed, Shelf & shelf);
         AbstractSolution * getStartSolution() const {return this->startSolution; }
         vector<AbstractSolution *> createNeighbors();

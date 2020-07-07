@@ -41,11 +41,11 @@ class StorageAllocationSolution : public AbstractSolution{
 		StorageAllocationSolution(StorageAllocationSolution &other);
 		StorageAllocationSolution(double value, double time, double minDelta = 1e-06,bool maximization = true);
 		~StorageAllocationSolution();
-		static void setEvaluator(DistanceMatrix<Vertex> distanceMatrix, map<pair<Cell,int> , Vertex > &vertexByPosition);
+		static void setEvaluator(DistanceMatrix<Vertex> distanceMatrix, map<pair<Cell,int> , Vertex > &vertexByPosition, OptimizationConstraints &constraints);
 		map<Product, pair<Cell, int> > & getProductAllocations();
 		set<Product> & getNonAllocatedProducts()const; 
 		void setAllocation(const Cell &cell, int level, const Product &product); 
-		void setAllocation(const map<Product, pair<Cell,int> > &allocations, vector<Order> &orders); 
+		void setAllocation(map<Product, pair<Cell,int> > &allocations,const vector<Order> &orders); 
 		void setNonAllocatedProducts(const set<Product> &nonAllocated);
 		void removeAllocation(Product &product);
 		void proceedSwap(const Product &firstProduct, const Product &secondProduct,bool evaluateSolutionWithTSP=false);
