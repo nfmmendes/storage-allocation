@@ -259,7 +259,9 @@ AbstractSolution * StorageAllocationPertubation::getStartSolution() const{
 } 
 
 vector<AbstractSolution *> StorageAllocationPertubation::createNeighbors(){
-			
+	vector<AbstractSolution *> solutions;	
+	
+	return solutions; 	
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -290,7 +292,6 @@ StorageAllocationSolution * StorageILS::CreateInitialSolution(){
 	StorageConstructiveHeuristic constr(this->products,*warehouse,*distanceMatrix,vertexByCell, orders,constraints); 
 	StorageAllocationSolution constructiveSolution = constr.Execute();
 
-
 	return initial; 
 }
 
@@ -307,8 +308,7 @@ StorageAllocationSolution * StorageILS::ExecutePertubation(StorageAllocationSolu
  * 
  */
 void StorageILS::EvaluateSolution(AbstractSolution * solution){
-	//double value = solution->getSolutionValue(); 
-	//cout<<value<<endl;
+	((StorageAllocationSolution *)solution)->Evaluate(true);
 }
 
 /**
@@ -445,8 +445,9 @@ AbstractSolution * StorageILS::Execute(){
 	vector<double> thresholds;
 	thresholds.push_back(OptimizationParameters::A_THRESHOLD_CLASS);
 	thresholds.push_back(OptimizationParameters::B_THRESHOLD_CLASS); 
-
+	
 	ABCAnalysis abcAnalysis(vector<Order> &orders,unsigned int numClasses, vector<double> &thresholds);
+	
     AbstractSolution * initialSolution = CreateInitialSolution();
 	
 	StorageAllocationSolution * bestGlobalSolution = new StorageAllocationSolution( *( (StorageAllocationSolution *) initialSolution));
@@ -488,7 +489,7 @@ AbstractSolution * StorageILS::Execute(){
 				bestLocalSearchSolution = new StorageAllocationSolution(*currentSolution);
 				bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue(); 
 			}
-
+			cout<<"Pertubation \n"<<this->numPertubations<<"\tValue:"<<currentSolution->getSolutionValue()<<endl; 
 			this->numPertubations++;
 	
 			
@@ -507,6 +508,7 @@ AbstractSolution * StorageILS::Execute(){
 		randomSeed++; 
 		
 	}
+	
 
 	return bestGlobalSolution;
 }

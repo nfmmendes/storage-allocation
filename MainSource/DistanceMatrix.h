@@ -44,6 +44,7 @@ DistanceMatrix<T>::DistanceMatrix(map<pair<T,T> , double> & distancesPairs){
 template<class T> 
 DistanceMatrix<T> & DistanceMatrix<T>::buildMatrix(map<pair<T,T> , double> &distancesPairs){
 	set<T> keys; 
+
 	for(auto &mapPair : distancesPairs){
 		keys.insert(mapPair.first.first);
 		keys.insert(mapPair.first.second); 

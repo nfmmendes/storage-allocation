@@ -77,10 +77,10 @@ StorageAllocationSolution::StorageAllocationSolution(double value, double time, 
 }
 
 
-void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> distanceMatrix, map<pair<Cell,int> , Vertex > &vertexByPosition, OptimizationConstraints &constraints){
+void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> *distanceMatrix, map<pair<Cell,int> , Vertex > &vertexByPosition, OptimizationConstraints &constraints){
 	if(Evaluator != NULL)
 		delete Evaluator;
-	Evaluator = new StorageSolutionEvaluator(&distanceMatrix,vertexByPosition,constraints);
+	Evaluator = new StorageSolutionEvaluator(distanceMatrix,vertexByPosition,constraints);
 }
 
 /**
@@ -91,7 +91,7 @@ StorageAllocationSolution::~StorageAllocationSolution(){
 	this->productsAllocation.clear(); 
 
 	for(auto [key,value] : this->routesByProduct){
-		for(int i=0; i<value.size();i++){
+		for(unsigned int i=0; i<value.size();i++){
 			if(true /*Maybe insert a test here in the future if the cache of routes is implemented*/)
 				delete value[i];
 		}
@@ -127,6 +127,29 @@ void StorageAllocationSolution::printSolution() const{
 	ofstream file("results\\solutions.txt");
 	printToFile(file); 
 }
+
+void StorageAllocationSolution::Evaluate(bool evaluateWithTSP){
+	set<PickingRoute *> routes; 
+	double distance = 0.0; 
+	double penalty = 0.0; 
+	for(auto [key, routeList] : routesByProduct)
+		for(unsigned int i=0; i<routeList.size(); i++)
+			routes.insert(routeList[i]); 
+	if(evaluateWithTSP){
+		
+		for(auto route : routes){
+			route->second =  StorageAllocationSolution::Evaluator->DoRouteEvaluation(route->first);
+			distance += route->second; 
+		}
+		
+	}else{
+		for(auto route : routes){
+			route->second =  StorageAllocationSolution::Evaluator->DoRouteEstimation(route->first);
+			distance += route->second; 
+		}
+	}
+}
+
 
 /**
  * Print the solution to a given file defined by the ofstream object
@@ -216,7 +239,7 @@ void StorageAllocationSolution::setAllocation(map<Product, pair<Cell,int> > &all
 		vector<pair<Product,double> > items = order.getOrderItems();
 		vector<pair<Cell,int> > positions; 
 
-		for( int i=0; i< items.size(); i++ ){
+		for(unsigned int i=0; i< items.size(); i++ ){
 			if(allocations.find(items[i].first) != allocations.end() )
 				positions.push_back(allocations[items[i].first]); 
 		}
@@ -225,7 +248,7 @@ void StorageAllocationSolution::setAllocation(map<Product, pair<Cell,int> > &all
 		for(auto &[product, quantity] : items ){
 			this->routesByProduct[product].push_back(new PickingRoute());
 			PickingRoute *inserted = this->routesByProduct[product][this->routesByProduct[product].size()-1];
-			for(int i=0;i<vertexes.first.size();i++)
+			for(unsigned int i=0;i<vertexes.first.size();i++)
 				inserted->first.push_back(vertexes.first[i]);
 		}
 	}

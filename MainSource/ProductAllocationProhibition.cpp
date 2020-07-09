@@ -203,7 +203,7 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
 		}
 		
 	}
-	
+
     return prohibitions;
 }
 

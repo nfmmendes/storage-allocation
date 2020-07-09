@@ -81,13 +81,12 @@ using namespace std;
 		int numIsolations;
 		string c, f, l;
 		
-		
 		file>>numIsolations;
 		for(int i=0;i<numIsolations;i++){
 			file>>l>>c>>f;
 			returned.push_back(IsolatedFamily(f,l,c));
 		}
-		
+
 		return returned; 
 	}
 	

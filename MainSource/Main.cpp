@@ -44,7 +44,6 @@ void printRandomSolution(){
 	vector<Product> products = input.getProducts(); 
 	
 	//random_shuffle(products.begin(), products.end());
-	
 	while(allocated == true && productIndex < (int)products.size()){
 			allocated = false; 
 			vector<Cell> possibleCells;
@@ -68,7 +67,6 @@ void printRandomSolution(){
 			}
 		countLevel++;
 	}
-	
 	ofstream file("results\\solutions.txt");
 	file<<allocations.size()<<endl;
 	for(unsigned int i=0;i<allocations.size();i++)
@@ -100,18 +98,19 @@ int main(int argc, char **argv){
 		
 		ABCAnalysis * abc = createABCAnalysis(input); 
 		abc->execute(); 
-
+		
 		printRandomSolution();
-        cout<<"Converting algorithm to graph\n";
-			
+    			
 		ProcessInputData processInput(&input);
+		cout<<"Converting warehouse to graph\n";
 		processInput.ExecuteProcessData();
 		
 		Graph graph = processInput.getWarehouseToGraphConverter()->getGraph();
 		OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
 		Warehouse warehouse =  input.getWarehouse();
 		map<pair<Cell, int>, Vertex> vertexByCell = processInput.getWarehouseToGraphConverter()->getVertexByCell();
-		StorageAllocationSolution::setEvaluator(*processInput.getDistanceMatrix(),vertexByCell, cons);
+		cout<<"TEST: "<<processInput.getDistanceMatrix()->getKeys().size()<<endl; 
+		StorageAllocationSolution::setEvaluator(processInput.getDistanceMatrix(),vertexByCell, cons);
 		
 		cout<<"Initializing metaheuristic \n";
 	//	StorageConstructiveHeuristic constr(input.getProducts(),warehouse,*processInput.getDistanceMatrix(),vertexByCell, input.getOrders(),cons); 

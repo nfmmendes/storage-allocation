@@ -89,17 +89,18 @@ void ABCAnalysis::execute(){
         throw "The thresholds must be setted before start this method";
     if(numClasses-1 != thresholds.size())
         throw "The number of classes and the number of thresholds are not consistent";
-
     //Get the frequences and volumes of all products
     for(unsigned int i=0; i<this->orders.size();i++){
         vector< pair<Product, double> > items = this->orders[i].getOrderItems();
 		totalFrequence += items.size();
+        
         for(unsigned int j=0; j<items.size(); j++){
             totalVolume += items[j].second;
             if(products.find(items[j].first) == products.end()){
                 products.insert(items[j].first);
                 productFrequences[items[j].first] = 1; 
-                productVolumes[items[j].first] = items[i].second;
+                productVolumes[items[j].first] = items[j].second;
+        
             }else{
                 productFrequences[items[j].first]++;
                 productVolumes[items[j].first]+= items[j].second;
@@ -138,7 +139,7 @@ void ABCAnalysis::execute(){
     }
 
 	for(unsigned int i=0;i<numClasses;i++){
-		cout<<volumeThresholds[i]<<" "<<frequenceThresholds[i]<<endl;
+		cout<<"Volume: "<<volumeThresholds[i]<<" Frequence: "<<frequenceThresholds[i]<<endl;
 	}
 
     //Assign the classes. 
@@ -164,7 +165,6 @@ void ABCAnalysis::execute(){
 
 		this->volumeClasses[volumes[i].second] = currentVolumeClass;
 		this->frequenceClasses[frequences[i].second] = currentFrequenceClass;
-
     }
 }
 

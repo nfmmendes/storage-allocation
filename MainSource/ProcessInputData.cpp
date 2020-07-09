@@ -87,7 +87,7 @@ void ProcessInputData::ExecuteProcessData(){
 
 	cout<<"Calculating distances \n"; 
 	this->CalculateMatrixDistances();
-	this->distanceMatrix->print(); 
+	//this->distanceMatrix->print(); 
 }
 
 

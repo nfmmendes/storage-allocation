@@ -48,7 +48,7 @@ void TSP::setDistanceMatrix(DistanceMatrix<Vertex> matrix){
  *  @param bestStart Map the closest delivery point for each storage point in the sense delivery point --> storage point
  *  @param bestEnd Map the closest delivery point for each storage point in the sense storage point --> delivery point 
  **/
-pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
+pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> &points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
 	
 	vector<Vertex> currentOrder = points; 
 	vector<Vertex> solution = points;
@@ -78,7 +78,7 @@ pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> points, map
  *  @param bestStart Map the closest delivery point for each storage point in the sense delivery point --> storage point
  *  @param bestEnd Map the closest delivery point for each storage point in the sense storage point --> delivery point 
  */
-pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart,map<Vertex,Vertex> &bestEnd){
+pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> &points, map<Vertex,Vertex> &bestStart,map<Vertex,Vertex> &bestEnd){
 	
 	
 	vector<Vertex> solution;
@@ -137,8 +137,8 @@ pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> poin
 /**
  *  Return a route with a good cost (without warranty of optimality) for a average size sequence of points 
  **/
-pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
-	 cout<<"Aqui\n";
+pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> &points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
+	 
 	vector<Vertex> solution = points;
 	double bestCost = std::numeric_limits<double>::max(); 
 		
@@ -172,7 +172,7 @@ pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> poi
 			i--; 
 		}  
 	}
-	cout<<"End\n";
+	
 	return make_pair(bestCost, solution); 
 	
 }

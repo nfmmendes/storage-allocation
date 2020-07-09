@@ -64,15 +64,16 @@ void StorageSolutionEvaluator::InitializeClosestDeliveryPoint(){
 	vector<Vertex> storagePoints;  
 	vector<Vertex> expeditionPoints; 
 	vector<Vertex> allVertexes = distances->getKeys(); 
-
+	
 	for(Vertex &vertex : allVertexes){
-		if(vertex.getType() == WarehouseToGraphConverter::EXPEDITION_POINT_VERTEX)
+		if(vertex.getType() == WarehouseToGraphConverter::EXPEDITION_POINT_VERTEX){
 			expeditionPoints.push_back(vertex);
-		else //All the non expedition points in this case are storage points (TEST IT)
+		}else{ //All the non expedition points in this case are storage points (TEST IT)
 			storagePoints.push_back(vertex);
+		}
 	}
 
-	cout<<"****** "<<storagePoints.size()<<endl; 
+	cout<<"****** Storage points : "<<storagePoints.size()<<endl; 
 	closestStartPoint.clear();
 	closestEndPoint.clear(); 
 	
@@ -183,14 +184,14 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex> & route){
 	double totalDistance =0.0;
 	
 	pair<double, vector<Vertex> > routeEvaluation; 
-	if(items.size() == 1){
+	if(route.size() == 1){
 		Vertex location = route[0]; 
 		Vertex begin = closestStartPoint[ location ];
 		Vertex end =   closestEndPoint[ location ] ; 
 		totalDistance = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end);
 
-	}else if(items.size() == 2){
-			//totalDistance = this->getBetterRouteWithTwoPoints(items);	
+	}else if(route.size() == 2){
+		totalDistance = this->getBetterRouteWithTwoPoints(route);	
 	}if(route.size() < 6) //This is just a limit to use the brute force TSP algorithm
 		routeEvaluation = tsp.bruteForceTSP(route, closestStartPoint, closestEndPoint); 
 	else if(route.size() < 12) //This is a limit to use 
@@ -198,7 +199,7 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex> & route){
 	else //All the other cases will use a closest neighbor inserction procedure 
 		routeEvaluation = tsp.closestNeighborTSP(route, closestStartPoint, closestEndPoint);
 
-		totalDistance += routeEvaluation.first; 		
+	totalDistance += routeEvaluation.first; 		
 	
 	return totalDistance+penalty; 
 }
@@ -209,6 +210,11 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex> & route){
 double StorageSolutionEvaluator::DoRouteEstimation(vector<Vertex> & solution){
 	//int solutionSize = solution.size();
 	//cout<<solutionValue<<endl;
+	for(unsigned int i=0; i< solution.size(); i++){
+		
+	}
+	
+	
 	return 0;
 }
 

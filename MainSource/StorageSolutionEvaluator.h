@@ -41,10 +41,8 @@ class StorageSolutionEvaluator{
 
 	public:
 		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);
-		StorageSolutionEvaluator(DistanceMatrix<Vertex> * distanceMatrix,const map<pair<Cell,int> , Vertex > &vertexByPosition,const OptimizationConstraints &constraints); 
+		StorageSolutionEvaluator(DistanceMatrix<Vertex> * distanceMatrix,const map<pair<Cell,int> , Vertex > &vertexByPosition,const OptimizationConstraints &constraint); 
 		double sumDistances(vector<Vertex> &sequence); 
-		void DoRouteEvaluation(AbstractSolution * solution);
-		void DoRouteEstimation(AbstractSolution * solution);
 		double DoRouteEvaluation(vector<Vertex> & route);
 		double DoRouteEstimation(vector<Vertex> & route);
 		double DoFullEvaluationWithTSP(vector<PickingRoute> &vertexesVisits);

@@ -122,12 +122,12 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             } 
         }
 		
-		cout<<setw(20)<<sourceVertexes[i].getLabel()<<"\t"; 
+	//	cout<<setw(20)<<sourceVertexes[i].getLabel()<<"\t"; 
 		for(unsigned int j=0;j<sourceVertexes.size();j++){
 			distancePairs[make_pair(sourceVertexes[i], sourceVertexes[j])] = dist[indexVertex[sourceVertexes[j] ]]; 
-			cout<<setw(4)<<dist[indexVertex[sourceVertexes[j] ]]<<" ";
+		//	cout<<setw(4)<<dist[indexVertex[sourceVertexes[j] ]]<<" ";
 		}
-		cout<<endl;
+	//	cout<<endl;
 		
     }
 	

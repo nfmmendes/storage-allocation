@@ -42,27 +42,26 @@ StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & pro
  * elegant to initialize them all the time it is needed 
  **/
 void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
-	
-	
+
 	vector<IsolatedFamily> isolatedFamiliesList = constraints.getIsolatedFamilies(); 
 	vector<ProductAllocationProhibitions> prohibitions = constraints.getProduAllocationProhibitions();
-	
+
 	//Initialize isolated families structures
 	for(unsigned int i=0; i< isolatedFamiliesList.size(); i++){
 		familyIsolationsByFamilyCode[isolatedFamiliesList[i].getCode()] = isolatedFamiliesList[i];
 		isolatedFamilies.insert(isolatedFamiliesList[i].getCode());
 	}		
-	
+
 	//Initialize product allocation prohibitions structures 
 	for(unsigned int i= 0;i< prohibitions.size(); i++){
 		productAllocationsByProductName[prohibitions[i].getProduct().getName()] = prohibitions[i];
 		restrictedProducts.insert(prohibitions[i].getProduct().getName());
 	}
-	
+
 	//Initialize structures to recover quickly information about store positions on graph
 	for(auto &[key, value] : vertexByCell)
 		cellByVertex[value] = key;
-	
+
 	vector<Vertex> allVertexes = distanceMatrix->getKeys();
 	for(auto key : allVertexes)
 		vertexByType[key.getType()].push_back(key); 
@@ -77,21 +76,22 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 		for(auto &[id, shelf] : shelves)
 			shelvesById[id] = shelf; 
 	}
-	
+
 	//Group products by family
 	for(unsigned int i=0;i<products.size();i++)
 		productsByFamily[products[i].getType()].push_back(products[i]);
-	
+
 	productsSortedByFrequence = getProductOrderByFrequence();
-	
+
 	for(unsigned int i=0; i<productsSortedByFrequence.size();i++)
 		frequenceByProduct[productsSortedByFrequence[i].first ] = productsSortedByFrequence[i].second; 
-	
+
 	InitializeClosestDeliveryPoint(); 	
-	
+
 	storageVertexTypes.insert(WarehouseToGraphConverter::UPPER_LEVEL_CELL);
 	storageVertexTypes.insert(WarehouseToGraphConverter::UNIQUE_LEVEL_CELL);
 	storageVertexTypes.insert(WarehouseToGraphConverter::FIRST_LEVEL_CELL);
+	
 	
 }
 
@@ -246,7 +246,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			
 		}else{
 			//If some item is not allocated it should be penalized 
-			
+			storagePoints.clear();
 			for(unsigned int j = 0; j<items.size();j++){
 				auto position = productAllocation[items[j].first ];
 			
@@ -257,19 +257,20 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			}
 			
 			pair<double, vector<Vertex> > route; 
-			if(storagePoints.size() == 0) 
-				continue; 
-			if(storagePoints.size() < 6) //This is just a limit to use the brute force TSP algorithm
+			if(storagePoints.size() < 6){ //This is just a limit to use the brute force TSP algorithm
 				route = tsp.bruteForceTSP(storagePoints, closestStartPoint, closestEndPoint); 
-			else if(storagePoints.size() < 12) //This is a limit to use 
+			}else if(storagePoints.size() < 12){ //This is a limit to use 
 				route = tsp.quickLocalSearchTSP(storagePoints, closestStartPoint, closestEndPoint);
-			else //All the other cases will use a closest neighbor inserction procedure 
+			}else{ //All the other cases will use a closest neighbor inserction procedure 
 				route = tsp.closestNeighborTSP(storagePoints, closestStartPoint, closestEndPoint);
+			}
 			
 			totalDistance += route.first; 
 		}
+
+		
 	}
-	
+
 	solution->setSolutionValue(totalDistance+penalty);
 	
 }
@@ -493,10 +494,10 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	unsigned int countTries = 0; 
 	unsigned int numPositions = vertexesOrderedByDistance.size(); 
 	usedVertex.resize(numPositions, false); 
-	cout<<"NUM PRODUCTS \n"<<productsSortedByFrequence.size()<<endl;
+	//cout<<"NUM PRODUCTS \n"<<productsSortedByFrequence.size()<<endl;
 	for(unsigned int i=0;i<productsSortedByFrequence.size();i++){
 		auto & item  = productsSortedByFrequence[i]; 
-		item.first.print();
+		//item.first.print();
 		
 		if(!hasConstraints(item.first)){								// All the products that have not a allocation constraint are inserted in 
 														// the first available cell
@@ -540,12 +541,8 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 		countTries = 0;
 	} 
 	
-	int countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
 	cout<<"Allocated:\t" <<allocation.size()<<endl;
 	allocateStronglyIsolatedFamilies(allocation);
-	
-
-	countNotAllocated = count_if(usedVertex.begin(), usedVertex.end(), [](bool a){ return !a; } );
 	cout<<"Allocated:\t" <<allocation.size()<<endl;
 	
 	solution = new StorageAllocationSolution(0.0, 0.0, 1e-02,false); 
@@ -553,10 +550,13 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	for(auto & [vertex, product] : allocation){
 		allocationByProduct[product] = cellByVertex[vertex]; 
 	}
-	
+	cout<<"1\n";
 	solution->setAllocation(allocationByProduct,orders); 
+	cout<<"2\n";
 	EvaluateSolution(solution);
+	cout<<"3\n";
 	solution->printSolution(); 
+	cout<<"4\n";
 	return solution; 
 }
 
@@ -659,7 +659,7 @@ vector<pair<Product,int> > StorageConstructiveHeuristic::getProductOrderByFreque
 	
 	for(unsigned int i=0;i<orders.size();i++){
 		orderItems = orders[i].getOrderItems(); 
-		for(unsigned int j=0;j<orders.size();j++)
+		for(unsigned int j=0;j<orderItems.size();j++)
 			if(productCount.find(orderItems[j].first) != productCount.end())
 				productCount[orderItems[j].first] = 1;
 			else
