@@ -45,7 +45,8 @@ class StorageAllocationSolution : public AbstractSolution{
 		map<Product, pair<Cell, int> > & getProductAllocations();
 		set<Product> & getNonAllocatedProducts()const; 
 		void setAllocation(const Cell &cell, int level, const Product &product); 
-		void setAllocation(map<Product, pair<Cell,int> > &allocations,const vector<Order> &orders); 
+		void setAllocation(map<Product, pair<Cell,int> > &allocations,const vector<Order> &orders);
+		void setRoutesByProduct(map<Product, vector<PickingRoute * > > &other);
 		void setNonAllocatedProducts(const set<Product> &nonAllocated);
 		void removeAllocation(Product &product);
 		void proceedSwap(const Product &firstProduct, const Product &secondProduct,bool evaluateSolutionWithTSP=false);

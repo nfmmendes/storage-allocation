@@ -29,7 +29,6 @@ class StorageConstructiveHeuristic : public Heuristic  {
         DistanceMatrix<Vertex> *distanceMatrix; 
         Warehouse *warehouse; 
 		vector<Order> orders; 
-		StorageAllocationSolution *solution; 
 		
 		//Auxiliary data structures
 		set<string> isolatedFamilies; 

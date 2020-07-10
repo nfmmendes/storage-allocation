@@ -286,13 +286,9 @@ StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Ver
  *  between each cell and the closest delivery point  
  */
 StorageAllocationSolution * StorageILS::CreateInitialSolution(){
-	StorageAllocationSolution *initial = new StorageAllocationSolution();
-	
-	
-	StorageConstructiveHeuristic constr(this->products,*warehouse,*distanceMatrix,vertexByCell, orders,constraints); 
-	StorageAllocationSolution constructiveSolution = constr.Execute();
 
-	return initial; 
+	StorageConstructiveHeuristic constr(this->products,*warehouse,*distanceMatrix,vertexByCell, orders,constraints); 
+	return  constr.Execute(); 
 }
 
 /**
@@ -346,6 +342,10 @@ void StorageILS::InitializeNeighborhoods(){
 	this->neighborhoodStructures.push_back(new InsideShelfSwap());
 	this->neighborhoodStructures.push_back(new InsideBlockSwap());
 	
+	neighborhoodType.push_back("MostFrequentSwap");
+	neighborhoodType.push_back("InsideShelfSwap");
+	neighborhoodType.push_back("InsideBlockSwap");
+
 }
 
 /**
@@ -370,7 +370,6 @@ void StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, N
 	for(unsigned int j=0;j<blocks.size();j++){
 		vector<Shelf> shelves = blocks[j].getShelves();
 		vector<AbstractSolution *> neighbors;
-		
 
 		((InsideBlockSwap *) neighborhoodStructure)->setBlock(blocks[j]); 
 		((InsideBlockSwap *) neighborhoodStructure)->setRandomSeed(randomSeed+j*shelves.size());
@@ -378,10 +377,9 @@ void StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, N
 		neighborhoodStructure->setStartSolution(currentSolution); 
 		neighbors = ((InsideShelfSwap *) neighborhoodStructure)->createNeighbors(); 
 	
-		
 		double currentSolutionValue = currentSolution->getSolutionValue();
 		double newSolutionValue = neighbors[0]->getSolutionValue();
-		
+
 		for(unsigned int k=0;k<neighbors.size();k++){
 			newSolutionValue = neighbors[k]->getSolutionValue();
 			
@@ -397,7 +395,9 @@ void StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, N
 	}
 }
 
-
+/**
+ * 
+ * */
 void StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
 	vector<Block> blocks = this->warehouse->getBlocks(); 
 				
@@ -418,7 +418,6 @@ void StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, N
 		
 		for(unsigned int k=0;k<neighbors.size();k++){
 			newSolutionValue = neighbors[k]->getSolutionValue();
-			
 			//If the neighbor has a better value than the current solution value, so update the current solution
 			//A margin of 0.1% is used to avoid to update constantly the current solution with solutions that 
 			//are not significantly better 
@@ -449,42 +448,46 @@ AbstractSolution * StorageILS::Execute(){
 	ABCAnalysis abcAnalysis(vector<Order> &orders,unsigned int numClasses, vector<double> &thresholds);
 	
     AbstractSolution * initialSolution = CreateInitialSolution();
-	
 	StorageAllocationSolution * bestGlobalSolution = new StorageAllocationSolution( *( (StorageAllocationSolution *) initialSolution));
 	StorageAllocationSolution * currentSolution = new StorageAllocationSolution(bestGlobalSolution); 
-	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue();
-	cout<<"Best value :"<<bestGlobalSolutionValue<<endl; 
+	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue(); 
 	int randomSeed= 1;
 	
 	while(!StopCriteriaReached()){
 		
-
+		
 		StorageAllocationSolution *bestLocalSearchSolution = new StorageAllocationSolution(*currentSolution);
 		StorageAllocationSolution *originalSolution = new StorageAllocationSolution(*currentSolution);
 		double bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue();
-
+		
 		//Perform a local search as a VNS
 		for(unsigned int i=0;i< this->neighborhoodStructures.size();i++){
-			string typeName = typeid(*this->neighborhoodStructures[i]).name();
 			
 			delete currentSolution;
+			
 			currentSolution = new StorageAllocationSolution(*originalSolution);
 			double currentSolutionValue = currentSolution->getSolutionValue();
 			double newSolutionValue = 0;
-		
-			if(typeName == "InsideShelfSwap"){	
+			
+			if(neighborhoodType[i] == "InsideShelfSwap"){	
+				
 				SwapInsideShelfLocalSearch(currentSolution, this->neighborhoodStructures[i], randomSeed);
 				newSolutionValue = currentSolution->getSolutionValue();	
-			}else if(typeName == "InsideBlockSwap"){
+			}else if(neighborhoodType[i] == "InsideBlockSwap"){
+				
 				SwapInsideBlockLocalSearch(currentSolution, this->neighborhoodStructures[i], randomSeed);
 				double newSolutionValue = currentSolution->getSolutionValue();
 
-			}else if(typeName == "MostFrequentSwap"){
+			}else if(neighborhoodType[i] == "MostFrequentSwap"){
+				currentSolution = new StorageAllocationSolution(*originalSolution);currentSolution = new StorageAllocationSolution(*originalSolution);
+				continue; 
+				
 				SwapMostFrequentLocalSearch(currentSolution, this->neighborhoodStructures[i], randomSeed);
 				newSolutionValue = currentSolution->getSolutionValue();
 			}
 
 			if((newSolutionValue-bestLocalSearchSolutionValue)*100.0/bestLocalSearchSolutionValue <= -0.1){
+				
 				delete bestLocalSearchSolution; 
 				bestLocalSearchSolution = new StorageAllocationSolution(*currentSolution);
 				bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue(); 
@@ -509,7 +512,7 @@ AbstractSolution * StorageILS::Execute(){
 		
 	}
 	
-
+	cout<<"End function"<<endl;
 	return bestGlobalSolution;
 }
 

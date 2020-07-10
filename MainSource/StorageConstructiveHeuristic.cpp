@@ -230,12 +230,14 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 	vector<Vertex> storagePoints; 
 	double penalty = 0.0; 
 	double totalDistance =0.0;
-	
 	map<Product, pair<Cell,int> > productAllocation = ((StorageAllocationSolution *) solution)->getProductAllocations();
-	
+	map<Product, vector<PickingRoute *> > routesByProduct; 
+
+
+
 	for(unsigned int i=0;i< orders.size();i++){
 		items = orders[i].getOrderItems(); 
-		
+
 		if(items.size() == 1) {
 			Vertex location = vertexByCell[ productAllocation[items[0].first ] ]; 
 			Vertex begin = closestStartPoint[ location  ];
@@ -243,7 +245,6 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			totalDistance += this->distanceMatrix->getDistance(begin, location) + this->distanceMatrix->getDistance(location, end); 
 		}else if(items.size() == 2){
 			totalDistance += this->getBetterRouteWithTwoPoints(items, productAllocation);
-			
 		}else{
 			//If some item is not allocated it should be penalized 
 			storagePoints.clear();
@@ -264,14 +265,20 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			}else{ //All the other cases will use a closest neighbor inserction procedure 
 				route = tsp.closestNeighborTSP(storagePoints, closestStartPoint, closestEndPoint);
 			}
-			
 			totalDistance += route.first; 
-		}
 
-		
+			PickingRoute *newPickingRoute = new PickingRoute();
+			newPickingRoute->second = route.first; 
+			newPickingRoute->first.resize(route.second.size());
+			for(int j=0;j<route.second.size(); j++)
+				newPickingRoute->first[j] = route.second[j];
+			for(unsigned int j = 0; j<items.size();j++)
+				routesByProduct[items[j].first].push_back(newPickingRoute);
+		}
 	}
 
 	solution->setSolutionValue(totalDistance+penalty);
+	((StorageAllocationSolution*)solution)->setRoutesByProduct(routesByProduct);
 	
 }
 
@@ -545,19 +552,17 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	allocateStronglyIsolatedFamilies(allocation);
 	cout<<"Allocated:\t" <<allocation.size()<<endl;
 	
-	solution = new StorageAllocationSolution(0.0, 0.0, 1e-02,false); 
+	bestSolution = new StorageAllocationSolution(0.0, 0.0, 1e-02,false); 
 	map<Product, pair<Cell, int> > allocationByProduct; 
 	for(auto & [vertex, product] : allocation){
 		allocationByProduct[product] = cellByVertex[vertex]; 
 	}
-	cout<<"1\n";
-	solution->setAllocation(allocationByProduct,orders); 
-	cout<<"2\n";
-	EvaluateSolution(solution);
-	cout<<"3\n";
-	solution->printSolution(); 
-	cout<<"4\n";
-	return solution; 
+	
+	((StorageAllocationSolution *)bestSolution)->setAllocation(allocationByProduct,orders); 
+	EvaluateSolution(bestSolution);
+	bestSolution->printSolution(); 
+	
+	return (StorageAllocationSolution *)bestSolution; 
 }
 
 

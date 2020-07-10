@@ -39,8 +39,16 @@ StorageAllocationSolution::StorageAllocationSolution(){
 		this->notAllocatedProducts.insert(key); 
 	for(auto & [key, value] : other->productsAllocation)
 		this->productsAllocation[key] = value; 
-	for(auto & [key, value] : other->routesByProduct)
-		this->routesByProduct[key] = value; 
+
+	for(map<Product,vector<PickingRoute*> >::iterator it = other->routesByProduct.begin(); it!= other->routesByProduct.end(); it++){
+		this->routesByProduct[it->first].resize(it->second.size());
+		for(unsigned int i =0;i<it->second.size(); i++){
+			this->routesByProduct[it->first][i] = new PickingRoute();
+			this->routesByProduct[it->first][i]->first = it->second[i]->first; 
+			this->routesByProduct[it->first][i]->second = it->second[i]->second; 
+		}
+	}
+
 }
 
 /**
@@ -58,8 +66,16 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &
 		this->notAllocatedProducts.insert(key); 
 	for(auto & [key, value] : other.productsAllocation)
 		this->productsAllocation[key] = value; 
-	for(auto & [key, value] : other.routesByProduct)
-		this->routesByProduct[key] = value; 
+
+	for(map<Product,vector<PickingRoute*> >::iterator it = other.routesByProduct.begin(); it!= other.routesByProduct.end(); it++){
+		this->routesByProduct[it->first].resize(it->second.size());
+		for(unsigned int i =0;i<it->second.size(); i++){
+			this->routesByProduct[it->first][i] = new PickingRoute();
+			this->routesByProduct[it->first][i]->first = it->second[i]->first; 
+			this->routesByProduct[it->first][i]->second = it->second[i]->second; 
+		}
+	}
+
 }
 
 /**
@@ -90,13 +106,34 @@ StorageAllocationSolution::~StorageAllocationSolution(){
 	this->notAllocatedProducts.clear();
 	this->productsAllocation.clear(); 
 
-	for(auto [key,value] : this->routesByProduct){
-		for(unsigned int i=0; i<value.size();i++){
-			if(true /*Maybe insert a test here in the future if the cache of routes is implemented*/)
-				delete value[i];
+
+	for(map<Product, vector<PickingRoute *> >::iterator it = this->routesByProduct.begin(); it != this->routesByProduct.end();it++ ){
+		for(int i=0;i< it->second.size(); i++){
+		//	cout<<"del 1."<<i<<endl; 
+			if(it->second[i] != NULL  /*Maybe insert a test here in the future if the cache of routes is implemented*/){
+		//		cout<<"Parte A "<<(it->second[i] == NULL)<<" "<<it->second[i]->first.size()<<"\n";
+				it->second[i]->first.clear(); 
+				//cout<<"Parte B "<<it->second[i]<<"\n";
+				delete it->second[i]; 
+				//cout<<"Parte C\n";
+			}
+			it->second.clear();
+			
 		}
 	}
-
+	cout<<"End for"<<endl; 
+	this->routesByProduct.clear();
+//	cout<<"Clear"<<endl;
+/*
+	for(auto & [key,value] : this->routesByProduct){
+		for(unsigned int i=0; i<value.size();i++){
+			if(true ){
+				//value[i].clear(); 
+				delete value[i];
+			}
+		}
+	}
+*/
 }
 
 /**
@@ -117,14 +154,38 @@ void StorageAllocationSolution::setRuntime(double time){
  * 
  **/
 void StorageAllocationSolution::setSolutionValue(double value){
+	cout<<"SET VALUE : "<<value<<endl;
     this->solutionValue = value; 
+}
+
+/**
+ * 
+ **/
+void StorageAllocationSolution::setRoutesByProduct(map<Product, vector<PickingRoute * > > &other){
+
+	for(map<Product, vector<PickingRoute *> >::iterator it = this->routesByProduct.begin(); it != this->routesByProduct.end(); it++ ){
+		for(unsigned int i=0;i<it->second.size(); i++){			
+			it->second[i]->first.clear();
+			delete it->second[i];
+		}
+		it->second.clear(); 
+	}
+
+	for(map<Product,vector<PickingRoute*> >::iterator it = other.begin(); it!= other.end(); it++){
+		this->routesByProduct[it->first].resize(it->second.size());
+		for(unsigned int i =0;i<it->second.size(); i++){
+			this->routesByProduct[it->first][i] = new PickingRoute();
+			this->routesByProduct[it->first][i]->first = it->second[i]->first; 
+			this->routesByProduct[it->first][i]->second = it->second[i]->second; 
+		}
+	}
 }
 
 /**
  * Print the solution in the folder results\\solution 
  **/
 void StorageAllocationSolution::printSolution() const{
-	ofstream file("results\\solutions.txt");
+	ofstream file("results/solutions.txt");
 	printToFile(file); 
 }
 

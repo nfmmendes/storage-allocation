@@ -180,6 +180,7 @@ class StorageILS :public Heuristic{
         vector<NeighborhoodStructure *> neighborhoodStructures;
 		int numPertubations; 
         int numIterationsWithoutImprovement; 
+        vector<string> neighborhoodType; 
 		
         bool StopCriteriaReached();
         StorageAllocationSolution * ExecutePertubation(StorageAllocationSolution *);
