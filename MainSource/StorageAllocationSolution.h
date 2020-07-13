@@ -35,6 +35,7 @@ class StorageAllocationSolution : public AbstractSolution{
         void setRuntime(double time) override; 
         void setMinDelta(double minDelta) override ;
 		void updateSolutionValue(vector<PickingRoute> &oldRoutes, vector<PickingRoute> &newRoutes, bool evaluateSolutionWithTSP=false);
+		double getVariationAndUpdateAfterSwap(PickingRoute *original,Vertex &oldVertex, Vertex &newVertex, bool useTSPEvaluator);
     public:
 		StorageAllocationSolution();
 		StorageAllocationSolution(StorageAllocationSolution *other);

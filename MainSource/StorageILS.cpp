@@ -83,8 +83,8 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 	map<pair<Cell, int> , Product> shelfAllocations; 
 	vector<AbstractSolution *> solutions; 
 	srand(this->randomSeed); 
-	
-	for(const auto &[product, position] : allocations){
+
+	for(auto &[product, position] : allocations){
 		if(position.first.getIdShelf() == shelf.getId())
 			shelfAllocations[position] = product;
 	}
@@ -94,13 +94,13 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 	if(shelfAllocations.size() <=2)
 		return solutions;
 	
-	
 	set<pair<int,int> > swapsDone; 
 	int first, second; 
+
 	for(unsigned int i=0; i< min(numberOfNeighbors, ((unsigned int) (allocationsSize-1)*allocationsSize) ); i++){
 		if(!ChooseTwoProductIndexes(first ,second,allocationsSize, swapsDone))
 			break;
-		
+
 		map< pair<Cell, int> , Product>::iterator it = shelfAllocations.begin();
 		advance(it,first); 
 		Product firstProduct = it->second; 
@@ -110,7 +110,9 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 		Product secondProduct = it->second; 
 		
 		StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution); 
-		newSolution->proceedSwap(firstProduct, secondProduct); 
+		newSolution->proceedSwap(firstProduct, secondProduct,true); 
+		
+		solutions.push_back(newSolution); 
 	}
 	
 	return solutions;
@@ -144,6 +146,21 @@ InsideBlockSwap::InsideBlockSwap(StorageAllocationSolution *initial, int numNeig
 	
 }
 
+bool InsideBlockSwap::ChooseTwoProductIndexes(int &first, int &second, int allocationsSize, const set<pair<int,int> > & swapsDone){
+	first = rand()%allocationsSize;
+	second = rand()%allocationsSize; 
+	
+	int countTries = 0; 
+	while(swapsDone.find(make_pair(first, second)) != swapsDone.end() || swapsDone.find(make_pair(second,first)) != swapsDone.end() || second == first){
+		first = rand()%allocationsSize;
+		second = rand()%allocationsSize; 
+		if( countTries >= allocationsSize*allocationsSize)
+			break;
+	}
+
+	return countTries < allocationsSize*allocationsSize;
+}
+
 
 /**
  * 
@@ -153,21 +170,43 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 	map<pair<Cell, int> , Product> blockAllocations; 
 	vector<Shelf> shelves = this->block.getShelves(); 
 	vector<AbstractSolution *> solutions; 
-	
-	for(unsigned int i=0;i<shelves.size();i++){
-		vector<Cell> cells = shelves[i].getCells();
-		
-		for(unsigned int j=0;j<cells.size();j++){
-			int numLevels = cells[j].getLevels();
-			for(int k=0;k<numLevels; k++){
-				pair<Cell, int> key(cells[j],k); 
-				//TODO: Remember how it works 
-			//	if(allocations.find(key) != allocations.end())
-			//		shelfAllocations[key] = allocations[key];
-			}
-		}		
+	set<long> shelfIds; 
+
+	for(unsigned int i=0; i < shelves.size(); i++)
+		shelfIds.insert(shelves[i].getId()); 
+
+
+	for(auto &[product, position] : allocations){
+		if(shelfIds.find(position.first.getIdShelf()) != shelfIds.end())
+			blockAllocations[position] = product;
 	}
+
+	int allocationsSize = blockAllocations.size();
+	if(allocationsSize <=2)
+		return solutions;
 	
+	set<pair<int,int> > swapsDone; 
+	int first, second; 
+
+	for(unsigned int i=0; i< min(numberOfNeighbors, (allocationsSize-1)*allocationsSize) ; i++){
+		if(!ChooseTwoProductIndexes(first ,second,allocationsSize, swapsDone))
+			break;
+
+		map< pair<Cell, int> , Product>::iterator it = blockAllocations.begin();
+		advance(it,first); 
+		Product firstProduct = it->second; 
+		
+		it = blockAllocations.begin(); 
+		advance(it,second); 
+		Product secondProduct = it->second; 
+		
+		StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution); 
+		newSolution->proceedSwap(firstProduct, secondProduct,true); 
+		
+		solutions.push_back(newSolution); 
+	}
+
+
 	//Get all allocations of the shelf
 	return solutions;
 }
@@ -205,7 +244,7 @@ MostFrequentSwap::MostFrequentSwap(StorageAllocationSolution *initial, int numNe
 
 /**
  *
- */
+ **/
 AbstractSolution * MostFrequentSwap::getStartSolution() const{
 	return this->startSolution; 
 }
@@ -358,7 +397,7 @@ void StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, 
 		vector<AbstractSolution *> neighbors;
 		((MostFrequentSwap *) neighborhoodStructure)->setRandomSeed(randomSeed*products.size()+i);
 		neighborhoodStructure->setStartSolution(currentSolution); 
-		neighbors = ((InsideShelfSwap *) neighborhoodStructure)->createNeighbors(); 
+		neighbors = ((MostFrequentSwap *) neighborhoodStructure)->createNeighbors(); 
 	}
 	
 }
@@ -375,7 +414,7 @@ void StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, N
 		((InsideBlockSwap *) neighborhoodStructure)->setRandomSeed(randomSeed+j*shelves.size());
 		((InsideBlockSwap *) neighborhoodStructure)->setNumberOfNeighbors((int)sqrt(blocks[j].getShelves().size()));
 		neighborhoodStructure->setStartSolution(currentSolution); 
-		neighbors = ((InsideShelfSwap *) neighborhoodStructure)->createNeighbors(); 
+		neighbors = ((InsideBlockSwap *) neighborhoodStructure)->createNeighbors(); 
 	
 		double currentSolutionValue = currentSolution->getSolutionValue();
 		double newSolutionValue = neighbors[0]->getSolutionValue();
@@ -386,6 +425,7 @@ void StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, N
 			//If the neighbor has a better value than the current solution value, so update the current solution
 			//A margin of 0.1% is used to avoid to update constantly the current solution with solutions that 
 			//are not significantly better 
+			cout<<"Comparison : "<<newSolutionValue<<" | "<<currentSolutionValue<<endl;
 			if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
 				delete currentSolution;
 				currentSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbors[k]);
@@ -393,6 +433,7 @@ void StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, N
 			}
 		}
 	}
+	cout<<"Current solution value : "<<currentSolution->getSolutionValue()<< endl; 
 }
 
 /**
@@ -400,34 +441,36 @@ void StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, N
  * */
 void StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
 	vector<Block> blocks = this->warehouse->getBlocks(); 
-				
+
+			
 	for(unsigned int j=0;j<blocks.size();j++){
 		vector<Shelf> shelves = blocks[j].getShelves();
 		vector<AbstractSolution *> neighbors;
 		
 		for(unsigned int k=0;k<shelves.size();k++){
-			((InsideShelfSwap *) neighborhoodStructure)->setShelf(shelves[k]); 
+			((InsideShelfSwap *) neighborhoodStructure)->setShelf(shelves[rand()%shelves.size()]); 
 			((InsideShelfSwap *) neighborhoodStructure)->setRandomSeed(randomSeed+j*shelves.size()+k);
 			((InsideShelfSwap *) neighborhoodStructure)->setNumberOfNeighbors((int)sqrt(shelves[k].getCells().size()));
 			neighborhoodStructure->setStartSolution(currentSolution); 
 			neighbors = ((InsideShelfSwap *) neighborhoodStructure)->createNeighbors(); 
-		}
 		
-		double currentSolutionValue = currentSolution->getSolutionValue();
-		double newSolutionValue = neighbors[0]->getSolutionValue();
-		
-		for(unsigned int k=0;k<neighbors.size();k++){
-			newSolutionValue = neighbors[k]->getSolutionValue();
-			//If the neighbor has a better value than the current solution value, so update the current solution
-			//A margin of 0.1% is used to avoid to update constantly the current solution with solutions that 
-			//are not significantly better 
-			if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
-				delete currentSolution;
-				currentSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbors[k]);
-				currentSolutionValue = currentSolution->getSolutionValue();
+			double currentSolutionValue = currentSolution->getSolutionValue();
+			double newSolutionValue = neighbors[0]->getSolutionValue();
+			for(unsigned int w=0;w<neighbors.size();w++){
+				newSolutionValue = neighbors[w]->getSolutionValue(); 
+				//If the neighbor has a better value than the current solution value, so update the current solution
+				//A margin of 0.1% is used to avoid to update constantly the current solution with solutions that 
+				//are not significantly better 
+				cout<<"Comparison : "<<newSolutionValue<<" | "<<currentSolutionValue<<endl;
+				if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
+					delete currentSolution;
+					currentSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbors[w]);
+					currentSolutionValue = currentSolution->getSolutionValue();
+				}
 			}
 		}
 	}
+	cout<<"Current solution value : "<<currentSolution->getSolutionValue()<< endl; 
 }
 
 

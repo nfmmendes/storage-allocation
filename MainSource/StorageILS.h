@@ -82,8 +82,9 @@ class InsideBlockSwap:public NeighborhoodStructure{
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
 		Block block; 
-		vector<Product> interchangeableProducts; 
-		
+	//	vector<Product> interchangeableProducts; 
+		bool ChooseTwoProductIndexes(int &first, int &second, int allocationsSize, const set<pair<int,int> > & swapsDone);
+
     public:
         InsideBlockSwap();
         ~InsideBlockSwap();
@@ -94,7 +95,7 @@ class InsideBlockSwap:public NeighborhoodStructure{
 
         void setRandomSeed(int seed){ this->randomSeed = seed; }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
-        vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
+    //    vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
         int getRandomSeed(){ return this->randomSeed; }
         void setBlock(Block &other){ this->block = other; }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
@@ -150,17 +151,17 @@ class StorageAllocationPertubation :public NeighborhoodStructure {
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
         int numOfPertubationMoves; 
-		vector<Product> interchangeableProducts; 
+	//	vector<Product> interchangeableProducts; 
     public:
         AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
         StorageAllocationPertubation(){}
         ~StorageAllocationPertubation(){}
 
-        void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
+    //    void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
         void setRandomSeed(int seed){ this->randomSeed = seed; }
         void setNumberOfNeighbors(unsigned int val){ this->numOfPertubationMoves = val; }
-        vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
+    //    vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
         int getRandomSeed(){ return this->randomSeed; }
         unsigned int getNumberOfNeighbors(){ return this->numOfPertubationMoves; }
 };

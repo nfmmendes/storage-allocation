@@ -50,6 +50,7 @@ class StorageSolutionEvaluator{
 		StorageSolutionEvaluator & operator=(const StorageSolutionEvaluator &other);
 		map<Product, int> getRequestsByProduct(vector<Order> &orders);
 		PickingRoute getVertexes(vector<pair<Cell, int> > &positions);
+		Vertex getVertex(pair<Cell, int> &position);
 		
 };
 

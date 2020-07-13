@@ -106,34 +106,18 @@ StorageAllocationSolution::~StorageAllocationSolution(){
 	this->notAllocatedProducts.clear();
 	this->productsAllocation.clear(); 
 
-
 	for(map<Product, vector<PickingRoute *> >::iterator it = this->routesByProduct.begin(); it != this->routesByProduct.end();it++ ){
-		for(int i=0;i< it->second.size(); i++){
-		//	cout<<"del 1."<<i<<endl; 
+		for(int i=0;i< it->second.size(); i++){ 
 			if(it->second[i] != NULL  /*Maybe insert a test here in the future if the cache of routes is implemented*/){
-		//		cout<<"Parte A "<<(it->second[i] == NULL)<<" "<<it->second[i]->first.size()<<"\n";
 				it->second[i]->first.clear(); 
-				//cout<<"Parte B "<<it->second[i]<<"\n";
 				delete it->second[i]; 
-				//cout<<"Parte C\n";
 			}
 			it->second.clear();
 			
 		}
 	}
-	cout<<"End for"<<endl; 
+	
 	this->routesByProduct.clear();
-//	cout<<"Clear"<<endl;
-/*
-	for(auto & [key,value] : this->routesByProduct){
-		for(unsigned int i=0; i<value.size();i++){
-			if(true ){
-				//value[i].clear(); 
-				delete value[i];
-			}
-		}
-	}
-*/
 }
 
 /**
@@ -259,6 +243,9 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 		
 	pair<Cell,int> first = productsAllocation[firstProduct];
 	pair<Cell,int> second	= productsAllocation[secondProduct];
+	Vertex firstVertex = Evaluator->getVertex(first);
+	Vertex secondVertex = Evaluator->getVertex(second);
+	double delta = 0.0; 
 	
 	productsAllocation[firstProduct] = second; 
 	productsAllocation[secondProduct] = first;
@@ -266,25 +253,33 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	vector<PickingRoute *> firstRoutes = routesByProduct[firstProduct];
 	vector<PickingRoute *> secondRoutes = routesByProduct[secondProduct];
 	
-	//if a same route has both products in the swap the evaluation don't need to be done
-	for(unsigned int i=0; i<firstRoutes.size(); i++){
-		if(find(secondRoutes.begin(),secondRoutes.end(), firstRoutes[i]) != secondRoutes.end())
-			continue; 
-		else if(useTSPEvaluator)
-			firstRoutes[i]->second = Evaluator->DoRouteEvaluation(firstRoutes[i]->first);
-		else
-			firstRoutes[i]->second = Evaluator->DoRouteEstimation(firstRoutes[i]->first);
-	}
+	for(unsigned int i=0; i<firstRoutes.size(); i++)
+		delta += getVariationAndUpdateAfterSwap(firstRoutes[i], firstVertex, secondVertex, useTSPEvaluator);
 	
-	//if a same route has both products in the swap the evaluation don't need to be done	
-	for(unsigned int i=0; i<secondRoutes.size(); i++){
-		if(find(firstRoutes.begin(),firstRoutes.end(), secondRoutes[i]) != firstRoutes.end())
-			continue; 
-		else if(useTSPEvaluator)
-			secondRoutes[i]->second = Evaluator->DoRouteEvaluation(secondRoutes[i]->first);
-		else
-			secondRoutes[i]->second = Evaluator->DoRouteEstimation(secondRoutes[i]->first);
-	}
+	for(unsigned int i=0; i<secondRoutes.size(); i++)
+		delta += getVariationAndUpdateAfterSwap(secondRoutes[i], secondVertex, firstVertex, useTSPEvaluator);
+
+	this->solutionValue += delta; 
+}
+
+/**
+ * Update a picking route and returns the objective function variation after this update
+ * @param original Picking route that will be alterated 
+ * @param oldVertex Vertex that will be removed of the route
+ * @param newVertex Vertex that will be included in the new route
+ * @param useTSPEvaluator Param to define how the route new cost will be calculated 
+ * */
+double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *original,Vertex &oldVertex, Vertex &newVertex, bool useTSPEvaluator){
+	
+	//if a same route has both products in the swap the evaluation don't need to be done
+	if(find(original->first.begin(),original->first.end(), newVertex) != original->first.end())
+		return 0;
+	
+	replace(original->first.begin(), original->first.end(), oldVertex, newVertex);
+	double oldValue = original->second; 
+	original->second = useTSPEvaluator ? Evaluator->DoRouteEvaluation(original->first) : Evaluator->DoRouteEstimation(original->first);
+
+	return original->second - oldValue; 
 }
 
 
