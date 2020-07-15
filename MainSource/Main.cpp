@@ -96,8 +96,8 @@ int main(int argc, char **argv){
         string indexFileName = argv[1];
         InputData input(indexFileName);
 		
-		ABCAnalysis * abc = createABCAnalysis(input); 
-		abc->execute(); 
+		//ABCAnalysis * abc = createABCAnalysis(input); 
+		//abc->execute(); 
 		
 		printRandomSolution();
     			

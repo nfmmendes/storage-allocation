@@ -179,18 +179,19 @@ class StorageILS :public Heuristic{
         Warehouse *warehouse; 
 		vector<Order> orders; 
         vector<NeighborhoodStructure *> neighborhoodStructures;
-		int numPertubations; 
         int numIterationsWithoutImprovement; 
-        vector<string> neighborhoodType; 
+        vector<string> neighborhoodType;
+        map<Product, char> productClasses; 
 		
         bool StopCriteriaReached();
         StorageAllocationSolution * ExecutePertubation(StorageAllocationSolution *);
         StorageAllocationSolution * CreateInitialSolution();
         void EvaluateSolution(AbstractSolution * solution); 
 		void InitializeNeighborhoods();
-        void SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure,int randomSeed);
-        void SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
-        void SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
+        AbstractSolution * SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure,int randomSeed);
+        AbstractSolution * SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
+        AbstractSolution * SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
+        map<Product, char> getProductABCClasses();
     public:
         StorageILS();
         StorageILS(StorageILS &other);

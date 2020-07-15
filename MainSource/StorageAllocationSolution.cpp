@@ -32,9 +32,9 @@ StorageAllocationSolution::StorageAllocationSolution(){
 	this->runtime = other->runtime;
 	this->minDelta = other->minDelta;
 	isMaximization = other->isMaximization; 
-	
+	 
 	//unsigned long long int solutionIndex;  
-		
+	
 	for(auto & key : other->notAllocatedProducts)
 		this->notAllocatedProducts.insert(key); 
 	for(auto & [key, value] : other->productsAllocation)
@@ -107,7 +107,7 @@ StorageAllocationSolution::~StorageAllocationSolution(){
 	this->productsAllocation.clear(); 
 
 	for(map<Product, vector<PickingRoute *> >::iterator it = this->routesByProduct.begin(); it != this->routesByProduct.end();it++ ){
-		for(int i=0;i< it->second.size(); i++){ 
+		for(unsigned int i=0;i< it->second.size(); i++){ 
 			if(it->second[i] != NULL  /*Maybe insert a test here in the future if the cache of routes is implemented*/){
 				it->second[i]->first.clear(); 
 				delete it->second[i]; 

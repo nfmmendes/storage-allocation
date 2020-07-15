@@ -270,7 +270,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			PickingRoute *newPickingRoute = new PickingRoute();
 			newPickingRoute->second = route.first; 
 			newPickingRoute->first.resize(route.second.size());
-			for(int j=0;j<route.second.size(); j++)
+			for(unsigned int j=0;j<route.second.size(); j++)
 				newPickingRoute->first[j] = route.second[j];
 			for(unsigned int j = 0; j<items.size();j++)
 				routesByProduct[items[j].first].push_back(newPickingRoute);

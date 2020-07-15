@@ -296,6 +296,10 @@ double StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex> &vertexes)
 	return -1;
 }
 
+
+/**
+ * 
+ * */
 PickingRoute StorageSolutionEvaluator::getVertexes(vector<pair<Cell, int> > &positions){
 	PickingRoute value; 
 	for(unsigned int i=0; i<positions.size(); i++){
