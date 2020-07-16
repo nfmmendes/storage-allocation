@@ -138,7 +138,6 @@ void StorageAllocationSolution::setRuntime(double time){
  * 
  **/
 void StorageAllocationSolution::setSolutionValue(double value){
-	cout<<"SET VALUE : "<<value<<endl;
     this->solutionValue = value; 
 }
 

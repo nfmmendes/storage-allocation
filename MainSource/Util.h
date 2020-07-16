@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set> 
 using namespace std;
 
 
@@ -13,6 +14,7 @@ class Util{
     
         Util(){}
         static void splitString(vector<string>& returned ,string originalString, string delimiter);
+        static bool ChooseTwoProductIndexes(int &first, int &second, int numProducts, const set<pair<int,int> > & swapsDone);
 };
 
 #endif 
