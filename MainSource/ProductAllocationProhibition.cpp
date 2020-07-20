@@ -162,7 +162,7 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
 	for(int w= 0; w < numIterations; w++){
 		file>>productCode;
 		file>>numProhibitions;
-		cout<<numProhibitions<<endl;
+		//cout<<numProhibitions<<endl;
 		file>>numCellProhibitions>>numShelvesProhibitions>>numBlocksProhibitions;
 	
 		for(int i=0; i < numProhibitions; i++){
@@ -207,7 +207,7 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
     return prohibitions;
 }
 
-void ProductAllocationProhibitions::recoverWarehouseData(const Warehouse warehouse, map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName){
+void ProductAllocationProhibitions::recoverWarehouseData(Warehouse & warehouse, map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName){
     vector<Block> blocks = warehouse.getBlocks();
     vector<Shelf> shelves;
     vector<Cell> cells;

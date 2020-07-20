@@ -6,6 +6,7 @@
 #include<vector>
 #include<map>
 #include<algorithm>
+#include<stdexcept> 
 #include "Cell.h"
 #include "Vertex.h"
 #include "Arc.h"
@@ -15,6 +16,7 @@
 #include "WarehouseToGraphConverter.h"
 #include "TSP.h"
 #include "Order.h"
+#include "Block.h"
 using namespace std;
 using namespace QuickTSP;
 
@@ -24,18 +26,30 @@ using namespace QuickTSP;
  */
 StorageSolutionEvaluator::StorageSolutionEvaluator(const StorageSolutionEvaluator &sto){
 	this->routesByVertexAndSize = sto.routesByVertexAndSize;
-	this->vertexByCellPosition = sto.vertexByCellPosition;
+	
 	this->distances = sto.distances;
-	this->optimizationConstraints = sto.optimizationConstraints; 
+	this->optimizationConstraints = sto.optimizationConstraints;
+
+	for(auto & [key, value] : sto.vertexByCellPosition)
+		vertexByCellPosition[key] = value; 
+
 	for(auto &[key,value] : sto.closestStartPoint)	this->closestStartPoint[key] = value;
 	for(auto &[key, value] : sto.closestEndPoint)	this->closestEndPoint[key] = value;
+	InitializeIsolatedFamilies();
+
+	for(auto &[key,value] : sto.shelfById)
+		this->shelfById[key] = value; 
+
+	for(auto &[key, value] : sto.shelfIdsSetByBlockName)
+		for(auto & ID : value)
+			this->shelfIdsSetByBlockName[key].insert(ID);
 }
 
 /**
  *
  */
-StorageSolutionEvaluator::StorageSolutionEvaluator(DistanceMatrix<Vertex> * distances,const map<pair<Cell,int> , Vertex > &vertexByPosition, 
-												   const OptimizationConstraints & constraints){
+StorageSolutionEvaluator::StorageSolutionEvaluator(DistanceMatrix<Vertex> * distances, map<Position, Vertex> &vertexByPosition,
+												   vector<Block> &blocks, const OptimizationConstraints & constraints){
 	
 	this->distances = distances;
 	this->optimizationConstraints = constraints;
@@ -43,15 +57,68 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(DistanceMatrix<Vertex> * dist
 
 	for(auto & [key, value] : vertexByPosition)
 		vertexByCellPosition[key] = value; 
+	InitializeIsolatedFamilies();
+
+	for(unsigned int i=0; i<blocks.size(); i++){
+		vector<Shelf> shelves = blocks[i].getShelves();
+		for(auto & shelf : shelves){
+			this->shelfById[shelf.getId()] = shelf;
+			this->shelfIdsSetByBlockName[blocks[i].getName()].insert(shelf.getId());
+		}
+	}
+	 
 }
+
+/**
+ *
+ */
+void StorageSolutionEvaluator::InitializeIsolatedFamilies(){
+	 
+	weaklyIsolatedFamilies.clear(); 
+	stronglyIsolatedFamilies.clear(); 
+	prohibitionsByProduct.clear(); 
+
+	vector<IsolatedFamily> isolatedFamilies = this->optimizationConstraints.getIsolatedFamilies();
+	for(auto &item: isolatedFamilies){	
+		if(item.getForce() == WEAK_ISOLATION) 
+			weaklyIsolatedFamilies.insert(item.getCode()); 
+		else  
+			stronglyIsolatedFamilies.insert(item.getCode());
+	}		 
+ 
+	vector<ProductAllocationProhibitions> prohibitions = this->optimizationConstraints.getProductAllocationProhibitions();  
+	for(auto &item : prohibitions) 
+		prohibitionsByProduct[item.getProduct().getName()] = item;
+
+}
+
 
 /**
  *
  */
 StorageSolutionEvaluator & StorageSolutionEvaluator::operator=(const StorageSolutionEvaluator &other){
 	this->routesByVertexAndSize = other.routesByVertexAndSize;
-	this->vertexByCellPosition = other.vertexByCellPosition;
+	
 	this->distances = other.distances;
+	this->optimizationConstraints = other.optimizationConstraints;
+
+	for(auto & [key, value] : other.vertexByCellPosition)
+		vertexByCellPosition[key] = value; 
+ 
+	this->closestStartPoint.clear();  
+	this->closestEndPoint.clear();
+	for(auto &[key,value] : other.closestStartPoint)	this->closestStartPoint[key] = value;
+	for(auto &[key, value] : other.closestEndPoint)		this->closestEndPoint[key] = value;
+	InitializeIsolatedFamilies();
+	 
+	this->shelfIdsSetByBlockName.clear(); 
+	this->shelfById.clear();
+	for(auto &[key,value] : other.shelfById)
+		this->shelfById[key] = value; 
+
+	for(auto &[key, value] : other.shelfIdsSetByBlockName)
+		for(auto & ID : value)
+			this->shelfIdsSetByBlockName[key].insert(ID);
 	return *this;
 }
 
@@ -104,7 +171,86 @@ void StorageSolutionEvaluator::InitializeClosestDeliveryPoint(){
 
 }
 
+/**
+ *
+ **/
+double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(const Product &first, const Cell &firstCell, const Product &second, const Cell &secondCell){	
+	auto firstResult = prohibitionsByProduct.find(first.getName());  
+	auto secondResult = prohibitionsByProduct.find(second.getName());  
+ 
+	if(firstResult == prohibitionsByProduct.end() && secondResult == prohibitionsByProduct.end()) 
+		return 0; 
+  
+	double firstCurrentPenalty, secondCurrentPenalty, firstNewPenalty, secondNewPenalty;  
+	firstCurrentPenalty = secondCurrentPenalty = firstNewPenalty = secondNewPenalty = 0;   
 
+	if(firstResult != prohibitionsByProduct.end()){ 
+		ProductAllocationProhibitions firstProhibition = prohibitionsByProduct[first.getName()];
+		vector<Cell> prohibitedCells = firstProhibition.getForbiddenCells();
+		vector<Shelf> prohibitedShelves = firstProhibition.getForbiddenShelves();
+		vector<Block> prohibitedBlocks = firstProhibition.getForbiddenBlocks();
+
+		for(unsigned int i=0; i<prohibitedCells.size(); i++){
+			if(prohibitedCells[i].getCode() == firstCell.getCode() )
+				firstCurrentPenalty += 8000; 
+			if(prohibitedCells[i].getCode() == secondCell.getCode() )
+				firstNewPenalty += 8000;
+		}
+	} 
+ 
+	if(secondResult != prohibitionsByProduct.end()){ 
+		ProductAllocationProhibitions secondProhibition = prohibitionsByProduct[second.getName()];
+		vector<Cell> prohibitedCells = secondProhibition.getForbiddenCells();
+		vector<Shelf> prohibitedShelves = secondProhibition.getForbiddenShelves();
+		vector<Block> prohibitedBlocks = secondProhibition.getForbiddenBlocks();
+
+
+		for(unsigned int i=0; i<prohibitedCells.size(); i++){
+			if(prohibitedCells[i].getCode() == secondCell.getCode() )
+				secondCurrentPenalty += 8000; 
+			if(prohibitedCells[i].getCode() == firstCell.getCode() )
+				secondNewPenalty += 8000;
+		}
+	} 
+ 
+	return (firstNewPenalty + secondNewPenalty) - (firstCurrentPenalty + secondCurrentPenalty); 
+}
+	
+/**	
+ *	Evaluate the penalty delta caused by a swap between two products. In this function is supposed a valid swap, so 	
+ *	strongly isolated families or strong allocation prohibitions will cause a exception 
+ **/
+double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocations,const Product &first,const Product &second){
+	pair<Cell, int> firstPosition =  allocations[first]; 	
+	pair<Cell, int> secondPosition = allocations[second];		
+	Cell firstCell = firstPosition.first; 	
+	Cell secondCell = secondPosition.first; 
+	double delta = 0.0; 		
+	
+	//Check prohibition 	
+	evaluatePenaltyDeltaByProhibition(first, firstCell, second, secondCell);	
+
+	//Check isolation	
+	if(first.getType() == second.getType())	
+		return 0; 	
+
+	auto isolatedFamilies = this->optimizationConstraints.getIsolatedFamilies(); 		
+	bool firstIsStronglyIsolated = stronglyIsolatedFamilies.find(first.getType()) != stronglyIsolatedFamilies.end(); 
+	bool secondIsStronglyIsolated = stronglyIsolatedFamilies.find(second.getType()) != stronglyIsolatedFamilies.end();
+
+	if(firstIsStronglyIsolated || secondIsStronglyIsolated )
+		std::invalid_argument("There are strongly isolated products");
+	bool isFirstIsolated = weaklyIsolatedFamilies.find(first.getType()) != weaklyIsolatedFamilies.end(); 
+	bool isSecondIsolated =  weaklyIsolatedFamilies.find(second.getType()) != weaklyIsolatedFamilies.end();
+	
+	if(isFirstIsolated && isSecondIsolated)
+		return 0;
+
+	//Check cell delta
+	if(firstCell.getCode() != secondCell.getCode() && (firstCell.getLevels() > 1 || secondCell.getLevels() > 1) ){	
+		
+	}	
+}
 
 /**
  *
@@ -140,7 +286,8 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute> &v
 	for(unsigned int i=0;i< vertexesVisits.size();i++){
 		
 		vector<Vertex> vertexes = vertexesVisits[i].first; 
-		
+		storagePoints.clear(); 
+		 
 		if(items.size() == 1) {
 			
 			Vertex location = vertexes[0]; 
@@ -300,7 +447,7 @@ double StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex> &vertexes)
 /**
  * 
  * */
-PickingRoute StorageSolutionEvaluator::getVertexes(vector<pair<Cell, int> > &positions){
+PickingRoute StorageSolutionEvaluator::getVertexes(vector<Position> &positions){
 	PickingRoute value; 
 	for(unsigned int i=0; i<positions.size(); i++){
 		if(this->vertexByCellPosition.find(positions[i]) != this->vertexByCellPosition.end())
@@ -312,6 +459,7 @@ PickingRoute StorageSolutionEvaluator::getVertexes(vector<pair<Cell, int> > &pos
 
 
 
-Vertex StorageSolutionEvaluator::getVertex(pair<Cell, int>  &position){
+Vertex StorageSolutionEvaluator::getVertex(Position &position){
 	return this->vertexByCellPosition[position];
 }
+

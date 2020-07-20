@@ -19,7 +19,7 @@ class OptimizationConstraints{
 		
 	public: 
 		vector<Parameter> getParameters()const { return parameters; }
-		vector<ProductAllocationProhibitions> getProduAllocationProhibitions()const{ return allocationProhitions; }
+		vector<ProductAllocationProhibitions> getProductAllocationProhibitions()const{ return allocationProhitions; }
 		vector<IsolatedFamily> getIsolatedFamilies()const{ return isolatedFamilies; } 
 		
 		void setParameters(vector<Parameter> value){ parameters = value;} 
@@ -39,13 +39,13 @@ class OptimizationConstraints{
 		 */
 		OptimizationConstraints(const OptimizationConstraints &other){
 			this->parameters = other.getParameters();
-			this->allocationProhitions = other.getProduAllocationProhibitions();
+			this->allocationProhitions = other.getProductAllocationProhibitions();
 			this->isolatedFamilies= other.isolatedFamilies;
 		}
 
 		OptimizationConstraints & operator=(const OptimizationConstraints &other){
 			this->parameters = other.getParameters();
-			this->allocationProhitions = other.getProduAllocationProhibitions();
+			this->allocationProhitions = other.getProductAllocationProhibitions();
 			this->isolatedFamilies= other.getIsolatedFamilies();
 			
 			return *this;

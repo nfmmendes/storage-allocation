@@ -89,7 +89,7 @@ string Block::getName() const { return name; }
 /**
  *	Return the shelves of the block 
  */
-vector<Shelf> Block::getShelves() {return shelves; }
+vector<Shelf> & Block::getShelves() {return shelves; }
 
 
 double Block::getWidth(){ return this->width;}

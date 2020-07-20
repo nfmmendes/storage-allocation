@@ -23,7 +23,7 @@ class ProductAllocationProhibitions{
         vector<Shelf> forbiddenShelves;			///< Shelves where the product can not be stored
         vector<Cell> forbiddenCells;			///< Shelves where the product can not be stored 
         vector<Block> forbiddenBlocks;			///< Blocks where the product can not be stored 
-        static void recoverWarehouseData(const Warehouse warehouse,map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName);
+        static void recoverWarehouseData(Warehouse &warehouse,map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName);
     public:
         ProductAllocationProhibitions();
         ProductAllocationProhibitions(const ProductAllocationProhibitions &other);

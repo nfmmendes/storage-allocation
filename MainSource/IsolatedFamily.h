@@ -10,6 +10,13 @@
 using namespace std;
 
 
+#define STRONG_ISOLATION "STRONG"
+#define WEAK_ISOLATION "WEAK"
+#define SHELF_LEVEL "SHELF"
+#define CELL_LEVEL "CELL"
+#define BLOCK_LEVEL "BLOCK"
+
+
 class IsolatedFamily{
 
 

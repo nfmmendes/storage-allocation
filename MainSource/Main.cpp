@@ -110,7 +110,7 @@ int main(int argc, char **argv){
 		Warehouse warehouse =  input.getWarehouse();
 		map<pair<Cell, int>, Vertex> vertexByCell = processInput.getWarehouseToGraphConverter()->getVertexByCell();
 		cout<<"TEST: "<<processInput.getDistanceMatrix()->getKeys().size()<<endl; 
-		StorageAllocationSolution::setEvaluator(processInput.getDistanceMatrix(),vertexByCell, cons);
+		StorageAllocationSolution::setEvaluator(processInput.getDistanceMatrix(),vertexByCell, warehouse.getBlocks(), cons);
 		
 		cout<<"Initializing metaheuristic \n";
 	//	StorageConstructiveHeuristic constr(input.getProducts(),warehouse,*processInput.getDistanceMatrix(),vertexByCell, input.getOrders(),cons); 

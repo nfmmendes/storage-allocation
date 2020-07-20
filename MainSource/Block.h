@@ -52,7 +52,7 @@ class Block{
         string getName() const;
 		double getWidth();
 		double getLenght();
-        vector<Shelf> getShelves();
+        vector<Shelf> & getShelves();
 		map<long int, Shelf> getShelvesById(); 
 		
         vector<BlockExit> getExits();

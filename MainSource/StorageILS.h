@@ -10,7 +10,7 @@
 #define ILS_h
 
 #include "StorageAllocationSolution.h"
-#include "StorageAllocationSolution.h"
+#include "StorageSolutionEvaluator.h"
 #include "Heuristic.h"
 #include "NeighborhoodStructure.h"
 #include "DistanceMatrix.h"
@@ -50,7 +50,7 @@ class InsideShelfSwap :public NeighborhoodStructure{
                                         // also helps to debug the code, as the bug can be reproduced several times 
                                         // until its cause be discovered
 		Shelf shelf; 
-        map<pair<Cell, int> , Product> shelfAllocations; 
+        map<Position, Product> shelfAllocations; 
         
     public:
         InsideShelfSwap();
@@ -58,7 +58,7 @@ class InsideShelfSwap :public NeighborhoodStructure{
         InsideShelfSwap(AbstractSolution *initial, unsigned int numNeigh, int randomSeed, Shelf & shelf);
         AbstractSolution * getStartSolution() const {return this->startSolution; }
         vector<AbstractSolution *> createNeighbors();
-        void setShelfAllocations(map<pair<Cell,int>, Product> &value){ shelfAllocations = value; }
+        void setShelfAllocations(map<Position,Product> &value){ shelfAllocations = value; }
 		
 		void setShelf(Shelf & shelf) { this->shelf = shelf;} 
         void setRandomSeed(int seed){ this->randomSeed = seed; }
@@ -84,7 +84,7 @@ class InsideBlockSwap:public NeighborhoodStructure{
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
 		Block block; 
-	//	vector<Product> interchangeableProducts; 
+		map<Position, Product> blockAllocations;
 
     public:
         InsideBlockSwap();
@@ -178,7 +178,6 @@ class IsolatedFamilySwap :public NeighborhoodStructure{
 class StorageAllocationPertubation :public NeighborhoodStructure {
 
     private: 
-        int strategy;
         int randomSeed;                     //The algorithm use random functions, but it can not be 100% random because
                                             //two consecutive runs of the same instance must have the same result due to
                                             // the hardness of a company accepts a random behavior of the algorithm. It
@@ -209,7 +208,7 @@ class StorageILS :public Heuristic{
 		OptimizationConstraints constraints;
 		vector<Product> products; 
         DistanceMatrix<Vertex> *distanceMatrix; 
-		map<pair<Cell, int>, Vertex> vertexByCell;
+		map<Position, Vertex> vertexByCell;
         Warehouse *warehouse; 
 		vector<Order> orders; 
         vector<NeighborhoodStructure *> neighborhoodStructures;
@@ -231,7 +230,7 @@ class StorageILS :public Heuristic{
         StorageILS();
         StorageILS(StorageILS &other);
 		StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> &distMatrix,
-				   map<pair<Cell, int>, Vertex> vertexByCell,vector<Order> &orders, OptimizationConstraints &cons);
+				   map<Position, Vertex> vertexByCell,vector<Order> &orders, OptimizationConstraints &cons);
         AbstractSolution * Execute(); 
 
 };

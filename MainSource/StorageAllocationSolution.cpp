@@ -93,10 +93,11 @@ StorageAllocationSolution::StorageAllocationSolution(double value, double time, 
 }
 
 
-void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> *distanceMatrix, map<pair<Cell,int> , Vertex > &vertexByPosition, OptimizationConstraints &constraints){
+void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> *distanceMatrix, map<Position , Vertex > &vertexByPosition,
+											vector<Block> &blocks, OptimizationConstraints &constraints){
 	if(Evaluator != NULL)
 		delete Evaluator;
-	Evaluator = new StorageSolutionEvaluator(distanceMatrix,vertexByPosition,constraints);
+	Evaluator = new StorageSolutionEvaluator(distanceMatrix,vertexByPosition, blocks, constraints);
 }
 
 /**
@@ -216,6 +217,14 @@ map<Product, pair<Cell,int> > & StorageAllocationSolution::getProductAllocations
 }
 
 /**
+ * 
+ * */
+double StorageAllocationSolution::getTotalPenalty(){
+	return this->totalPenalty;
+}
+
+
+/**
  * Set a specific product allocation 
  * @param cell Cell where the product will be allocated 
  * @param level Level inside the cell where the product will be allocated
@@ -230,7 +239,15 @@ void StorageAllocationSolution::setAllocation(const Cell &cell, int level, const
  */
 void StorageAllocationSolution::removeAllocation(Product &product){	
 	this->productsAllocation.erase(product);	
-}
+} 
+ 
+/**
+ *
+ **/
+void StorageAllocationSolution::setTotalPenalty(const double value){ 
+	this->totalPenalty = value; 
+} 
+ 
 
 /**
  * Change the position of two products in the solution 
@@ -285,7 +302,7 @@ double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *o
 /**
  * Set the allocations on warehouse 
  **/
-void StorageAllocationSolution::setAllocation(map<Product, pair<Cell,int> > &allocations,const vector<Order> &orders){
+void StorageAllocationSolution::setAllocation(MapAllocation &allocations,const vector<Order> &orders){
 	
 	for(auto &[product,allocation] : allocations)
 		this->productsAllocation[product] = allocation; 

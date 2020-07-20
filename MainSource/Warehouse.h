@@ -37,7 +37,7 @@ class Warehouse{
             
             string getName() const ;
 			map<string, Block> getBlocksByName();  
-            vector<Block> getBlocks() const ;
+            vector<Block> &getBlocks();
 			vector<ExpeditionPoint> getExpeditionPoints();
             vector<pair<Product, Cell> > getProductAllocation() const;
 			Warehouse &operator= (const Warehouse &other);

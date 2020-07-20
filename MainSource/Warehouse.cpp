@@ -312,7 +312,7 @@ string Warehouse::getName() const { return this->name;}
 /**
  *
  **/
-vector<Block> Warehouse::getBlocks() const { return this->blocks;}
+vector<Block> & Warehouse::getBlocks()  { return this->blocks;}
 
 /**
  *

@@ -14,7 +14,8 @@
 #include "OptimizationConstraints.h"
 #include "StorageConstructiveHeuristic.h"
 #include "ProductAllocationProhibition.h"
-#include "WarehouseToGraphConverter.h"
+#include "WarehouseToGraphConverter.h" 
+#include "StorageSolutionEvaluator.h"
 #include "IsolatedFamily.h"
 #include "TSP.h"
 using namespace std;
@@ -25,7 +26,7 @@ using namespace QuickTSP;
  * Member constructor
  **/
 StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> &distMatrix,
-														   map<pair<Cell, int>, Vertex> vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
+														   map<Position, Vertex> vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
 	this->distanceMatrix = &distMatrix; 
 	this->warehouse = &wh; 
 	this->orders= orders; 
@@ -44,7 +45,7 @@ StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & pro
 void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 
 	vector<IsolatedFamily> isolatedFamiliesList = constraints.getIsolatedFamilies(); 
-	vector<ProductAllocationProhibitions> prohibitions = constraints.getProduAllocationProhibitions();
+	vector<ProductAllocationProhibitions> prohibitions = constraints.getProductAllocationProhibitions();
 
 	//Initialize isolated families structures
 	for(unsigned int i=0; i< isolatedFamiliesList.size(); i++){
@@ -153,7 +154,7 @@ bool StorageConstructiveHeuristic::isForbiddenStore(Product &product, Vertex &ve
 	else if(productAllocationsByProductName.find(product.getName()) !=  productAllocationsByProductName.end()){
 		ProductAllocationProhibitions allocationProhibition = productAllocationsByProductName[product.getName()];
 		
-		pair<Cell,int> location = cellByVertex[vertex]; 
+		Position location = cellByVertex[vertex]; 
 		Cell cell = location.first; 
 		long int shelfId = cell.getIdShelf(); 
 		
@@ -203,7 +204,7 @@ bool StorageConstructiveHeuristic::hasConstraints(Product &prod){
  *
  **/
 double StorageConstructiveHeuristic::getBetterRouteWithTwoPoints(vector<pair<Product, double> > &items, 
-																 map<Product, pair<Cell,int> > &productAllocation){
+																 MapAllocation &productAllocation){
 																	 
 	Vertex location = vertexByCell[ productAllocation[items[0].first ] ]; 
 	Vertex begin = closestStartPoint[ location  ];
@@ -219,6 +220,91 @@ double StorageConstructiveHeuristic::getBetterRouteWithTwoPoints(vector<pair<Pro
 	
 }
 
+/**
+ * Full evaluate a solution 
+ **/	
+double StorageConstructiveHeuristic::evaluatePenaltiesByNonIsolation(MapAllocation & allocations){
+	map<string, vector<string> > familiesByCell; 
+	map<long, vector<string> > familiesByShelf; 
+	map<string, vector<string> > familiesByBlock;
+
+	double totalPenalty = 0.0; 	
+		
+	for(auto &[product, position] : allocations ){
+		if(position.first.getLevels() > 1)
+			familiesByCell[position.first.getCode()].push_back(product.getType());
+		familiesByShelf[position.first.getIdShelf()].push_back(product.getType());
+		familiesByBlock[shelvesById[position.first.getIdShelf()].getBlockName()].push_back(product.getType());
+	}
+	
+	for(auto &[key, value] : familiesByCell){
+		map<string, int> countByFamily; 
+		int countIsolated = 0; 
+
+		for(unsigned int i=0;i<value.size();i++){
+			countByFamily.find(value[i]) == countByFamily.end() ? (countByFamily[value[i]] =0) : countByFamily[value[i]]++; 
+			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == "CELL")
+				countIsolated++;
+		}
+
+		totalPenalty += 8000*countIsolated; 	
+	} 
+
+	for(auto &[key, value] : familiesByShelf){
+		map<string, int> countByFamily; 
+		int countIsolated = 0; 
+
+		for(unsigned int i=0;i<value.size();i++){
+			countByFamily.find(value[i]) == countByFamily.end() ? (countByFamily[value[i]] =0) : countByFamily[value[i]]++; 
+			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == "SHELF")
+				countIsolated++;
+		}
+
+		totalPenalty += 8000*countIsolated; 	
+	} 
+
+	for(auto &[key, value] : familiesByBlock){
+		map<string, int> countByFamily; 
+		int countIsolated = 0; 
+
+		for(unsigned int i=0;i<value.size();i++){
+			countByFamily.find(value[i]) == countByFamily.end() ? (countByFamily[value[i]] =0) : countByFamily[value[i]]++; 
+			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == "BLOCK")
+				countIsolated++;
+		}
+		
+		totalPenalty += 8000*countIsolated; 	
+	} 
+	return totalPenalty;
+} 
+
+/**
+ *
+ **/
+double StorageConstructiveHeuristic::evaluatePenaltiesByAllocationProhibition(MapAllocation & allocation){
+	double totalPenalty;
+
+	vector<ProductAllocationProhibitions> prohibitions = this->constraints.getProductAllocationProhibitions();
+	for(auto & prohibition : prohibitions){
+		Product product = prohibition.getProduct(); 
+		Position position  = allocation[product];
+		Cell cell = position.first; 
+		Shelf shelf = shelvesById[cell.getIdShelf()];
+		Block block = blocksByName[shelf.getBlockName()];
+		
+
+		auto forbiddenCells = prohibition.getForbiddenCells(); 
+		auto forbiddenShelves = prohibition.getForbiddenShelves();
+		auto forbiddenBlocks = prohibition.getForbiddenBlocks(); 
+		int contA = count_if(forbiddenCells.begin(), forbiddenCells.end(), [cell](Cell &o){ return  cell.getCode() == o.getCode(); });
+		int contB = count_if(forbiddenShelves.begin(), forbiddenShelves.end(), [shelf](Shelf &o){ return shelf.getId()== o.getId(); });
+		int contC = count_if(forbiddenBlocks.begin(), forbiddenBlocks.end(), [block](Block &o){ return block.getName() == o.getName();});
+		totalPenalty += 20000*(contA+contB+contC);
+	}
+ 
+	return totalPenalty; 
+}
+
 
 /**
  * Full evaluate a solution 
@@ -229,12 +315,14 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 	vector<pair<Product, double> > items; 
 	vector<Vertex> storagePoints; 
 	double penalty = 0.0; 
-	double totalDistance =0.0;
-	map<Product, pair<Cell,int> > productAllocation = ((StorageAllocationSolution *) solution)->getProductAllocations();
+	double nonExistentPositionPenalty = 0.0;  
+	
+	double totalDistance =0.0; 
+	MapAllocation productAllocation = ((StorageAllocationSolution *) solution)->getProductAllocations();
 	map<Product, vector<PickingRoute *> > routesByProduct; 
-
-
-
+	double isolatedFamilyPenalty = evaluatePenaltiesByNonIsolation(productAllocation);
+	double forbiddenAllocationPenalty = evaluatePenaltiesByAllocationProhibition(productAllocation); 
+	
 	for(unsigned int i=0;i< orders.size();i++){
 		items = orders[i].getOrderItems(); 
 
@@ -254,7 +342,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 				if(vertexByCell.find(position) != vertexByCell.end())
 					storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
 				else 
-					penalty += 5000; 
+					nonExistentPositionPenalty += 5000; 
 			}
 			
 			pair<double, vector<Vertex> > route; 
@@ -276,7 +364,8 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 				routesByProduct[items[j].first].push_back(newPickingRoute);
 		}
 	}
-
+	penalty = nonExistentPositionPenalty + isolatedFamilyPenalty; 
+	cout<<nonExistentPositionPenalty<<" "<<isolatedFamilyPenalty<<" "<<penalty<<" "<<totalDistance<<endl;
 	solution->setSolutionValue(totalDistance+penalty);
 	((StorageAllocationSolution*)solution)->setRoutesByProduct(routesByProduct);
 	

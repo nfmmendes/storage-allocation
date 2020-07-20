@@ -9,7 +9,7 @@
 #include "StorageILS.h"
 #include "Order.h"
 #include "StorageAllocationSolution.h"
-#include "StorageAllocationSolution.h"
+#include "StorageSolutionEvaluator.h"
 #include "StorageConstructiveHeuristic.h"
 #include "Heuristic.h"
 #include "NeighborhoodStructure.h"
@@ -65,7 +65,7 @@ InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, unsigned int numNeig
  */
 vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 	map<Product , pair<Cell,int> > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
-	//map<pair<Cell, int> , Product> shelfAllocations; 
+ 
 	vector<AbstractSolution *> solutions; 
 	srand(this->randomSeed); 
 
@@ -81,7 +81,7 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 		if(!Util::ChooseTwoProductIndexes(first ,second,allocationsSize, swapsDone))
 			break;
 
-		map< pair<Cell, int> , Product>::iterator it = shelfAllocations.begin();
+		map< Position , Product>::iterator it = shelfAllocations.begin();
 		advance(it,first); 
 		Product firstProduct = it->second; 
 		
@@ -131,7 +131,7 @@ InsideBlockSwap::InsideBlockSwap(StorageAllocationSolution *initial, int numNeig
  */
 vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 	map<Product, pair<Cell,int> > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
-	map<pair<Cell, int> , Product> blockAllocations; 
+	blockAllocations.clear(); 
 	vector<Shelf> shelves = this->block.getShelves(); 
 	vector<AbstractSolution *> solutions; 
 	set<long> shelfIds; 
@@ -218,7 +218,7 @@ AbstractSolution * MostFrequentSwap::getStartSolution() const{
 vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 
 	vector<AbstractSolution *> solutions;
-	map< Product, pair<Cell,int> > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
+	MapAllocation allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
 	if(this->interchangeableProducts.size()<3)
 		return solutions; 
 
@@ -480,8 +480,8 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
 	vector<Block> blocks = this->warehouse->getBlocks(); 
 		
-	map<Product, pair<Cell,int> > allocations = ((StorageAllocationSolution *)	currentSolution)->getProductAllocations();
-	map<long, map<pair<Cell, int> , Product> > shelfAllocations; 
+	map<Product, Position > allocations = ((StorageAllocationSolution *)	currentSolution)->getProductAllocations();
+	map<long, map<Position,Product> > shelfAllocations; 
 
 	for(auto &[product, position] : allocations)
 		shelfAllocations[position.first.getIdShelf()][position] = product;
@@ -593,10 +593,7 @@ AbstractSolution * StorageILS::Execute(){
 				bestLocalSearchSolution = new StorageAllocationSolution(currentSolution);
 				bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue(); 
 			}
-			
-			//this->numPertubations++;
-	
-			
+
 		}
 		
 		this->numIterationsWithoutImprovement++;
