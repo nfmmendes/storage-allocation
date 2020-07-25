@@ -53,14 +53,18 @@ pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> &points, ma
 	vector<Vertex> currentOrder = points; 
 	vector<Vertex> solution = points;
 	double bestCost = std::numeric_limits<double>::max(); 
-	
+	int orderSize = currentOrder.size(); 
+
 	do {
 		double sum = 0.0;
-		for(unsigned int i=1;i<currentOrder.size(); i++)
+		for(unsigned int i=1;i<orderSize; i++){
 			sum += distanceMatrix.getDistance(currentOrder[i-1], currentOrder[i]); 
+			if(sum > bestCost)
+				break;
+		}
 		
 		sum += distanceMatrix.getDistance(bestStart[currentOrder[0] ] , currentOrder[0] );
-		sum += distanceMatrix.getDistance(currentOrder[currentOrder.size()-1] , bestEnd[ currentOrder[currentOrder.size()-1] ] );
+		sum += distanceMatrix.getDistance(currentOrder[orderSize-1] , bestEnd[ currentOrder[orderSize-1] ] );
 		
 		if(sum < bestCost){
 			bestCost = sum; 
@@ -139,17 +143,18 @@ pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> &poi
  **/
 pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> &points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
 	 
-	vector<Vertex> solution = points;
+	//vector<Vertex> solution = points;
 	double bestCost = std::numeric_limits<double>::max(); 
 		
 	pair<double, vector<Vertex> > currentOrder = closestNeighborTSP(points, bestStart, bestEnd);
 	bestCost = currentOrder.first; 
-   
-	for(unsigned int i=1; i+1< currentOrder.second.size(); i++){
+	int orderSize = currentOrder.second.size(); 
+
+	for(unsigned int i=1; i+1< orderSize; i++){
 		double costReduction = 0; 
 		int changingPoint =0;
 
-		for(unsigned int j=1; j+2<currentOrder.second.size(); j++){
+		for(unsigned int j=1; j+2<orderSize; j++){
 			double oldCost = distanceMatrix.getDistance(currentOrder.second[j-1], currentOrder.second[j]) +
 							 distanceMatrix.getDistance(currentOrder.second[j], currentOrder.second[j+1]) +
 							 distanceMatrix.getDistance(currentOrder.second[j+1], currentOrder.second[j+2]);
@@ -158,7 +163,7 @@ pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> &po
 							 distanceMatrix.getDistance(currentOrder.second[j], currentOrder.second[j+2]);
 			
 			if(newCost - oldCost < costReduction){
-				costReduction = oldCost - newCost;
+				costReduction = newCost - oldCost;
 				changingPoint = j; 
 				break; 
 			}
@@ -173,6 +178,6 @@ pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> &po
 		}  
 	}
 	
-	return make_pair(bestCost, solution); 
+	return currentOrder; 
 	
 }

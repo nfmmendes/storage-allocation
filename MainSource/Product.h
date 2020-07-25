@@ -16,40 +16,40 @@ class Product{
     private:
         long int ID;
         string name;
-        string type;
+        string family;
         
     public:
         Product(){}
         Product(const Product & other){
 			this->ID = other.ID;
             this->name = other.name;
-            this->type = other.type;
+            this->family = other.family;
         }
         
-        Product(long int ID, string name, string type){
+        Product(long int ID, string name, string family){
             this->ID = ID;
             this->name = name;
-            this->type = type;
+            this->family = family;
         }
 		
 		Product & operator=(const Product &other){
 			this->ID = other.ID;
             this->name = other.name;
-            this->type = other.type;
+            this->family = other.family;
 			
 			return *this;
 		}
     
         long int getID()const { return ID; }
         string getName()const{ return name; }
-        string getType()const{ return type; }
+        string getFamily()const{ return family; }
     
         void setID(long int Id){ if(Id >= 0 ) this->ID = Id; }
         void setName(string name){ this->name = name;}
-        void setType(string type){ this->type = type;}
+        void setFamily(string family){ this->family = family;}
 		bool operator<(const Product &other) const{ return this->ID < other.ID; }
         static vector<Product> readProductsData(ifstream &file);
-		void print()const{ cout<<ID<<" "<<name<<" "<<type<<endl;}
+		void print()const{ cout<<ID<<" "<<name<<" "<<family<<endl;}
     
 };
 

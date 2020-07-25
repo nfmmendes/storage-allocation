@@ -3,6 +3,7 @@
 #include <vector>
 #include <string> 
 #include <cmath>
+#include <chrono>
 #include "OptimizationConstraints.h"
 #include "OptimizationParameters.h"
 #include "Vertex.h"
@@ -16,18 +17,19 @@ using namespace QuickTSP;
 
 
 StorageSolutionEvaluator * StorageAllocationSolution::Evaluator = NULL;
-
+int StorageAllocationSolution::countSolutions = 0;
 /**
  * Default constructor. Creates an empty solution 
  **/
 StorageAllocationSolution::StorageAllocationSolution(){
-	
+	StorageAllocationSolution::countSolutions++;
 }
 
 /**
  *
  **/
  StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution *other){
+	 StorageAllocationSolution::countSolutions++;
 	this->solutionValue = other->solutionValue;
 	this->runtime = other->runtime;
 	this->minDelta = other->minDelta;
@@ -48,13 +50,13 @@ StorageAllocationSolution::StorageAllocationSolution(){
 			this->routesByProduct[it->first][i]->second = it->second[i]->second; 
 		}
 	}
-
 }
 
 /**
  *
  **/
 StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &other){
+	StorageAllocationSolution::countSolutions++;
 	this->solutionValue = other.solutionValue;
 	this->runtime = other.runtime;
 	this->minDelta = other.minDelta;
@@ -86,6 +88,7 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &
  * @param maximization Defines if that solution is of a maximization problem (default value true)
  **/
 StorageAllocationSolution::StorageAllocationSolution(double value, double time, double minDelta,bool maximization){
+	StorageAllocationSolution::countSolutions++;
 	this->solutionValue = value;
 	this->runtime = time;
 	this->minDelta = minDelta;
@@ -104,20 +107,17 @@ void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> *distanceMat
  * Destructor
  **/
 StorageAllocationSolution::~StorageAllocationSolution(){
+	StorageAllocationSolution::countSolutions--;
+	
 	this->notAllocatedProducts.clear();
 	this->productsAllocation.clear(); 
-
 	for(map<Product, vector<PickingRoute *> >::iterator it = this->routesByProduct.begin(); it != this->routesByProduct.end();it++ ){
 		for(unsigned int i=0;i< it->second.size(); i++){ 
-			if(it->second[i] != NULL  /*Maybe insert a test here in the future if the cache of routes is implemented*/){
-				it->second[i]->first.clear(); 
-				delete it->second[i]; 
-			}
-			it->second.clear();
-			
+			it->second[i]->first.clear(); 
+			delete it->second[i]; 
 		}
+		it->second.clear();
 	}
-	
 	this->routesByProduct.clear();
 }
 
@@ -268,12 +268,17 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	
 	vector<PickingRoute *> firstRoutes = routesByProduct[firstProduct];
 	vector<PickingRoute *> secondRoutes = routesByProduct[secondProduct];
-	
+	//cout<<"Num routes A: "<<firstRoutes.size()<<"\t Num routes B: "<<secondRoutes.size()<<endl;
+	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	for(unsigned int i=0; i<firstRoutes.size(); i++)
 		delta += getVariationAndUpdateAfterSwap(firstRoutes[i], firstVertex, secondVertex, useTSPEvaluator);
-	
+	//std::chrono::steady_clock::time_point mid = std::chrono::steady_clock::now();
+
 	for(unsigned int i=0; i<secondRoutes.size(); i++)
 		delta += getVariationAndUpdateAfterSwap(secondRoutes[i], secondVertex, firstVertex, useTSPEvaluator);
+//	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+//	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(mid - begin).count() << "[micro_s]" << std::endl;
+//	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - mid).count() << "[micro_s]" << std::endl;
 
 	this->solutionValue += delta; 
 }
@@ -286,7 +291,7 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
  * @param useTSPEvaluator Param to define how the route new cost will be calculated 
  * */
 double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *original,Vertex &oldVertex, Vertex &newVertex, bool useTSPEvaluator){
-	
+
 	//if a same route has both products in the swap the evaluation don't need to be done
 	if(find(original->first.begin(),original->first.end(), newVertex) != original->first.end())
 		return 0;

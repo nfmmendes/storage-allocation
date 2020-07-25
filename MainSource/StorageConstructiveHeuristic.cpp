@@ -16,6 +16,7 @@
 #include "ProductAllocationProhibition.h"
 #include "WarehouseToGraphConverter.h" 
 #include "StorageSolutionEvaluator.h"
+#include "OptimizationParameters.h"
 #include "IsolatedFamily.h"
 #include "TSP.h"
 using namespace std;
@@ -80,7 +81,7 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 
 	//Group products by family
 	for(unsigned int i=0;i<products.size();i++)
-		productsByFamily[products[i].getType()].push_back(products[i]);
+		productsByFamily[products[i].getFamily()].push_back(products[i]);
 
 	productsSortedByFrequence = getProductOrderByFrequence();
 
@@ -186,18 +187,20 @@ bool StorageConstructiveHeuristic::isForbiddenStore(Product &product, Vertex &ve
 }
 
 /**
- *
+ * Check if a product belongs to one of the family products that must be isolated inside the warehouse
+ * @param product Product that will be checked
+ * @return true if the product belongs to an isolated family, false otherwise 
  **/
 bool StorageConstructiveHeuristic::isIsolatedFamily(Product &product){
-	return isolatedFamilies.find(product.getType()) != isolatedFamilies.end();
+	return isolatedFamilies.find(product.getFamily()) != isolatedFamilies.end();
 }
 
 /**
- *
+ * 
  **/
 bool StorageConstructiveHeuristic::hasConstraints(Product &prod){
 	return restrictedProducts.find(prod.getName()) != restrictedProducts.end() || 
-		   isolatedFamilies.find(prod.getType()) != isolatedFamilies.end();
+		   isolatedFamilies.find(prod.getFamily()) != isolatedFamilies.end();
 }
 
 /**
@@ -232,49 +235,56 @@ double StorageConstructiveHeuristic::evaluatePenaltiesByNonIsolation(MapAllocati
 		
 	for(auto &[product, position] : allocations ){
 		if(position.first.getLevels() > 1)
-			familiesByCell[position.first.getCode()].push_back(product.getType());
-		familiesByShelf[position.first.getIdShelf()].push_back(product.getType());
-		familiesByBlock[shelvesById[position.first.getIdShelf()].getBlockName()].push_back(product.getType());
+			familiesByCell[position.first.getCode()].push_back(product.getFamily());
+		familiesByShelf[position.first.getIdShelf()].push_back(product.getFamily());
+		familiesByBlock[shelvesById[position.first.getIdShelf()].getBlockName()].push_back(product.getFamily());
 	}
 	
 	for(auto &[key, value] : familiesByCell){
 		map<string, int> countByFamily; 
 		int countIsolated = 0; 
 
+		if(value.size() == 1) continue; 
+
 		for(unsigned int i=0;i<value.size();i++){
 			countByFamily.find(value[i]) == countByFamily.end() ? (countByFamily[value[i]] =0) : countByFamily[value[i]]++; 
-			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == "CELL")
+			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == CELL_LEVEL)
 				countIsolated++;
 		}
 
-		totalPenalty += 8000*countIsolated; 	
+		totalPenalty += OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY*countIsolated; 	
 	} 
 
 	for(auto &[key, value] : familiesByShelf){
 		map<string, int> countByFamily; 
 		int countIsolated = 0; 
 
+		if(value.size() == 1) continue; 
+
 		for(unsigned int i=0;i<value.size();i++){
 			countByFamily.find(value[i]) == countByFamily.end() ? (countByFamily[value[i]] =0) : countByFamily[value[i]]++; 
-			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == "SHELF")
+			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == SHELF_LEVEL )
 				countIsolated++;
 		}
 
-		totalPenalty += 8000*countIsolated; 	
+		totalPenalty += OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY*countIsolated; 	
 	} 
 
 	for(auto &[key, value] : familiesByBlock){
 		map<string, int> countByFamily; 
 		int countIsolated = 0; 
 
+		if(value.size() == 1) continue; 
+
 		for(unsigned int i=0;i<value.size();i++){
 			countByFamily.find(value[i]) == countByFamily.end() ? (countByFamily[value[i]] =0) : countByFamily[value[i]]++; 
-			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == "BLOCK")
+			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == BLOCK_LEVEL)
 				countIsolated++;
 		}
 		
-		totalPenalty += 8000*countIsolated; 	
+		totalPenalty += OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY*countIsolated; 	
 	} 
+	
 	return totalPenalty;
 } 
 
@@ -382,7 +392,7 @@ tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuri
 	map<string, int> frequenceByFamily; 
 	
 	for(unsigned int i=0; i< productsSortedByFrequence.size();i++){
-		string familyName = productsSortedByFrequence[i].first.getType(); 
+		string familyName = productsSortedByFrequence[i].first.getFamily(); 
 		if(frequenceByFamily.find(familyName) == frequenceByFamily.end())
 			frequenceByFamily[familyName] = productsSortedByFrequence[i].second;
 		else
@@ -514,7 +524,7 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 			}
 		}
 		
-		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel["BLOCK"], orderedProductsByFamily); 
+		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel[BLOCK_LEVEL], orderedProductsByFamily); 
 		if(allocated){
 			vector<Shelf> blockShelves= block.getShelves(); 
 			//Remove all the shelves of the block (they cannot be used by other family
@@ -536,7 +546,7 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 			for(int j=0;j<shelfCells[i].getLevels();j++)
 				vertexes.push_back(vertexByCell[make_pair(shelfCells[i],j+1)]); 
 		
-		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel["SHELF"], orderedProductsByFamily);
+		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel[SHELF_LEVEL], orderedProductsByFamily);
 		if(allocated){
 			vector<Cell> shelfCells = shelf.getCells(); 
 			//Remove all cells of this shelf from the list of not used cells
@@ -554,7 +564,7 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 		for(int j=0;j<cell.getLevels();j++)
 			vertexes.push_back(vertexByCell[make_pair(cell,j+1)]); 
 		
-		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel["CELL"], orderedProductsByFamily);
+		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel[CELL_LEVEL], orderedProductsByFamily);
 		if(allocated > 0)
 			notUsedCells.erase(cell);
 	}
@@ -601,7 +611,7 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 			usedVertex[lastOnSequence%numPositions] = true; 
 			allocation[vertexesOrderedByDistance[lastOnSequence%numPositions]] = item.first; 
 		}else if(isIsolatedFamily(item.first)){
-			IsolatedFamily isolation = familyIsolationsByFamilyCode[item.first.getType()]; 
+			IsolatedFamily isolation = familyIsolationsByFamilyCode[item.first.getFamily()]; 
 			string level = isolation.getLevel(); 
 			string force = isolation.getForce();
 			
@@ -612,12 +622,12 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 				tryInsertIndex = (tryInsertIndex+1)%numPositions;
 			
 			if(countTries > numPositions){ //It means that all the positions were tested and no insertion is possible 			
-				if(force == "WEAK"){							// If it is a weak isolation, we perform the allocation anyway
+				if(force == WEAK_ISOLATION){							// If it is a weak isolation, we perform the allocation anyway
 					usedVertex[tryInsertIndex] = true;
 					allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
-				}else if(force == "STRONG"){ //If we have an strong isolation by cell but just one product can be inserted in each cell, so it is
+				}else if(force == STRONG_ISOLATION ){ //If we have an strong isolation by cell but just one product can be inserted in each cell, so it is
 											 //ok to insert the product there 
-					if(cellByVertex[vertexesOrderedByDistance[tryInsertIndex]].first.getLevels() == 1 && level == "CELL"){
+					if(cellByVertex[vertexesOrderedByDistance[tryInsertIndex]].first.getLevels() == 1 && level == CELL_LEVEL){
 						usedVertex[tryInsertIndex] = true; 
 						allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
 					}

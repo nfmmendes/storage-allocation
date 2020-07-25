@@ -25,6 +25,7 @@ typedef struct pair< vector<Vertex>, double> PickingRoute;
 class StorageAllocationSolution : public AbstractSolution{
 
 	private: 
+	
 		static StorageSolutionEvaluator *Evaluator; 
 		static vector<StorageAllocationSolution *> currentSolutions;
 		unsigned long long int solutionIndex; 
@@ -38,6 +39,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		void updateSolutionValue(vector<PickingRoute> &oldRoutes, vector<PickingRoute> &newRoutes, bool evaluateSolutionWithTSP=false);
 		double getVariationAndUpdateAfterSwap(PickingRoute *original,Vertex &oldVertex, Vertex &newVertex, bool useTSPEvaluator);
     public:
+		static int countSolutions; 
 		StorageAllocationSolution();
 		StorageAllocationSolution(StorageAllocationSolution *other);
 		StorageAllocationSolution(StorageAllocationSolution &other);

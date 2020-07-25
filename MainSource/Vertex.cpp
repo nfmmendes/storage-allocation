@@ -8,6 +8,9 @@ using namespace QuickTSP;
 
 
 Vertex::Vertex(){
+    this->value = 0; 
+    this->label = "";
+    this->type = "";
 }
 Vertex::Vertex(const Vertex &other){
     this->label = other.label;
@@ -31,11 +34,11 @@ string Vertex::getType() const { return this->type; }
 double Vertex::getValue() const { return this->value; }
 
 bool Vertex::operator==(const Vertex & other)const {
-    return label == other.label && type == other.type && fabs(value - other.value) <= 0.0000000000001;
+    return label == other.label && type == other.type && fabs(value-other.value) < 0.000001;
 }
 
 bool Vertex::operator!=(const Vertex & other){
-    return label != other.label || type != other.type || fabs(value - other.value) > 0.0000000000001;
+    return label != other.label || type != other.type || fabs(value-other.value) > 0.000001;
 }
 
 Vertex & Vertex::operator=(const Vertex &other){
@@ -49,6 +52,6 @@ Vertex & Vertex::operator=(const Vertex &other){
 
 ///This overload allows the use of an object of this class as a key to a map
 bool Vertex::operator<(const Vertex &other)const{
-    return label+type+to_string(value) < other.label+other.type+to_string(other.value);
+    return (label+type == other.label+other.type) ? value < other.value: label+type < other.label+other.type;
 }
 

@@ -49,6 +49,8 @@ class StorageSolutionEvaluator{
 		double getBetterRouteWithTwoPoints(vector<Vertex>& vertexes); 
 		void InitializeIsolatedFamilies();
 		void InitializeClosestDeliveryPoint();
+		double evaluatePenaltyDeltaByProhibition(const Product product, const Cell &firstCell, const Cell &secondCell);
+		double evaluatePenaltyDeltaByProhibition(const Product &first, const Cell &firstCell, const Product &second, const Cell &secondCell);
 
 	public:
 		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);
@@ -63,7 +65,7 @@ class StorageSolutionEvaluator{
 		PickingRoute getVertexes(vector<Position> &positions);
 		Vertex getVertex(Position &position);
 		double evaluatePenaltyDelta(MapAllocation & allocations,const Product &first,const Product &second);
-		double evaluatePenaltyDeltaByProhibition(const Product &first, const Cell &firstCell, const Product &second, const Cell &secondCell);
+
 };
 
 #endif

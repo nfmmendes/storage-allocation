@@ -172,6 +172,55 @@ void StorageSolutionEvaluator::InitializeClosestDeliveryPoint(){
 }
 
 /**
+ * Evaluate the prohibition penalty delta *after - before) product be moved to another cell
+ * 
+ * */
+double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(const Product product, const Cell &firstCell, const Cell &secondCell){
+
+		if(firstCell.getCode() == secondCell.getCode())
+			return 0; 
+
+		double oldPenalty=0;
+		double newPenalty=0; 
+		ProductAllocationProhibitions firstProhibition = prohibitionsByProduct[product.getName()];
+		vector<Cell> prohibitedCells = firstProhibition.getForbiddenCells();
+		vector<Shelf> prohibitedShelves = firstProhibition.getForbiddenShelves();
+		vector<Block> prohibitedBlocks = firstProhibition.getForbiddenBlocks();
+
+		
+		for(unsigned int i=0; i<prohibitedCells.size(); i++){
+			if(prohibitedCells[i].getCode() == firstCell.getCode() )
+				oldPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY; 
+			if(prohibitedCells[i].getCode() == secondCell.getCode() )
+				newPenalty +=  OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
+		}
+
+		if(firstCell.getIdShelf() != secondCell.getIdShelf()){
+			for(unsigned int i=0; i< prohibitedShelves.size(); i++){
+				if(prohibitedShelves[i].getId() == firstCell.getIdShelf())
+					oldPenalty +=  OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;  
+				if(prohibitedShelves[i].getId() == secondCell.getIdShelf())
+					newPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;  
+			}
+		}
+
+		string blockNameA = shelfById[firstCell.getIdShelf()].getBlockName(); 
+		string blockNameB = shelfById[secondCell.getIdShelf()].getBlockName(); 
+		
+		if(blockNameA != blockNameB){
+			for(unsigned int i=0; i< prohibitedBlocks.size();i++){
+				if(prohibitedBlocks[i].getName() == blockNameA)
+					oldPenalty +=  OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;  
+				if(prohibitedBlocks[i].getName() == blockNameB)
+					newPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY; 
+			}
+		}
+
+		return newPenalty-oldPenalty;
+}
+
+
+/**
  *
  **/
 double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(const Product &first, const Cell &firstCell, const Product &second, const Cell &secondCell){	
@@ -181,39 +230,16 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(const Product
 	if(firstResult == prohibitionsByProduct.end() && secondResult == prohibitionsByProduct.end()) 
 		return 0; 
   
-	double firstCurrentPenalty, secondCurrentPenalty, firstNewPenalty, secondNewPenalty;  
-	firstCurrentPenalty = secondCurrentPenalty = firstNewPenalty = secondNewPenalty = 0;   
+	double deltaFirstProduct = 0;
+	double deltaSecondProduct = 0;
 
-	if(firstResult != prohibitionsByProduct.end()){ 
-		ProductAllocationProhibitions firstProhibition = prohibitionsByProduct[first.getName()];
-		vector<Cell> prohibitedCells = firstProhibition.getForbiddenCells();
-		vector<Shelf> prohibitedShelves = firstProhibition.getForbiddenShelves();
-		vector<Block> prohibitedBlocks = firstProhibition.getForbiddenBlocks();
-
-		for(unsigned int i=0; i<prohibitedCells.size(); i++){
-			if(prohibitedCells[i].getCode() == firstCell.getCode() )
-				firstCurrentPenalty += 8000; 
-			if(prohibitedCells[i].getCode() == secondCell.getCode() )
-				firstNewPenalty += 8000;
-		}
-	} 
+	if(firstResult != prohibitionsByProduct.end())
+		deltaFirstProduct = evaluatePenaltyDeltaByProhibition(first, firstCell,secondCell);
  
-	if(secondResult != prohibitionsByProduct.end()){ 
-		ProductAllocationProhibitions secondProhibition = prohibitionsByProduct[second.getName()];
-		vector<Cell> prohibitedCells = secondProhibition.getForbiddenCells();
-		vector<Shelf> prohibitedShelves = secondProhibition.getForbiddenShelves();
-		vector<Block> prohibitedBlocks = secondProhibition.getForbiddenBlocks();
-
-
-		for(unsigned int i=0; i<prohibitedCells.size(); i++){
-			if(prohibitedCells[i].getCode() == secondCell.getCode() )
-				secondCurrentPenalty += 8000; 
-			if(prohibitedCells[i].getCode() == firstCell.getCode() )
-				secondNewPenalty += 8000;
-		}
-	} 
+	if(secondResult != prohibitionsByProduct.end())
+		deltaSecondProduct = evaluatePenaltyDeltaByProhibition(second, secondCell,firstCell);
  
-	return (firstNewPenalty + secondNewPenalty) - (firstCurrentPenalty + secondCurrentPenalty); 
+	return deltaFirstProduct+deltaSecondProduct; 
 }
 	
 /**	
@@ -228,32 +254,59 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocation
 	double delta = 0.0; 		
 	
 	//Check prohibition 	
-	evaluatePenaltyDeltaByProhibition(first, firstCell, second, secondCell);	
+	double deltaProhibitions = evaluatePenaltyDeltaByProhibition(first, firstCell, second, secondCell);	
 
 	//Check isolation	
-	if(first.getType() == second.getType())	
-		return 0; 	
+	if(first.getFamily() == second.getFamily())	
+		return deltaProhibitions; 	
 
 	auto isolatedFamilies = this->optimizationConstraints.getIsolatedFamilies(); 		
-	bool firstIsStronglyIsolated = stronglyIsolatedFamilies.find(first.getType()) != stronglyIsolatedFamilies.end(); 
-	bool secondIsStronglyIsolated = stronglyIsolatedFamilies.find(second.getType()) != stronglyIsolatedFamilies.end();
+	bool firstIsStronglyIsolated = stronglyIsolatedFamilies.find(first.getFamily()) != stronglyIsolatedFamilies.end(); 
+	bool secondIsStronglyIsolated = stronglyIsolatedFamilies.find(second.getFamily()) != stronglyIsolatedFamilies.end();
 
 	if(firstIsStronglyIsolated || secondIsStronglyIsolated )
 		std::invalid_argument("There are strongly isolated products");
-	bool isFirstIsolated = weaklyIsolatedFamilies.find(first.getType()) != weaklyIsolatedFamilies.end(); 
-	bool isSecondIsolated =  weaklyIsolatedFamilies.find(second.getType()) != weaklyIsolatedFamilies.end();
+	bool isFirstIsolated = weaklyIsolatedFamilies.find(first.getFamily()) != weaklyIsolatedFamilies.end(); 
+	bool isSecondIsolated =  weaklyIsolatedFamilies.find(second.getFamily()) != weaklyIsolatedFamilies.end();
 	
-	if(isFirstIsolated && isSecondIsolated)
-		return 0;
+	if(!isFirstIsolated && !isSecondIsolated)
+		return deltaProhibitions;
 
 	//Check cell delta
-	if(firstCell.getCode() != secondCell.getCode() && (firstCell.getLevels() > 1 || secondCell.getLevels() > 1) ){	
+	if(firstCell.getCode() != secondCell.getCode() ){	
+		map<string, vector<Product> > allocationsByCell; 
+		map<long, vector<Product> > allocationsByShelf;
+		map<string, vector<Product> > allocationsByBlock; 
+
+		for(auto [key, value] : allocations){
+			allocationsByCell[value.first.getCode()].push_back(key);
+			allocationsByShelf[value.first.getIdShelf()].push_back(key);
+			allocationsByBlock[shelfById[value.first.getIdShelf()].getBlockName()].push_back(key);
+		}
+
+		map<string, set<string> > familiesByCell; 
+		map<long, set<string> > familiesByShelf; 
+		map<string, set<string> > familiesByBlock; 
+
+		for(unsigned int i=0;i<allocationsByCell[firstCell.getCode()].size();i++) familiesByCell[firstCell.getCode()].insert(first.getFamily()); 
+		for(unsigned int i=0;i<allocationsByCell[secondCell.getCode()].size();i++) familiesByCell[secondCell.getCode()].insert(second.getFamily()); 
+
+		for(unsigned int i=0; i<allocationsByShelf[firstCell.getIdShelf()].size();i++) familiesByShelf[firstCell.getIdShelf()].insert(first.getFamily());
+		for(unsigned int i=0; i<allocationsByShelf[secondCell.getIdShelf()].size();i++) familiesByShelf[secondCell.getIdShelf()].insert(second.getFamily());
+
+		string firstBlockName = shelfById[firstCell.getIdShelf()].getBlockName();
+		string secondBlockName = shelfById[secondCell.getIdShelf()].getBlockName();
+		for(unsigned int i=0; i<allocationsByBlock[firstBlockName].size();i++) familiesByBlock[firstBlockName].insert(first.getFamily());
+		for(unsigned int i=0; i<allocationsByBlock[secondBlockName].size();i++) familiesByBlock[secondBlockName].insert(second.getFamily());
+
 		
 	}	
 }
 
 /**
- *
+ *	Get the best route considering only two points (more the closest start point and closest end point)
+ *	@param vertexes List of vertexes (pair)
+ *	@return Total distance between the two points
  **/
 double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(vector<Vertex>& vertexes){
 	
@@ -429,7 +482,6 @@ double StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex> &vertexes)
 	sort(vertexes.begin(), vertexes.end(), [](Vertex &a, Vertex &b){ return a.getLabel() < b.getLabel(); });
 	
 	vector<PickingRoute> cachedRoutes = routesByVertexAndSize[firstVertex][vertexes.size()];
-	
 	for(unsigned int i=0; i<vertexes.size(); i++)
 		if(cachedRoutes[i].first[0].getLabel() == firstVertex.getLabel()){
 			unsigned j;
@@ -458,7 +510,9 @@ PickingRoute StorageSolutionEvaluator::getVertexes(vector<Position> &positions){
 }
 
 
-
+/**
+ * 
+ * */
 Vertex StorageSolutionEvaluator::getVertex(Position &position){
 	return this->vertexByCellPosition[position];
 }
