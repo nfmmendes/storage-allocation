@@ -51,6 +51,7 @@ class StorageSolutionEvaluator{
 		void InitializeClosestDeliveryPoint();
 		double evaluatePenaltyDeltaByProhibition(const Product product, const Cell &firstCell, const Cell &secondCell);
 		double evaluatePenaltyDeltaByProhibition(const Product &first, const Cell &firstCell, const Product &second, const Cell &secondCell);
+		double fuF(vector<Product> &allocatedProducts, const Product & first, const Product & second, string isolationLevel);
 
 	public:
 		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);

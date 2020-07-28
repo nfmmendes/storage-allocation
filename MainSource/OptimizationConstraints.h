@@ -10,6 +10,8 @@
 #include "Parameter.h"
 using namespace std; 
 
+typedef struct pair<Cell, int> Position; 
+
 class OptimizationConstraints{
 
 	private: 
@@ -25,7 +27,7 @@ class OptimizationConstraints{
 		void setParameters(vector<Parameter> value){ parameters = value;} 
 		void setProductAllocationProhibition(vector<ProductAllocationProhibitions> value){ allocationProhitions = value;}
 		void setIsolatedFamilies(vector<IsolatedFamily> value){ isolatedFamilies = value; } 
-		
+		bool IsAllocationAllowed(Product &product, Position newPosition);
 
 		/**
 		 *	Default constructor
@@ -57,9 +59,7 @@ class OptimizationConstraints{
 		 *  @param prohibition Product allocation prohibitions
 		 *  @param isolated Isolated families 
 		 */
-		OptimizationConstraints(vector<Parameter> param, 
-								vector<ProductAllocationProhibitions> prohibitions, 
-								vector<IsolatedFamily> isolated){
+		OptimizationConstraints(vector<Parameter> param,  vector<ProductAllocationProhibitions> prohibitions, vector<IsolatedFamily> isolated){
 			
 			parameters = param;
 			allocationProhitions = prohibitions;

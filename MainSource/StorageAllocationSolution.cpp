@@ -181,12 +181,10 @@ void StorageAllocationSolution::Evaluate(bool evaluateWithTSP){
 		for(unsigned int i=0; i<routeList.size(); i++)
 			routes.insert(routeList[i]); 
 	if(evaluateWithTSP){
-		
 		for(auto route : routes){
 			route->second =  StorageAllocationSolution::Evaluator->DoRouteEvaluation(route->first);
 			distance += route->second; 
 		}
-		
 	}else{
 		for(auto route : routes){
 			route->second =  StorageAllocationSolution::Evaluator->DoRouteEstimation(route->first);
@@ -262,25 +260,23 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	Vertex firstVertex = Evaluator->getVertex(first);
 	Vertex secondVertex = Evaluator->getVertex(second);
 	double delta = 0.0; 
-	
+	double penaltyDelta = StorageAllocationSolution::Evaluator->evaluatePenaltyDelta(getProductAllocations(), firstProduct, secondProduct);
+
+	totalPenalty  += penaltyDelta; 
+
 	productsAllocation[firstProduct] = second; 
 	productsAllocation[secondProduct] = first;
 	
 	vector<PickingRoute *> firstRoutes = routesByProduct[firstProduct];
 	vector<PickingRoute *> secondRoutes = routesByProduct[secondProduct];
-	//cout<<"Num routes A: "<<firstRoutes.size()<<"\t Num routes B: "<<secondRoutes.size()<<endl;
-	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	for(unsigned int i=0; i<firstRoutes.size(); i++)
 		delta += getVariationAndUpdateAfterSwap(firstRoutes[i], firstVertex, secondVertex, useTSPEvaluator);
-	//std::chrono::steady_clock::time_point mid = std::chrono::steady_clock::now();
 
 	for(unsigned int i=0; i<secondRoutes.size(); i++)
 		delta += getVariationAndUpdateAfterSwap(secondRoutes[i], secondVertex, firstVertex, useTSPEvaluator);
-//	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-//	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(mid - begin).count() << "[micro_s]" << std::endl;
-//	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - mid).count() << "[micro_s]" << std::endl;
 
-	this->solutionValue += delta; 
+
+	this->solutionValue += delta + penaltyDelta; 
 }
 
 /**

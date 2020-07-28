@@ -569,41 +569,31 @@ AbstractSolution * StorageILS::Execute(){
 
 		//Perform a local search as a VNS
 		for(unsigned int i=0;i< this->neighborhoodStructures.size();i++){
-			cout<<"Problem "<<endl;
-		//	delete currentSolution;
-			
-			cout<<"Num solutions: "<<StorageAllocationSolution::countSolutions<<endl;
+
 			currentSolution = new StorageAllocationSolution(*originalSolution);
-			
 			double currentSolutionValue = currentSolution->getSolutionValue();
 			double newSolutionValue = 0;
 		
 			if(neighborhoodType[i] == "InsideShelfSwap"){		
-				cout<<"A\n";
 				auxiliaryPointer = (StorageAllocationSolution *) SwapInsideShelfLocalSearch(currentSolution, this->neighborhoodStructures[i], randomSeed);
 				newSolutionValue = auxiliaryPointer->getSolutionValue();	
 			}else if(neighborhoodType[i] == "InsideBlockSwap"){	
-				cout<<"B\n";
 				auxiliaryPointer = (StorageAllocationSolution *) SwapInsideBlockLocalSearch(currentSolution, this->neighborhoodStructures[i], randomSeed);
 				newSolutionValue = auxiliaryPointer->getSolutionValue();
 			}else if(neighborhoodType[i] == "MostFrequentSwap"){
-				cout<<"C\n";
 			//	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 				auxiliaryPointer = (StorageAllocationSolution *) SwapMostFrequentLocalSearch(currentSolution, neighborhoodStructures[i], randomSeed);
 				newSolutionValue = auxiliaryPointer->getSolutionValue();
 			//	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 			//	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[micro_s]" << std::endl;
 			}
-			//cout<<"Before delete "<< (auxiliaryPointer == NULL) <<" "<<(auxiliaryPointer == currentSolution)<<endl; 
-			//if(auxiliaryPointer != currentSolution )
-			//	delete auxiliaryPointer;
+
 			if((newSolutionValue-bestLocalSearchSolutionValue)*100.0/bestLocalSearchSolutionValue <= -0.1){
 				delete bestLocalSearchSolution; 
 				bestLocalSearchSolution = new StorageAllocationSolution(auxiliaryPointer);
 				bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue(); 
 			}
 			delete auxiliaryPointer;
-			cout<<"after delete"<<endl; 
 		}
 		
 		this->numIterationsWithoutImprovement++;
@@ -622,8 +612,6 @@ AbstractSolution * StorageILS::Execute(){
 	//	delete currentSolution;
 		currentSolution = (StorageAllocationSolution *) RunPerturbation(bestGlobalSolution,perturbation);
 		randomSeed++; 
-		cout<<"Num solutions: "<<StorageAllocationSolution::countSolutions<<endl;
-		cout<<"end for "<<endl;
 	}
 	
 	cout<<"End function"<<endl;

@@ -5,6 +5,7 @@
 #include<cmath>
 #include<vector>
 #include<utility>
+#include<chrono> 
 #include<algorithm>
 #include "TSP.h"
 #include "VND.h"
@@ -119,8 +120,11 @@ int main(int argc, char **argv){
 		//VND vnd(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell , input.getOrders(),cons); 
 		StorageILS ils(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);
 		//vnd.run();
+		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 		ils.Execute();
-        
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milli_sec]" << std::endl;
+
     }else
         cerr<<"Too few  arguments. Inform the index file name.";
     

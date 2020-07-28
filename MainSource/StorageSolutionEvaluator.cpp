@@ -249,29 +249,27 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(const Product
 double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocations,const Product &first,const Product &second){
 	pair<Cell, int> firstPosition =  allocations[first]; 	
 	pair<Cell, int> secondPosition = allocations[second];		
-	Cell firstCell = firstPosition.first; 	
-	Cell secondCell = secondPosition.first; 
 	double delta = 0.0; 		
 	
-	//Check prohibition 	
+	//Check prohibition 
+	Cell firstCell = firstPosition.first; 	
+	Cell secondCell = secondPosition.first;	
 	double deltaProhibitions = evaluatePenaltyDeltaByProhibition(first, firstCell, second, secondCell);	
+	bool isFirstIsolated = weaklyIsolatedFamilies.find(first.getFamily()) != weaklyIsolatedFamilies.end(); 
+	bool isSecondIsolated =  weaklyIsolatedFamilies.find(second.getFamily()) != weaklyIsolatedFamilies.end();
+	
+	//Check isolation
+	if( !(isFirstIsolated || isSecondIsolated)  || first.getFamily() == second.getFamily() )
+		return deltaProhibitions;
 
-	//Check isolation	
-	if(first.getFamily() == second.getFamily())	
-		return deltaProhibitions; 	
-
-	auto isolatedFamilies = this->optimizationConstraints.getIsolatedFamilies(); 		
+	
+	//for_each(weaklyIsolatedFamilies.begin(), isolatedFamilies.end(), [&isolatedFamilyCodes](IsolatedFamily &iso){ isolatedFamilyCodes.insert(iso.getCode()); });	
 	bool firstIsStronglyIsolated = stronglyIsolatedFamilies.find(first.getFamily()) != stronglyIsolatedFamilies.end(); 
 	bool secondIsStronglyIsolated = stronglyIsolatedFamilies.find(second.getFamily()) != stronglyIsolatedFamilies.end();
 
 	if(firstIsStronglyIsolated || secondIsStronglyIsolated )
 		std::invalid_argument("There are strongly isolated products");
-	bool isFirstIsolated = weaklyIsolatedFamilies.find(first.getFamily()) != weaklyIsolatedFamilies.end(); 
-	bool isSecondIsolated =  weaklyIsolatedFamilies.find(second.getFamily()) != weaklyIsolatedFamilies.end();
-	
-	if(!isFirstIsolated && !isSecondIsolated)
-		return deltaProhibitions;
-
+ 
 	//Check cell delta
 	if(firstCell.getCode() != secondCell.getCode() ){	
 		map<string, vector<Product> > allocationsByCell; 
@@ -284,24 +282,66 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocation
 			allocationsByBlock[shelfById[value.first.getIdShelf()].getBlockName()].push_back(key);
 		}
 
-		map<string, set<string> > familiesByCell; 
-		map<long, set<string> > familiesByShelf; 
-		map<string, set<string> > familiesByBlock; 
+		auto products = allocationsByCell[firstCell.getCode()];
+		delta += fuF(products, first, second, CELL_LEVEL); 
+		products = allocationsByCell[secondCell.getCode()]; 
+		delta += fuF(products, second, first , CELL_LEVEL); 
 
-		for(unsigned int i=0;i<allocationsByCell[firstCell.getCode()].size();i++) familiesByCell[firstCell.getCode()].insert(first.getFamily()); 
-		for(unsigned int i=0;i<allocationsByCell[secondCell.getCode()].size();i++) familiesByCell[secondCell.getCode()].insert(second.getFamily()); 
+		if(firstCell.getIdShelf() != secondCell.getIdShelf()){
+			products = allocationsByShelf[firstCell.getIdShelf()];
+			delta += fuF(products, first, second, SHELF_LEVEL); 
+			products = allocationsByShelf[secondCell.getIdShelf()];
+			delta += fuF(products, second, first, SHELF_LEVEL);
 
-		for(unsigned int i=0; i<allocationsByShelf[firstCell.getIdShelf()].size();i++) familiesByShelf[firstCell.getIdShelf()].insert(first.getFamily());
-		for(unsigned int i=0; i<allocationsByShelf[secondCell.getIdShelf()].size();i++) familiesByShelf[secondCell.getIdShelf()].insert(second.getFamily());
+			string firstBlockName = shelfById[firstCell.getIdShelf()].getBlockName();
+			string secondBlockName = shelfById[secondCell.getIdShelf()].getBlockName();
 
-		string firstBlockName = shelfById[firstCell.getIdShelf()].getBlockName();
-		string secondBlockName = shelfById[secondCell.getIdShelf()].getBlockName();
-		for(unsigned int i=0; i<allocationsByBlock[firstBlockName].size();i++) familiesByBlock[firstBlockName].insert(first.getFamily());
-		for(unsigned int i=0; i<allocationsByBlock[secondBlockName].size();i++) familiesByBlock[secondBlockName].insert(second.getFamily());
-
-		
+			if(firstBlockName != secondBlockName){
+				products = allocationsByBlock[firstBlockName];
+				delta += fuF(products, first, second, BLOCK_LEVEL); 
+				products = allocationsByBlock[secondBlockName];
+				delta += fuF(products, second, first, BLOCK_LEVEL);
+			}
+		}
 	}	
 }
+
+/**
+ * 
+ * */
+double StorageSolutionEvaluator::fuF(vector<Product> &allProducts,const Product & first, const Product & second, string isolationLevel){
+	double delta = 0; 
+	double oldValue = 0; 
+	double newValue = 0; 
+	map<string, int> allocationsByFamily;
+	for(auto & prod : allProducts){
+		if(allocationsByFamily.find(prod.getFamily()) == allocationsByFamily.end())
+			allocationsByFamily[prod.getFamily()] = 0; 
+		allocationsByFamily[prod.getFamily()]++;
+	}
+
+	for(auto &[familyCode, quantity]: allocationsByFamily)
+		if(weaklyIsolatedFamilies.find(familyCode) != weaklyIsolatedFamilies.end())
+			oldValue += quantity*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+
+	//update family count 
+	allocationsByFamily[first.getFamily()]--; 
+	if(allocationsByFamily.find(second.getFamily()) == allocationsByFamily.end())
+		allocationsByFamily[second.getFamily()] = 0;
+	allocationsByFamily[second.getFamily()]++; 
+
+	if(allocationsByFamily[first.getFamily()] == 0)
+		allocationsByFamily.erase(allocationsByFamily.find(first.getFamily())); 
+	
+	if(allocationsByFamily.size() > 1)
+		for(auto &[familyCode, quantity]: allocationsByFamily)
+			if(weaklyIsolatedFamilies.find(familyCode) != weaklyIsolatedFamilies.end())
+				newValue += quantity*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+
+	delta = newValue - oldValue; 
+
+}
+
 
 /**
  *	Get the best route considering only two points (more the closest start point and closest end point)
@@ -341,18 +381,15 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute> &v
 		vector<Vertex> vertexes = vertexesVisits[i].first; 
 		storagePoints.clear(); 
 		 
-		if(items.size() == 1) {
-			
+		if(items.size() == 1) {	
 			Vertex location = vertexes[0]; 
 			Vertex begin = closestStartPoint[location];
 			Vertex end =   closestEndPoint[location] ; 
 			vertexesVisits[i].second = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end); 
 			totalDistance += vertexesVisits[i].second; 
-			
 		}else if(items.size() == 2){
 			vertexesVisits[i].second = this->getBetterRouteWithTwoPoints(vertexes);
 			totalDistance += vertexesVisits[i].second;
-			
 		}else{
 			for(unsigned int j = 0; j<vertexes.size();j++)
 				storagePoints.push_back( vertexes[j] );
@@ -392,9 +429,9 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex> & route){
 
 	}else if(route.size() == 2){
 		totalDistance = this->getBetterRouteWithTwoPoints(route);	
-	}if(route.size() < 6) //This is just a limit to use the brute force TSP algorithm
+	}if(route.size() < OptimizationParameters::ALL_PERMUTATIONS_TSP_THRESHOLD) //This is just a limit to use the brute force TSP algorithm
 		routeEvaluation = tsp.bruteForceTSP(route, closestStartPoint, closestEndPoint); 
-	else if(route.size() < 12) //This is a limit to use 
+	else if(route.size() < OptimizationParameters::INSERTION_TSP_THRESHOLD) //This is a limit to use 
 		routeEvaluation = tsp.quickLocalSearchTSP(route, closestStartPoint, closestEndPoint);
 	else //All the other cases will use a closest neighbor inserction procedure 
 		routeEvaluation = tsp.closestNeighborTSP(route, closestStartPoint, closestEndPoint);
@@ -427,9 +464,8 @@ double StorageSolutionEvaluator::sumDistances(vector<Vertex> &sequence){
 	double sum = 0.0;
 	int limit = sequence.size() >0 ? sequence.size()-1 : 0; 
 	
-	for(int i=0;i<limit; i++){
+	for(int i=0;i<limit; i++)
 		sum += distances->getDistance(sequence[i], sequence[i+1]); 
-	}
 	
 	return sum; 
 }
