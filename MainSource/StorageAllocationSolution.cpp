@@ -260,6 +260,7 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	Vertex firstVertex = Evaluator->getVertex(first);
 	Vertex secondVertex = Evaluator->getVertex(second);
 	double delta = 0.0; 
+
 	double penaltyDelta = StorageAllocationSolution::Evaluator->evaluatePenaltyDelta(getProductAllocations(), firstProduct, secondProduct);
 
 	totalPenalty  += penaltyDelta; 

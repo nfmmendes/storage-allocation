@@ -40,6 +40,7 @@ class IsolatedFamily{
 		bool operator==(const IsolatedFamily &other);
 		bool operator<=(const IsolatedFamily &other);
 		IsolatedFamily & operator=(const IsolatedFamily & other);
+		static bool isLowerOrEqualLevel(string fisrtLevel,string secondLevel);
 };
 
 

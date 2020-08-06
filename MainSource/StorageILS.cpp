@@ -260,13 +260,22 @@ vector<AbstractSolution *> StorageAllocationPertubation::createNeighbors(){
 	set<pair<int,int> > swapsDone;
 
 	StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution); 
+
+	auto allocations = newSolution->getProductAllocations(); 
+
 	for( int i=0; i<  numIterations; i++){
 		if(!Util::ChooseTwoProductIndexes(first ,second,interchangeableProducts.size(), swapsDone))
 			break;
 
 		Product firstProduct  = interchangeableProducts[first]; 
-		Product secondProduct = interchangeableProducts[second]; 
-		
+		Product secondProduct = interchangeableProducts[second];
+
+		//This if should not be here
+		if(allocations.find(firstProduct) == allocations.end() || allocations.find(secondProduct) == allocations.end()){
+			cout<<"Error: "<<secondProduct.getName()<<endl; 
+			i--;
+			continue; 
+		}
 		newSolution->proceedSwap(firstProduct, secondProduct,true); 
 		
 		
@@ -320,6 +329,7 @@ StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Ver
 	this->constraints = cons; 
 	this->products = prods; 
 	InitializeNeighborhoods(); 
+	this->productClasses = getProductABCClasses();
 	
 }
 
@@ -541,6 +551,8 @@ map<Product, char> StorageILS::getProductABCClasses(){
 	
 	ABCAnalysis abcAnalysis(orders,3, thresholds);
 	abcAnalysis.execute();
+
+	auto frequences = abcAnalysis.getProductFrequences();
 	return abcAnalysis.getFrequenceClasses();
 }
 
@@ -557,9 +569,9 @@ AbstractSolution * StorageILS::Execute(){
 	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue(); 
 	NeighborhoodStructure * perturbation = new StorageAllocationPertubation(); 
 	int randomSeed= 1;
-	
+	auto allocations = ((StorageAllocationSolution *) initialSolution)->getProductAllocations(); 
+
 	while(!StopCriteriaReached()){
-		
 		
 		StorageAllocationSolution *bestLocalSearchSolution = new StorageAllocationSolution(*currentSolution);
 		StorageAllocationSolution *originalSolution = new StorageAllocationSolution(*currentSolution);
@@ -574,7 +586,7 @@ AbstractSolution * StorageILS::Execute(){
 			double currentSolutionValue = currentSolution->getSolutionValue();
 			double newSolutionValue = 0;
 		
-			if(neighborhoodType[i] == "InsideShelfSwap"){		
+			if(neighborhoodType[i] == "InsideShelfSwap"){	
 				auxiliaryPointer = (StorageAllocationSolution *) SwapInsideShelfLocalSearch(currentSolution, this->neighborhoodStructures[i], randomSeed);
 				newSolutionValue = auxiliaryPointer->getSolutionValue();	
 			}else if(neighborhoodType[i] == "InsideBlockSwap"){	

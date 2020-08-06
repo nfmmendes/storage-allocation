@@ -571,7 +571,32 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 
 }
 
+/***
+ * 
+ **/
+void StorageConstructiveHeuristic::fillFrequenceByProduct(){
+	if(productsSortedByFrequence.size() == 0){
+		productsSortedByFrequence = getProductOrderByFrequence();
+		for(unsigned int i=0; i<productsSortedByFrequence.size();i++)
+			frequenceByProduct[productsSortedByFrequence[i].first ] = productsSortedByFrequence[i].second; 
+	}
+}
 
+
+/***
+ *	 
+ ***/
+void StorageConstructiveHeuristic::setBestSolution(map<Vertex, Product> &allocation){
+	bestSolution = new StorageAllocationSolution(0.0, 0.0, 1e-02,false); 
+	map<Product, pair<Cell, int> > allocationByProduct; 
+	for(auto & [vertex, product] : allocation){
+		allocationByProduct[product] = cellByVertex[vertex]; 
+	}
+	
+	((StorageAllocationSolution *)bestSolution)->setAllocation(allocationByProduct,orders); 
+	EvaluateSolution(bestSolution);
+	bestSolution->printSolution(); 
+}
 
 
 /**
@@ -586,48 +611,39 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	map<Cell, set<string> > familiesByCell; 							///< Stores all the families that have constraints by cell
 	map<Shelf, set<string> > familiesByShelf;							///< Stores all the shelves that have constraints by shelf
 	map<Block, set<string> > familiesByBlock;  							///< Stores all families that have constraints by block
+	int lastOnSequence = 0; 
+	unsigned int countTries = 0; 
 	
 	vector<Vertex> storePoints = getStorageVertexes(vertexByType);
 	vector<Vertex> vertexesOrderedByDistance = getStorageVertexesOrderedByDistance(); 
-	
-	if(productsSortedByFrequence.size() == 0){
-		productsSortedByFrequence = getProductOrderByFrequence();
-		for(unsigned int i=0; i<productsSortedByFrequence.size();i++)
-			frequenceByProduct[productsSortedByFrequence[i].first ] = productsSortedByFrequence[i].second; 
-	}
-	
-	int lastOnSequence = 0; 
-	unsigned int countTries = 0; 
+	fillFrequenceByProduct();
+
 	unsigned int numPositions = vertexesOrderedByDistance.size(); 
 	usedVertex.resize(numPositions, false); 
 	//cout<<"NUM PRODUCTS \n"<<productsSortedByFrequence.size()<<endl;
 	for(unsigned int i=0;i<productsSortedByFrequence.size();i++){
 		auto & item  = productsSortedByFrequence[i]; 
-		//item.first.print();
-		
-		if(!hasConstraints(item.first)){								// All the products that have not a allocation constraint are inserted in 
+	//	cout<<"Product : "<<productsSortedByFrequence[i].first.getName()<<" Frequence: "<<productsSortedByFrequence[i].second<<endl;
+		if(!hasConstraints(item.first)){				// All the products that have not a allocation constraint are inserted in 
 														// the first available cell
 			while(usedVertex[lastOnSequence%numPositions] && numPositions> countTries++)lastOnSequence++;
 			usedVertex[lastOnSequence%numPositions] = true; 
 			allocation[vertexesOrderedByDistance[lastOnSequence%numPositions]] = item.first; 
 		}else if(isIsolatedFamily(item.first)){
 			IsolatedFamily isolation = familyIsolationsByFamilyCode[item.first.getFamily()]; 
-			string level = isolation.getLevel(); 
-			string force = isolation.getForce();
-			
 			unsigned int tryInsertIndex = lastOnSequence%numPositions; 	
-			
+
 			//Looks for the first not forbidden available position			
 			while((isForbiddenStore(item.first, vertexesOrderedByDistance[tryInsertIndex]) || usedVertex[tryInsertIndex]) && numPositions> countTries++)
 				tryInsertIndex = (tryInsertIndex+1)%numPositions;
-			
-			if(countTries > numPositions){ //It means that all the positions were tested and no insertion is possible 			
-				if(force == WEAK_ISOLATION){							// If it is a weak isolation, we perform the allocation anyway
+
+			if(countTries <= numPositions){ //It means that not all the positions were tested and an insertion is possible 			
+				if(isolation.getForce() == WEAK_ISOLATION){							// If it is a weak isolation, we perform the allocation anyway
 					usedVertex[tryInsertIndex] = true;
 					allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
-				}else if(force == STRONG_ISOLATION ){ //If we have an strong isolation by cell but just one product can be inserted in each cell, so it is
-											 //ok to insert the product there 
-					if(cellByVertex[vertexesOrderedByDistance[tryInsertIndex]].first.getLevels() == 1 && level == CELL_LEVEL){
+				}else if(isolation.getForce() == STRONG_ISOLATION ){ //If we have an strong isolation by cell but just one product can be inserted 
+																	 // in each cell, so it is ok to insert the product there 
+					if(cellByVertex[vertexesOrderedByDistance[tryInsertIndex]].first.getLevels() == 1 && isolation.getLevel() == CELL_LEVEL){
 						usedVertex[tryInsertIndex] = true; 
 						allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
 					}
@@ -651,16 +667,7 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	allocateStronglyIsolatedFamilies(allocation);
 	cout<<"Allocated:\t" <<allocation.size()<<endl;
 	
-	bestSolution = new StorageAllocationSolution(0.0, 0.0, 1e-02,false); 
-	map<Product, pair<Cell, int> > allocationByProduct; 
-	for(auto & [vertex, product] : allocation){
-		allocationByProduct[product] = cellByVertex[vertex]; 
-	}
-	
-	((StorageAllocationSolution *)bestSolution)->setAllocation(allocationByProduct,orders); 
-	EvaluateSolution(bestSolution);
-	bestSolution->printSolution(); 
-	
+	setBestSolution(allocation); 
 	return (StorageAllocationSolution *)bestSolution; 
 }
 
@@ -751,8 +758,6 @@ vector<Vertex> StorageConstructiveHeuristic::getStorageVertexesOrderedByDistance
 }
 
 
-
-
 /**
  * Get the products ordered by descending order of frequence and with its respective frequencies
  **/
@@ -764,7 +769,7 @@ vector<pair<Product,int> > StorageConstructiveHeuristic::getProductOrderByFreque
 	for(unsigned int i=0;i<orders.size();i++){
 		orderItems = orders[i].getOrderItems(); 
 		for(unsigned int j=0;j<orderItems.size();j++)
-			if(productCount.find(orderItems[j].first) != productCount.end())
+			if(productCount.find(orderItems[j].first) == productCount.end())
 				productCount[orderItems[j].first] = 1;
 			else
 				productCount[orderItems[j].first]++;
@@ -776,7 +781,6 @@ vector<pair<Product,int> > StorageConstructiveHeuristic::getProductOrderByFreque
 	
 	sort(orderedProducts.begin(), orderedProducts.end()); 
 	reverse(orderedProducts.begin(), orderedProducts.end()); 
-	
 	
 	vector<pair<Product, int> > result;
 	

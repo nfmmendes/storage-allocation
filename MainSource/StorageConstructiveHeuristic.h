@@ -73,6 +73,8 @@ class StorageConstructiveHeuristic : public Heuristic  {
 				  vector<string> familyCodes,  map<string, queue<Product> >  &orderedProductsByFamily);
 		tuple<set<Cell> , set<Shelf> , set<Block> > getNonUsedStructures(const map<Vertex,Product> &allocations);
 		double evaluatePenaltiesByAllocationProhibition(MapAllocation & allocation); 
+		void fillFrequenceByProduct();
+		void setBestSolution(map<Vertex, Product> &cellByVertex);
 
     public: 
         StorageAllocationSolution * Execute();

@@ -40,6 +40,7 @@ class StorageSolutionEvaluator{
 		//Auxiliary structures
 		set<string> weaklyIsolatedFamilies;  
 		set<string> stronglyIsolatedFamilies;
+		map<string, pair<string, string> > isolationDataByFamilyCode; 			///< Isolation level and force by family code 
 		map<Vertex, Vertex> closestStartPoint;
 		map<Vertex, Vertex> closestEndPoint;
 		map<string, ProductAllocationProhibitions> prohibitionsByProduct; 
