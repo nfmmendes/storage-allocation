@@ -141,7 +141,6 @@ void StorageSolutionEvaluator::InitializeClosestDeliveryPoint(){
 		}
 	}
 
-	cout<<"****** Storage points : "<<storagePoints.size()<<endl; 
 	closestStartPoint.clear();
 	closestEndPoint.clear(); 
 	
@@ -233,7 +232,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(const Product
   
 	double deltaFirstProduct = 0;
 	double deltaSecondProduct = 0;
-
+	
 	if(firstResult != prohibitionsByProduct.end())
 		deltaFirstProduct = evaluatePenaltyDeltaByProhibition(first, firstCell,secondCell);
  
@@ -277,26 +276,48 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocation
 		map<string, vector<Product> > allocationsByCell; 
 		map<long, vector<Product> > allocationsByShelf;
 		map<string, vector<Product> > allocationsByBlock; 
+		string firstBlockName = shelfById[firstCell.getIdShelf()].getBlockName();
+		string secondBlockName = shelfById[secondCell.getIdShelf()].getBlockName();
+	//	string firstIsolationLevel = 
 
-		for(auto [key, value] : allocations){
+		if(firstCell.getIdShelf() == secondCell.getIdShelf()){
+			for(auto & [key, value] : allocations){ //Same shelf. Does not need to load shelf or block allocations
+				allocationsByCell[value.first.getCode()].push_back(key);
+			}
+		}else{ 
+			if(firstBlockName == secondBlockName){
+				for(auto & [key, value] : allocations){	//Same block. Does not need to load block allocations 
+					allocationsByCell[value.first.getCode()].push_back(key);
+					allocationsByShelf[value.first.getIdShelf()].push_back(key);
+				}
+			}else {
+				for(auto & [key, value] : allocations){	
+					allocationsByCell[value.first.getCode()].push_back(key);
+					allocationsByShelf[value.first.getIdShelf()].push_back(key);
+					allocationsByBlock[shelfById[value.first.getIdShelf()].getBlockName()].push_back(key);
+				}
+			}
+			
+		}
+
+		for(auto & [key, value] : allocations){
 			allocationsByCell[value.first.getCode()].push_back(key);
 			allocationsByShelf[value.first.getIdShelf()].push_back(key);
 			allocationsByBlock[shelfById[value.first.getIdShelf()].getBlockName()].push_back(key);
 		}
 		
-		auto products = allocationsByCell[firstCell.getCode()];
-		delta += fuF(products, first, second, CELL_LEVEL); 
-		products = allocationsByCell[secondCell.getCode()]; 		
-		delta += fuF(products, second, first , CELL_LEVEL); 
+		if(firstCell.getLevels() > 1 || secondCell.getLevels() > 1){
+			auto products = allocationsByCell[firstCell.getCode()];
+			delta += fuF(products, first, second, CELL_LEVEL); 
+			products = allocationsByCell[secondCell.getCode()]; 		
+			delta += fuF(products, second, first , CELL_LEVEL); 
+		}
 		
 		if(firstCell.getIdShelf() != secondCell.getIdShelf()){
-			products = allocationsByShelf[firstCell.getIdShelf()];
+			auto products = allocationsByShelf[firstCell.getIdShelf()];
 			delta += fuF(products, first, second, SHELF_LEVEL); 
 			products = allocationsByShelf[secondCell.getIdShelf()];
 			delta += fuF(products, second, first, SHELF_LEVEL);
-		
-			string firstBlockName = shelfById[firstCell.getIdShelf()].getBlockName();
-			string secondBlockName = shelfById[secondCell.getIdShelf()].getBlockName();
 			
 			if(firstBlockName != secondBlockName){
 				products = allocationsByBlock[firstBlockName];
@@ -328,7 +349,7 @@ double StorageSolutionEvaluator::fuF(vector<Product> &allProducts,const Product 
 
 	if(allocationsByFamily.size() > 1)
 		for(auto &[familyCode, quantity]: allocationsByFamily)
-			if(weaklyIsolatedFamilies.find(familyCode) != weaklyIsolatedFamilies.end() && isolationDataByFamilyCode[familyCode].first == isolationLevel)
+			if(isolationDataByFamilyCode[familyCode].first == isolationLevel && weaklyIsolatedFamilies.find(familyCode) != weaklyIsolatedFamilies.end() )
 				oldValue += quantity*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
 
 	//update family count 
@@ -342,7 +363,7 @@ double StorageSolutionEvaluator::fuF(vector<Product> &allProducts,const Product 
 
 	if(allocationsByFamily.size() > 1)
 		for(auto &[familyCode, quantity]: allocationsByFamily)
-			if(weaklyIsolatedFamilies.find(familyCode) != weaklyIsolatedFamilies.end() && isolationDataByFamilyCode[familyCode].first == isolationLevel)
+			if(isolationDataByFamilyCode[familyCode].first == isolationLevel && weaklyIsolatedFamilies.find(familyCode) != weaklyIsolatedFamilies.end() )
 				newValue += quantity*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
 
 	delta = newValue - oldValue; 

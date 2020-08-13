@@ -57,11 +57,8 @@ pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> &points, ma
 
 	do {
 		double sum = 0.0;
-		for(unsigned int i=1;i<orderSize; i++){
+		for(unsigned int i=1;sum > bestCost && i<orderSize ; i++)
 			sum += distanceMatrix.getDistance(currentOrder[i-1], currentOrder[i]); 
-			if(sum > bestCost)
-				break;
-		}
 		
 		sum += distanceMatrix.getDistance(bestStart[currentOrder[0] ] , currentOrder[0] );
 		sum += distanceMatrix.getDistance(currentOrder[orderSize-1] , bestEnd[ currentOrder[orderSize-1] ] );
@@ -90,23 +87,22 @@ pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> &poi
 	Vertex previousPoint; 
 	double sumCost = 0; 
 	
-	double minStartCost = 1e100; 
+	double lowerDistance = 1e100; 
 	int bestVertexToInit = 0; 
 	double distance; 
-	
-	for(unsigned int i=0; i< points.size(); i++){
+	int numPoints = points.size(); 
+	for(unsigned int i=0; i< numPoints; i++){
 		distance = distanceMatrix.getDistance(bestStart[points[i] ],  points[i]);
 		//find the closest point to a delivery point 
-		if(distance < minStartCost){
-			minStartCost = distance; 
+		if(distance < lowerDistance){
+			lowerDistance = distance; 
 			bestVertexToInit = i; 
 		}
 			
 		remainingPoints.insert(points[i]); 
 	}
 	
-	
-	sumCost = minStartCost; 
+	sumCost = lowerDistance; 
 	solution.push_back(points[bestVertexToInit]); 
 	remainingPoints.erase(points[bestVertexToInit]); 
 	
@@ -114,8 +110,8 @@ pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> &poi
 	previousPoint =  solution[0]; 
 	
 	while(!remainingPoints.empty()){
-		double lowerDistance = 1e100; 
-		double distance = 0;
+		lowerDistance = 1e100; 
+		distance = 0;
 		Vertex bestPoint; 
 
 		for(auto value : remainingPoints){
@@ -130,7 +126,7 @@ pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> &poi
 		sumCost+= lowerDistance; 
 		solution.push_back(bestPoint); 
 		previousPoint = bestPoint; 
-		remainingPoints.erase(remainingPoints.find(bestPoint)); 
+		remainingPoints.erase(bestPoint); 
 	}
 	
 	sumCost += distanceMatrix.getDistance(previousPoint, bestEnd[previousPoint]);

@@ -29,19 +29,22 @@ StorageAllocationSolution::StorageAllocationSolution(){
  *
  **/
  StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution *other){
-	 StorageAllocationSolution::countSolutions++;
+	 
+	StorageAllocationSolution::countSolutions++;
 	this->solutionValue = other->solutionValue;
 	this->runtime = other->runtime;
 	this->minDelta = other->minDelta;
 	isMaximization = other->isMaximization; 
+	this->totalPenalty = other->totalPenalty; 
 	 
 	//unsigned long long int solutionIndex;  
-	
+	//cout<<(other == NULL) <<" "<<other->notAllocatedProducts.size()<<endl;
 	for(auto & key : other->notAllocatedProducts)
 		this->notAllocatedProducts.insert(key); 
+	
 	for(auto & [key, value] : other->productsAllocation)
 		this->productsAllocation[key] = value; 
-
+	
 	for(map<Product,vector<PickingRoute*> >::iterator it = other->routesByProduct.begin(); it!= other->routesByProduct.end(); it++){
 		this->routesByProduct[it->first].resize(it->second.size());
 		for(unsigned int i =0;i<it->second.size(); i++){
@@ -50,6 +53,7 @@ StorageAllocationSolution::StorageAllocationSolution(){
 			this->routesByProduct[it->first][i]->second = it->second[i]->second; 
 		}
 	}
+
 }
 
 /**
@@ -61,6 +65,7 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &
 	this->runtime = other.runtime;
 	this->minDelta = other.minDelta;
 	isMaximization = other.isMaximization; 
+	this->totalPenalty = other.totalPenalty; 
 	
 	//unsigned long long int solutionIndex;  
 		
@@ -93,6 +98,8 @@ StorageAllocationSolution::StorageAllocationSolution(double value, double time, 
 	this->runtime = time;
 	this->minDelta = minDelta;
 	isMaximization = maximization; 
+	this->notAllocatedProducts.clear(); 
+	this->productsAllocation.clear();
 }
 
 
@@ -108,7 +115,7 @@ void StorageAllocationSolution::setEvaluator(DistanceMatrix<Vertex> *distanceMat
  **/
 StorageAllocationSolution::~StorageAllocationSolution(){
 	StorageAllocationSolution::countSolutions--;
-	
+	 
 	this->notAllocatedProducts.clear();
 	this->productsAllocation.clear(); 
 	for(map<Product, vector<PickingRoute *> >::iterator it = this->routesByProduct.begin(); it != this->routesByProduct.end();it++ ){
@@ -221,6 +228,9 @@ double StorageAllocationSolution::getTotalPenalty(){
 	return this->totalPenalty;
 }
 
+set<Product> & StorageAllocationSolution::getNonAllocatedProducts(){
+	return this->notAllocatedProducts; 
+}
 
 /**
  * Set a specific product allocation 
@@ -262,6 +272,7 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	double delta = 0.0; 
 
 	double penaltyDelta = StorageAllocationSolution::Evaluator->evaluatePenaltyDelta(getProductAllocations(), firstProduct, secondProduct);
+	
 
 	totalPenalty  += penaltyDelta; 
 
@@ -270,13 +281,21 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	
 	vector<PickingRoute *> firstRoutes = routesByProduct[firstProduct];
 	vector<PickingRoute *> secondRoutes = routesByProduct[secondProduct];
+	
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
 	for(unsigned int i=0; i<firstRoutes.size(); i++)
 		delta += getVariationAndUpdateAfterSwap(firstRoutes[i], firstVertex, secondVertex, useTSPEvaluator);
 
 	for(unsigned int i=0; i<secondRoutes.size(); i++)
 		delta += getVariationAndUpdateAfterSwap(secondRoutes[i], secondVertex, firstVertex, useTSPEvaluator);
 
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::cout << "First size: "<<firstRoutes.size()<<" Second size: "<<secondRoutes.size()<<endl;
+	std::cout << "Penalty test runtime = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milliseconds_s]" << std::endl;
 
+//	cout<<this->totalPenalty<<" "<<this->solutionValue<<" "<<delta<<" "<<penaltyDelta<<endl;
+//	system("pause");
 	this->solutionValue += delta + penaltyDelta; 
 }
 
@@ -295,8 +314,9 @@ double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *o
 	
 	replace(original->first.begin(), original->first.end(), oldVertex, newVertex);
 	double oldValue = original->second; 
+//	cout<<"Use evaluator :"<<useTSPEvaluator<<" evaluator: "<<resultEvaluator<<" estimator: "<<resultEstimator<<endl;
 	original->second = useTSPEvaluator ? Evaluator->DoRouteEvaluation(original->first) : Evaluator->DoRouteEstimation(original->first);
-
+//	cout<<"Old value: "<<oldValue<<" New value: "<<original->second<<endl;
 	return original->second - oldValue; 
 }
 

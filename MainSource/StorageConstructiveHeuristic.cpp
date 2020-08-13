@@ -376,6 +376,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 	}
 	penalty = nonExistentPositionPenalty + isolatedFamilyPenalty; 
 	cout<<nonExistentPositionPenalty<<" "<<isolatedFamilyPenalty<<" "<<penalty<<" "<<totalDistance<<endl;
+	((StorageAllocationSolution *)solution)->setTotalPenalty(penalty);
 	solution->setSolutionValue(totalDistance+penalty);
 	((StorageAllocationSolution*)solution)->setRoutesByProduct(routesByProduct);
 	

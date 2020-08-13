@@ -50,18 +50,20 @@ class InsideShelfSwap :public NeighborhoodStructure{
                                         // also helps to debug the code, as the bug can be reproduced several times 
                                         // until its cause be discovered
 		Shelf shelf; 
+        OptimizationConstraints *constraints;
         map<Position, Product> shelfAllocations; 
         
     public:
         InsideShelfSwap();
         ~InsideShelfSwap();
-        InsideShelfSwap(AbstractSolution *initial, unsigned int numNeigh, int randomSeed, Shelf & shelf);
+        InsideShelfSwap(AbstractSolution *initial, OptimizationConstraints * constr, Shelf & shelf);
         AbstractSolution * getStartSolution() const {return this->startSolution; }
         vector<AbstractSolution *> createNeighbors();
         void setShelfAllocations(map<Position,Product> &value){ shelfAllocations = value; }
-		
+		void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
+        OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
 		void setShelf(Shelf & shelf) { this->shelf = shelf;} 
-        void setRandomSeed(int seed){ this->randomSeed = seed; }
+        void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
 
 };
@@ -84,18 +86,21 @@ class InsideBlockSwap:public NeighborhoodStructure{
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
 		Block block; 
+        OptimizationConstraints *constraints;
 		map<Position, Product> blockAllocations;
 
     public:
         InsideBlockSwap();
         ~InsideBlockSwap();
-        InsideBlockSwap(StorageAllocationSolution *initial, int numNeigh,  int randomSeed, Block &block);
+        InsideBlockSwap(StorageAllocationSolution *initial, OptimizationConstraints * constr, Block &block);
         AbstractSolution * getStartSolution() const { return this->startSolution; }
 
         vector<AbstractSolution *> createNeighbors();
 
-        void setRandomSeed(int seed){ this->randomSeed = seed; }
+        void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
+        void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
+        OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
         int getRandomSeed(){ return this->randomSeed; }
         void setBlock(Block &other){ this->block = other; }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
@@ -116,19 +121,22 @@ class MostFrequentSwap :public NeighborhoodStructure{
                                             // the hardness of a company accepts a random behavior of the algorithm. It
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
+        OptimizationConstraints *constraints;
         vector<Product> interchangeableProducts; 
 
     public:
         MostFrequentSwap();
         ~MostFrequentSwap();
-        MostFrequentSwap(StorageAllocationSolution *initial, int numNeigh, int randomSeed, vector<Product> &products);
+        MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr , vector<Product> &products);
         AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
 
 
-        void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
-        void setRandomSeed(int seed){ this->randomSeed = seed; }
+        void setInterchangeableProducts(vector<Product> &prods) { this->interchangeableProducts = prods; }
+        void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
+        void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
+        OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
         vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
         int getRandomSeed(){ return this->randomSeed; srand(this->randomSeed); }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
@@ -152,15 +160,18 @@ class IsolatedFamilySwap :public NeighborhoodStructure{
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
         vector<Product> interchangeableProducts;
+        OptimizationConstraints *constraints; 
     public:
         IsolatedFamilySwap();
         ~IsolatedFamilySwap();
-        IsolatedFamilySwap(StorageAllocationSolution *initial, int numNeigh, int randomSeed, vector<Product> &products);
+        IsolatedFamilySwap(StorageAllocationSolution *initial, OptimizationConstraints *constr,  vector<Product> &products);
         AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
 
-        void setRandomSeed(int seed){ this->randomSeed = seed; }
+        void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
+        void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
+        OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
         int getRandomSeed(){ return this->randomSeed; srand(this->randomSeed); }
         void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
         vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
@@ -185,14 +196,19 @@ class StorageAllocationPertubation :public NeighborhoodStructure {
                                             // until its cause be discovered
         int numOfPertubationMoves; 
 		vector<Product> interchangeableProducts; 
+        OptimizationConstraints * constraints; 
+        set<string> forbiddenAllocationProducts; 
+        bool isValidSwap(Product &first, Product &second, MapAllocation &allocations);
     public:
         AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
-        StorageAllocationPertubation(){}
+        StorageAllocationPertubation(OptimizationConstraints *constr){}
         ~StorageAllocationPertubation(){}
 
-        void setRandomSeed(int seed){ this->randomSeed = seed; }
+        void setRandomSeed(int seed){ this->randomSeed = seed; srand(randomSeed);  }
         void setNumberOfNeighbors(unsigned int val){ this->numOfPertubationMoves = val; }
+        void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
+        OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
         int getRandomSeed(){ return this->randomSeed; }
         void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
         vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }

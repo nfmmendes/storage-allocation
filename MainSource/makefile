@@ -13,7 +13,7 @@ all: GraphPack Input Parameter Evaluator WarehousePack Block Warehouse ProductAl
 	
 
 Input: ProcessInputData.h InputData.h ABCAnalysis.h  OptimizationConstraints.h
-	$(CC) $(COMPILE_FLAGS) -c InputData.cpp ProcessInputData.cpp ABCAnalysis.cpp OptimizationConstraints.h
+	$(CC) $(COMPILE_FLAGS) -c InputData.cpp ProcessInputData.cpp ABCAnalysis.cpp OptimizationConstraints.cpp
 
 #BASIC CLASSES (CAN BE USED IN ANY SOFTWARE. IT'S NOT ALGORITHM RELATED
 GeneralClasses: Point.h Date.h Time.h
