@@ -50,7 +50,7 @@ void ProcessInputData::CreateGraph(){
 void ProcessInputData::CalculateMatrixDistances(){
 	Graph graph = warehouseToGraphConverter.getGraph();
 	map<string, set<Vertex> > vertexesByType = graph.getVertexesByType();
-	
+
 	vector<Vertex> desirableVertexes; 
 	for(map<string, set<Vertex> >::iterator it = vertexesByType.begin(); it!= vertexesByType.end();it++){
 		string key = it->first; 
@@ -87,7 +87,7 @@ void ProcessInputData::ExecuteProcessData(){
 
 	cout<<"Calculating distances \n"; 
 	this->CalculateMatrixDistances();
-	//this->distanceMatrix->print(); 
+
 }
 
 

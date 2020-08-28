@@ -32,51 +32,6 @@ struct Allocation{
 };
 
 
-void printRandomSolution(){
-	
-	vector<Allocation> allocations; 
-	
-	bool allocated = true; 
-	int countLevel = 1; 
-	int productIndex = 0;
-	
-	InputData input;
-	vector<Block> blocks = input.getWarehouse().getBlocks();
-	vector<Product> products = input.getProducts(); 
-	
-	//random_shuffle(products.begin(), products.end());
-	while(allocated == true && productIndex < (int)products.size()){
-			allocated = false; 
-			vector<Cell> possibleCells;
-			for(unsigned int i = 0; i<blocks.size(); i++){
-				vector<Shelf> shelves = blocks[i].getShelves();
-				//cout<<"\t"<<shelves.size()<<endl;
-				for(unsigned int j=0;j<shelves.size(); j++){
-					vector<Cell> cells = shelves[j].getCells();
-					for(unsigned int k=0;k<cells.size();k++)
-						if(cells[k].getLevels() >= countLevel){
-							possibleCells.push_back(cells[k]); 
-						}
-				}
-			}
-			
-			if(possibleCells.size()> 0){
-				allocated = true;
-				
-				for(unsigned int i = 0;i<possibleCells.size() && productIndex < (int) products.size();i++, productIndex++)
-					allocations.push_back(Allocation(products[productIndex].getName(), possibleCells[i].getCode(), countLevel));
-			}
-		countLevel++;
-	}
-	ofstream file("results\\solutions.txt");
-	file<<allocations.size()<<endl;
-	for(unsigned int i=0;i<allocations.size();i++)
-		file<<allocations[i].productCode<<" "<<allocations[i].cellCode<<" "<<allocations[i].level<<endl;
-	file<<flush;
-	file.close();
-}
-
-
 ABCAnalysis * createABCAnalysis(InputData &input){
 	
 	vector<Order> orders = input.getOrders();
@@ -99,8 +54,6 @@ int main(int argc, char **argv){
 		
 		//ABCAnalysis * abc = createABCAnalysis(input); 
 		//abc->execute(); 
-		
-		printRandomSolution();
     			
 		ProcessInputData processInput(&input);
 		cout<<"Converting warehouse to graph\n";
@@ -110,7 +63,7 @@ int main(int argc, char **argv){
 		OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
 		Warehouse warehouse =  input.getWarehouse();
 		map<pair<Cell, int>, Vertex> vertexByCell = processInput.getWarehouseToGraphConverter()->getVertexByCell();
-		cout<<"TEST: "<<processInput.getDistanceMatrix()->getKeys().size()<<endl; 
+		 
 		StorageAllocationSolution::setEvaluator(processInput.getDistanceMatrix(),vertexByCell, warehouse.getBlocks(), cons);
 		
 		cout<<"Initializing metaheuristic \n";
@@ -121,10 +74,10 @@ int main(int argc, char **argv){
 		StorageILS ils(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);
 		//vnd.run();
 		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-		ils.Execute();
+		auto solution = ils.Execute();
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 		std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milli_sec]" << std::endl;
-
+		((StorageAllocationSolution *) solution)->printSolution(); 
     }else
         cerr<<"Too few  arguments. Inform the index file name.";
     

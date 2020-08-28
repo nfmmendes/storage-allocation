@@ -176,7 +176,11 @@ void StorageAllocationSolution::setRoutesByProduct(map<Product, vector<PickingRo
  * Print the solution in the folder results\\solution 
  **/
 void StorageAllocationSolution::printSolution() const{
-	ofstream file("results/solutions.txt");
+
+    auto end = std::chrono::system_clock::now();
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+	ofstream file("results/solutions_"+to_string(end_time) + ".txt");
 	printToFile(file); 
 }
 
@@ -198,6 +202,7 @@ void StorageAllocationSolution::Evaluate(bool evaluateWithTSP){
 			distance += route->second; 
 		}
 	}
+	
 }
 
 

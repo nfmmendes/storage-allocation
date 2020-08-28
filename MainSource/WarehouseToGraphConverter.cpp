@@ -273,7 +273,7 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
 	if(numRows <= numColumns){
 		for(int k=1; k< (int) numColumns+1; k++){
 			//First row
-			if(corridorUp != NULL){
+        	if(corridorUp != NULL){
 				connectSingleCellToSingleCorridor(shelf, corridorUp, arcs, cellPositions[numRows][k], "UP", numRows, k);
 			}else{
 				//The cell is considered an internal cell thus it will be connected with its neighbors
@@ -427,8 +427,11 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 		//Get the most to down up-corridor (so the closest corridor on up side)
 		for(unsigned int i=0;i<adjacents.size();i++){
 			double yValue = adjacents[i].getBeginCoords().second;
+    
 			if(adjacents[i].getDirection() == HORIZONTAL && yValue > shelf.getBottomLeftCoordY() + shelfLength && yValue < extremeUp ){
-				up =  new Corridor(adjacents[i]);
+				if(extremeUp < 1e99)
+                    delete up; 
+                up =  new Corridor(adjacents[i]);
 				extremeUp = yValue; 
 			}
 		}
@@ -436,7 +439,11 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 		//Get the most to the up down-corridor (so the closest corridor on down side)
 		for(unsigned int i=0;i<adjacents.size();i++){
 			double yValue = adjacents[i].getBeginCoords().second;
+    
 			if(adjacents[i].getDirection() == HORIZONTAL && yValue < shelf.getBottomLeftCoordY() && yValue > extremeDown){
+    
+                if(extremeDown > -1e99)
+                    delete down; 
 				down =  new Corridor(adjacents[i]);
 				extremeDown = yValue;
 			}
@@ -677,7 +684,7 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
     
     //This first if looks for the closest corridors in horizontal direction, if the shelf is also in this same position
     //If numColumns == numRows the two ifs will be executed
-    if(numColumns <= numLines){
+    if(numLines <= numColumns){
         for(int i=0; i<(int)corridors.size();i++){
             if(corridors[i].getDirection() == HORIZONTAL && doCorridorTranverse(corridors[i], shelf)){
                 double yCoordCorridor = corridors[i].getBeginCoords().second;

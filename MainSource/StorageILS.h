@@ -52,7 +52,8 @@ class InsideShelfSwap :public NeighborhoodStructure{
 		Shelf shelf; 
         OptimizationConstraints *constraints;
         map<Position, Product> shelfAllocations; 
-        
+        bool isValidSwap(Product &first, Product &second, MapAllocation &allocations);
+
     public:
         InsideShelfSwap();
         ~InsideShelfSwap();
@@ -88,7 +89,7 @@ class InsideBlockSwap:public NeighborhoodStructure{
 		Block block; 
         OptimizationConstraints *constraints;
 		map<Position, Product> blockAllocations;
-
+        bool isValidSwap(Product &first, Product &second, MapAllocation &allocations); 
     public:
         InsideBlockSwap();
         ~InsideBlockSwap();
@@ -123,14 +124,13 @@ class MostFrequentSwap :public NeighborhoodStructure{
                                             // until its cause be discovered
         OptimizationConstraints *constraints;
         vector<Product> interchangeableProducts; 
-
+        bool isValidSwap(Product &first, Product &second, MapAllocation &allocations);
     public:
         MostFrequentSwap();
         ~MostFrequentSwap();
         MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr , vector<Product> &products);
         AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
-
 
         void setInterchangeableProducts(vector<Product> &prods) { this->interchangeableProducts = prods; }
         void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
@@ -186,7 +186,7 @@ class IsolatedFamilySwap :public NeighborhoodStructure{
  *  2. Pertubate less frequent products
  *  3. Mix all the products
  */
-class StorageAllocationPertubation :public NeighborhoodStructure {
+class StorageAllocationPertubation : public NeighborhoodStructure {
 
     private: 
         int randomSeed;                     //The algorithm use random functions, but it can not be 100% random because
@@ -202,7 +202,7 @@ class StorageAllocationPertubation :public NeighborhoodStructure {
     public:
         AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
-        StorageAllocationPertubation(OptimizationConstraints *constr){}
+        StorageAllocationPertubation(OptimizationConstraints *constr){ constraints = constr; }
         ~StorageAllocationPertubation(){}
 
         void setRandomSeed(int seed){ this->randomSeed = seed; srand(randomSeed);  }

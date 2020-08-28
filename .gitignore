@@ -1,0 +1,5 @@
+*.o
+*.gch
+/MainSource/*.exe
+/MainSource/results
+/MainSource/.vscode
