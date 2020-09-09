@@ -296,8 +296,8 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 		delta += getVariationAndUpdateAfterSwap(secondRoutes[i], secondVertex, firstVertex, useTSPEvaluator);
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-	std::cout << "First size: "<<firstRoutes.size()<<" Second size: "<<secondRoutes.size()<<endl;
-	std::cout << "Penalty test runtime = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milliseconds_s]" << std::endl;
+	//std::cout << "First size: "<<firstRoutes.size()<<" Second size: "<<secondRoutes.size()<<endl;
+	//std::cout << "Penalty test runtime = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milliseconds_s]" << std::endl;
 
 //	cout<<this->totalPenalty<<" "<<this->solutionValue<<" "<<delta<<" "<<penaltyDelta<<endl;
 //	system("pause");

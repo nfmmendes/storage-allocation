@@ -152,7 +152,7 @@ void WarehouseToGraphConverter::generateGraph(){
     this->graph = Graph::convertArcsToGraph(arcs);
 	
 	//this->graph.print();
-	cout<<"Conversion finished:\nNumber of arcs: \t"<<endl;
+	cout<<"Conversion finished:\nNumber of arcs: \t"<< this->graph.getArcs().size()<<endl;
 }
 
 /**
@@ -841,24 +841,22 @@ void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & ar
 	double minDistanceB = 1e20;
     
     double distance = 0;
-    
     if(blocksByName.find(exit.getBlockAName()) == blocksByName.end())
         return;
-	
+
     if(exit.getBlockBName() != "#_#_#" && blocksByName.find(exit.getBlockAName()) == blocksByName.end())
         return; 
-	
+
     Block blockA = blocksByName[exit.getBlockAName()];
     Block blockB = blocksByName[exit.getBlockBName()];
 
     pair<double,double> reference = exit.getCoords(); 
-    Point referencePoint("expeditionPoint_"+to_string(exit.getId()), reference.first, reference.second, 0); 
+    Point referencePoint("blockExit_"+to_string(exit.getId()), reference.first, reference.second, 0); 
     
     for(map<Point, Vertex>::iterator it=vertexByPoint.begin(); it!= vertexByPoint.end(); it++){
-	
         if(blockA.isInBlock(it->first)){
-			distance = sqrt( pow(it->first.getCoordX()-reference.first,2)+pow(it->first.getCoordY()-reference.second,2));
-			if(distance< minDistanceA){
+			distance = sqrt( pow(it->first.getCoordX()-reference.first,2)+pow(it->first.getCoordY()-reference.second,2)); 
+			if(distance< minDistanceA && distance > 1e-08){
 				minDistanceA = distance;
 				closestVertexA = it->second;
 			}
@@ -866,21 +864,23 @@ void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & ar
 		
 		if(exit.getBlockBName() != "#_#_#" && blockB.isInBlock(it->first)){
 			distance = sqrt( pow(it->first.getCoordX()-reference.first,2)+pow(it->first.getCoordY()-reference.second,2));
-			if(distance< minDistanceB){
+			if(distance< minDistanceB && distance > 1e-08 ){
 				minDistanceB = distance;
 				closestVertexB = it->second;
 			}
 		}
     }
-	
+
 	Vertex exitVertex("exit"+to_string(exit.getId()), BLOCK_EXIT_VERTEX,0);
+
     if(minDistanceA <= 1e19){
         
         vertexByPoint[referencePoint] = exitVertex; 
-        vertexByCode[to_string(exit.getId())] = exitVertex; 
+        vertexByCode[exitVertex.getLabel()] = exitVertex; 
+      //  vertexByCode[]
 		
-        Arc one("expedition_"+exitVertex.getLabel()+"_toVertex_"+closestVertexA.getLabel(), minDistanceA, exitVertex, closestVertexA);
-        Arc other("Vertex_"+closestVertexA.getLabel()+"toExpedition_"+exitVertex.getLabel(), minDistanceA, closestVertexA, exitVertex);
+        Arc one("exitVertex_"+exitVertex.getLabel()+"_toVertex_"+closestVertexA.getLabel(), minDistanceA, exitVertex, closestVertexA);
+        Arc other("Vertex_"+closestVertexA.getLabel()+"_toExitVertex_"+exitVertex.getLabel(), minDistanceA, closestVertexA, exitVertex);
 
         arcs.insert(one);
         arcs.insert(other);
@@ -888,10 +888,10 @@ void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & ar
     
 	if(minDistanceB <= 1e19){
 		vertexByPoint[referencePoint] = exitVertex; 
-        vertexByCode[to_string(exit.getId())] = exitVertex; 
+        vertexByCode[exitVertex.getLabel()] = exitVertex; 
 		
-        Arc one("expedition_"+exitVertex.getLabel()+"_toVertex_"+closestVertexB.getLabel(), minDistanceB, exitVertex, closestVertexB);
-        Arc other("Vertex_"+closestVertexB.getLabel()+"toExpedition_"+exitVertex.getLabel(), minDistanceB, closestVertexB, exitVertex);
+        Arc one("exitVertex_"+exitVertex.getLabel()+"_toVertex_"+closestVertexB.getLabel(), minDistanceB, exitVertex, closestVertexB);
+        Arc other("Vertex_"+closestVertexB.getLabel()+"_toExitVertex_"+exitVertex.getLabel(), minDistanceB, closestVertexB, exitVertex);
 
         arcs.insert(one);
         arcs.insert(other);

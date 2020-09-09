@@ -219,8 +219,8 @@
             file>>blockName>>idCurve>>startCorridor>>endCorridor>>beginCoordX>>beginCoordY>>endCoordX>>endCoordY;
 			//cout<<blockName<<" "<<idCurve<<" "<<startCorridor<<" "<<endCorridor<<" "<<beginCoordX<<" "<<beginCoordY<<" "<<endCoordX<<" "<<endCoordY;
             curvesByBlock[blockName].push_back(Curve(idCurve, startCorridor, endCorridor,
-                                                     Point("beginCurve"+to_string(idCurve),beginCoordX, beginCoordY,0), 
-			  									   Point("endCurve"+to_string(idCurve),endCoordX, endCoordY,0)));
+                                                    Point("beginCurve"+to_string(idCurve),beginCoordX, beginCoordY,0), 
+			  									    Point("endCurve"+to_string(idCurve),endCoordX, endCoordY,0)));
             
         }
         

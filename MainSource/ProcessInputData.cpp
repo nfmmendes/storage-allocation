@@ -88,6 +88,9 @@ void ProcessInputData::ExecuteProcessData(){
 	cout<<"Calculating distances \n"; 
 	this->CalculateMatrixDistances();
 
+	//Keep these lines here, they are useful to debug the code
+	//this->warehouseToGraphConverter.getGraph().print();
+	//this->distanceMatrix->print(); 
 }
 
 
