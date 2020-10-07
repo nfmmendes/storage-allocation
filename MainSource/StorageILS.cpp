@@ -383,7 +383,7 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 	int second; 
 	set<pair<int,int> >swapsDone; 
 	int numInterchangeableProducts = this->interchangeableProducts.size(); 
-	StorageAllocationSolution * newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution);
+	
 
 	for(int i=0;i<this->numberOfNeighbors && numTries < 2*numberOfNeighbors;i++, numTries++){
 		if(!Util::ChooseTwoProductIndexes(first ,second,numInterchangeableProducts, swapsDone))
@@ -394,7 +394,8 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 			i--;
 			continue; 
 		}
-		
+
+		StorageAllocationSolution * newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution);
 		newSolution->proceedSwap(this->interchangeableProducts[first], this->interchangeableProducts[second],true); 
 		solutions.push_back(newSolution);
 	}
@@ -542,7 +543,7 @@ StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Ver
  *  between each cell and the closest delivery point  
  */
 StorageAllocationSolution * StorageILS::CreateInitialSolution(){
-
+	
 	StorageConstructiveHeuristic constr(this->products,*warehouse,*distanceMatrix,vertexByCell, orders,constraints); 
 	return  constr.Execute(); 
 }
@@ -769,17 +770,19 @@ AbstractSolution * StorageILS::Execute(){
 
     this->numIterationsWithoutImprovement = 0;
 	double bestGlobalSolutionValue; 
+	
     AbstractSolution * initialSolution = CreateInitialSolution();
 	StorageAllocationSolution * bestGlobalSolution = new StorageAllocationSolution( (StorageAllocationSolution *) initialSolution);
 	StorageAllocationSolution * currentSolution = new StorageAllocationSolution(bestGlobalSolution); 
-	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue(); 
 
+	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue(); 
+	cout<<"Greed algorithm value : "<<bestGlobalSolutionValue<<endl;
 	NeighborhoodStructure * perturbation = new StorageAllocationPertubation(&constraints); 
 	//((StorageAllocationPertubation *) perturbation)->setOptimizationConstraints(&this->constraints);
 
 	int randomSeed= 1;
 	auto allocations = ((StorageAllocationSolution *) initialSolution)->getProductAllocations(); 
-	cout<<"Total penalty init : "<<currentSolution->getTotalPenalty()<<endl; 
+	//cout<<"Total penalty init : "<<currentSolution->getTotalPenalty()<<endl; 
 	while(!StopCriteriaReached()){
 		 
 		StorageAllocationSolution *bestLocalSearchSolution = new StorageAllocationSolution(*currentSolution);
@@ -833,7 +836,7 @@ AbstractSolution * StorageILS::Execute(){
 	
 		delete bestLocalSearchSolution; 
 		delete originalSolution; 
-		cout<<"Without improvement \t"<<this->numIterationsWithoutImprovement<<"\tValue:"<<bestGlobalSolution->getSolutionValue()<<endl;
+	//	cout<<"Without improvement \t"<<this->numIterationsWithoutImprovement<<"\tValue:"<<bestGlobalSolution->getSolutionValue()<<endl;
 		
 		
 	//	delete currentSolution;
@@ -841,6 +844,6 @@ AbstractSolution * StorageILS::Execute(){
 		randomSeed++; 
 	}
 	
-	cout<<"End function"<<endl;
+	//	cout<<"End function"<<endl;
 	return bestGlobalSolution;
 }

@@ -80,18 +80,18 @@
 
 	
 		file>>numBlocks;
-		cout<<"Reading blocks...\n";
-		cout<<numBlocks<<endl;
+	//cout<<"Reading blocks...\n";
+	//	cout<<numBlocks<<endl;
         for(int i=0; i<numBlocks; i++){
             file>> blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY>> width >> lenght;
             this->blocks.push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY, width, lenght));
         }
 		
 		file>>numExpeditionPoints;
-		cout<<"Reading expedition points...\n";
+	//	cout<<"Reading expedition points...\n";
 		double coordX, coordY;
 		string expeditionCode; 
-		cout<<numExpeditionPoints<<endl;
+	//	cout<<numExpeditionPoints<<endl;
 		for(int i=0;i<numExpeditionPoints;i++){
 			file>>expeditionCode>>blockName>>coordX>>coordY; 
 			this->expeditionPoints.push_back(ExpeditionPoint(expeditionCode, blockName, pair<double,double>(coordX, coordY)));
@@ -104,8 +104,8 @@
         string blockBName; 
         map<string, vector<BlockExit> > exitsByBlock;
    
-		cout<<"Reading blocks exits...\n";
-		cout<<numExits<<endl;
+	//	cout<<"Reading blocks exits...\n";
+	//	cout<<numExits<<endl;
         if(numExits != 0){
             for(int i=0; i<numExits; i++){
 				
@@ -136,10 +136,10 @@
         }
 		
 		
-		cout<<"Reading shelves...\n";
+	//	cout<<"Reading shelves...\n";
         //Read all the data concerning shelves
         file>> numShelves; 
-		cout<<numShelves<<endl;
+	//	cout<<numShelves<<endl;
         long int idShelf;
         int columns;
         int lines; 
@@ -159,14 +159,14 @@
         //We assume that it will be few blocks and each block will have few shelves, so this part of code will
         //not harm the code performance
         for(int i=0;i<(int)blocks.size();i++){
-			cout<<"Shelves on block: \n" <<shelvesByBlock[blocks[i].getName()].size()<<endl;
+	//		cout<<"Shelves on block: \n" <<shelvesByBlock[blocks[i].getName()].size()<<endl;
             this->blocks[i].setShelves(shelvesByBlock[blocks[i].getName()]);
         }
 		
-        cout<<"Reading corridors...\n";
+    //    cout<<"Reading corridors...\n";
         //Read all data concerning corridors
         file>>numCorridors;
-		cout<<numCorridors<<endl;
+	//	cout<<numCorridors<<endl;
         long int idCorridor;
         string dirCorridor, senseCorridor;
         double beginCoordX, beginCoordY,length;
@@ -184,10 +184,10 @@
         for(unsigned int i=0; i<blocks.size();i++)
             this->blocks[i].setCorridors(corridorsByBlock[this->blocks[i].getName()]);
         
-		cout<<"Reading cells...\n";
+	//	cout<<"Reading cells...\n";
         //Read all data concerning cells
         file>>numCells;
-		cout<<numCells<<endl;
+		//cout<<numCells<<endl;
         int row, column;
         string cellCode;
         int numLevels;
@@ -209,9 +209,9 @@
             blocks[i].setShelves(blockShelves);
         }
         
-		cout<<"Reading curves...\n";
+	//	cout<<"Reading curves...\n";
         file>>numCurves;
-		cout<<numCurves<<endl;
+	//	cout<<numCurves<<endl;
         long int idCurve, startCorridor, endCorridor;
         double endCoordX, endCoordY;
         map<string, vector<Curve> > curvesByBlock;

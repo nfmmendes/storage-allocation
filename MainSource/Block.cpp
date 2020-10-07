@@ -148,7 +148,7 @@ void Block::setShelves(vector<Shelf > & others){
 	
 	//std::transform(shelves.begin(), shelves.end(), std::inserter(shelvesById, shelvesById.end()),
       //         [](const Shelf &s) { return std::make_pair(s.getId(), s); });
-    for(auto shelf : shelves )
+    for(Shelf & shelf : shelves )
 		shelvesById[shelf.getId()] = shelf;
 }
 

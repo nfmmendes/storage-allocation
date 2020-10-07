@@ -116,16 +116,16 @@ void WarehouseToGraphConverter::generateGraph(){
                 }
             }
 		
-            cout<<"Connecting shelf to corridor"<<endl;
+           // cout<<"Connecting shelf to corridor"<<endl;
             connectShelvesToCorridor(shelves[j], adjacentCorridors,cellPositions, numRows, numColumns, arcs);
 			
         }
 		
-		cout<<"Splitting corridors\n";
+	//	cout<<"Splitting corridors\n";
         //This will allow to create arcs in the interior of corridors
         for(int j = 0; j<(int)curves.size(); j++)
             splitCorridorByCurves(curves[j], curvesByCorridor);
-		cout<<"Creating arcs on corridors\n"; 
+	//	cout<<"Creating arcs on corridors\n"; 
         for(int j=0; j< (int)corridors.size(); j++)
             createArcsOnCorridors(corridors[j],arcs);
         connectCorridorsByCurves(curves,arcs);
@@ -152,7 +152,7 @@ void WarehouseToGraphConverter::generateGraph(){
     this->graph = Graph::convertArcsToGraph(arcs);
 	
 	//this->graph.print();
-	cout<<"Conversion finished:\nNumber of arcs: \t"<< this->graph.getArcs().size()<<endl;
+	//cout<<"Conversion finished:\nNumber of arcs: \t"<< this->graph.getArcs().size()<<endl;
 }
 
 /**

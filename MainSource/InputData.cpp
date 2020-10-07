@@ -45,20 +45,20 @@ InputData::InputData(string  dataFile){
     ifstream file;
     file.open(dataFile, ios::in);
     if(file.is_open()){
-        cout<<"Starting the input reading...\n";
+       // cout<<"Starting the input reading...\n";
         
         
-        cout<<"Reading warehouse data...\n";
+       // cout<<"Reading warehouse data...\n";
         warehouse.ReadWarehouseData(file);
         
-        cout<<"Reading products data..\n";
+     //   cout<<"Reading products data..\n";
         products = Product::readProductsData(file);
         
-        cout<<"Reading order data...\n";
+     //   cout<<"Reading order data...\n";
         orders = Order::readOrdersData(file);
         
         
-        cout<<"Reading allocation prohibitions...\n";
+     //   cout<<"Reading allocation prohibitions...\n";
         prohibitions = ProductAllocationProhibitions::readAllProhibitionsData(file);
 		isolatedFamilies = IsolatedFamily::readIsolatedFamilyData(file);
         

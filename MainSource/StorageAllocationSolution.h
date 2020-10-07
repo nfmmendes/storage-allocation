@@ -60,6 +60,7 @@ class StorageAllocationSolution : public AbstractSolution{
         void printSolution()const override;
         void printToFile(ofstream & out) const override;
 		StorageAllocationSolution & operator=(const StorageAllocationSolution &other); 
+		bool checkSolution();
 
 };
 

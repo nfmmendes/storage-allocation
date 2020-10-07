@@ -56,7 +56,7 @@ int main(int argc, char **argv){
 		//abc->execute(); 
     			
 		ProcessInputData processInput(&input);
-		cout<<"Converting warehouse to graph\n";
+		//cout<<"Converting warehouse to graph\n";
 		processInput.ExecuteProcessData();
 		
 		Graph graph = processInput.getWarehouseToGraphConverter()->getGraph();
@@ -66,7 +66,7 @@ int main(int argc, char **argv){
 		 
 		StorageAllocationSolution::setEvaluator(processInput.getDistanceMatrix(),vertexByCell, warehouse.getBlocks(), cons);
 		
-		cout<<"Initializing metaheuristic \n";
+	//	cout<<"Initializing metaheuristic \n";
 	//	StorageConstructiveHeuristic constr(input.getProducts(),warehouse,*processInput.getDistanceMatrix(),vertexByCell, input.getOrders(),cons); 
 	//	StorageAllocationSolution constructiveSolution = constr.Execute();
 		
@@ -77,6 +77,8 @@ int main(int argc, char **argv){
 		auto solution = ils.Execute();
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 		std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milli_sec]" << std::endl;
+		bool resultCheck = ((StorageAllocationSolution *) solution)->checkSolution();
+		cout<<"Solution is :"<<(resultCheck? "consistent\n ": "inconsistent \n");
 		((StorageAllocationSolution *) solution)->printSolution(); 
     }else
         cerr<<"Too few  arguments. Inform the index file name.";

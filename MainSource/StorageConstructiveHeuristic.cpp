@@ -375,7 +375,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 		}
 	}
 	penalty = nonExistentPositionPenalty + isolatedFamilyPenalty; 
-	cout<<nonExistentPositionPenalty<<" "<<isolatedFamilyPenalty<<" "<<penalty<<" "<<totalDistance<<endl;
+	//cout<<nonExistentPositionPenalty<<" "<<isolatedFamilyPenalty<<" "<<penalty<<" "<<totalDistance<<endl;
 	((StorageAllocationSolution *)solution)->setTotalPenalty(penalty);
 	solution->setSolutionValue(totalDistance+penalty);
 	((StorageAllocationSolution*)solution)->setRoutesByProduct(routesByProduct);
@@ -452,7 +452,7 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 	sort(vertexes.begin(), vertexes.end(), [this](const Vertex &a,const Vertex &b){ 
 		return this->distanceMatrix->getDistance(this->closestStartPoint[a], a) <= this->distanceMatrix->getDistance(this->closestStartPoint[b], b); 
 	});
-
+	 
 	string bestFamily; 
 	int maxFrequence=0; 
 	map<Vertex,Product> bestAllocation;  
@@ -466,13 +466,13 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 			bestAllocation = currentAllocation; 
 		}
 	} 
-
+	
 	if(maxFrequence > 0){
-
+	
 		set<Product> allocatedProducts;
 		for(auto &[vertex, prod] : bestAllocation)
 			allocatedProducts.insert(prod);
- 
+	
 		queue<Product> remainingOrderedProducts; 
 		//cout<<"Before "<<orderedProductsByFamily[bestFamily].size()<<endl;
 		while(orderedProductsByFamily[bestFamily].size() > 0){
@@ -482,14 +482,14 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 				remainingOrderedProducts.push(prod); 
 			orderedProductsByFamily[bestFamily].pop();
 		}
-
+	
 		//cout<<"After "<<remainingOrderedProducts.size()<<" "<<allocatedProducts.size()<<endl;
 		orderedProductsByFamily[bestFamily] = remainingOrderedProducts; 
 		for(auto &[vertex, prod] : bestAllocation)
 			allocations[vertex] = prod; 	 
-
+	
 	}
- 
+	
 	return false;
 }
 
@@ -503,20 +503,21 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 
 	//First of all it is needed to know which cells were used (or not) as well as the shelves and blocks, in this way we are 
 	//able to evaluate available positions for the isolated families 
+	
 	set<Product> notAllocatedProducts = getNotUsedProducts(allocations); 
 	auto [notUsedCells, notUsedShelves, notUsedBlocks] = getNonUsedStructures(allocations);
-
+	
 	// After it is needed to know which products were not allocated in each family and put them in frequence order 
 	// It is also useful to know the total frequence of each family, then we can try allocated those with a higher 
     // number of requests first
 	auto [orderedProductsByFamily, frequenceByFamily] = getProductAndFrequenceByFamily(notAllocatedProducts); 
 	vector< pair<int, string> > familiesOrderedByFrequence = orderFamilyByFrequence(frequenceByFamily); 
 	map<string, vector<string> > familiesByIsolationLevel;
-
+	
 	//Allocate families with "BLOCK" isolation level
 	for(auto [code, family] : familyIsolationsByFamilyCode)
 		familiesByIsolationLevel[family.getLevel()].push_back(code); 
-
+	
 	for(auto block: notUsedBlocks){
  
 		map<long int, Shelf> shelves = block.getShelvesById(); 
@@ -541,28 +542,30 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 		}
 
 	}
-
+	
 	//Allocate families with "SHELF" isolation level
 	for(auto shelf : notUsedShelves){
-
+	
 		vector<Cell> shelfCells =  shelf.getCells();
 		vector<Vertex> vertexes;
-
+	
 		for(unsigned i=0;i<shelfCells.size();i++)
 			for(int j=0;j<shelfCells[i].getLevels();j++)
 				vertexes.push_back(vertexByCell[make_pair(shelfCells[i],j+1)]); 
 		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel[SHELF_LEVEL], orderedProductsByFamily);
-
+	
 		if(allocated){
 			vector<Cell> shelfCells = shelf.getCells(); 
 			//Remove all cells of this shelf from the list of not used cells
+	
 			for(unsigned int i=0;i<shelfCells.size(); i++)
 				if(notUsedCells.find(shelfCells[i]) != notUsedCells.end())
 					notUsedCells.erase(shelfCells[i]);
 			notUsedShelves.erase(shelf);
+	
 		}
 	}
-
+	
 	for(auto cell : notUsedCells){
 		vector<Vertex> vertexes;
 		for(int j=0;j<cell.getLevels();j++)
@@ -572,6 +575,7 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 		if(allocated > 0)
 			notUsedCells.erase(cell);
 	}
+	
 }
 
 /***
@@ -605,6 +609,7 @@ void StorageConstructiveHeuristic::setBestSolution(map<Vertex, Product> &allocat
  * Overloaded function that runs the algorithm 
  **/
 StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
+	
 	map<string, vector<Vertex> > vertexByType = getVertexesByType(); 	///< Store the vertex classification
 	map<Vertex,Product> allocation; 									///< Store the product allocation on the vertexes
 	
@@ -619,12 +624,13 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	vector<Vertex> storePoints = getStorageVertexes(vertexByType);
 	vector<Vertex> vertexesOrderedByDistance = getStorageVertexesOrderedByDistance(); 
 	fillFrequenceByProduct();
-
+	
 	unsigned int numPositions = vertexesOrderedByDistance.size(); 
 	usedVertex.resize(numPositions, false); 
 	//cout<<"NUM PRODUCTS \n"<<productsSortedByFrequence.size()<<endl;
 	for(unsigned int i=0;i<productsSortedByFrequence.size();i++){
 		auto & item  = productsSortedByFrequence[i]; 
+	
 	//	cout<<"Product : "<<productsSortedByFrequence[i].first.getName()<<" Frequence: "<<productsSortedByFrequence[i].second<<endl;
 		if(!hasConstraints(item.first)){				// All the products that have not a allocation constraint are inserted in 
 														// the first available cell
@@ -662,14 +668,16 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 				allocation[vertexesOrderedByDistance[tryInsertIndex]] = item.first; 
 			}
 		}
+	
 		countTries = 0;
 	} 
 	
-	cout<<"Allocated:\t" <<allocation.size()<<endl;
+	//cout<<"Allocated:\t" <<allocation.size()<<endl;
 	allocateStronglyIsolatedFamilies(allocation);
-	cout<<"Allocated:\t" <<allocation.size()<<endl;
+	//cout<<"Allocated:\t" <<allocation.size()<<endl;
 	
 	setBestSolution(allocation); 
+	
 	return (StorageAllocationSolution *)bestSolution; 
 }
 

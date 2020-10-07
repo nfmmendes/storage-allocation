@@ -57,8 +57,11 @@ pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> &points, ma
 
 	do {
 		double sum = 0.0;
-		for(unsigned int i=1;sum > bestCost && i<orderSize ; i++)
+		for(unsigned int i=1;sum <= bestCost && i<orderSize ; i++){
+			//double disss = distanceMatrix.getDistance(currentOrder[i-1], currentOrder[i]); 
+			//cout<<currentOrder[i-1].getLabel()<<" "<<currentOrder[i].getLabel()<<" "<<disss<<endl;
 			sum += distanceMatrix.getDistance(currentOrder[i-1], currentOrder[i]); 
+		}
 		
 		sum += distanceMatrix.getDistance(bestStart[currentOrder[0] ] , currentOrder[0] );
 		sum += distanceMatrix.getDistance(currentOrder[orderSize-1] , bestEnd[ currentOrder[orderSize-1] ] );
@@ -67,6 +70,7 @@ pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> &points, ma
 			bestCost = sum; 
 			solution= currentOrder; 
 		}
+		//cout<<"Sum :" << sum<<" \n ----------------------------- \n";
 	} while ( std::next_permutation(currentOrder.begin(),currentOrder.end()) );
 	
 	return make_pair(bestCost, solution); 

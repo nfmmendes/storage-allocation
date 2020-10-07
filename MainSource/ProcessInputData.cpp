@@ -40,7 +40,7 @@ ProcessInputData::ProcessInputData(ProcessInputData & other){
  *
  */
 void ProcessInputData::CreateGraph(){
-	cout<<"Starting conversion of warehouse to graph\n";
+	//cout<<"Starting conversion of warehouse to graph\n";
 	warehouseToGraphConverter.generateGraph();
 }
 
@@ -62,7 +62,7 @@ void ProcessInputData::CalculateMatrixDistances(){
 				desirableVertexes.push_back((Vertex)(*vt)); 
 		}
 	}
-	cout<<"DesirableVertexes : "<<desirableVertexes.size()<<endl;
+//	cout<<"DesirableVertexes : "<<desirableVertexes.size()<<endl;
 	if(desirableVertexes.size()>0){
 		DijkstraDistanceMatrixCalculator<Graph, Vertex > dijkstra; 
 		this->distanceMatrix = new DistanceMatrix<Vertex>(dijkstra.calculateMatrixDistance(graph, desirableVertexes)); 
@@ -85,7 +85,7 @@ void ProcessInputData::CreateOptimizationAuxiliarStructures(){
 void ProcessInputData::ExecuteProcessData(){
 	this->CreateGraph(); 
 
-	cout<<"Calculating distances \n"; 
+	//cout<<"Calculating distances \n"; 
 	this->CalculateMatrixDistances();
 
 	//Keep these lines here, they are useful to debug the code

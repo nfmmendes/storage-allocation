@@ -82,7 +82,7 @@ void ABCAnalysis::execute(){
     set<Product> products; 
     double totalVolume = 0;
     int totalFrequence = 0; 
-    cout<<"Number of orders: "<<this->orders.size()<<endl;
+   // cout<<"Number of orders: "<<this->orders.size()<<endl;
     if(thresholds.size() == 0)
         throw "The thresholds must be setted before start this method";
     if(thresholds[0] <0 )
@@ -139,7 +139,7 @@ void ABCAnalysis::execute(){
     }
 
 	for(unsigned int i=0;i<numClasses;i++){
-		cout<<"Volume: "<<volumeThresholds[i]<<" Frequence: "<<frequenceThresholds[i]<<endl;
+	//	cout<<"Volume: "<<volumeThresholds[i]<<" Frequence: "<<frequenceThresholds[i]<<endl;
 	}
 
     //Assign the classes. 

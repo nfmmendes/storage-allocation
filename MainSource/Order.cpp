@@ -91,7 +91,7 @@ vector<Order> Order::readOrdersData(ifstream &file){
     Product product;
     string date, time;
     file>>numOrders;
-    cout<<numOrders<<endl;
+    //cout<<numOrders<<endl;
 	
     InputData input;
     vector<pair<Product, double> > items;
