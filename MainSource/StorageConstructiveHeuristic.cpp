@@ -359,9 +359,9 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			}
 			
 			pair<double, vector<Vertex> > route; 
-			if(storagePoints.size() < 6){ //This is just a limit to use the brute force TSP algorithm
+			if(storagePoints.size() < OptimizationParameters::ALL_PERMUTATIONS_TSP_THRESHOLD){ //This is just a limit to use the brute force TSP algorithm
 				route = tsp.bruteForceTSP(storagePoints, closestStartPoint, closestEndPoint); 
-			}else if(storagePoints.size() < 12){ //This is a limit to use 
+			}else if(storagePoints.size() < OptimizationParameters::INSERTION_TSP_THRESHOLD){ //This is a limit to use 
 				route = tsp.quickLocalSearchTSP(storagePoints, closestStartPoint, closestEndPoint);
 			}else{ //All the other cases will use a closest neighbor inserction procedure 
 				route = tsp.closestNeighborTSP(storagePoints, closestStartPoint, closestEndPoint);
