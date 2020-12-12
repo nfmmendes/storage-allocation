@@ -94,7 +94,7 @@ bool InsideShelfSwap::isValidSwap(Product &first, Product &second, MapAllocation
 	auto stronglyIsolatedFamilies = this->constraints->getStronglyIsolatedFamilyCodes(); 
 	if(stronglyIsolatedFamilies.find(firstFamily) == stronglyIsolatedFamilies.end() && 
 	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
-			return false; 
+			return true; 
 
 	/**
 	 * 
@@ -215,7 +215,7 @@ bool InsideBlockSwap::isValidSwap(Product &first, Product &second, MapAllocation
 	auto stronglyIsolatedFamilies = this->constraints->getStronglyIsolatedFamilyCodes(); 
 	if(stronglyIsolatedFamilies.find(firstFamily) == stronglyIsolatedFamilies.end() && 
 	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
-			return false; 
+			return true; 
 
 	/**
 	 * 
@@ -355,7 +355,7 @@ bool MostFrequentSwap::isValidSwap(Product &first, Product &second, MapAllocatio
 	auto stronglyIsolatedFamilies = this->constraints->getStronglyIsolatedFamilyCodes(); 
 	if(stronglyIsolatedFamilies.find(firstFamily) == stronglyIsolatedFamilies.end() && 
 	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
-			return false; 
+			return true; 
 
 	/**
 	 * 
@@ -444,7 +444,7 @@ bool StorageAllocationPertubation::isValidSwap(Product &first, Product &second, 
 	auto stronglyIsolatedFamilies = this->constraints->getStronglyIsolatedFamilyCodes(); 
 	if(stronglyIsolatedFamilies.find(firstFamily) == stronglyIsolatedFamilies.end() && 
 	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
-			return false; 
+			return true; 
 
 	/**
 	 * 
@@ -776,7 +776,7 @@ AbstractSolution * StorageILS::Execute(){
 	StorageAllocationSolution * currentSolution = new StorageAllocationSolution(bestGlobalSolution); 
 
 	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue(); 
-	cout<<"Greed algorithm value : "<<bestGlobalSolutionValue<<endl;
+	cout<<"Greed value : "<<bestGlobalSolutionValue<< " penalty: "<<((StorageAllocationSolution *) initialSolution)->getTotalPenalty()<<endl;
 	NeighborhoodStructure * perturbation = new StorageAllocationPertubation(&constraints); 
 	//((StorageAllocationPertubation *) perturbation)->setOptimizationConstraints(&this->constraints);
 

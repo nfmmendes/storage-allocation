@@ -240,53 +240,56 @@ double StorageConstructiveHeuristic::evaluatePenaltiesByNonIsolation(MapAllocati
 		familiesByBlock[shelvesById[position.first.getIdShelf()].getBlockName()].push_back(product.getFamily());
 	}
 	
-	for(auto &[key, value] : familiesByCell){
-		map<string, int> countByFamily; 
-		int countIsolated = 0; 
-
-		if(value.size() == 1) continue; 
-
-		for(unsigned int i=0;i<value.size();i++){
-			countByFamily.find(value[i]) == countByFamily.end() ? (countByFamily[value[i]] =0) : countByFamily[value[i]]++; 
-			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == CELL_LEVEL)
-				countIsolated++;
-		}
-
-		totalPenalty += OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY*countIsolated; 	
-	} 
+	for(auto &[key, value] : familiesByCell)
+		totalPenalty += evaluatePenaltyOnLevel(value, CELL_LEVEL); 
 
 	for(auto &[key, value] : familiesByShelf){
-		map<string, int> countByFamily; 
-		int countIsolated = 0; 
-
-		if(value.size() == 1) continue; 
-
-		for(unsigned int i=0;i<value.size();i++){
-			countByFamily.find(value[i]) == countByFamily.end() ? (countByFamily[value[i]] =0) : countByFamily[value[i]]++; 
-			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == SHELF_LEVEL )
-				countIsolated++;
-		}
-
-		totalPenalty += OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY*countIsolated; 	
+		totalPenalty += evaluatePenaltyOnLevel(value, SHELF_LEVEL);	
 	} 
 
-	for(auto &[key, value] : familiesByBlock){
-		map<string, int> countByFamily; 
-		int countIsolated = 0; 
-
-		if(value.size() == 1) continue; 
-
-		for(unsigned int i=0;i<value.size();i++){
-			countByFamily.find(value[i]) == countByFamily.end() ? (countByFamily[value[i]] =0) : countByFamily[value[i]]++; 
-			if(isolatedFamilies.find(value[i]) != isolatedFamilies.end() && familyIsolationsByFamilyCode[value[i]].getLevel() == BLOCK_LEVEL)
-				countIsolated++;
-		}
-		
-		totalPenalty += OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY*countIsolated; 	
-	} 
+	for(auto &[key, value] : familiesByBlock)
+		totalPenalty += evaluatePenaltyOnLevel(value, BLOCK_LEVEL);	 	
 	
 	return totalPenalty;
 } 
+
+/**
+ * 
+ * */
+double StorageConstructiveHeuristic::evaluatePenaltyOnLevel(vector<string> familyAllocated, string isolation){
+	
+	double totalPenalty = 0; 
+	map<string, int> countByFamily; 	
+	int isolatedAccum = 0;
+	int notIsolatedAccum = 0; 
+	int higherIsolatedQuantity = 0;
+	map<string, int> allocationsByFamily; 
+
+	for(unsigned int i=0;i<familyAllocated.size();i++){
+		if(allocationsByFamily.find(familyAllocated[i]) == allocationsByFamily.end())
+		   allocationsByFamily[familyAllocated[i]] =0;
+		allocationsByFamily[familyAllocated[i]]++; 
+	}
+
+	if(allocationsByFamily.size() == 1)
+		return 0; 
+
+	for(auto [familyCode, quantity] : allocationsByFamily){
+		if(isolatedFamilies.find(familyCode) != isolatedFamilies.end() && familyIsolationsByFamilyCode[familyCode].getLevel() == isolation){
+			isolatedAccum+= quantity;
+			higherIsolatedQuantity = (higherIsolatedQuantity < quantity) ? quantity : higherIsolatedQuantity;
+		}else
+			notIsolatedAccum += quantity;
+	}
+
+	int numAllocations = isolatedAccum + notIsolatedAccum; 
+	int remainingIsolated = (isolatedAccum - higherIsolatedQuantity);
+	totalPenalty = isolatedAccum > notIsolatedAccum ? (pow(notIsolatedAccum,2) + remainingIsolated)*1.0/numAllocations: isolatedAccum*1.0/numAllocations;
+	totalPenalty *= OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+
+	return totalPenalty; 
+}
+
 
 /**
  *

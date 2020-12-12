@@ -459,10 +459,7 @@ void WarehouseToGraphConverter::createArcsCellToCorridor(Vertex vertexCell, Vert
 	
 	Arc leaving("arc("+ vertexCell.getLabel() + ","+ vertexCorridor.getLabel() +")", value, vertexCell, vertexCorridor);
 	Arc picking("arc("+ vertexCorridor.getLabel() + ","+ vertexCell.getLabel() +")", value, vertexCorridor, vertexCell);
-	//cout<<"Leaving \n";
-	//cout<<leaving<<endl;
-	//cout<<"Picking \n"; 
-	//cout<<picking<<endl;
+	
 	arcs.insert(leaving);
 	arcs.insert(picking);
 }

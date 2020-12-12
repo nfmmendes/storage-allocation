@@ -75,6 +75,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		double evaluatePenaltiesByAllocationProhibition(MapAllocation & allocation); 
 		void fillFrequenceByProduct();
 		void setBestSolution(map<Vertex, Product> &cellByVertex);
+		double evaluatePenaltyOnLevel(vector<string> familyAllocated, string isolation);
 
     public: 
         StorageAllocationSolution * Execute();

@@ -76,6 +76,7 @@ int main(int argc, char **argv){
 		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 		auto solution = ils.Execute();
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		std::cout<<"Final value : "<<((StorageAllocationSolution *) solution)->getSolutionValue()<< " penalty: "<<((StorageAllocationSolution *) solution)->getTotalPenalty()<<endl;
 		std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milli_sec]" << std::endl;
 		bool resultCheck = ((StorageAllocationSolution *) solution)->checkSolution();
 		cout<<"Solution is :"<<(resultCheck? "consistent\n ": "inconsistent \n");

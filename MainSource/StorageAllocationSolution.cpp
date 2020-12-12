@@ -277,7 +277,7 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	double delta = 0.0; 
 
 	double penaltyDelta = StorageAllocationSolution::Evaluator->evaluatePenaltyDelta(getProductAllocations(), firstProduct, secondProduct);
-	
+	cout<<firstProduct.getFamily()<<" "<<secondProduct.getFamily()<<endl; 
 
 	totalPenalty  += penaltyDelta; 
 
@@ -300,8 +300,8 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	//std::cout << "Penalty test runtime = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milliseconds_s]" << std::endl;
 	//cout<<" ================ Total delta : "<< delta<< " ======================== " << endl; 
 	//cout<<"_______________________________________________________________"<<endl;
-//	cout<<this->totalPenalty<<" "<<this->solutionValue<<" "<<delta<<" "<<penaltyDelta<<endl;
-//	system("pause");
+	cout<<this->totalPenalty<<" "<<this->solutionValue<<" "<<delta<<" "<<penaltyDelta<<endl;
+	//system("pause");
 	this->solutionValue += delta + penaltyDelta; 
 }
 
@@ -419,13 +419,14 @@ bool StorageAllocationSolution::checkSolution(){
 	//cout<<"Number of not allocated products: "<<notAllocatedProducts.size()<<endl; 
 	//cout<<"Total penalty: "<<totalPenalty<<endl;
 
-	set<string> positions; 
+	set<pair<string,int>> positions; 
 	set<long> prods;
 	for(auto [key, value]: productsAllocation){
-	//	cout<<key.getID()<<" "<<value.first.getCode()<<" "<<value.second<<endl; 
-		positions.insert(value.first.getCode()); 
+		//cout<<key.getID()<<" "<<value.first.getCode()<<" "<<value.second<<endl; 
+		positions.insert(make_pair(value.first.getCode(), value.second)); 
 		prods.insert(key.getID());
 	}
+	//cout<<prods.size()<<" "<<positions.size()<<endl; 
 	if(prods.size()!= positions.size())
 		return false; 
 	return true; 

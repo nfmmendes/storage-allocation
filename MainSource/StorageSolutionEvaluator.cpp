@@ -262,7 +262,6 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocation
 	//Check isolation
 	if( !(isFirstIsolated || isSecondIsolated)  || first.getFamily() == second.getFamily() )
 		return deltaProhibitions;
-
 	
 	//for_each(weaklyIsolatedFamilies.begin(), isolatedFamilies.end(), [&isolatedFamilyCodes](IsolatedFamily &iso){ isolatedFamilyCodes.insert(iso.getCode()); });	
 	bool firstIsStronglyIsolated = stronglyIsolatedFamilies.find(first.getFamily()) != stronglyIsolatedFamilies.end(); 
@@ -299,7 +298,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocation
 			}
 			
 		}
-
+		
 		for(auto & [key, value] : allocations){
 			allocationsByCell[value.first.getCode()].push_back(key);
 			allocationsByShelf[value.first.getIdShelf()].push_back(key);
@@ -308,22 +307,23 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocation
 		
 		if(firstCell.getLevels() > 1 || secondCell.getLevels() > 1){
 			auto products = allocationsByCell[firstCell.getCode()];
-			delta += fuF(products, first, second, CELL_LEVEL); 
+			delta += evaluatePenaltyDeltaByLevel(products, first, second, CELL_LEVEL); 
 			products = allocationsByCell[secondCell.getCode()]; 		
-			delta += fuF(products, second, first , CELL_LEVEL); 
+			delta += evaluatePenaltyDeltaByLevel(products, second, first , CELL_LEVEL); 
 		}
 		
 		if(firstCell.getIdShelf() != secondCell.getIdShelf()){
 			auto products = allocationsByShelf[firstCell.getIdShelf()];
-			delta += fuF(products, first, second, SHELF_LEVEL); 
+			delta += evaluatePenaltyDeltaByLevel(products, first, second, SHELF_LEVEL); 
+			
 			products = allocationsByShelf[secondCell.getIdShelf()];
-			delta += fuF(products, second, first, SHELF_LEVEL);
+			delta += evaluatePenaltyDeltaByLevel(products, second, first, SHELF_LEVEL);
 			
 			if(firstBlockName != secondBlockName){
 				products = allocationsByBlock[firstBlockName];
-				delta += fuF(products, first, second, BLOCK_LEVEL); 
+				delta += evaluatePenaltyDeltaByLevel(products, first, second, BLOCK_LEVEL); 
 				products = allocationsByBlock[secondBlockName];
-				delta += fuF(products, second, first, BLOCK_LEVEL);
+				delta += evaluatePenaltyDeltaByLevel(products, second, first, BLOCK_LEVEL);
 			}
 
 		}
@@ -335,7 +335,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocation
 /**
  * 
  * */
-double StorageSolutionEvaluator::fuF(vector<Product> &allProducts,const Product & first, const Product & second, string isolationLevel){
+double StorageSolutionEvaluator::evaluatePenaltyDeltaByLevel(vector<Product> &allProducts,const Product & first, const Product & second, string isolationLevel){
 	double delta = 0; 
 	double oldValue = 0; 
 	double newValue = 0; 
@@ -347,10 +347,7 @@ double StorageSolutionEvaluator::fuF(vector<Product> &allProducts,const Product 
 		allocationsByFamily[prod.getFamily()]++;
 	}
 
-	if(allocationsByFamily.size() > 1)
-		for(auto &[familyCode, quantity]: allocationsByFamily)
-			if(isolationDataByFamilyCode[familyCode].first == isolationLevel && weaklyIsolatedFamilies.find(familyCode) != weaklyIsolatedFamilies.end() )
-				oldValue += quantity*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+	oldValue = evaluatePenaltyOnLevel(allocationsByFamily,isolationLevel); 
 
 	//update family count 
 	allocationsByFamily[first.getFamily()]--; 
@@ -361,13 +358,35 @@ double StorageSolutionEvaluator::fuF(vector<Product> &allProducts,const Product 
 	if(allocationsByFamily[first.getFamily()] == 0)
 		allocationsByFamily.erase(allocationsByFamily.find(first.getFamily())); 
 
-	if(allocationsByFamily.size() > 1)
-		for(auto &[familyCode, quantity]: allocationsByFamily)
-			if(isolationDataByFamilyCode[familyCode].first == isolationLevel && weaklyIsolatedFamilies.find(familyCode) != weaklyIsolatedFamilies.end() )
-				newValue += quantity*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
-
+	newValue = evaluatePenaltyOnLevel(allocationsByFamily,isolationLevel); 
+	
 	delta = newValue - oldValue; 
 	return delta;
+}
+
+double StorageSolutionEvaluator::evaluatePenaltyOnLevel(map<string, int> & allocationsByFamilyCode, string isolationLevel){
+	double total = 0; 
+	if(allocationsByFamilyCode.size() > 1){
+		int isolatedAccum = 0;
+		int notIsolatedAccum = 0;
+		int higherIsolatedQuantity = 0;
+		for(auto &[familyCode, quantity]: allocationsByFamilyCode){
+			if(isolationDataByFamilyCode[familyCode].first == isolationLevel && weaklyIsolatedFamilies.find(familyCode) != weaklyIsolatedFamilies.end() ){
+				isolatedAccum += quantity;//*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+				higherIsolatedQuantity = (higherIsolatedQuantity < quantity) ? quantity : higherIsolatedQuantity;
+			}else
+				notIsolatedAccum += quantity;//*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+		}
+
+		if(isolatedAccum > 0){
+			int numAllocations = isolatedAccum + notIsolatedAccum; 
+			int remainingIsolated = (isolatedAccum - higherIsolatedQuantity);
+		 	total = isolatedAccum > notIsolatedAccum ? (pow(notIsolatedAccum,2) + remainingIsolated)*1.0/numAllocations: isolatedAccum*1.0/numAllocations;
+			total *= OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+		}
+	}
+
+	return total; 
 }
 
 
@@ -391,7 +410,6 @@ double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(vector<Vertex>& ver
 	return min(dist1, dist2); 
 	
 }
-
 
 /**
  * 
