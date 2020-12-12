@@ -277,7 +277,7 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	double delta = 0.0; 
 
 	double penaltyDelta = StorageAllocationSolution::Evaluator->evaluatePenaltyDelta(getProductAllocations(), firstProduct, secondProduct);
-	cout<<firstProduct.getFamily()<<" "<<secondProduct.getFamily()<<endl; 
+	//cout<<firstProduct.getFamily()<<" "<<secondProduct.getFamily()<<endl; 
 
 	totalPenalty  += penaltyDelta; 
 
@@ -300,7 +300,7 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	//std::cout << "Penalty test runtime = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milliseconds_s]" << std::endl;
 	//cout<<" ================ Total delta : "<< delta<< " ======================== " << endl; 
 	//cout<<"_______________________________________________________________"<<endl;
-	cout<<this->totalPenalty<<" "<<this->solutionValue<<" "<<delta<<" "<<penaltyDelta<<endl;
+	//cout<<this->totalPenalty<<" "<<this->solutionValue<<" "<<delta<<" "<<penaltyDelta<<endl;
 	//system("pause");
 	this->solutionValue += delta + penaltyDelta; 
 }
