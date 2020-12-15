@@ -3,3 +3,14 @@
 /MainSource/*.exe
 /MainSource/results
 /MainSource/.vscode
+/MainSource/Instances/results
+/MainSource/Instances/*.exe
+/MainSource/W3_(P400_O5000)_1.txt
+/MainSource/dist.txt
+/MainSource/graph.txt
+/MainSource/merda.txt
+/MainSource/merda1.txt
+/MainSource/w1_(P100_O1000)_1.txt
+/MainSource/w1_(P100_O500)_1_IS1_1.txt
+/MainSource/Instances/Isolation1.rar
+/MainSource/Instances/run.bat
