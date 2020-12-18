@@ -13,7 +13,7 @@ class OptimizationParameters{
 		static const int MAX_ITERATIONS_WITHOUT_IMPROVEMENT=10;
 		static const int ALL_PERMUTATIONS_TSP_THRESHOLD=7;
 		static const int INSERTION_TSP_THRESHOLD=11;
-		static const int NON_ALLOCATED_PRODUCT_PENALTY = 20000;
+		static const int NON_ALLOCATED_PRODUCT_PENALTY = 800;
 		static const int WEAK_ALLOCATION_PROHIBITION_PENALTY = 8000;
 		static const int WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY = 50000;
 };

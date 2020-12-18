@@ -277,7 +277,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocation
 		map<string, vector<Product> > allocationsByBlock; 
 		string firstBlockName = shelfById[firstCell.getIdShelf()].getBlockName();
 		string secondBlockName = shelfById[secondCell.getIdShelf()].getBlockName();
-	//	string firstIsolationLevel = 
+	
 
 		if(firstCell.getIdShelf() == secondCell.getIdShelf()){
 			for(auto & [key, value] : allocations){ //Same shelf. Does not need to load shelf or block allocations
@@ -299,12 +299,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocation
 			
 		}
 		
-		for(auto & [key, value] : allocations){
-			allocationsByCell[value.first.getCode()].push_back(key);
-			allocationsByShelf[value.first.getIdShelf()].push_back(key);
-			allocationsByBlock[shelfById[value.first.getIdShelf()].getBlockName()].push_back(key);
-		}
-		
+
 		if(firstCell.getLevels() > 1 || secondCell.getLevels() > 1){
 			auto products = allocationsByCell[firstCell.getCode()];
 			delta += evaluatePenaltyDeltaByLevel(products, first, second, CELL_LEVEL); 
@@ -328,7 +323,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation & allocation
 
 		}
 	}	
-
+	
 	return delta + deltaProhibitions; 
 }
 
@@ -346,15 +341,15 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByLevel(vector<Product> &al
 			allocationsByFamily[prod.getFamily()] = 0; 
 		allocationsByFamily[prod.getFamily()]++;
 	}
-
+	
 	oldValue = evaluatePenaltyOnLevel(allocationsByFamily,isolationLevel); 
-
+	
 	//update family count 
 	allocationsByFamily[first.getFamily()]--; 
 	if(allocationsByFamily.find(second.getFamily()) == allocationsByFamily.end())
 		allocationsByFamily[second.getFamily()] = 0;
 	allocationsByFamily[second.getFamily()]++; 
-
+	
 	if(allocationsByFamily[first.getFamily()] == 0)
 		allocationsByFamily.erase(allocationsByFamily.find(first.getFamily())); 
 
@@ -377,12 +372,13 @@ double StorageSolutionEvaluator::evaluatePenaltyOnLevel(map<string, int> & alloc
 			}else
 				notIsolatedAccum += quantity;//*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
 		}
-
+		
 		if(isolatedAccum > 0){
 			int numAllocations = isolatedAccum + notIsolatedAccum; 
 			int remainingIsolated = (isolatedAccum - higherIsolatedQuantity);
-		 	total = isolatedAccum > notIsolatedAccum ? (pow(notIsolatedAccum,2) + remainingIsolated)*1.0/numAllocations: isolatedAccum*1.0/numAllocations;
-			total *= OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+			
+		 	total = isolatedAccum > notIsolatedAccum ? (pow(notIsolatedAccum,2) + remainingIsolated)*1.0/numAllocations: pow(isolatedAccum,2)*1.0/numAllocations;
+			total *= 1.0*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
 		}
 	}
 

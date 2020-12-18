@@ -277,10 +277,8 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	double delta = 0.0; 
 
 	double penaltyDelta = StorageAllocationSolution::Evaluator->evaluatePenaltyDelta(getProductAllocations(), firstProduct, secondProduct);
-	//cout<<firstProduct.getFamily()<<" "<<secondProduct.getFamily()<<endl; 
-
 	totalPenalty  += penaltyDelta; 
-
+	
 	productsAllocation[firstProduct] = second; 
 	productsAllocation[secondProduct] = first;
 	
@@ -399,6 +397,7 @@ StorageAllocationSolution & StorageAllocationSolution::operator=(const StorageAl
 	this->runtime = other.runtime;
 	this->minDelta = other.minDelta;
 	isMaximization = other.isMaximization; 
+	this->totalPenalty = other.totalPenalty;
 	
 	this->notAllocatedProducts.clear();
 	this->productsAllocation.clear(); 

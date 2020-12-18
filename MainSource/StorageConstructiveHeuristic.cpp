@@ -284,7 +284,7 @@ double StorageConstructiveHeuristic::evaluatePenaltyOnLevel(vector<string> famil
 
 	int numAllocations = isolatedAccum + notIsolatedAccum; 
 	int remainingIsolated = (isolatedAccum - higherIsolatedQuantity);
-	totalPenalty = isolatedAccum > notIsolatedAccum ? (pow(notIsolatedAccum,2) + remainingIsolated)*1.0/numAllocations: isolatedAccum*1.0/numAllocations;
+	totalPenalty = isolatedAccum > notIsolatedAccum ? (pow(notIsolatedAccum,2) + remainingIsolated)*1.0/numAllocations: pow(isolatedAccum,2)*1.0/numAllocations;
 	totalPenalty *= OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
 
 	return totalPenalty; 
@@ -355,7 +355,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 				if(vertexByCell.find(position) != vertexByCell.end())
 					storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
 				else 
-					nonExistentPositionPenalty += 5000; 
+					nonExistentPositionPenalty += OptimizationParameters::NON_ALLOCATED_PRODUCT_PENALTY; 
 			}
 			
 			pair<double, vector<Vertex> > route; 
