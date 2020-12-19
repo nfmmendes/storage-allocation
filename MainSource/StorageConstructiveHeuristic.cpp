@@ -351,7 +351,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			storagePoints.clear();
 			for(unsigned int j = 0; j<items.size();j++){
 				auto position = productAllocation[items[j].first ];
-			
+				
 				if(vertexByCell.find(position) != vertexByCell.end())
 					storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
 				else 

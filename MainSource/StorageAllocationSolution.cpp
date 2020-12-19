@@ -182,6 +182,8 @@ void StorageAllocationSolution::printSolution() const{
 
 	ofstream file("results/solutions_"+to_string(end_time) + ".txt");
 	printToFile(file); 
+	ofstream fileToInterface("results/solutions.txt");
+	printToFile(fileToInterface); 
 }
 
 void StorageAllocationSolution::Evaluate(bool evaluateWithTSP){
@@ -391,13 +393,14 @@ void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRou
 /**
  *	Overload of the operator = 
  */
+
 StorageAllocationSolution & StorageAllocationSolution::operator=(const StorageAllocationSolution &other){
 	
 	this->solutionValue = other.solutionValue;
 	this->runtime = other.runtime;
 	this->minDelta = other.minDelta;
 	isMaximization = other.isMaximization; 
-	this->totalPenalty = other.totalPenalty;
+	//this->totalPenalty = other.totalPenalty;
 	
 	this->notAllocatedProducts.clear();
 	this->productsAllocation.clear(); 
