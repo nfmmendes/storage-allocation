@@ -206,15 +206,14 @@ bool StorageConstructiveHeuristic::hasConstraints(Product &prod){
 /**
  *
  **/
-double StorageConstructiveHeuristic::getBetterRouteWithTwoPoints(vector<pair<Product, double> > &items, 
-																 MapAllocation &productAllocation){
+double StorageConstructiveHeuristic::getBetterRouteWithTwoPoints(vector<Product> &items, MapAllocation &productAllocation){
 																	 
-	Vertex location = vertexByCell[ productAllocation[items[0].first ] ]; 
+	Vertex location = vertexByCell[ productAllocation[items[0] ] ]; 
 	Vertex begin = closestStartPoint[ location  ];
 	Vertex end =   closestEndPoint[   location  ] ; 
 	double dist1 = this->distanceMatrix->getDistance(begin, location) + this->distanceMatrix->getDistance(location, end); 
 	
-	location = vertexByCell[ productAllocation[items[1].first ] ]; 
+	location = vertexByCell[ productAllocation[items[1] ] ]; 
 	begin = closestStartPoint[ location  ];
 	end =   closestEndPoint[   location  ] ; 
 	double dist2 = this->distanceMatrix->getDistance(begin, location) + this->distanceMatrix->getDistance(location, end); 
@@ -339,25 +338,28 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 	for(unsigned int i=0;i< orders.size();i++){
 		items = orders[i].getOrderItems(); 
 
-		if(items.size() == 1) {
-			Vertex location = vertexByCell[ productAllocation[items[0].first ] ]; 
+		storagePoints.clear();
+		vector<Product> allocated;
+		for(unsigned int j = 0; j<items.size();j++){
+			auto position = productAllocation[items[j].first ];
+					
+		if(vertexByCell.find(position) != vertexByCell.end()){
+			allocated.push_back(items[j].first);
+			storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
+		}else //If some item is not allocated it should be penalized 
+			nonExistentPositionPenalty += OptimizationParameters::NON_ALLOCATED_PRODUCT_PENALTY; 
+		}
+
+		if(allocated.size() == 1) {
+			Vertex location = vertexByCell[ productAllocation[allocated[0] ] ]; 
 			Vertex begin = closestStartPoint[ location  ];
 			Vertex end =   closestEndPoint[   location  ] ; 
 			totalDistance += this->distanceMatrix->getDistance(begin, location) + this->distanceMatrix->getDistance(location, end); 
-		}else if(items.size() == 2){
-			totalDistance += this->getBetterRouteWithTwoPoints(items, productAllocation);
+		}else if(allocated.size() == 2){
+			totalDistance += this->getBetterRouteWithTwoPoints(allocated, productAllocation);
 		}else{
-			//If some item is not allocated it should be penalized 
-			storagePoints.clear();
-			for(unsigned int j = 0; j<items.size();j++){
-				auto position = productAllocation[items[j].first ];
-				
-				if(vertexByCell.find(position) != vertexByCell.end())
-					storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
-				else 
-					nonExistentPositionPenalty += OptimizationParameters::NON_ALLOCATED_PRODUCT_PENALTY; 
-			}
-			
+			if(allocated.size() == 0)continue; 
+
 			pair<double, vector<Vertex> > route; 
 			if(storagePoints.size() < OptimizationParameters::ALL_PERMUTATIONS_TSP_THRESHOLD){ //This is just a limit to use the brute force TSP algorithm
 				route = tsp.bruteForceTSP(storagePoints, closestStartPoint, closestEndPoint); 

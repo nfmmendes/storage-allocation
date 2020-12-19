@@ -65,7 +65,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		set<Block> getNotUsedBlocks(const set<Shelf> &usedShelves); 
 		void allocateStronglyIsolatedFamilies(map<Vertex, Product> & allocations);
 		double evaluatePenaltiesByNonIsolation(map <Product, Position > & allocations);
-		double getBetterRouteWithTwoPoints(vector<pair<Product, double> > &items, MapAllocation &productAllocation );
+		double getBetterRouteWithTwoPoints(vector<Product> &items, MapAllocation &productAllocation );
 		tuple <map<string, queue<Product> >, map<string, int> > getProductAndFrequenceByFamily(set<Product> &notUsedProducts); 
 		vector<pair<int, string > > orderFamilyByFrequence(const map<string, int> &frequenceByFamily);
 		tuple<int, map<Vertex,Product> > testFamilyAllocation(queue<Product> products, vector<Vertex> &vertexes);
