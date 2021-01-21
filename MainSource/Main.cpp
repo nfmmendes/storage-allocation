@@ -48,12 +48,10 @@ ABCAnalysis * createABCAnalysis(InputData &input){
 int main(int argc, char **argv){
     
     if(argc > 1){
+		
         //Main input file name. This file will say which input files will be used
         string indexFileName = argv[1];
         InputData input(indexFileName);
-		
-		//ABCAnalysis * abc = createABCAnalysis(input); 
-		//abc->execute(); 
     			
 		ProcessInputData processInput(&input);
 		//cout<<"Converting warehouse to graph\n";
@@ -63,16 +61,16 @@ int main(int argc, char **argv){
 		OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
 		Warehouse warehouse =  input.getWarehouse();
 		map<pair<Cell, int>, Vertex> vertexByCell = processInput.getWarehouseToGraphConverter()->getVertexByCell();
-		 
-		StorageAllocationSolution::setEvaluator(processInput.getDistanceMatrix(),vertexByCell, warehouse.getBlocks(), cons);
 		
+		StorageAllocationSolution::setEvaluator(processInput.getDistanceMatrix(),vertexByCell, warehouse.getBlocks(), cons);
+	
 	//	cout<<"Initializing metaheuristic \n";
-	//	StorageConstructiveHeuristic constr(input.getProducts(),warehouse,*processInput.getDistanceMatrix(),vertexByCell, input.getOrders(),cons); 
-	//	StorageAllocationSolution constructiveSolution = constr.Execute();
 		
 		//VND vnd(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell , input.getOrders(),cons); 
 		StorageILS ils(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);
+	
 		//vnd.run();
+		
 		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 		auto solution = ils.Execute();
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -81,6 +79,7 @@ int main(int argc, char **argv){
 		bool resultCheck = ((StorageAllocationSolution *) solution)->checkSolution();
 		cout<<"Solution is :"<<(resultCheck? "consistent\n ": "inconsistent \n");
 		((StorageAllocationSolution *) solution)->printSolution(); 
+		
     }else
         cerr<<"Too few  arguments. Inform the index file name.";
     

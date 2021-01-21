@@ -115,23 +115,23 @@ void OptimizationConstraints::setIsolatedFamilies(vector<IsolatedFamily> value){
  * 
  * */
 bool OptimizationConstraints::IsAllocationAllowed(Product &product, Position newPosition){
-    cout<<"A"<<endl;
+    
     auto query = [product](ProductAllocationProhibitions &other) {  return other.getProduct().getName() == product.getName() ;  };
     vector<ProductAllocationProhibitions>::iterator prohibition = find_if(allocationProhitions.begin(), allocationProhitions.end(), query );
-    cout<<"B"<<endl;
+    
     if(prohibition == allocationProhitions.end())
         return true; 
-    cout<<"C"<<endl;
+    
     auto forbiddenCells = prohibition->getForbiddenCells();
     auto cellQuery = [newPosition](Cell &other){ return newPosition.first.getCode() == other.getCode(); }; 
     if( find_if(forbiddenCells.begin(), forbiddenCells.end(), cellQuery) == forbiddenCells.end())
         return true; 
-    cout<<"D"<<endl;
+    
     auto forbiddenShelves = prohibition->getForbiddenShelves(); 
     auto shelfQuery = [newPosition](Shelf &other){ return newPosition.first.getIdShelf() == other.getId(); }; 
     if (find_if(forbiddenShelves.begin(), forbiddenShelves.end(), shelfQuery) == forbiddenShelves.end())
         return true; 
-    cout<<"E"<<endl;
+    
 
    // auto forbiddenBlocks = prohibition->getForbiddenBlocks(); 
 
