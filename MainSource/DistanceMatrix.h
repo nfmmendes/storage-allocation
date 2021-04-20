@@ -136,12 +136,18 @@ vector<T> & DistanceMatrix<T>::getKeys() {
 
 template<class T>
 double DistanceMatrix<T>::getDistance(const T &first,const T &second) const {
+	
     auto itFirst = keyIndex.find(first);
     auto itSecond = keyIndex.find(second);
-   
-    if(itFirst != keyIndex.end() && itSecond!= keyIndex.end())
-		return distances[itFirst->second][itSecond->second] ;
-
+	
+	try{
+		if(itFirst != keyIndex.end() && itSecond!= keyIndex.end())
+			return distances[itFirst->second][itSecond->second] ;
+	}catch(const std::out_of_range& oor){
+		cerr<<"There is a error here! Function return 1e5"<<endl;
+		return 1e5;
+	}
+	
 	return -1;
 }
 
