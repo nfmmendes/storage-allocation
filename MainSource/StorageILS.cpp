@@ -371,10 +371,10 @@ bool MostFrequentSwap::isValidSwap(Product &first, Product &second, MapAllocatio
  *
  **/
 vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
-
+	//cout<<"A"<<endl;
 	vector<AbstractSolution *> solutions;
 	MapAllocation allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
-
+	//cout<<"B"<<endl;
 	if(this->interchangeableProducts.size()<3)
 		return solutions; 
 
@@ -383,23 +383,26 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 	int second; 
 	set<pair<int,int> >swapsDone; 
 	int numInterchangeableProducts = this->interchangeableProducts.size(); 
-	
+	//cout<<"C"<<endl;
 
 	for(int i=0;i<this->numberOfNeighbors && numTries < 2*numberOfNeighbors;i++, numTries++){
+		
 		if(!Util::ChooseTwoProductIndexes(first ,second,numInterchangeableProducts, swapsDone))
 			break;
-
+		//cout<<first<<" "<<second<<" "<<interchangeableProducts.size()<<endl; 
 		bool isValid = isValidSwap(this->interchangeableProducts[first], this->interchangeableProducts[second], allocations); 
 		if(!isValid){
 			i--;
 			continue; 
 		}
-
+		//cout<<"Aqui 1"<<endl; 
 		StorageAllocationSolution * newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution);
+		//cout<<"Aqui 2"<<endl; 
 		newSolution->proceedSwap(this->interchangeableProducts[first], this->interchangeableProducts[second],true); 
+		//cout<<"Aqui 3"<<endl; 
 		solutions.push_back(newSolution);
 	}
-	
+	//cout<<"D"<<endl;
 	return solutions; 
 }
 

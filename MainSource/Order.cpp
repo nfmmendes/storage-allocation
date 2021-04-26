@@ -13,6 +13,7 @@
 #include "Date.h"
 #include "Order.h"
 #include "InputData.h"
+#include "Util.h"
 using namespace std;
 
 
@@ -106,7 +107,22 @@ vector<Order> Order::readOrdersData(ifstream &file){
     for(int i=0; i<numOrders; i++){
         file>>numItems;
         file>>clientCode;
-        file>>date>>time;
+		file.get();
+		string line;
+		getline(file,line);
+		//cout<<clientCode<<" "<<numItems<<"*************"<<line<<endl;
+		vector<string> date_time; 
+		Util::splitString(date_time, line, " ");
+		
+		if(date_time.size() > 1){
+			//cout<<"__"<<date_time[0]<<"___"<<date_time[1]<<endl;
+			date = date_time[0];
+			time = date_time[1];
+		}else{
+			date = "01/01/1990";
+			time = "12:00:00";
+		}
+      //  file>>date>>time;
       //  cout<<"\t" <<clientCode<<" "<<date<<" "<<time<<endl;
 		
         
