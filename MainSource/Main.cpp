@@ -54,7 +54,7 @@ int main(int argc, char **argv){
         InputData input(indexFileName);
     			
 		ProcessInputData processInput(&input);
-		//cout<<"Converting warehouse to graph\n";
+		cout<<"Converting warehouse to graph\n";
 		processInput.ExecuteProcessData();
 		
 		Graph graph = processInput.getWarehouseToGraphConverter()->getGraph();
@@ -64,7 +64,7 @@ int main(int argc, char **argv){
 		
 		StorageAllocationSolution::setEvaluator(processInput.getDistanceMatrix(),vertexByCell, warehouse.getBlocks(), cons);
 	
-	//	cout<<"Initializing metaheuristic \n";
+		cout<<"Initializing metaheuristic \n";
 		
 		//VND vnd(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell , input.getOrders(),cons); 
 		StorageILS ils(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);

@@ -455,7 +455,7 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 	//Order the vertexes in the block by distance from the closest delivery point 
 	//Maybe it could be pre-evaluated 
 	sort(vertexes.begin(), vertexes.end(), [this](const Vertex &a,const Vertex &b){ 
-		return this->distanceMatrix->getDistance(this->closestStartPoint[a], a) <= this->distanceMatrix->getDistance(this->closestStartPoint[b], b); 
+		return this->distanceMatrix->getDistance(this->closestStartPoint[a], a) < this->distanceMatrix->getDistance(this->closestStartPoint[b], b); 
 	});
 	 
 	string bestFamily; 

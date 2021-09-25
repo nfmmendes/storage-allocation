@@ -29,14 +29,14 @@ StorageAllocationSolution::StorageAllocationSolution(){
  *
  **/
  StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution *other){
-	 
+	// cout<<"CP1"<<endl;
 	StorageAllocationSolution::countSolutions++;
 	this->solutionValue = other->solutionValue;
 	this->runtime = other->runtime;
 	this->minDelta = other->minDelta;
 	isMaximization = other->isMaximization; 
 	this->totalPenalty = other->totalPenalty; 
-	 
+	// cout<<"CP2"<<endl;
 	//unsigned long long int solutionIndex;  
 	//cout<<(other == NULL) <<" "<<other->notAllocatedProducts.size()<<endl;
 	for(auto & key : other->notAllocatedProducts)
@@ -44,22 +44,27 @@ StorageAllocationSolution::StorageAllocationSolution(){
 	
 	for(auto & [key, value] : other->productsAllocation)
 		this->productsAllocation[key] = value; 
-	
+	//cout<<"CP3"<<endl;
 	for(map<Product,vector<PickingRoute*> >::iterator it = other->routesByProduct.begin(); it!= other->routesByProduct.end(); it++){
+		//cout<<"CP3.1"<<endl;
 		this->routesByProduct[it->first].resize(it->second.size());
+		//cout<<"CP3.2 "<<this->routesByProduct.size()<<endl;
 		for(unsigned int i =0;i<it->second.size(); i++){
+			//cout<<it->first.getName()<<" "<<i<<" "<<it->second.size()<<" " <<endl;
 			this->routesByProduct[it->first][i] = new PickingRoute();
 			this->routesByProduct[it->first][i]->first = it->second[i]->first; 
 			this->routesByProduct[it->first][i]->second = it->second[i]->second; 
 		}
+		//cout<<"CP3.3"<<endl;
 	}
-
+	//cout<<"CP4"<<endl;
 }
 
 /**
  *
  **/
 StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &other){
+	
 	StorageAllocationSolution::countSolutions++;
 	this->solutionValue = other.solutionValue;
 	this->runtime = other.runtime;
@@ -73,7 +78,7 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &
 		this->notAllocatedProducts.insert(key); 
 	for(auto & [key, value] : other.productsAllocation)
 		this->productsAllocation[key] = value; 
-
+	
 	for(map<Product,vector<PickingRoute*> >::iterator it = other.routesByProduct.begin(); it!= other.routesByProduct.end(); it++){
 		this->routesByProduct[it->first].resize(it->second.size());
 		for(unsigned int i =0;i<it->second.size(); i++){
@@ -82,7 +87,7 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &
 			this->routesByProduct[it->first][i]->second = it->second[i]->second; 
 		}
 	}
-
+	
 }
 
 /**
@@ -182,6 +187,8 @@ void StorageAllocationSolution::printSolution() const{
 
 	ofstream file("results/solutions_"+to_string(end_time) + ".txt");
 	printToFile(file); 
+	ofstream fileToInterface("results/solutions.txt");
+	printToFile(fileToInterface); 
 }
 
 void StorageAllocationSolution::Evaluate(bool evaluateWithTSP){
@@ -391,13 +398,14 @@ void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRou
 /**
  *	Overload of the operator = 
  */
+
 StorageAllocationSolution & StorageAllocationSolution::operator=(const StorageAllocationSolution &other){
 	
 	this->solutionValue = other.solutionValue;
 	this->runtime = other.runtime;
 	this->minDelta = other.minDelta;
 	isMaximization = other.isMaximization; 
-	this->totalPenalty = other.totalPenalty;
+	//this->totalPenalty = other.totalPenalty;
 	
 	this->notAllocatedProducts.clear();
 	this->productsAllocation.clear(); 

@@ -57,7 +57,7 @@ pair<double,vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex> &points, ma
 
 	do {
 		double sum = 0.0;
-		for(unsigned int i=1;sum <= bestCost && i<orderSize ; i++){
+		for(int i=1;sum <= bestCost && i<orderSize ; i++){
 			//double disss = distanceMatrix.getDistance(currentOrder[i-1], currentOrder[i]); 
 			//cout<<currentOrder[i-1].getLabel()<<" "<<currentOrder[i].getLabel()<<" "<<disss<<endl;
 			sum += distanceMatrix.getDistance(currentOrder[i-1], currentOrder[i]); 
@@ -95,7 +95,7 @@ pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> &poi
 	int bestVertexToInit = 0; 
 	double distance; 
 	int numPoints = points.size(); 
-	for(unsigned int i=0; i< numPoints; i++){
+	for(int i=0; i< numPoints; i++){
 		distance = distanceMatrix.getDistance(bestStart[points[i] ],  points[i]);
 		//find the closest point to a delivery point 
 		if(distance < lowerDistance){
@@ -142,19 +142,16 @@ pair<double , vector<Vertex> > TSP::closestNeighborTSP(const vector<Vertex> &poi
  *  Return a route with a good cost (without warranty of optimality) for a average size sequence of points 
  **/
 pair<double , vector<Vertex> > TSP::quickLocalSearchTSP(const vector<Vertex> &points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd){
-	 
-	//vector<Vertex> solution = points;
-	double bestCost = std::numeric_limits<double>::max(); 
+	  
 		
 	pair<double, vector<Vertex> > currentOrder = closestNeighborTSP(points, bestStart, bestEnd);
-	bestCost = currentOrder.first; 
 	int orderSize = currentOrder.second.size(); 
 
-	for(unsigned int i=1; i+1< orderSize; i++){
+	for(int i=1; i+1< orderSize; i++){
 		double costReduction = 0; 
 		int changingPoint =0;
 
-		for(unsigned int j=1; j+2<orderSize; j++){
+		for(int j=1; j+2<orderSize; j++){
 			double oldCost = distanceMatrix.getDistance(currentOrder.second[j-1], currentOrder.second[j]) +
 							 distanceMatrix.getDistance(currentOrder.second[j], currentOrder.second[j+1]) +
 							 distanceMatrix.getDistance(currentOrder.second[j+1], currentOrder.second[j+2]);
