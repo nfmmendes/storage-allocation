@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NEIGHBORHOOD_STRUCTURE_H
+#define NEIGHBORHOOD_STRUCTURE_H
 
 #include<vector>
 #include "AbstractSolution.h"
@@ -22,3 +23,5 @@ class NeighborhoodStructure{
         virtual std::vector<AbstractSolution *> createNeighbors() =0;    
 
 };
+
+#endif

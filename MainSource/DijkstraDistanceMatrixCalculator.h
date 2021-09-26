@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DIJKSTRA_DISTANCE_METRIC_CALCULATOR_H
+#define DIJKSTRA_DISTANCE_METRIC_CALCULATOR_H
 
 #include<iostream>
 #include<utility>
@@ -124,3 +125,5 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
 		
 	return distanceMatrix.buildMatrix(distancePairs); 
 }
+
+#endif

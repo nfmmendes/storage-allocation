@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DISTANCE_MATRIX_H
+#define DISTANCE_MATRIX_H
 
 #include<iostream>
 #include<map>
@@ -202,3 +203,5 @@ void DistanceMatrix<T>::print(){
 		
 	}
 }
+
+#endif

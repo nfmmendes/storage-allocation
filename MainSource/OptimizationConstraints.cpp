@@ -92,7 +92,8 @@ void OptimizationConstraints::setParameters(vector<Parameter> value){
 void OptimizationConstraints::setProductAllocationProhibitions(vector<ProductAllocationProhibitions> value){ 	
     allocationProhitions = value;
     productsCodeWithProhibition.clear(); 
-    for(int i=0;i<allocationProhitions.size(); i++)
+
+    for(unsigned int i=0;i<allocationProhitions.size(); i++)
         productsCodeWithProhibition.insert(allocationProhitions[i].getProduct().getName());
 }
 
@@ -104,7 +105,7 @@ void OptimizationConstraints::setIsolatedFamilies(vector<IsolatedFamily> value){
     weaklyIsolatedFamilies.clear();
     stronglyIsolatedFamilies.clear(); 
 
-    for(int i=0;i<isolatedFamilies.size(); i++)
+    for(unsigned int i=0;i<isolatedFamilies.size(); i++)
         if(isolatedFamilies[i].getForce() == WEAK_ISOLATION)
             weaklyIsolatedFamilies.insert(isolatedFamilies[i].getCode());
         else if(isolatedFamilies[i].getForce() == STRONG_ISOLATION)
@@ -131,9 +132,6 @@ bool OptimizationConstraints::IsAllocationAllowed(Product &product, Position new
     auto shelfQuery = [newPosition](Shelf &other){ return newPosition.first.getIdShelf() == other.getId(); }; 
     if (find_if(forbiddenShelves.begin(), forbiddenShelves.end(), shelfQuery) == forbiddenShelves.end())
         return true; 
-    
-
-   // auto forbiddenBlocks = prohibition->getForbiddenBlocks(); 
 
     return false;
 }

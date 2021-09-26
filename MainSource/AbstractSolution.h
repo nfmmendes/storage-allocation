@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ABSTRACT_SOLUTION_H
+#define ABSTRACT_SOLUTION_H
 
 #include<iostream>
 #include<cstdlib>
@@ -57,3 +58,5 @@ class AbstractSolution{
 
         
 };
+
+#endif

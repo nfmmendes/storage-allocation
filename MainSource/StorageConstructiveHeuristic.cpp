@@ -294,7 +294,7 @@ double StorageConstructiveHeuristic::evaluatePenaltyOnLevel(vector<string> famil
  *
  **/
 double StorageConstructiveHeuristic::evaluatePenaltiesByAllocationProhibition(MapAllocation & allocation){
-	double totalPenalty;
+	double totalPenalty = 0.0;
 
 	vector<ProductAllocationProhibitions> prohibitions = this->constraints.getProductAllocationProhibitions();
 	for(auto & prohibition : prohibitions){
@@ -333,7 +333,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 	MapAllocation productAllocation = ((StorageAllocationSolution *) solution)->getProductAllocations();
 	map<Product, vector<PickingRoute *> > routesByProduct; 
 	double isolatedFamilyPenalty = evaluatePenaltiesByNonIsolation(productAllocation);
-	double forbiddenAllocationPenalty = evaluatePenaltiesByAllocationProhibition(productAllocation); 
+	//double forbiddenAllocationPenalty = evaluatePenaltiesByAllocationProhibition(productAllocation); 
 	
 	for(unsigned int i=0;i< orders.size();i++){
 		items = orders[i].getOrderItems(); 

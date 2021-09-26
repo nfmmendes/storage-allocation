@@ -20,7 +20,7 @@ GeneralClasses: Point.h Date.h Time.h
 	$(CC) $(COMPILE_FLAGS)  -c Util.cpp Date.cpp Time.cpp
 
 #Classes to proceed the TSP algorithm
-QuickTSP : PathUnity.h TSP.h QuickTSP.h State.h WarehouseToGraphConverter.h Layer.h Parameter.h Transition.o Order.o Vertex.o 
+QuickTSP : PathUnity.h TSP.h QuickTSP.h State.h WarehouseToGraphConverter.h Layer.h Parameter.h Transition.o Order.o Vertex.o
 	$(CC) $(COMPILE_FLAGS) -c PathUnity.cpp TSP.cpp QuickTSP.cpp State.cpp WarehouseToGraphConverter.cpp Layer.cpp Parameter.cpp
 
 
@@ -38,7 +38,7 @@ HeuristicPack: Warehouse Evaluator Parameter AbstractSolution.h NeighborhoodStru
 Evaluator: Parameter StorageSolutionEvaluator.h  Warehouse StorageAllocationSolution.h
 	$(CC) $(COMPILE_FLAGS) -c StorageSolutionEvaluator.cpp  StorageAllocationSolution.cpp
 
-Warehouse : Block.o Cell.o Shelf.o BlockExit.o
+Warehouse : Block.o Cell.o Shelf.o BlockExit.o Corridor.o
 	$(CC) $(COMPILE_FLAGS) -c Warehouse.cpp
 
 Block : WarehousePack Block.h 
@@ -49,11 +49,14 @@ GraphPack: AbstractVertex.h DistanceMatrix.h Point.h Vertex.h Arc.h Graph.h Hana
 
 
 #DAO CLASSES (DIRECTLY RELATED WITH THE DESCRIPTION OF DATA)
-WarehousePack : ExpeditionPoint.h Cell.h Shelf.h  Warehouse.h BlockExit.h Corridor.h Curve.h Client.h Product.h Order.h 
-	$(CC) $(COMPILE_FLAGS) -c ExpeditionPoint.cpp Corridor.h Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp
+WarehousePack : ExpeditionPoint.h Cell.h Shelf.h  Warehouse.h BlockExit.h Curve.h Client.h Product.h Order.h 
+	$(CC) $(COMPILE_FLAGS) -c ExpeditionPoint.cpp Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp
 
 Parameter: Parameter.h OptimizationParameters.h
 	$(CC) $(COMPILE_FLAGS) -c Parameter.cpp OptimizationParameters.h
+
+Corridor: Corridor.h
+	$(CC) $(COMPILE_FLAGS) -c Corridor.cpp
 
 Client: Client.h
 	$(CC) $(COMPILE_FLAGS) -c Client.cpp

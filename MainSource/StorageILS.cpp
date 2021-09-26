@@ -123,8 +123,8 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 	
 	set<pair<int,int> > swapsDone; 
 	int first, second; 
-	int numIterations = min(numberOfNeighbors, ((unsigned int) (allocationsSize-1)*allocationsSize) );
-	int numTries = 0; 
+	unsigned int numIterations = min(numberOfNeighbors, ((unsigned int) (allocationsSize-1)*allocationsSize) );
+	unsigned int numTries = 0; 
 
 	for(unsigned int i=0; i< numIterations && numTries < 2*numIterations; i++, numTries++){
 		if(!Util::ChooseTwoProductIndexes(first ,second,allocationsSize, swapsDone))
@@ -555,7 +555,7 @@ StorageAllocationSolution * StorageILS::CreateInitialSolution(){
  * 
  */
 StorageAllocationSolution * StorageILS::ExecutePertubation(StorageAllocationSolution *_currentSolution){
-	return NULL;
+	return _currentSolution;
 }
 
 /**
@@ -799,7 +799,7 @@ AbstractSolution * StorageILS::Execute(){
 		for(unsigned int i=0;i< this->neighborhoodStructures.size();i++){
 
 			currentSolution = new StorageAllocationSolution(*originalSolution);
-			double currentSolutionValue = currentSolution->getSolutionValue();
+
 			double newSolutionValue = 0;
 		
 			if(neighborhoodType[i] == "InsideShelfSwap"){	

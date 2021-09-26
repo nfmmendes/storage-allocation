@@ -63,7 +63,7 @@ StorageAllocationSolution::StorageAllocationSolution(){
 /**
  *
  **/
-StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &other){
+StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &other):AbstractSolution(other){
 	
 	StorageAllocationSolution::countSolutions++;
 	this->solutionValue = other.solutionValue;
@@ -194,7 +194,7 @@ void StorageAllocationSolution::printSolution() const{
 void StorageAllocationSolution::Evaluate(bool evaluateWithTSP){
 	set<PickingRoute *> routes; 
 	double distance = 0.0; 
-	double penalty = 0.0; 
+	
 	for(auto [key, routeList] : routesByProduct)
 		for(unsigned int i=0; i<routeList.size(); i++)
 			routes.insert(routeList[i]); 
@@ -292,7 +292,7 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	vector<PickingRoute *> firstRoutes = routesByProduct[firstProduct];
 	vector<PickingRoute *> secondRoutes = routesByProduct[secondProduct];
 	
-	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
 	for(unsigned int i=0; i<firstRoutes.size(); i++)
 		delta += getVariationAndUpdateAfterSwap(firstRoutes[i], firstVertex, secondVertex, useTSPEvaluator);
@@ -300,7 +300,7 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	for(unsigned int i=0; i<secondRoutes.size(); i++)
 		delta += getVariationAndUpdateAfterSwap(secondRoutes[i], secondVertex, firstVertex, useTSPEvaluator);
 
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	//std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 	//std::cout << "First size: "<<firstRoutes.size()<<" Second size: "<<secondRoutes.size()<<endl;
 	//std::cout << "Penalty test runtime = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milliseconds_s]" << std::endl;
 	//cout<<" ================ Total delta : "<< delta<< " ======================== " << endl; 
