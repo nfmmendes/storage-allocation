@@ -1,17 +1,12 @@
-#ifndef DIJKSTRA_DISTANCE_MATRIX_CALCULATOR_H
-#define DIJKSTRA_DISTANCE_MATRIX_CALCULATOR_H
-
+#pragma once
 
 #include<iostream>
-#include<vector>
 #include<utility>
 #include<queue>
 #include<functional>
 #include<algorithm>
-#include<iomanip>
-#include<map>
 #include<list>
-#include<exception>
+#include<map>
 #include "DistanceMatrix.h"
 #include "AbstractVertex.h"
 #include "DistanceMatrixCalculator.h"
@@ -122,24 +117,10 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             } 
         }
 		
-	//	cout<<setw(20)<<sourceVertexes[i].getLabel()<<"\t"; 
 		for(unsigned int j=0;j<sourceVertexes.size();j++){
 			distancePairs[make_pair(sourceVertexes[i], sourceVertexes[j])] = dist[indexVertex[sourceVertexes[j] ]]; 
-		//	cout<<setw(4)<<dist[indexVertex[sourceVertexes[j] ]]<<" ";
-		}
-	//	cout<<endl;
-		
+		}	
     }
-	
-	
-	
+		
 	return distanceMatrix.buildMatrix(distancePairs); 
 }
-
-
-
-
-
-#endif
-
-

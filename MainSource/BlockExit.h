@@ -1,12 +1,9 @@
-#ifndef BLOCK_EXIT_H
-#define BLOCK_EXIT_H
+#pragma once
 
 #include<iostream>
 #include<vector>
 #include<string>
-#include<algorithm>
 #include<utility>
-using namespace std;
 
 /** 
  *  This class describes a block exit. These exits can connect one warehouse
@@ -19,20 +16,20 @@ class BlockExit{
         long int Id;
         double coordX;					///< X-coordinate of central exit point 
         double coordY;					///< Y-coordinate of central exit point  
-        string blockAName; 				///< First block of exit 
-        string blockBName;				///< Second block of exit. The second block can be empty if the exit goes out of warehouse
+        std::string blockAName; 				///< First block of exit 
+        std::string blockBName;				///< Second block of exit. The second block can be empty if the exit goes out of warehouse
     public:
         BlockExit();
         BlockExit(const BlockExit &other);
         
-        BlockExit(long int id, double coordX, double coordY, string blockA, string blockB="");
+        BlockExit(long int id, double coordX, double coordY, std::string blockA, std::string blockB="");
         
         long int getId();
         double getCoordX();
         double getCoordY();
-        string getBlockAName();
-        string getBlockBName();
-        pair<double, double> getCoords();
+        std::string getBlockAName();
+        std::string getBlockBName();
+        std::pair<double, double> getCoords();
     
         void setId(long int value);
         void setCoordX(double value);
@@ -48,5 +45,3 @@ class BlockExit{
 		void printExitInformation();
     
 };
-
-#endif

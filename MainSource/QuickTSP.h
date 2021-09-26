@@ -1,9 +1,6 @@
-#ifndef QUICK_TSP_H
-#define QUICK_TSP_H
+#pragma once
 
 #include<iostream>
-#include<cmath>
-#include<ctime>
 #include<vector>
 #include "HananGraph.h"
 #include "PathUnity.h"
@@ -15,24 +12,21 @@ namespace QuickTSP{
         class _QuickTSP{
             private: 
                 HananGraph graph;
-                vector<Order> orders;
-                vector<PathUnity> solution;
+                std::vector<Order> orders;
+                std::vector<PathUnity> solution;
             public:
                 _QuickTSP();
             
                 _QuickTSP(const _QuickTSP &other);
             
-                _QuickTSP(HananGraph &graph,vector<Order> &orders);
+                _QuickTSP(HananGraph &graph, std::vector<Order> &orders);
                 
                 void setHananGraph(HananGraph &graph);
-                void setOrders(vector<Order>& orders);
+                void setOrders(std::vector<Order>& orders);
                 HananGraph & getHananGraph();
-                vector<Order> & getOrders();
-                vector<PathUnity> getSolution();
+                std::vector<Order> & getOrders();
+                std::vector<PathUnity> getSolution();
                 
                 void Run();
         };
 }
-
-
-#endif

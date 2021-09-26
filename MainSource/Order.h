@@ -1,20 +1,16 @@
-#ifndef ORDER_H
-#define ORDER_H
+#pragma once 
 
 #include<iostream>
-#include<ctime>
 #include<string>
 #include<vector>
 #include<fstream>
 #include<utility>
-#include<cstdlib>
 #include "Product.h"
 #include "Date.h"
 #include "Time.h"
 #include "Client.h"
 #include "Time.h"
 #include "Date.h"
-using namespace std;
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -25,34 +21,30 @@ using namespace std;
 class Order{
     
     private:
-        vector<pair<Product, double> > orderItens; //!< The first element describe the product and
-                                                  //!  the second the quantity
-        pair<Date, Time> deadline;                //!< It can be initialized or not. If it is not
-                                                  //!  its default value will be 2001/01/01
+        std::vector<std::pair<Product, double> > orderItens; //!< The first element describe the product and
+                                                             //!  the second the quantity
+        std::pair<Date, Time> deadline;                      //!< It can be initialized or not. If it is not
+                                                             //!  its default value will be 2001/01/01
     
-        string client;                            //The amount of data needed in this object will depend of
+        std::string client;                                  //The amount of data needed in this object will depend of
         
     public:
         Order();
     
         Order(const  Order &other);
     
-        Order(vector< pair<Product, double> >items, Date dataDeadline, Time hourDeadline, string client);
+        Order(std::vector<std::pair<Product, double> >items, Date dataDeadline, Time hourDeadline, std::string client);
     
     
         void setOrderItens(int i, Product &product, double quantity);
         void removeOrderItens(int i);
         void addOrderItens(Product &product, double quantity);
-        void setOrders(vector<pair<Product, double> > orders);
+        void setOrders(std::vector<std::pair<Product, double> > orders);
     
         void setDateDeadline(Date &date);
         void setTimeDeadline(Time &time);
     
-        const vector<pair<Product, double> > & getOrderItems() const;
-        static vector<Order> readOrdersData(ifstream &file);
+        const std::vector<std::pair<Product, double> > & getOrderItems() const;
+        static std::vector<Order> readOrdersData(ifstream &file);
     
 };
-
-
-
-#endif

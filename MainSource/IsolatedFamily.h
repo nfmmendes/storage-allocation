@@ -1,13 +1,9 @@
-#ifndef ISOLATED_FAMILY_H
-#define ISOLATED_FAMILY_H
+#pragma once
 
 #include<iostream>
-#include<cmath>
-#include<cstdlib>
 #include<string>
 #include<vector>
 #include<fstream>
-using namespace std;
 
 
 #define STRONG_ISOLATION "STRONG"
@@ -21,27 +17,24 @@ class IsolatedFamily{
 
 
 	private:
-		string Force;		///< Strongness of the isolation (STRONG, WEEL)
-		string Level;		///< Level of isolation (BLOCK, SHELVE, CELL)
-		string Code;		///< Family code'
+		std::string Force;		///< Strongness of the isolation (STRONG, WEEL)
+		std::string Level;		///< Level of isolation (BLOCK, SHELVE, CELL)
+		std::string Code;		///< Family code'
 		
 	public:
 		IsolatedFamily(){}
 		IsolatedFamily(const IsolatedFamily &other);
-		IsolatedFamily(string f, string l, string c);
-		string getForce() const;
-		string getLevel() const;
-		string getCode() const;
-		void setForce(const string &other);
-		void setLevel(const string &other);
-		void setCode(const string &other);
+		IsolatedFamily(std::string f, std::string l, std::string c);
+		std::string getForce() const;
+		std::string getLevel() const;
+		std::string getCode() const;
+		void setForce(const std::string &other);
+		void setLevel(const std::string &other);
+		void setCode(const std::string &other);
 		void printIsolatedFamily();
-		static vector<IsolatedFamily> readIsolatedFamilyData(ifstream &file);
+		static std::vector<IsolatedFamily> readIsolatedFamilyData(std::ifstream &file);
 		bool operator==(const IsolatedFamily &other);
 		bool operator<=(const IsolatedFamily &other);
 		IsolatedFamily & operator=(const IsolatedFamily & other);
-		static bool isLowerOrEqualLevel(string fisrtLevel,string secondLevel);
+		static bool isLowerOrEqualLevel(std::string fisrtLevel, std::string secondLevel);
 };
-
-
-#endif

@@ -1,44 +1,38 @@
-#ifndef OPTIMIZATION_CONSTRAINTS_H
-#define OPTIMIZATION_CONSTRAINTS_H
+#pragma once
 
-#include<iostream>
-#include<cstdlib>
+#include<string>
 #include<vector>
-#include<set>
-#include<map>
 #include "IsolatedFamily.h"
 #include "ProductAllocationProhibition.h"
 #include "Parameter.h"
-using namespace std; 
 
 typedef struct pair<Cell, int> Position; 
 
 class OptimizationConstraints{
 
 	private: 
-		vector<Parameter> parameters; 								///< Optimization parameters defined by the user 
-		vector<ProductAllocationProhibitions> allocationProhitions;  ///< Prohibitions of putting some products in some places
-		vector<IsolatedFamily> isolatedFamilies; 					///< Families that should be isolated in the warehouse
-		set<string> productsCodeWithProhibition; 
-		set<string> weaklyIsolatedFamilies; 
-		set<string> stronglyIsolatedFamilies; 
+		std::vector<Parameter> parameters; 								///< Optimization parameters defined by the user 
+		std::vector<ProductAllocationProhibitions> allocationProhitions;  ///< Prohibitions of putting some products in some places
+		std::vector<IsolatedFamily> isolatedFamilies; 					///< Families that should be isolated in the warehouse
+		std::set<std::string> productsCodeWithProhibition; 
+		std::set<std::string> weaklyIsolatedFamilies; 
+		std::set<std::string> stronglyIsolatedFamilies; 
 
 	public: 
-		vector<Parameter> getParameters()const;
-		vector<ProductAllocationProhibitions> getProductAllocationProhibitions()const;
-		vector<IsolatedFamily> getIsolatedFamilies()const;
-		set<string> & getProductsCodeWithProhibition();
-		set<string> & getWeaklyIsolatedFamilyCodes();
-		set<string> & getStronglyIsolatedFamilyCodes();
+		std::vector<Parameter> getParameters()const;
+		std::vector<ProductAllocationProhibitions> getProductAllocationProhibitions()const;
+		std::vector<IsolatedFamily> getIsolatedFamilies()const;
+		std::set<string> & getProductsCodeWithProhibition();
+		std::set<std::string> & getWeaklyIsolatedFamilyCodes();
+		std::set<std::string> & getStronglyIsolatedFamilyCodes();
 
-		void setParameters(vector<Parameter> value);
-		void setProductAllocationProhibitions(vector<ProductAllocationProhibitions> value);
-		void setIsolatedFamilies(vector<IsolatedFamily> value);
+		void setParameters(std::vector<Parameter> value);
+		void setProductAllocationProhibitions(std::vector<ProductAllocationProhibitions> value);
+		void setIsolatedFamilies(std::vector<IsolatedFamily> value);
 		bool IsAllocationAllowed(Product &product, Position newPosition);
 		OptimizationConstraints();
 		OptimizationConstraints(const OptimizationConstraints &other);
 		OptimizationConstraints & operator=(const OptimizationConstraints &other);
-		OptimizationConstraints(vector<Parameter> param,  vector<ProductAllocationProhibitions> prohibitions, vector<IsolatedFamily> isolated);
+		OptimizationConstraints(std::vector<Parameter> param,  std::vector<ProductAllocationProhibitions> prohibitions, 
+								std::vector<IsolatedFamily> isolated);
 };
-
-#endif

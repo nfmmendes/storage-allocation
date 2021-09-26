@@ -1,14 +1,10 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#pragma once
 
 #include<iostream>
 #include<string>
-#include<cstdlib>
 #include<vector>
 #include<map>
-#include<algorithm>
 #include<utility>
-using namespace std;
 
 
 ///This class represents the main data of a client
@@ -17,35 +13,33 @@ using namespace std;
 class Client{
     
     private:
-        string name;						///< Client name (or address) 
-        string type;						///< Client type 
-        pair<double,double> coordinates;	///< Coordinates for product deliveries (optional) 
+        std::string name;						///< Client name (or address) 
+        std::string type;						///< Client type 
+        std::pair<double,double> coordinates;	///< Coordinates for product deliveries (optional) 
     
     public:
         Client();
         // Member by member constructor
-        Client(string name, string type,  pair<double, double> coordinates );
+        Client(std::string name, std::string type,  std::pair<double, double> coordinates );
     
         //Copy constructor
         Client(const Client &other);
     
         //Set functions
-        void setName(string value);
-        void setType(string value);
-        void setCoordinates(pair<double,double> value);
+        void setName(std::string value);
+        void setType(std::string value);
+        void setCoordinates(std::pair<double,double> value);
     
         //Get functions
-        string getName();
-        string setType();
-        pair<double, double> getCoordinates();
+        std::string getName();
+        std::string setType();
+        std::pair<double, double> getCoordinates();
     
     
         //Assignment operator
         Client & operator=(const Client &other);
-        static vector<Client> readClientData(string fileName);
-        static vector<Client> readClientDataWithCoordinates(string fileName);
+        static std::vector<Client> readClientData(std::string fileName);
+        static std::vector<Client> readClientDataWithCoordinates(std::string fileName);
 
 };
 
-
-#endif

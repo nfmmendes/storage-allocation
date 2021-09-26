@@ -6,7 +6,7 @@
 #include "Util.h"
 
 
-void Util::splitString(vector<string> & returned,string originalString, string delimiter){
+void Util::splitString(std::vector<std::string> & returned, std::string originalString, std::string delimiter){
     
 	returned.clear();
     //cout<<originalString<<endl;
@@ -23,12 +23,12 @@ void Util::splitString(vector<string> & returned,string originalString, string d
 	
 	
 	
-bool Util::ChooseTwoProductIndexes(int &first, int &second, int numProducts, const set<pair<int,int> > & swapsDone){
+bool Util::ChooseTwoProductIndexes(int &first, int &second, int numProducts, const std::set<std::pair<int,int> > & swapsDone){
 	first = rand()%numProducts;
 	second = rand()%numProducts; 
 	
 	int countTries = 0; 
-	while(swapsDone.find(make_pair(first, second)) != swapsDone.end() || swapsDone.find(make_pair(second,first)) != swapsDone.end() || second == first){
+	while(swapsDone.find(std::make_pair(first, second)) != swapsDone.end() || swapsDone.find(std::make_pair(second,first)) != swapsDone.end() || second == first){
 		first = rand()%numProducts;
 		second = rand()%numProducts; 
 		if( countTries >= numProducts*numProducts)

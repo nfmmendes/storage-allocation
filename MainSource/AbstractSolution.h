@@ -1,13 +1,8 @@
-#ifndef ABSTRACT_SOLUTION_H
-#define ABSTRACT_SOLUTION_H
+#pragma once
 
 #include<iostream>
 #include<cstdlib>
-#include<string>
 #include<cmath>
-#include<vector>
-#include<map>
-using namespace std;
 
 class AbstractSolution{
 
@@ -33,7 +28,6 @@ class AbstractSolution{
             this->isMaximization = maximization; 
         }
 		
-		
 		virtual ~AbstractSolution(){};
 
         //Data modifiers 
@@ -42,14 +36,14 @@ class AbstractSolution{
         virtual void setMinDelta(double minDelta)  = 0;
         void setIsMaximization(bool isMax) { this->isMaximization = isMax; }
 
-        //Data accessers 
+        //Data accessers s
         double getSolutionValue() const { return this->solutionValue; }
         double getRuntime() const  { return this->runtime; }
         double getMinDelta() const { return this->minDelta; }
         double _isMaximization() const { return this->isMaximization; } 
 
         virtual void printSolution() const = 0;
-        virtual void printToFile(ofstream & out) const =0;
+        virtual void printToFile(std::ofstream & out) const =0;
 
         bool betterThan(const AbstractSolution &other){ 
             if(isMaximization) return this->solutionValue - other.solutionValue > minDelta; 
@@ -63,6 +57,3 @@ class AbstractSolution{
 
         
 };
-
-
-#endif

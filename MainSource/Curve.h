@@ -1,18 +1,6 @@
-//
-//  Curve.hpp
-//  
-//
-//  Created by Nilson Mendes on 12/12/2018.
-//
-
-#ifndef CURVE_h
-#define CURVE_h
+#pragma once
 
 #include <iostream>
-#include <vector>
-#include <string>
-#include <utility>
-#include <algorithm>
 #include "Corridor.h"
 #include "Point.h"
 
@@ -48,6 +36,4 @@ class Curve{
 		
 		void printCurveInformation();
 };
-
-#endif
 

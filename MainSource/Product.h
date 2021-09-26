@@ -1,5 +1,4 @@
-#ifndef PRODUCT_H
-#define PRODUCT_H
+#pragma once
 
 #include<iostream>
 #include<cstdlib>
@@ -7,16 +6,13 @@
 #include<vector>
 #include<fstream>
 using namespace std; 
-
-
-
     
 class Product{
     
     private:
         long int ID;
-        string name;
-        string family;
+        std::string name;
+        std::string family;
         
     public:
         Product(){}
@@ -26,7 +22,7 @@ class Product{
             this->family = other.family;
         }
         
-        Product(long int ID, string name, string family){
+        Product(long int ID, std::string name, std::string family){
             this->ID = ID;
             this->name = name;
             this->family = family;
@@ -41,16 +37,14 @@ class Product{
 		}
     
         long int getID()const { return ID; }
-        string getName()const{ return name; }
-        string getFamily()const{ return family; }
+        std::string getName()const{ return name; }
+        std::string getFamily()const{ return family; }
     
         void setID(long int Id){ if(Id >= 0 ) this->ID = Id; }
-        void setName(string name){ this->name = name;}
-        void setFamily(string family){ this->family = family;}
+        void setName(std::string name){ this->name = name;}
+        void setFamily(std::string family){ this->family = family;}
 		bool operator<(const Product &other) const{ return this->ID < other.ID; }
-        static vector<Product> readProductsData(ifstream &file);
-		void print()const{ cout<<ID<<" "<<name<<" "<<family<<endl;}
+        static std::vector<Product> readProductsData(std::ifstream &file);
+		void print()const{ std::cout<<ID<<" "<<name<<" "<<family<<std::endl; }
     
 };
-
-#endif

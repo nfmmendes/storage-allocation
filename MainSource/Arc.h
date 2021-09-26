@@ -1,14 +1,8 @@
-#ifndef ARC_H
-#define ARC_H
+#pragma once
 
 #include<iostream>
 #include<string>
-#include<cmath>
-#include<cstdlib>
 #include "Vertex.h"
-using namespace std;
-
-
 
 namespace QuickTSP{
 
@@ -17,7 +11,7 @@ namespace QuickTSP{
     class Arc{
         
         private:
-            string label;
+            std::string label;
             double value; 
             Vertex beginVertex;
             Vertex endVertex;
@@ -27,9 +21,9 @@ namespace QuickTSP{
             Arc();
             Arc(const Arc &arc);
                 
-            Arc(string label, double value, Vertex &begin, Vertex &end, bool directed=true);
+            Arc(std::string label, double value, Vertex &begin, Vertex &end, bool directed=true);
             
-            void setLabel(string label);
+            void setLabel(std::string label);
                 
                 
             void setValue(double value);
@@ -40,7 +34,7 @@ namespace QuickTSP{
             void setEndVertex(Vertex& vertex);
         
         
-            string getLabel() const;
+            std::string getLabel() const;
             double getValue() const;
             Vertex getBeginVertex() const;
             Vertex getEndVertex() const;
@@ -49,12 +43,11 @@ namespace QuickTSP{
             bool operator==(const Arc &other)const;
             bool operator<(const Arc &other) const;
 			
-			friend ostream& operator<<(ostream &pr, const Arc & a){
-				pr<<"Arc "<<a.label <<" value: "<<a.value<< endl<<a.beginVertex<<" \n"<<a.endVertex <<endl;
+			friend std::ostream& operator<<(std::ostream &pr, const Arc & a){
+				pr<<"Arc "<<a.label <<" value: "<<a.value<< std::endl<<a.beginVertex<<" \n"<<a.endVertex <<std::endl;
 				return pr;
 			}
             
     };
 }
 
-#endif

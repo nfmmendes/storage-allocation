@@ -1,12 +1,10 @@
-#ifndef DATE_H
-#define DATE_H
+#pragma once
 
 #include<iostream>
 #include<string>
 #include<cstdlib>
-using namespace std; 
 
-const string monthName[13] = {"", "January", "February", "March", "April", "May", "June", "July",
+const std::string monthName[13] = {"", "January", "February", "March", "April", "May", "June", "July",
     "August", "September", "October", "November", "December"};
 
 /**
@@ -19,7 +17,6 @@ class Date{
         int day;		///< Day 
         int month;		///< Month
         int year;		///< Year 
-    
         
     public:
         Date();
@@ -32,13 +29,11 @@ class Date{
         void setMonth(int value);
         void setYear(int value);
     
-    
         void validateDate();
     
+        std::string toString(std::string format="yyyy/MM/dd");
     
-        string toString(string format="yyyy/MM/dd");
-    
-        static Date Parse(string date, string format);
+        static Date Parse(std::string date, std::string format);
         Date &operator=(const Date &other);
         bool operator==(Date &other);
         bool operator!=(Date &other);
@@ -46,8 +41,4 @@ class Date{
         bool operator<(Date &other);
         bool operator>=(Date &other);
         bool operator>(Date &other);
-        
-
 };
-
-#endif

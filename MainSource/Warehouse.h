@@ -1,26 +1,21 @@
-#ifndef WAREHOUSE_H
-#define WAREHOUSE_H
+#pragma once
 
 #include<iostream>
 #include<vector>
 #include<string>
-#include<algorithm>
 #include<utility>
 #include "Block.h"
 #include "Product.h"
 #include "Cell.h"
 #include "Curve.h"
 #include "ExpeditionPoint.h"
-using namespace std; 
-
-
 
 class Warehouse{
         private:
-            string name;
-            vector<Block> blocks;  
-            vector<pair<Product, Cell> > productAllocation;
-            vector<ExpeditionPoint> expeditionPoints;   /// Points where the products must be delivered after be picked on shelves
+            std::string name;
+            std::vector<Block> blocks;  
+            std::vector<pair<Product, Cell> > productAllocation;
+            std::vector<ExpeditionPoint> expeditionPoints;   /// Points where the products must be delivered after be picked on shelves
         public:
             Warehouse(){}
             Warehouse(const Warehouse &other);
@@ -30,25 +25,23 @@ class Warehouse{
             
             void RemoveBlock(Block &b);
             void RemoveBlock(int i);
-            void SetProductAllocation(pair<Product, Cell> & productionAllocation); 
-            void AddProductAllocation(pair<Product, Cell> & productionAllocation);
+            void SetProductAllocation(std::pair<Product, Cell> & productionAllocation); 
+            void AddProductAllocation(std::pair<Product, Cell> & productionAllocation);
             void RemoveProductAllocation(Cell &cell); 
             void RemoveProductAllocation(int i); 
             
-            string getName() const ;
-			map<string, Block> getBlocksByName();  
-            vector<Block> &getBlocks();
-			vector<ExpeditionPoint> getExpeditionPoints();
-            vector<pair<Product, Cell> > getProductAllocation() const;
+            std::string getName() const ;
+			std::map<std::string, Block> getBlocksByName();  
+            std::vector<Block> &getBlocks();
+			std::vector<ExpeditionPoint> getExpeditionPoints();
+            std::vector<std::pair<Product, Cell> > getProductAllocation() const;
 			Warehouse &operator= (const Warehouse &other);
             
-            void setName(string &name);
-            void setBlocks(vector<Block>& blocks);
-            void setProductAllocation(vector<pair<Product, Cell> > & productAllocation);
-			void setExpeditionPoints(vector<ExpeditionPoint> &points);
+            void setName(std::string &name);
+            void setBlocks(std::vector<Block>& blocks);
+            void setProductAllocation(std::vector<std::pair<Product, Cell> > & productAllocation);
+			void setExpeditionPoints(std::vector<ExpeditionPoint> &points);
 			void printWarehouseInformation();
             
             
 };
-
-#endif

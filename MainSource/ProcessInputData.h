@@ -1,18 +1,12 @@
-#ifndef PROCESS_INPUT_DATA_H
-#define PROCESS_INPUT_DATA_H
+#pragma once
 
 #include<iostream>
-#include<string>
-#include<vector>
-#include<set>
-#include<map>
 #include "InputData.h"
 #include "DistanceMatrix.h"
 #include "WarehouseToGraphConverter.h"
 #include "DijkstraDistanceMatrixCalculator.h"
 #include "Vertex.h"
 #include "AbstractVertex.h"
-using namespace std; 
 using namespace QuickTSP; 
 
 
@@ -37,5 +31,3 @@ using namespace QuickTSP;
 			DistanceMatrix<Vertex> *getDistanceMatrix();
 			WarehouseToGraphConverter *getWarehouseToGraphConverter();
 	};
-
-#endif

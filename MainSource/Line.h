@@ -1,11 +1,7 @@
-#ifndef LINE_H
-#define LINE_H
+#pragma once
 
 #include<iostream>
 #include<string>
-#include<sstream>
-#include<cmath>
-#include<cstdlib>
 #include "Point.h"
 using namespace std;
 
@@ -18,7 +14,7 @@ namespace QuickTSP{
         private: 
             Point startPoint;
             Point slope;
-            string label; 
+            std::string label; 
             
         public:
             Line();
@@ -27,16 +23,14 @@ namespace QuickTSP{
             Line(const Line &other);
                 
                 ///Constructor member by member
-            Line(string label, Point &pointA, Point &pointB);
+            Line(std::string label, Point &pointA, Point &pointB);
                 
             Point getSlope() const;
             Point getStartPoint() const;
-            string getLabel() const;
+            std::string getLabel() const;
             
             void setSlope(Point &value);
             void setStartPoint(Point &value);
-            void setLabel(string value);
+            void setLabel(std::string value);
     };
 }
-
-#endif

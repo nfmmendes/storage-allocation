@@ -1,13 +1,10 @@
-#ifndef PRODUCT_ALLOCATION_PROHIBITIONS_H
-#define PRODUCT_ALLOCATION_PROHIBITIONS_H
+#pragma once
 
 #include<iostream>
 #include<fstream>
 #include<string>
 #include<vector>
 #include<map>
-#include<algorithm>
-#include<utility>
 #include "Warehouse.h"
 #include "Product.h"
 #include "Shelf.h"
@@ -20,24 +17,26 @@ using namespace std;
 class ProductAllocationProhibitions{
     private:
         Product product;						///< Product to be allocated 
-        vector<Shelf> forbiddenShelves;			///< Shelves where the product can not be stored
-        vector<Cell> forbiddenCells;			///< Shelves where the product can not be stored 
-        vector<Block> forbiddenBlocks;			///< Blocks where the product can not be stored 
-        static void recoverWarehouseData(Warehouse &warehouse,map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName);
+        std::vector<Shelf> forbiddenShelves;			///< Shelves where the product can not be stored
+        std::vector<Cell> forbiddenCells;			///< Shelves where the product can not be stored 
+        std::vector<Block> forbiddenBlocks;			///< Blocks where the product can not be stored 
+        static void recoverWarehouseData(Warehouse &warehouse,std::map<std::string, Cell> & cellsByCode, 
+                                        std::map<long int, Shelf> &shelvesById, std::map<std::string, Block> & blocksByName);
     public:
         ProductAllocationProhibitions();
         ProductAllocationProhibitions(const ProductAllocationProhibitions &other);
-        ProductAllocationProhibitions(Product &product,vector<Shelf>forbiddenShelves,vector<Cell> forbiddenCells,vector<Block> &block);
+        ProductAllocationProhibitions(Product &product, std::vector<Shelf>forbiddenShelves, std::vector<Cell> forbiddenCells, 
+                                     std::vector<Block> &block);
     
         void setProduct(Product & other);
-        void setForbiddenShelves(vector<Shelf> & others);
-        void setForbiddenCells(vector<Cell> &others);
-        void setForbiddenBlocks(vector<Block> &others);
+        void setForbiddenShelves(std::vector<Shelf> & others);
+        void setForbiddenCells(std::vector<Cell> &others);
+        void setForbiddenBlocks(std::vector<Block> &others);
     
         Product getProduct() const; 
-        vector<Shelf> getForbiddenShelves();
-        vector<Cell> getForbiddenCells();
-        vector<Block> getForbiddenBlocks();
+        std::vector<Shelf> getForbiddenShelves();
+        std::vector<Cell> getForbiddenCells();
+        std::vector<Block> getForbiddenBlocks();
     
         void addProhibition(Cell &cell);
         void addProhibition(Shelf &shelf);
@@ -49,9 +48,7 @@ class ProductAllocationProhibitions{
     
         void removeProductBlockProhibition(int i);
     
-        static vector<ProductAllocationProhibitions> readAllProhibitionsData(ifstream &fileName);
+        static std::vector<ProductAllocationProhibitions> readAllProhibitionsData(std::ifstream &fileName);
 		
 		ProductAllocationProhibitions & operator=(const ProductAllocationProhibitions &other); 
 };
-
-#endif /* PROHIBITION_H */

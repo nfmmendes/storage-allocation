@@ -1,10 +1,8 @@
-#ifndef TIME_H
-#define TIME_H
+#pragma once
 
 #include<iostream>
 #include<string>
 #include<cstdlib>
-using namespace std; 
 
 
 class Time{
@@ -31,7 +29,7 @@ class Time{
         void setMillisecond(int value);
             
             
-        string toString(string format="HH:mm:ss");
+        std::string toString(std::string format="HH:mm:ss");
         
         void addHours(int value);
         void minusHours(int value);
@@ -42,7 +40,7 @@ class Time{
         void addMilliseconds(int value);
         void minusMilliseconds(int value);
     
-        static Time Parse(string time, string format);
+        static Time Parse(std::string time, std::string format);
         bool operator==(Time &other);
         bool operator!=(Time &other);
         bool operator<=(Time &other);
@@ -51,5 +49,3 @@ class Time{
         bool operator>(Time &other);
         
 };
-
-#endif

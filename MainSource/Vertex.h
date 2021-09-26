@@ -1,10 +1,8 @@
-#ifndef VERTEX_H
-#define VERTEX_H
+#pragma once
 
 #include<iostream>
 #include<string>
 #include "AbstractVertex.h"
-using namespace std;
 
 
 namespace QuickTSP{
@@ -14,22 +12,22 @@ namespace QuickTSP{
     class Vertex : public AbstractVertex{
         
         private:
-            string label;
-            string type;
+            std::string label;
+            std::string type;
             double value;
         
         public:
             Vertex();
             Vertex(const Vertex &other);
         
-            Vertex(string label, string Type, double value = 0);
+            Vertex(std::string label, std::string Type, double value = 0);
         
-            void setLabel(string value);
-            void setType(string value);
+            void setLabel(std::string value);
+            void setType(std::string value);
             void setValue(double value);
         
-            string getLabel() const ;
-            string getType() const;
+            std::string getLabel() const ;
+            std::string getType() const;
             double getValue() const;
         
             bool operator==(const Vertex & other)const;
@@ -37,12 +35,10 @@ namespace QuickTSP{
             bool operator!=(const Vertex & other);
 			Vertex &operator=(const Vertex &other); 
         
-                ///This overload allows the use of an object of this class as a key to a map
+            ///This overload allows the use of an object of this class as a key to a map
             bool operator<(const Vertex &other)const;
-			friend ostream &operator<<(ostream & pr, const Vertex &b){ pr<<b.type<<" label: "<<b.label; return pr;}
+			friend std::ostream &operator<<(std::ostream & pr, const Vertex &b){ pr<<b.type<<" label: "<<b.label; return pr;}
 		
     };
     
 }
-
-#endif    

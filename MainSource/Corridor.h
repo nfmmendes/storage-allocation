@@ -1,29 +1,22 @@
-#ifndef Corridor_H
-#define Corridor_H
+#pragma once
 
 #include<iostream>
 #include<vector>
-#include<algorithm>
 #include<utility>
-#include<cstdlib>
+#include<algorithm>
 #include "Point.h"
-//#include "Sense.h"
-//#include "Direction.h"
 using namespace std;
 
 
 
-const string HORIZONTAL = "HORIZONTAL";
-const string VERTICAL = "VERTICAL";
+const std::string HORIZONTAL = "HORIZONTAL";
+const std::string VERTICAL = "VERTICAL";
 
-const string UP_DOWN = "UP_DOWN";
-const string BOTTOM_UP = "BOTTOM_UP";
-const string LEFT_TO_RIGHT = "LEFT_TO_RIGHT";
-const string RIGHT_TO_LEFT = "RIGHT_TO_LEFT";
-const string BOTH = "BOTH";
-
-
-
+const std::string UP_DOWN = "UP_DOWN";
+const std::string BOTTOM_UP = "BOTTOM_UP";
+const std::string LEFT_TO_RIGHT = "LEFT_TO_RIGHT";
+const std::string RIGHT_TO_LEFT = "RIGHT_TO_LEFT";
+const std::string BOTH = "BOTH";
 
 /**
  *     Class to represent corridors. This class is used to describe only retilinear corridors
@@ -33,10 +26,10 @@ class Corridor{
     
     private:
         long int Id;
-        string blockName;			  ///< Name of block where the corridor is 
-        string direction;       	  ///< Direction of The values can be: HORIZONTAL or VERTICAL
-        string sense;             	  ///< The values can be: UP_DOWN, BOTTOM_UP, LEFT_TO_RIGHT, RIGHT_TO_LEFT, BOTH
-        pair<double, double> begin;	  ///< Coordinates of the corridor begin
+        std::string blockName;			  ///< Name of block where the corridor is 
+        std::string direction;       	  ///< Direction of The values can be: HORIZONTAL or VERTICAL
+        std::string sense;             	  ///< The values can be: UP_DOWN, BOTTOM_UP, LEFT_TO_RIGHT, RIGHT_TO_LEFT, BOTH
+        std::pair<double, double> begin;	  ///< Coordinates of the corridor begin
         double length;				  ///< Length of corridor 
     
     public:
@@ -64,36 +57,36 @@ class Corridor{
         }
     
     
-        void setDirection(string value){  direction = value;}
-        void setSense(string value) { sense = value; }
+        void setDirection(std::string value){  direction = value;}
+        void setSense(std::string value) { sense = value; }
         void setId( long int value ) { if(value > 0) Id = value; else throw("Error. Invalid negative Id"); }
-        void setIdBlock (string value) {blockName = value;}
-        void setBeginCoords(pair<double,double> value){ begin = value; }
+        void setIdBlock (std::string value) {blockName = value;}
+        void setBeginCoords(std::pair<double,double> value){ begin = value; }
         void setLength(double value){ length = value; }
         
-        string getDirection() const{ return direction; }
-        string getSense()const  { return sense; } 
+        std::string getDirection() const{ return direction; }
+        std::string getSense()const  { return sense; } 
         long int getId() const { return Id; }
-        string getBlockId() {return blockName; }
-        pair<double, double> getBeginCoords() const { return begin; }
+        std::string getBlockId() {return blockName; }
+        std::pair<double, double> getBeginCoords() const { return begin; }
 		
         double getLength()const { return length; }
     
 		/**
 		 *
 		 */
-		pair<double, double> getEndCoords() const { 
+		std::pair<double, double> getEndCoords() const { 
 		
 			if(direction == HORIZONTAL){
 				if( sense == LEFT_TO_RIGHT || sense == BOTH)
-					return make_pair<double,double>((double)begin.first + length, (double)begin.second);
+					return std::make_pair<double,double>((double)begin.first + length, (double)begin.second);
 				else 
-					return make_pair<double,double>((double)begin.first - length, (double)begin.second); 				
+					return std::make_pair<double,double>((double)begin.first - length, (double)begin.second); 				
 			}else {
 				if(sense == UP_DOWN)
-					return make_pair<double,double>((double)begin.first, (double) begin.second - length); 
+					return std::make_pair<double,double>((double)begin.first, (double) begin.second - length); 
 				else 
-					return make_pair<double,double>((double)begin.first,(double) begin.second + length); 
+					return std::make_pair<double,double>((double)begin.first,(double) begin.second + length); 
 			}
 		}
 		
@@ -101,17 +94,17 @@ class Corridor{
 		/**
 		 *
 		 */
-        void orderCorridorPoints(vector<Point> & points)const{
+        void orderCorridorPoints(std::vector<Point> & points)const{
             
             if(this->getDirection() ==  VERTICAL){
-                sort(points.begin(), points.end(), Point::isMinorY);
+                std::sort(points.begin(), points.end(), Point::isMinorY);
                 if(this->getSense() == UP_DOWN)
-                    reverse(points.begin(), points.end());
+                    std::reverse(points.begin(), points.end());
                 
             }else if(this->getDirection() == HORIZONTAL){
-                sort(points.begin(), points.end(), Point::isMinorX);
+                std::sort(points.begin(), points.end(), Point::isMinorX);
                 if(this->getSense() == RIGHT_TO_LEFT)
-                    reverse(points.begin(), points.end());
+                    std::reverse(points.begin(), points.end());
             }
         }
     
@@ -195,13 +188,3 @@ class Corridor{
 			cout<<"___________________________________\n\n";
 		}
 };
-
-
-#endif
-
-
-
-
-
-
-

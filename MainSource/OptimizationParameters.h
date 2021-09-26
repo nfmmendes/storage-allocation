@@ -1,5 +1,4 @@
-#ifndef OPTIMIZATION_PARAMETERS_H
-#define OPTIMIZATION_PARAMETERS_H
+#pragma once
 
 /**
  *	Class with constant data used as parameters of algorithm 
@@ -17,5 +16,3 @@ class OptimizationParameters{
 		static const int WEAK_ALLOCATION_PROHIBITION_PENALTY = 8000;
 		static const int WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY = 50000;
 };
-
-#endif

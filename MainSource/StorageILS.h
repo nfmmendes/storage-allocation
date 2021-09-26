@@ -1,13 +1,4 @@
-//
-//  ILS.hpp
-//  
-//
-//  Created by Nilson Mendes on 07/01/2019.
-//  In a future version of this code, the neighborhood structure classes must be put in a separated file
-//
-
-#ifndef ILS_h
-#define ILS_h
+#pragma once
 
 #include "StorageAllocationSolution.h"
 #include "StorageSolutionEvaluator.h"
@@ -51,7 +42,7 @@ class InsideShelfSwap :public NeighborhoodStructure{
                                         // until its cause be discovered
 		Shelf shelf; 
         OptimizationConstraints *constraints;
-        map<Position, Product> shelfAllocations; 
+        std::map<Position, Product> shelfAllocations; 
         bool isValidSwap(Product &first, Product &second, MapAllocation &allocations);
 
     public:
@@ -59,8 +50,8 @@ class InsideShelfSwap :public NeighborhoodStructure{
         ~InsideShelfSwap();
         InsideShelfSwap(AbstractSolution *initial, OptimizationConstraints * constr, Shelf & shelf);
         AbstractSolution * getStartSolution() const {return this->startSolution; }
-        vector<AbstractSolution *> createNeighbors();
-        void setShelfAllocations(map<Position,Product> &value){ shelfAllocations = value; }
+        std::vector<AbstractSolution *> createNeighbors();
+        void setShelfAllocations(std::map<Position,Product> &value){ shelfAllocations = value; }
 		void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
 		void setShelf(Shelf & shelf) { this->shelf = shelf;} 
@@ -88,7 +79,7 @@ class InsideBlockSwap:public NeighborhoodStructure{
                                             // until its cause be discovered
 		Block block; 
         OptimizationConstraints *constraints;
-		map<Position, Product> blockAllocations;
+		std::map<Position, Product> blockAllocations;
         bool isValidSwap(Product &first, Product &second, MapAllocation &allocations); 
     public:
         InsideBlockSwap();
@@ -96,7 +87,7 @@ class InsideBlockSwap:public NeighborhoodStructure{
         InsideBlockSwap(StorageAllocationSolution *initial, OptimizationConstraints * constr, Block &block);
         AbstractSolution * getStartSolution() const { return this->startSolution; }
 
-        vector<AbstractSolution *> createNeighbors();
+        std::vector<AbstractSolution *> createNeighbors();
 
         void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
@@ -123,21 +114,21 @@ class MostFrequentSwap :public NeighborhoodStructure{
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
         OptimizationConstraints *constraints;
-        vector<Product> interchangeableProducts; 
+        std::vector<Product> interchangeableProducts; 
         bool isValidSwap(Product &first, Product &second, MapAllocation &allocations);
     public:
         MostFrequentSwap();
         ~MostFrequentSwap();
-        MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr , vector<Product> &products);
+        MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr , std::vector<Product> &products);
         AbstractSolution * getStartSolution() const; 
-        vector<AbstractSolution *> createNeighbors();
+        std::vector<AbstractSolution *> createNeighbors();
 
-        void setInterchangeableProducts(vector<Product> &prods) { this->interchangeableProducts = prods; }
+        void setInterchangeableProducts(std::vector<Product> &prods) { this->interchangeableProducts = prods; }
         void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
-        vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
+        std::vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
         int getRandomSeed(){ return this->randomSeed; srand(this->randomSeed); }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
 };
@@ -159,22 +150,22 @@ class IsolatedFamilySwap :public NeighborhoodStructure{
                                             // the hardness of a company accepts a random behavior of the algorithm. It
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
-        vector<Product> interchangeableProducts;
+        std::vector<Product> interchangeableProducts;
         OptimizationConstraints *constraints; 
     public:
         IsolatedFamilySwap();
         ~IsolatedFamilySwap();
-        IsolatedFamilySwap(StorageAllocationSolution *initial, OptimizationConstraints *constr,  vector<Product> &products);
+        IsolatedFamilySwap(StorageAllocationSolution *initial, OptimizationConstraints *constr,  std::vector<Product> &products);
         AbstractSolution * getStartSolution() const; 
-        vector<AbstractSolution *> createNeighbors();
+        std::vector<AbstractSolution *> createNeighbors();
 
         void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
         int getRandomSeed(){ return this->randomSeed; srand(this->randomSeed); }
-        void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
-        vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
+        void setInterchangeableProducts(std::vector<Product> prods) {this->interchangeableProducts = prods; }
+        std::vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
 };
 
@@ -195,13 +186,13 @@ class StorageAllocationPertubation : public NeighborhoodStructure {
                                             // also helps to debug the code, as the bug can be reproduced several times 
                                             // until its cause be discovered
         int numOfPertubationMoves; 
-		vector<Product> interchangeableProducts; 
+		std::vector<Product> interchangeableProducts; 
         OptimizationConstraints * constraints; 
-        set<string> forbiddenAllocationProducts; 
+        set<std::string> forbiddenAllocationProducts; 
         bool isValidSwap(Product &first, Product &second, MapAllocation &allocations);
     public:
         AbstractSolution * getStartSolution() const; 
-        vector<AbstractSolution *> createNeighbors();
+        std::vector<AbstractSolution *> createNeighbors();
         StorageAllocationPertubation(OptimizationConstraints *constr){ constraints = constr; }
         ~StorageAllocationPertubation(){}
 
@@ -210,8 +201,8 @@ class StorageAllocationPertubation : public NeighborhoodStructure {
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
         int getRandomSeed(){ return this->randomSeed; }
-        void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
-        vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
+        void setInterchangeableProducts(std::vector<Product> prods) {this->interchangeableProducts = prods; }
+        std::vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
         unsigned int getNumberOfNeighbors(){ return this->numOfPertubationMoves; }
 };
 
@@ -222,15 +213,15 @@ class StorageILS :public Heuristic{
 
     private:
 		OptimizationConstraints constraints;
-		vector<Product> products; 
+		std::vector<Product> products; 
         DistanceMatrix<Vertex> *distanceMatrix; 
-		map<Position, Vertex> vertexByCell;
+		std::map<Position, Vertex> vertexByCell;
         Warehouse *warehouse; 
-		vector<Order> orders; 
-        vector<NeighborhoodStructure *> neighborhoodStructures;
+		std::vector<Order> orders; 
+        std::vector<NeighborhoodStructure *> neighborhoodStructures;
         int numIterationsWithoutImprovement; 
-        vector<string> neighborhoodType;
-        map<Product, char> productClasses; 
+        std::vector<std::string> neighborhoodType;
+        std::map<Product, char> productClasses; 
 		
         bool StopCriteriaReached();
         StorageAllocationSolution * ExecutePertubation(StorageAllocationSolution *);
@@ -241,16 +232,12 @@ class StorageILS :public Heuristic{
         AbstractSolution * SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
         AbstractSolution * SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
         AbstractSolution * RunPerturbation(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure);
-        map<Product, char> getProductABCClasses();
+        std::map<Product, char> getProductABCClasses();
     public:
         StorageILS();
         StorageILS(StorageILS &other);
-		StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> &distMatrix,
-				   map<Position, Vertex> vertexByCell,vector<Order> &orders, OptimizationConstraints &cons);
+		StorageILS(std::vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> &distMatrix,
+				   std::map<Position, Vertex> vertexByCell,std::vector<Order> &orders, OptimizationConstraints &cons);
         AbstractSolution * Execute(); 
 
 };
-
-
-
-#endif /* ILS_hpp */

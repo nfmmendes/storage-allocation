@@ -1,10 +1,7 @@
-#ifndef TRANSITION_H
-#define TRANSITION_H
+#pragma once
 
 #include<iostream>
-#include<vector>
-#include "Vertex.h"
-using namespace std; 
+#include "Vertex.h" 
 
 namespace QuickTSP{
 
@@ -40,5 +37,3 @@ namespace QuickTSP{
     };
     
  }
- 
- #endif

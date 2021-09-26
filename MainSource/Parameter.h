@@ -1,19 +1,16 @@
-#ifndef Parameter_h
-#define Parameter_h
+#pragma once
 
-#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <vector>
-using namespace std;
 
 enum ParameterType { _string_, _double_, _int_, _bool_};
 
 class Parameter{
     
     private:
-        string name;
-        string stringValue;
+        std::string name;
+        std::string stringValue;
         double doubleValue;
         int intValue;
         bool booleanValue;
@@ -22,24 +19,22 @@ class Parameter{
     public:
         Parameter();
         Parameter(const Parameter & other);
-        Parameter(string name, string value);
-        Parameter(string name, int value);
-        Parameter(string name, double value);
-        Parameter(string name, bool value);
+        Parameter(std::string name, std::string value);
+        Parameter(std::string name, int value);
+        Parameter(std::string name, double value);
+        Parameter(std::string name, bool value);
     
-        void setParameterValue(string value);
+        void setParameterValue(std::string value);
         void setParameterValue(double value);
         void setParameterValue(int value);
         void setParameterValue(bool value);
-        void setName(string name);
-        static vector<Parameter> readParametersData(string fileName);
+        void setName(std::string name);
+        static std::vector<Parameter> readParametersData(std::string fileName);
     
         ParameterType getParameterType();
-        string getName();
+        std::string getName();
         bool getBoolParameterValue();
         int getIntParameterValue();
         double getDoubleParameterValue();
-        string getStringParameterValue();
+        std::string getStringParameterValue();
 };
-
-#endif /* Parameter_hp */

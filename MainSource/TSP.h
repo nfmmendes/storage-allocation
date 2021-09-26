@@ -1,14 +1,11 @@
-#ifndef TSP_H
-#define TSP_H
+#pragma once
 
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <utility>
 #include <map>
 #include "DistanceMatrix.h"
 #include "Vertex.h"
-using namespace std;
 using namespace QuickTSP; 
 
 
@@ -24,15 +21,7 @@ class TSP {
 		DistanceMatrix<Vertex> getDistanceMatrix(); 
 		void setDistanceMatrix(DistanceMatrix<Vertex> matrix);
 		TSP(const TSP &other);
-		pair<double , vector<Vertex> > bruteForceTSP(const vector<Vertex> &points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd);
-		pair<double , vector<Vertex> > closestNeighborTSP(const vector<Vertex> &points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd);
-		pair<double , vector<Vertex> > quickLocalSearchTSP(const vector<Vertex> &points, map<Vertex,Vertex> &bestStart, map<Vertex,Vertex> &bestEnd); 
-		
-	
-
-
+		std::pair<double , std::vector<Vertex> > bruteForceTSP(const std::vector<Vertex> &points, std::map<Vertex,Vertex> &bestStart, std::map<Vertex,Vertex> &bestEnd);
+		std::pair<double , std::vector<Vertex> > closestNeighborTSP(const std::vector<Vertex> &points, std::map<Vertex,Vertex> &bestStart, std::map<Vertex,Vertex> &bestEnd);
+		std::pair<double , std::vector<Vertex> > quickLocalSearchTSP(const std::vector<Vertex> &points, std::map<Vertex,Vertex> &bestStart, std::map<Vertex,Vertex> &bestEnd); 
 }; 
-
-
-
-#endif

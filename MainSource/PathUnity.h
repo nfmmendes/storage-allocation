@@ -1,24 +1,12 @@
-#ifndef PATH_UNITY_H
-#define PATH_UNITY_H
+#pragma once
 
 #include<iostream>
-#include<cmath>
-#include<ctime>
-#include<vector>
-#include<algorithm>
-#include<utility>
-#include<fstream>
 #include "Vertex.h"
 #include "Transition.h"
 #include "HananGraph.h"
-using namespace std; 
-
-
 
 namespace QuickTSP{
 
-
-    
     class PathUnity{
         
         private: 
@@ -38,9 +26,5 @@ namespace QuickTSP{
             Vertex & getBeginVertex();
             Vertex & getEndVertex();
             Transition & getTransition(); 
-            
-        
     };
 }
-
-#endif
