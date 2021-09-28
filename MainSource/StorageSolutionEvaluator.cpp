@@ -1,4 +1,5 @@
 #include<iostream>
+#include<assert.h>
 #include<string>
 #include<cmath>
 #include<cstdlib>
@@ -391,21 +392,43 @@ double StorageSolutionEvaluator::evaluatePenaltyOnLevel(map<string, int> & alloc
  *	@param vertexes List of vertexes (pair)
  *	@return Total distance between the two points
  **/
-double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(vector<Vertex>& vertexes){
+double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(vector<Vertex>& vertexes) {
 	
-	Vertex location = vertexes[0]; 
-	Vertex begin = closestStartPoint[location];
-	Vertex end =   closestEndPoint[location] ; 
-	double dist1 = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end); 
+	assert(vertexes.size() >= 2);
+	assert(closestEndPoint.find(vertexes[0]) != closestEndPoint.end());
+	assert(closestEndPoint.find(vertexes[1]) != closestEndPoint.end());
 	
-	location = vertexes[1]; 
-	begin = closestStartPoint[ location  ];
-	end =   closestEndPoint[   location  ] ; 
-	double dist2 = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end); 
-	
-	return min(dist1, dist2); 
+	auto closestToZeroDepart = closestStartPoint[vertexes[0]];
+	auto closestToOneDepart = closestStartPoint[vertexes[1]];
+
+	auto closestFromZeroArrival = closestEndPoint[vertexes[0]];
+	auto closestFromOneArrival = closestEndPoint[vertexes[1]];
+
+	auto distanceDepartZero = distances->getDistance(closestToOneDepart, vertexes[0]);
+	auto distanceDepartOne = distances->getDistance(closestToOneDepart, vertexes[1]);
+
+	auto distanceZeroArrival = distances->getDistance(closestFromZeroArrival, vertexes[0]);
+	auto distanceOneArrival = distances->getDistance(closestFromOneArrival, vertexes[1]);
+
+	auto distanceZeroOne = distances->getDistance(vertexes[0], vertexes[1]);
+	auto distancesOneZero = distances->getDistance(vertexes[1], vertexes[0]);
+
+	auto firstOption = distanceDepartZero + distanceZeroOne + distanceOneArrival;
+	auto secondOption = distanceDepartOne + distancesOneZero + distanceZeroArrival;
+
+	return min(firstOption, secondOption); 
 	
 }
+
+double StorageSolutionEvaluator::getOnePointsBestRouteDistance(Vertex &location) {
+
+	auto begin = closestStartPoint[ location  ];
+	auto end =   closestEndPoint[   location  ] ; 
+	double distance = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end); 
+
+	return distance; 
+}
+
 
 /**
  * 
@@ -424,10 +447,7 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute> &v
 		storagePoints.clear(); 
 		 
 		if(items.size() == 1) {	
-			Vertex location = vertexes[0]; 
-			Vertex begin = closestStartPoint[location];
-			Vertex end =   closestEndPoint[location] ; 
-			vertexesVisits[i].second = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end); 
+			vertexesVisits[i].second = getOnePointsBestRouteDistance(vertexes[0]);
 			totalDistance += vertexesVisits[i].second; 
 		}else if(items.size() == 2){
 			vertexesVisits[i].second = this->getBetterRouteWithTwoPoints(vertexes);
@@ -464,10 +484,7 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex> & route){
 	
 	pair<double, vector<Vertex> > routeEvaluation; 
 	if(route.size() == 1){
-		Vertex location = route[0]; 
-		Vertex begin = closestStartPoint[ location ];
-		Vertex end =   closestEndPoint[ location ] ; 
-		totalDistance = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end);
+		totalDistance = getOnePointsBestRouteDistance(route[0]);
 
 	}else if(route.size() == 2){
 		totalDistance = this->getBetterRouteWithTwoPoints(route);	

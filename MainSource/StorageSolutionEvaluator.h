@@ -44,6 +44,7 @@ class StorageSolutionEvaluator{
 		std::map<std::string, set<long> > shelfIdsSetByBlockName;
 
 		double getBetterRouteWithTwoPoints(std::vector<Vertex>& vertexes); 
+		double getOnePointsBestRouteDistance(Vertex &location);
 		void InitializeIsolatedFamilies();
 		void InitializeClosestDeliveryPoint();
 		double evaluatePenaltyDeltaByProhibition(const Product product, const Cell &firstCell, const Cell &secondCell);
