@@ -34,9 +34,9 @@ class ProductAllocationProhibitions{
         void setForbiddenBlocks(std::vector<Block> &others);
     
         Product getProduct() const; 
-        std::vector<Shelf> getForbiddenShelves();
-        std::vector<Cell> getForbiddenCells();
-        std::vector<Block> getForbiddenBlocks();
+        std::vector<Shelf> & getForbiddenShelves();
+        std::vector<Cell> & getForbiddenCells();
+        std::vector<Block> & getForbiddenBlocks();
     
         void addProhibition(Cell &cell);
         void addProhibition(Shelf &shelf);

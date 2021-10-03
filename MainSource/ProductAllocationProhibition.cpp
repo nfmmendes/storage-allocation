@@ -77,9 +77,9 @@ void ProductAllocationProhibitions::setForbiddenCells(vector<Cell> &others){  th
 void ProductAllocationProhibitions::setForbiddenBlocks(vector<Block> &others) {  this->forbiddenBlocks = others; }
 
 Product ProductAllocationProhibitions::getProduct() const{   return this->product;}
-vector<Shelf> ProductAllocationProhibitions::getForbiddenShelves(){ return this->forbiddenShelves;}
-vector<Cell> ProductAllocationProhibitions::getForbiddenCells(){ return this->forbiddenCells; }
-vector<Block> ProductAllocationProhibitions::getForbiddenBlocks() { return this->forbiddenBlocks; }
+vector<Shelf> & ProductAllocationProhibitions::getForbiddenShelves(){ return this->forbiddenShelves;}
+vector<Cell> & ProductAllocationProhibitions::getForbiddenCells(){ return this->forbiddenCells; }
+vector<Block> & ProductAllocationProhibitions::getForbiddenBlocks() { return this->forbiddenBlocks; }
 
 /**
  *	Adds a cell to the pool of forbidden cells 

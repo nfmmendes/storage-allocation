@@ -65,6 +65,4 @@ class StorageSolutionEvaluator{
 		PickingRoute getVertexes(std::vector<Position> &positions);
 		Vertex getVertex(Position &position);
 		double evaluatePenaltyDelta(MapAllocation & allocations,const Product &first,const Product &second);
-		
-
 };
