@@ -197,27 +197,28 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(const Product
 
 	double oldPenalty = 0;
 	double newPenalty = 0;
-	ProductAllocationProhibitions firstProhibition = prohibitionsByProduct[product.getName()];
+	ProductAllocationProhibitions *firstProhibition = &prohibitionsByProduct[product.getName()];
 
-	vector<Cell> prohibitedCells = firstProhibition.getForbiddenCells();
-	vector<Shelf> prohibitedShelves = firstProhibition.getForbiddenShelves();
-	vector<Block> prohibitedBlocks = firstProhibition.getForbiddenBlocks();
+	vector<Cell> *prohibitedCells = &firstProhibition->getForbiddenCells();
+	vector<Shelf> *prohibitedShelves = &firstProhibition->getForbiddenShelves();
+	vector<Block> *prohibitedBlocks = &firstProhibition->getForbiddenBlocks();
 
-	for (unsigned int i = 0; i < prohibitedCells.size(); i++)
+	for (unsigned int i = 0; i < prohibitedCells->size(); i++)
 	{
-		if (prohibitedCells[i].getCode() == firstCell.getCode())
+		const Cell* currentCell = &(*prohibitedCells)[i];
+		if (currentCell->getCode() == firstCell.getCode())
 			oldPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
-		if (prohibitedCells[i].getCode() == secondCell.getCode())
+		if (currentCell->getCode() == secondCell.getCode())
 			newPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
 	}
 
 	if (firstCell.getIdShelf() != secondCell.getIdShelf())
 	{
-		for (unsigned int i = 0; i < prohibitedShelves.size(); i++)
+		for (unsigned int i = 0; i < prohibitedShelves->size(); i++)
 		{
-			if (prohibitedShelves[i].getId() == firstCell.getIdShelf())
+			if ((*prohibitedShelves)[i].getId() == firstCell.getIdShelf())
 				oldPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
-			if (prohibitedShelves[i].getId() == secondCell.getIdShelf())
+			if ((*prohibitedShelves)[i].getId() == secondCell.getIdShelf())
 				newPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
 		}
 	}
@@ -230,11 +231,11 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(const Product
 
 	if (blockNameA != blockNameB)
 	{
-		for (unsigned int i = 0; i < prohibitedBlocks.size(); i++)
+		for (unsigned int i = 0; i < prohibitedBlocks->size(); i++)
 		{
-			if (prohibitedBlocks[i].getName() == blockNameA)
+			if ((*prohibitedBlocks)[i].getName() == blockNameA)
 				oldPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
-			if (prohibitedBlocks[i].getName() == blockNameB)
+			if ((*prohibitedBlocks)[i].getName() == blockNameB)
 				newPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
 		}
 	}
