@@ -288,7 +288,6 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation &allocations
 	if (!(isFirstIsolated || isSecondIsolated) || first.getFamily() == second.getFamily())
 		return deltaProhibitions;
 
-	//for_each(weaklyIsolatedFamilies.begin(), isolatedFamilies.end(), [&isolatedFamilyCodes](IsolatedFamily &iso){ isolatedFamilyCodes.insert(iso.getCode()); });
 	bool firstIsStronglyIsolated = stronglyIsolatedFamilies.find(first.getFamily()) != stronglyIsolatedFamilies.end();
 	bool secondIsStronglyIsolated = stronglyIsolatedFamilies.find(second.getFamily()) != stronglyIsolatedFamilies.end();
 
@@ -298,17 +297,17 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation &allocations
 	//Check cell delta
 	if (firstCell.getCode() != secondCell.getCode())
 	{
-		map<string, vector<Product>> allocationsByCell;
-		map<long, vector<Product>> allocationsByShelf;
-		map<string, vector<Product>> allocationsByBlock;
+		map<string, vector<string>> familyAllocationsByCell;
+		map<long, vector<string>> allocationsByShelf;
+		map<string, vector<string>> allocationsByBlock;
 		string firstBlockName = shelfById[firstCell.getIdShelf()].getBlockName();
 		string secondBlockName = shelfById[secondCell.getIdShelf()].getBlockName();
 
 		if (firstCell.getIdShelf() == secondCell.getIdShelf())
 		{
-			for (auto &[key, value] : allocations)
+			for (auto &[product, cell] : allocations)
 			{ //Same shelf. Does not need to load shelf or block allocations
-				allocationsByCell[value.first.getCode()].push_back(key);
+				familyAllocationsByCell[cell.first.getCode()].push_back(product.getFamily());
 			}
 		}
 		else
@@ -317,43 +316,43 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation &allocations
 			{
 				for (auto &[key, value] : allocations)
 				{ //Same block. Does not need to load block allocations
-					allocationsByCell[value.first.getCode()].push_back(key);
-					allocationsByShelf[value.first.getIdShelf()].push_back(key);
+					familyAllocationsByCell[value.first.getCode()].push_back(key.getFamily());
+					allocationsByShelf[value.first.getIdShelf()].push_back(key.getFamily());
 				}
 			}
 			else
 			{
-				for (auto &[key, value] : allocations)
+				for (auto &[product, value] : allocations)
 				{
-					allocationsByCell[value.first.getCode()].push_back(key);
-					allocationsByShelf[value.first.getIdShelf()].push_back(key);
-					allocationsByBlock[shelfById[value.first.getIdShelf()].getBlockName()].push_back(key);
+					familyAllocationsByCell[value.first.getCode()].push_back(product.getFamily());
+					allocationsByShelf[value.first.getIdShelf()].push_back(product.getFamily());
+					allocationsByBlock[shelfById[value.first.getIdShelf()].getBlockName()].push_back(product.getFamily());
 				}
 			}
 		}
 
 		if (firstCell.getLevels() > 1 || secondCell.getLevels() > 1)
 		{
-			auto products = allocationsByCell[firstCell.getCode()];
-			delta += evaluatePenaltyDeltaByLevel(products, first, second, CELL_LEVEL);
-			products = allocationsByCell[secondCell.getCode()];
-			delta += evaluatePenaltyDeltaByLevel(products, second, first, CELL_LEVEL);
+			auto families = familyAllocationsByCell[firstCell.getCode()];
+			delta += evaluatePenaltyDeltaByLevel(families, first, second, CELL_LEVEL);
+			families = familyAllocationsByCell[secondCell.getCode()];
+			delta += evaluatePenaltyDeltaByLevel(families, second, first, CELL_LEVEL);
 		}
 
 		if (firstCell.getIdShelf() != secondCell.getIdShelf())
 		{
-			auto products = allocationsByShelf[firstCell.getIdShelf()];
-			delta += evaluatePenaltyDeltaByLevel(products, first, second, SHELF_LEVEL);
+			auto families = allocationsByShelf[firstCell.getIdShelf()];
+			delta += evaluatePenaltyDeltaByLevel(families, first, second, SHELF_LEVEL);
 
-			products = allocationsByShelf[secondCell.getIdShelf()];
-			delta += evaluatePenaltyDeltaByLevel(products, second, first, SHELF_LEVEL);
+			families = allocationsByShelf[secondCell.getIdShelf()];
+			delta += evaluatePenaltyDeltaByLevel(families, second, first, SHELF_LEVEL);
 
 			if (firstBlockName != secondBlockName)
 			{
-				products = allocationsByBlock[firstBlockName];
-				delta += evaluatePenaltyDeltaByLevel(products, first, second, BLOCK_LEVEL);
-				products = allocationsByBlock[secondBlockName];
-				delta += evaluatePenaltyDeltaByLevel(products, second, first, BLOCK_LEVEL);
+				families = allocationsByBlock[firstBlockName];
+				delta += evaluatePenaltyDeltaByLevel(families, first, second, BLOCK_LEVEL);
+				families = allocationsByBlock[secondBlockName];
+				delta += evaluatePenaltyDeltaByLevel(families, second, first, BLOCK_LEVEL);
 			}
 		}
 	}
@@ -364,18 +363,18 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(MapAllocation &allocations
 /**
  * 
  * */
-double StorageSolutionEvaluator::evaluatePenaltyDeltaByLevel(vector<Product> &allProducts, const Product &first, const Product &second, string isolationLevel)
+double StorageSolutionEvaluator::evaluatePenaltyDeltaByLevel(vector<string> &allocatedFamilies, const Product &first, const Product &second, string isolationLevel)
 {
 	double delta = 0;
 	double oldValue = 0;
 	double newValue = 0;
 	map<string, int> allocationsByFamily;
 
-	for (auto &prod : allProducts)
+	for (auto &family : allocatedFamilies)
 	{
-		if (allocationsByFamily.find(prod.getFamily()) == allocationsByFamily.end())
-			allocationsByFamily[prod.getFamily()] = 0;
-		allocationsByFamily[prod.getFamily()]++;
+		if (allocationsByFamily.find(family) == allocationsByFamily.end())
+			allocationsByFamily[family] = 0;
+		allocationsByFamily[family]++;
 	}
 
 	oldValue = evaluatePenaltyOnLevel(allocationsByFamily, isolationLevel);

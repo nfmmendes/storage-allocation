@@ -49,7 +49,7 @@ class StorageSolutionEvaluator{
 		void InitializeClosestDeliveryPoint();
 		double evaluatePenaltyDeltaByProhibition(const Product product, const Cell &firstCell, const Cell &secondCell);
 		double evaluatePenaltyDeltaByProhibition(const Product &first, const Cell &firstCell, const Product &second, const Cell &secondCell);
-		double evaluatePenaltyDeltaByLevel(std::vector<Product> &allocatedProducts, const Product & first, const Product & second, std::string isolationLevel);
+		double evaluatePenaltyDeltaByLevel(std::vector<string> &allocatedFamilies, const Product & first, const Product & second, std::string isolationLevel);
 		double evaluatePenaltyOnLevel(std::map<std::string, int> & allocationsByFamilyCode, std::string isolationLevel);
 
 	public:
