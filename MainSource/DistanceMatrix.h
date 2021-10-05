@@ -1,207 +1,205 @@
 #ifndef DISTANCE_MATRIX_H
 #define DISTANCE_MATRIX_H
 
-#include<iostream>
-#include<map>
-#include<vector>
-#include<cmath>
-#include<iomanip>
-#include<set>
-#include<map>
+#include <iostream>
+#include <map>
+#include <vector>
+#include <cmath>
+#include <iomanip>
+#include <set>
+#include <map>
 
+template <class T>
+class DistanceMatrix {
 
-template <class T> 
-class DistanceMatrix{
+private:
+    std::vector<T> orderedKeys;
+    std::map<T, int> keyIndex;
+    std::vector<std::vector<double> > distances;
 
-    private: 
-        std::vector<T> orderedKeys; 
-        std::map<T, int> keyIndex; 
-        std::vector<std::vector<double> > distances;
-    public:
-        DistanceMatrix(){}
-        DistanceMatrix(DistanceMatrix<T> & other);
-		DistanceMatrix(std::map<std::pair<T,T> , double> & distances);  
-		DistanceMatrix<T> & buildMatrix(std::map<std::pair<T,T> , double> & distances);
-        std::vector<T> & getKeys();
-        std::vector<std::vector< double > > getDistances()const;
-        std::map<T, int> getElementsMap() const;
-        double getDistance(const T &first,const T &second) const; 
-        void setRow(std::vector<double> &d, T &);
-        void setColumn(std::vector<double> &d, T&) ;
-        void setRowOnIndex(std::vector<double> &d, int) ;
-        void setColumnOnIndex(std::vector<double> &d, int);
-	DistanceMatrix<T> & operator=(DistanceMatrix<T> &other); 
-		void print(); 
+public:
+    DistanceMatrix() {}
+    DistanceMatrix(DistanceMatrix<T>& other);
+    DistanceMatrix(std::map<std::pair<T, T>, double>& distances);
+    DistanceMatrix<T>& buildMatrix(std::map<std::pair<T, T>, double>& distances);
+    std::vector<T>& getKeys();
+    std::vector<std::vector<double> > getDistances() const;
+    std::map<T, int> getElementsMap() const;
+    double getDistance(const T& first, const T& second) const;
+    void setRow(std::vector<double>& d, T&);
+    void setColumn(std::vector<double>& d, T&);
+    void setRowOnIndex(std::vector<double>& d, int);
+    void setColumnOnIndex(std::vector<double>& d, int);
+    DistanceMatrix<T>& operator=(DistanceMatrix<T>& other);
+    void print();
 };
 
-
-template<class T>
-DistanceMatrix<T>::DistanceMatrix(std::map<std::pair<T,T> , double> & distancesPairs){
-	this->buildMatrix(distancesPairs);
+template <class T>
+DistanceMatrix<T>::DistanceMatrix(std::map<std::pair<T, T>, double>& distancesPairs)
+{
+    this->buildMatrix(distancesPairs);
 }
 
-template<class T> 
-DistanceMatrix<T> & DistanceMatrix<T>::buildMatrix(std::map<std::pair<T,T> , double> &distancesPairs){
-	std::set<T> keys; 
+template <class T>
+DistanceMatrix<T>& DistanceMatrix<T>::buildMatrix(std::map<std::pair<T, T>, double>& distancesPairs)
+{
+    std::set<T> keys;
 
-	for(auto &mapPair : distancesPairs){
-		keys.insert(mapPair.first.first);
-		keys.insert(mapPair.first.second); 
-	}
-	
-	T aux; 
-	for(auto it = keys.begin(); it != keys.end();it++){
-		keyIndex[*it] = orderedKeys.size();
-		aux = *it; 
-		orderedKeys.push_back(aux); 
-	}
-	
-	distances.resize(orderedKeys.size());
-	for(unsigned int i=0;i<distances.size(); i++)
-		distances[i].resize(distances.size()); 
-	
-	int firstIndex, secondIndex; 
-	for(const auto & pair : distancesPairs){
-		firstIndex = keyIndex[pair.first.first]; 
-		secondIndex = keyIndex[pair.first.second]; 
-		
-		distances[firstIndex][secondIndex] = pair.second; 	
-	}
-	
-	return *this; 
+    for (auto& mapPair : distancesPairs) {
+        keys.insert(mapPair.first.first);
+        keys.insert(mapPair.first.second);
+    }
+
+    T aux;
+    for (auto it = keys.begin(); it != keys.end(); it++) {
+        keyIndex[*it] = orderedKeys.size();
+        aux = *it;
+        orderedKeys.push_back(aux);
+    }
+
+    distances.resize(orderedKeys.size());
+    for (unsigned int i = 0; i < distances.size(); i++)
+        distances[i].resize(distances.size());
+
+    int firstIndex, secondIndex;
+    for (const auto& pair : distancesPairs) {
+        firstIndex = keyIndex[pair.first.first];
+        secondIndex = keyIndex[pair.first.second];
+
+        distances[firstIndex][secondIndex] = pair.second;
+    }
+
+    return *this;
 }
 
-
-
-
-template<class T>
-DistanceMatrix<T>::DistanceMatrix(DistanceMatrix<T> & other){
-
-    for(unsigned int i=0; i<other.orderedKeys.size();i++)
+template <class T>
+DistanceMatrix<T>::DistanceMatrix(DistanceMatrix<T>& other)
+{
+    for (unsigned int i = 0; i < other.orderedKeys.size(); i++)
         this->orderedKeys.push_back(other.orderedKeys[i]);
 
     this->distances.resize(orderedKeys.size());
-    for(unsigned int i=0; i< orderedKeys.size(); i++){
+    for (unsigned int i = 0; i < orderedKeys.size(); i++) {
         this->distances[i].resize(orderedKeys.size());
 
-        for(unsigned int j=0; j<orderedKeys.size();j++)
-            this->distances[i][j] = other.distances[i][j]; 
+        for (unsigned int j = 0; j < orderedKeys.size(); j++)
+            this->distances[i][j] = other.distances[i][j];
     }
 
-    for(unsigned int i=0; i<this->orderedKeys.size(); i++)
-        this->keyIndex[orderedKeys[i]] = i; 
+    for (unsigned int i = 0; i < this->orderedKeys.size(); i++)
+        this->keyIndex[orderedKeys[i]] = i;
 }
 
-
-template<class T>
-DistanceMatrix<T> & DistanceMatrix<T>::operator=(DistanceMatrix<T> &other){
-	
-	this->orderedKeys.clear(); 
-	for(unsigned int i=0; i<other.orderedKeys.size();i++)
+template <class T>
+DistanceMatrix<T>& DistanceMatrix<T>::operator=(DistanceMatrix<T>& other)
+{
+    this->orderedKeys.clear();
+    for (unsigned int i = 0; i < other.orderedKeys.size(); i++)
         this->orderedKeys.push_back(other.orderedKeys[i]);
 
     this->distances.resize(orderedKeys.size());
-    for(unsigned int i=0; i< orderedKeys.size(); i++){
+    for (unsigned int i = 0; i < orderedKeys.size(); i++) {
         this->distances[i].resize(orderedKeys.size());
 
-        for(unsigned int j=0; j<orderedKeys.size();j++)
-            this->distances[i][j] = other.distances[i][j]; 
+        for (unsigned int j = 0; j < orderedKeys.size(); j++)
+            this->distances[i][j] = other.distances[i][j];
     }
 
-	this->keyIndex.clear();
-	for(unsigned int i=0; i<this->orderedKeys.size(); i++)
-        this->keyIndex[orderedKeys[i]] = i; 
-	
-	return *this;
+    this->keyIndex.clear();
+    for (unsigned int i = 0; i < this->orderedKeys.size(); i++)
+        this->keyIndex[orderedKeys[i]] = i;
+
+    return *this;
 }
 
-
-
-template<class T>
-std::map<T, int> DistanceMatrix<T>::getElementsMap() const {
+template <class T>
+std::map<T, int> DistanceMatrix<T>::getElementsMap() const
+{
     return keyIndex;
 }
 
-template<class T>
-std::vector<std::vector< double > > DistanceMatrix<T>::getDistances() const {
-    return distances; 
+template <class T>
+std::vector<std::vector<double> > DistanceMatrix<T>::getDistances() const
+{
+    return distances;
 }
 
-template<class T>
-std::vector<T> & DistanceMatrix<T>::getKeys() {
-    return orderedKeys; 
+template <class T>
+std::vector<T>& DistanceMatrix<T>::getKeys()
+{
+    return orderedKeys;
 }
 
-
-template<class T>
-double DistanceMatrix<T>::getDistance(const T &first,const T &second) const {
-	
+template <class T>
+double DistanceMatrix<T>::getDistance(const T& first, const T& second) const
+{
     auto itFirst = keyIndex.find(first);
+
+    if(itFirst == keyIndex.end())
+        return 1e5;
+
     auto itSecond = keyIndex.find(second);
-	
-	try{
-		if(itFirst != keyIndex.end() && itSecond!= keyIndex.end())
-			return distances[itFirst->second][itSecond->second] ;
-	}catch(const std::out_of_range& oor){
-		std::cerr<<"There is a error here! Function return 1e5"<<std::endl;
-		return 1e5;
-	}
-	
-	return -1;
+    if(itSecond == keyIndex.end())
+        return 1e5;
+
+    return distances[itFirst->second][itSecond->second];
 }
 
-template<class T>
-void DistanceMatrix<T>::setRow(std::vector<double> &d, T &elem) {
+template <class T>
+void DistanceMatrix<T>::setRow(std::vector<double>& d, T& elem)
+{
     typename std::vector<T>::iterator itFirst = keyIndex.find(elem);
-    if(itFirst != orderedKeys.end()){
+    if (itFirst != orderedKeys.end()) {
         int index = keyIndex[itFirst];
         int maxAdvance = min(orderedKeys.size(), distances.size());
-        for(int i=0; i<maxAdvance; i++)
+        for (int i = 0; i < maxAdvance; i++)
             orderedKeys[index][i] = d[i];
     }
 }
 
-template<class T>
-void DistanceMatrix<T>::setColumn(std::vector<double> &d, T&elem) {
+template <class T>
+void DistanceMatrix<T>::setColumn(std::vector<double>& d, T& elem)
+{
     typename std::vector<T>::iterator itFirst = keyIndex.find(elem);
-    if(itFirst != orderedKeys.end()){
+    if (itFirst != orderedKeys.end()) {
         int index = keyIndex[itFirst];
         int maxAdvance = min(orderedKeys.size(), distances.size());
-        for(int i=0; i<maxAdvance; i++)
+        for (int i = 0; i < maxAdvance; i++)
             orderedKeys[i][index] = d[i];
     }
 }
 
-template<class T>
-void DistanceMatrix<T>::setRowOnIndex(std::vector<double> &d, int index)  {
+template <class T>
+void DistanceMatrix<T>::setRowOnIndex(std::vector<double>& d, int index)
+{
     int maxAdvance = min(orderedKeys.size(), distances.size());
-    for(int i=0; i<maxAdvance; i++)
+    for (int i = 0; i < maxAdvance; i++)
         orderedKeys[index][i] = d[i];
 }
 
-template<class T>
-void DistanceMatrix<T>::setColumnOnIndex(std::vector<double> &d, int index)  {
+template <class T>
+void DistanceMatrix<T>::setColumnOnIndex(std::vector<double>& d, int index)
+{
     int maxAdvance = min(orderedKeys.size(), distances.size());
-    for(int i=0; i<maxAdvance; i++)
+    for (int i = 0; i < maxAdvance; i++)
         orderedKeys[i][index] = d[i];
 }
 
+template <class T>
+void DistanceMatrix<T>::print()
+{
 
-template<class T> 
-void DistanceMatrix<T>::print(){
-	
-	std::cout<<std::setw(15)<<"****************\n"; 
-	for(unsigned int i=0;i<orderedKeys.size();i++){
-		std::cout<<std::setw(15)<<orderedKeys[i]<<std::endl;
-	}
-	
-	for(unsigned int i=0; i< orderedKeys.size();i++){
-		int indexI = keyIndex[orderedKeys[i]]; 
-		for(unsigned int j=0; j< orderedKeys.size();j++)
-			std::cout<<std::setw(15)<<distances[indexI][keyIndex[ orderedKeys[j] ] ];
-		std::cout<<std::endl; 
-		
-	}
+    std::cout << std::setw(15) << "****************\n";
+    for (unsigned int i = 0; i < orderedKeys.size(); i++) {
+        std::cout << std::setw(15) << orderedKeys[i] << std::endl;
+    }
+
+    for (unsigned int i = 0; i < orderedKeys.size(); i++) {
+        int indexI = keyIndex[orderedKeys[i]];
+        for (unsigned int j = 0; j < orderedKeys.size(); j++)
+            std::cout << std::setw(15) << distances[indexI][keyIndex[orderedKeys[j]]];
+        std::cout << std::endl;
+    }
 }
 
 #endif
