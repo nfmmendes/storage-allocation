@@ -59,7 +59,7 @@ DistanceMatrix<T>& DistanceMatrix<T>::buildMatrix(std::map<std::pair<T, T>, doub
 
     distances.resize(orderedKeys.size());
     for (unsigned int i = 0; i < distances.size(); i++)
-        distances[i].resize(distances.size());
+        distances[i].resize(distances.size(),1e5);
 
     int firstIndex, secondIndex;
     for (const auto& pair : distancesPairs) {
