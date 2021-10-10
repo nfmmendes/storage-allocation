@@ -1,16 +1,10 @@
-#include<iostream>
 #include<cmath>
 #include<iomanip>
-#include<vector>
 #include<algorithm> 
-#include<queue>
 #include<exception> 
-#include "Product.h"
-#include "Vertex.h"
 #include "Heuristic.h"
 #include "Warehouse.h"
 #include "DistanceMatrix.h"
-#include "Order.h"
 #include "OptimizationConstraints.h"
 #include "StorageConstructiveHeuristic.h"
 #include "ProductAllocationProhibition.h"

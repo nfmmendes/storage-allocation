@@ -47,8 +47,8 @@ void TSP::setDistanceMatrix(DistanceMatrix<Vertex> matrix)
  *sense storage point --> delivery point
  **/
 pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
-    map<Vertex, Vertex>& bestStart,
-    map<Vertex, Vertex>& bestEnd)
+    VertexVertexMap& bestStart,
+    VertexVertexMap& bestEnd)
 {
 
     vector<Vertex> currentOrder = points;
@@ -88,8 +88,8 @@ pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
  */
 pair<double, vector<Vertex> >
 TSP::closestNeighborTSP(const vector<Vertex>& points,
-    map<Vertex, Vertex>& bestStart,
-    map<Vertex, Vertex>& bestEnd)
+    VertexVertexMap& bestStart,
+    VertexVertexMap& bestEnd)
 {
 
     vector<Vertex> solution;
@@ -150,8 +150,8 @@ TSP::closestNeighborTSP(const vector<Vertex>& points,
  **/
 pair<double, vector<Vertex> >
 TSP::quickLocalSearchTSP(const vector<Vertex>& points,
-    map<Vertex, Vertex>& bestStart,
-    map<Vertex, Vertex>& bestEnd)
+    VertexVertexMap& bestStart,
+    VertexVertexMap& bestEnd)
 {
 
     pair<double, vector<Vertex> > currentOrder = closestNeighborTSP(points, bestStart, bestEnd);

@@ -7,14 +7,14 @@
 #include <cmath>
 #include <iomanip>
 #include <set>
-#include <map>
+#include <unordered_map>
 
 template <class T>
 class DistanceMatrix {
 
 private:
     std::vector<T> orderedKeys;
-    std::map<T, int> keyIndex;
+    std::unordered_map<T, int> keyIndex;
     std::vector<std::vector<double> > distances;
 
 public:

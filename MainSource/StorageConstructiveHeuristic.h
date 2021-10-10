@@ -5,6 +5,7 @@
 #include<set>
 #include<vector>
 #include<queue>
+#include<unordered_map>
 #include "Product.h"
 #include "Heuristic.h"
 #include "Vertex.h"
@@ -40,8 +41,8 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		std::set<std::string> storageVertexTypes; 
 		std::map<std::string, Block> blocksByName; 
 		std::map<long int, Shelf> shelvesById; 
-		std::map<Vertex, Vertex> closestStartPoint;
-		std::map<Vertex, Vertex> closestEndPoint; 
+		std::unordered_map<Vertex, Vertex> closestStartPoint;
+		std::unordered_map<Vertex, Vertex> closestEndPoint; 
 		std::vector<std::pair<Product, int> > productsSortedByFrequence;
 		std::map<Product, int> frequenceByProduct;
 		

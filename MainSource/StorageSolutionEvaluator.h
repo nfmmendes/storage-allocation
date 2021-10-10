@@ -5,6 +5,7 @@
 #include<set>
 #include<vector>
 #include<map>
+#include<unordered_map>
 #include<utility>
 #include "Vertex.h"
 #include "Arc.h"
@@ -37,8 +38,8 @@ class StorageSolutionEvaluator{
 		std::set<std::string> weaklyIsolatedFamilies;  
 		std::set<std::string> stronglyIsolatedFamilies;
 		std::map<std::string, std::pair<std::string, std::string> > isolationDataByFamilyCode; 			// Isolation level and force by family code 
-		std::map<Vertex, Vertex> closestStartPoint;
-		std::map<Vertex, Vertex> closestEndPoint;
+		std::unordered_map<Vertex, Vertex> closestStartPoint;
+		std::unordered_map<Vertex, Vertex> closestEndPoint;
 		std::map<std::string, ProductAllocationProhibitions> prohibitionsByProduct; 
 		std::map<long, Shelf> shelfById; 
 		std::map<std::string, set<long> > shelfIdsSetByBlockName;
