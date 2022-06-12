@@ -15,7 +15,7 @@ TSP::TSP() {}
 /**
  * Copy constructor
  **/
-TSP::TSP(DistanceMatrix<Vertex>& distanceMatrix)
+TSP::TSP(const DistanceMatrix<Vertex>* distanceMatrix)
 {
     this->distanceMatrix = distanceMatrix;
     this->distanceMatrixSet = true;
@@ -24,12 +24,12 @@ TSP::TSP(DistanceMatrix<Vertex>& distanceMatrix)
 /**
  *
  **/
-DistanceMatrix<Vertex> TSP::getDistanceMatrix() { return distanceMatrix; }
+const DistanceMatrix<Vertex>* TSP::getDistanceMatrix() const { return distanceMatrix; }
 
 /**
  *
  **/
-void TSP::setDistanceMatrix(DistanceMatrix<Vertex> matrix)
+void TSP::setDistanceMatrix(const DistanceMatrix<Vertex>* matrix)
 {
     this->distanceMatrix = matrix;
     this->distanceMatrixSet = true;
@@ -59,11 +59,11 @@ pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
     do {
         double sum = 0.0;
         for (int i = 1; sum <= bestCost && i < orderSize; i++) {
-            sum += distanceMatrix.getDistance(currentOrder[i - 1], currentOrder[i]);
+            sum += distanceMatrix->getDistance(currentOrder[i - 1], currentOrder[i]);
         }
 
-        sum += distanceMatrix.getDistance(bestStart[currentOrder[0]], currentOrder[0]);
-        sum += distanceMatrix.getDistance(currentOrder[orderSize - 1],
+        sum += distanceMatrix->getDistance(bestStart[currentOrder[0]], currentOrder[0]);
+        sum += distanceMatrix->getDistance(currentOrder[orderSize - 1],
             bestEnd[currentOrder[orderSize - 1]]);
 
         if (sum < bestCost) {
@@ -102,7 +102,7 @@ TSP::closestNeighborTSP(const vector<Vertex>& points,
     double distance;
     int numPoints = points.size();
     for (int i = 0; i < numPoints; i++) {
-        distance = distanceMatrix.getDistance(bestStart[points[i]], points[i]);
+        distance = distanceMatrix->getDistance(bestStart[points[i]], points[i]);
         // find the closest point to a delivery point
         if (distance < lowerDistance) {
             lowerDistance = distance;
@@ -125,7 +125,7 @@ TSP::closestNeighborTSP(const vector<Vertex>& points,
         Vertex bestPoint;
 
         for (auto value : remainingPoints) {
-            distance = distanceMatrix.getDistance(previousPoint, value);
+            distance = distanceMatrix->getDistance(previousPoint, value);
 
             if (distance < lowerDistance) {
                 lowerDistance = distance;
@@ -139,7 +139,7 @@ TSP::closestNeighborTSP(const vector<Vertex>& points,
         remainingPoints.erase(bestPoint);
     }
 
-    sumCost += distanceMatrix.getDistance(previousPoint, bestEnd[previousPoint]);
+    sumCost += distanceMatrix->getDistance(previousPoint, bestEnd[previousPoint]);
 
     return make_pair(sumCost, solution);
 }
@@ -162,17 +162,17 @@ TSP::quickLocalSearchTSP(const vector<Vertex>& points,
         int changingPoint = 0;
 
         for (int j = 1; j + 2 < orderSize; j++) {
-            double oldCost = distanceMatrix.getDistance(currentOrder.second[j - 1],
+            double oldCost = distanceMatrix->getDistance(currentOrder.second[j - 1],
                                  currentOrder.second[j])
-                + distanceMatrix.getDistance(currentOrder.second[j],
+                + distanceMatrix->getDistance(currentOrder.second[j],
                       currentOrder.second[j + 1])
-                + distanceMatrix.getDistance(currentOrder.second[j + 1],
+                + distanceMatrix->getDistance(currentOrder.second[j + 1],
                       currentOrder.second[j + 2]);
-            double newCost = distanceMatrix.getDistance(currentOrder.second[j - 1],
+            double newCost = distanceMatrix->getDistance(currentOrder.second[j - 1],
                                  currentOrder.second[j + 1])
-                + distanceMatrix.getDistance(currentOrder.second[j + 1],
+                + distanceMatrix->getDistance(currentOrder.second[j + 1],
                       currentOrder.second[j])
-                + distanceMatrix.getDistance(currentOrder.second[j],
+                + distanceMatrix->getDistance(currentOrder.second[j],
                       currentOrder.second[j + 2]);
 
             if (newCost - oldCost < costReduction) {

@@ -210,11 +210,18 @@ class StorageAllocationPertubation : public NeighborhoodStructure {
  * 
  */
 class StorageILS :public Heuristic{
+    
+    public:
+        StorageILS();
+        StorageILS(StorageILS &other);
+		StorageILS(std::vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex>* distMatrix,
+				   std::map<Position, Vertex> vertexByCell,std::vector<Order> &orders, OptimizationConstraints &cons);
+        AbstractSolution * Execute(); 
 
     private:
 		OptimizationConstraints constraints;
 		std::vector<Product> products; 
-        DistanceMatrix<Vertex> *distanceMatrix; 
+        const DistanceMatrix<Vertex> *distanceMatrix; 
 		std::map<Position, Vertex> vertexByCell;
         Warehouse *warehouse; 
 		std::vector<Order> orders; 
@@ -233,11 +240,4 @@ class StorageILS :public Heuristic{
         AbstractSolution * SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
         AbstractSolution * RunPerturbation(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure);
         std::map<Product, char> getProductABCClasses();
-    public:
-        StorageILS();
-        StorageILS(StorageILS &other);
-		StorageILS(std::vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> &distMatrix,
-				   std::map<Position, Vertex> vertexByCell,std::vector<Order> &orders, OptimizationConstraints &cons);
-        AbstractSolution * Execute(); 
-
 };

@@ -527,9 +527,9 @@ vector<AbstractSolution *> IsolatedFamilySwap::createNeighbors(){
 ////                    Storage allocation ILS region
 ////
 /////////////////////////////////////////////////////////////////////////////////////////
-StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> &distMatrix,
+StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,const DistanceMatrix<Vertex> *distMatrix,
 					   map<pair<Cell, int>, Vertex> vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
-	this->distanceMatrix = &distMatrix; 
+	this->distanceMatrix = distMatrix; 
 	this->warehouse = &wh; 
 	this->orders= orders; 
 	this->vertexByCell = vertexByCell; 
@@ -547,7 +547,7 @@ StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Ver
  */
 StorageAllocationSolution * StorageILS::CreateInitialSolution(){
 	
-	StorageConstructiveHeuristic constr(this->products,*warehouse,*distanceMatrix,vertexByCell, orders,constraints); 
+	StorageConstructiveHeuristic constr(this->products,*warehouse, distanceMatrix,vertexByCell, orders,constraints); 
 	return  constr.Execute(); 
 }
 

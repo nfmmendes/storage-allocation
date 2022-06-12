@@ -72,16 +72,10 @@ void ProcessInputData::CalculateMatrixDistances(){
 		
 }
 
-/**
- *
- */
 void ProcessInputData::CreateOptimizationAuxiliarStructures(){
 	
 }
 
-/**
- *
- */
 void ProcessInputData::ExecuteProcessData(){
 	this->CreateGraph(); 
 
@@ -93,17 +87,10 @@ void ProcessInputData::ExecuteProcessData(){
 	//this->distanceMatrix->print(); 
 }
 
-
-/**
- *
- */
-DistanceMatrix<Vertex> * ProcessInputData::getDistanceMatrix(){
+const DistanceMatrix<Vertex> * ProcessInputData::getDistanceMatrix(){
 	return distanceMatrix; 
 }
 
-/**
- *
- */
 WarehouseToGraphConverter * ProcessInputData::getWarehouseToGraphConverter(){
 	return &warehouseToGraphConverter; 
 }

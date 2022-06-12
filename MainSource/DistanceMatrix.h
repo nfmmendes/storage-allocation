@@ -22,7 +22,7 @@ public:
     DistanceMatrix(DistanceMatrix<T>& other);
     DistanceMatrix(std::map<std::pair<T, T>, double>& distances);
     DistanceMatrix<T>& buildMatrix(std::map<std::pair<T, T>, double>& distances);
-    std::vector<T>& getKeys();
+    const std::vector<T>& getKeys() const;
     std::vector<std::vector<double> > getDistances() const;
     std::map<T, int> getElementsMap() const;
     double getDistance(const T& first, const T& second) const;
@@ -125,7 +125,7 @@ std::vector<std::vector<double> > DistanceMatrix<T>::getDistances() const
 }
 
 template <class T>
-std::vector<T>& DistanceMatrix<T>::getKeys()
+const std::vector<T>& DistanceMatrix<T>::getKeys() const
 {
     return orderedKeys;
 }

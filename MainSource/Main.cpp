@@ -67,7 +67,7 @@ int main(int argc, char **argv){
 		cout<<"Initializing metaheuristic \n";
 		
 		//VND vnd(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell , input.getOrders(),cons); 
-		StorageILS ils(input.getProducts(),warehouse, *processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);
+		StorageILS ils(input.getProducts(),warehouse, processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);
 	
 		//vnd.run();
 		

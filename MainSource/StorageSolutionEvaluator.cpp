@@ -54,7 +54,7 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(
  *
  */
 StorageSolutionEvaluator::StorageSolutionEvaluator(
-    DistanceMatrix<Vertex>* distances, map<Position, Vertex>& vertexByPosition,
+    const DistanceMatrix<Vertex>* distances, map<Position, Vertex>& vertexByPosition,
     vector<Block>& blocks, const OptimizationConstraints& constraints)
 {
 
@@ -477,7 +477,7 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(
     vector<PickingRoute>& vertexesVisits)
 {
 
-    TSP tsp(*distances);
+    TSP tsp(distances);
     vector<pair<Product, double> > items;
     vector<Vertex> storagePoints;
     double penalty = 0.0;
@@ -524,7 +524,7 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(
 double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex>& route)
 {
 
-    TSP tsp(*distances);
+    TSP tsp(distances);
     vector<pair<Product, double> > items;
     double penalty = 0.0;
     double totalDistance = 0.0;

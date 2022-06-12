@@ -31,7 +31,7 @@ class StorageSolutionEvaluator{
 		std::map<Vertex, std::map<int, std::vector<PickingRoute > >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
 															 								   ///< the presence of a vertex and then by size.  
 		std::map<std::pair<Cell,int> , Vertex> vertexByCellPosition; 
-		DistanceMatrix<Vertex> *distances; 
+		const DistanceMatrix<Vertex> *distances; 
 		OptimizationConstraints optimizationConstraints;	
 
 		//Auxiliary structures
@@ -55,7 +55,7 @@ class StorageSolutionEvaluator{
 
 	public:
 		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);
-		StorageSolutionEvaluator(DistanceMatrix<Vertex> * distanceMatrix, std::map<Position, Vertex> &vertexByPosition,  std::vector<Block> &blocks, const OptimizationConstraints &constraint); 
+		StorageSolutionEvaluator(const DistanceMatrix<Vertex> * distanceMatrix, std::map<Position, Vertex> &vertexByPosition,  std::vector<Block> &blocks, const OptimizationConstraints &constraint); 
 		double sumDistances(std::vector<Vertex> &sequence); 
 		double DoRouteEvaluation(std::vector<Vertex> & route);
 		double DoRouteEstimation(std::vector<Vertex> & route);

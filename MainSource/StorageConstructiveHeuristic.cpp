@@ -20,9 +20,9 @@ using namespace QuickTSP;
 /***
  * Member constructor
  **/
-StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh,DistanceMatrix<Vertex> &distMatrix,
+StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex> *distMatrix,
 														   map<Position, Vertex> vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
-	this->distanceMatrix = &distMatrix; 
+	this->distanceMatrix = distMatrix; 
 	this->warehouse = &wh; 
 	this->orders= orders; 
 	this->constraints = cons; 
@@ -87,8 +87,6 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 	storageVertexTypes.insert(WarehouseToGraphConverter::UPPER_LEVEL_CELL);
 	storageVertexTypes.insert(WarehouseToGraphConverter::UNIQUE_LEVEL_CELL);
 	storageVertexTypes.insert(WarehouseToGraphConverter::FIRST_LEVEL_CELL);
-	
-	
 }
 
 
@@ -122,9 +120,7 @@ void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 		
 		closestStartPoint[storagePoints[i]] = bestStart;
 		closestEndPoint[storagePoints[i] ] = bestEnd; 
-		
 	}	
-
 }
 
 
@@ -317,7 +313,7 @@ double StorageConstructiveHeuristic::evaluatePenaltiesByAllocationProhibition(Ma
  **/
 void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution){	
 	
-	TSP tsp(*distanceMatrix); 
+	TSP tsp(distanceMatrix); 
 	vector<pair<Product, double> > items; 
 	vector<Vertex> storagePoints; 
 	double penalty = 0.0; 

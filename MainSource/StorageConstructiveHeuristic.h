@@ -26,7 +26,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		OptimizationConstraints constraints;
 		std::map<Position, Vertex > vertexByCell; 
 		std::vector<Product> products; 
-        DistanceMatrix<Vertex> *distanceMatrix; 
+        const DistanceMatrix<Vertex> *distanceMatrix; 
         Warehouse *warehouse; 
 		std::vector<Order> orders; 
 		
@@ -78,7 +78,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 
     public: 
         StorageAllocationSolution * Execute();
-		StorageConstructiveHeuristic(std::vector<Product> & prods, Warehouse &wh, DistanceMatrix<Vertex> &distMatrix,
+		StorageConstructiveHeuristic(std::vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex> *distMatrix,
 									 std::map<Position, Vertex> vertexByCell,
 									std::vector<Order> &orders, OptimizationConstraints &cons);
 };

@@ -13,14 +13,14 @@ typedef std::unordered_map<Vertex,Vertex> VertexVertexMap;
 class TSP {
 
 	private:
-		DistanceMatrix<Vertex> distanceMatrix; 
+		const DistanceMatrix<Vertex>* distanceMatrix; 
 		bool distanceMatrixSet = false; 
 
 	public:
 		TSP();
-		TSP(DistanceMatrix<Vertex> &distanceMatrix);
-		DistanceMatrix<Vertex> getDistanceMatrix(); 
-		void setDistanceMatrix(DistanceMatrix<Vertex> matrix);
+		explicit TSP(const DistanceMatrix<Vertex>* distanceMatrix);
+		const DistanceMatrix<Vertex>* getDistanceMatrix() const; 
+		void setDistanceMatrix(const DistanceMatrix<Vertex>* matrix);
 		TSP(const TSP &other);
 		std::pair<double , std::vector<Vertex> > bruteForceTSP(const std::vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd);
 		std::pair<double , std::vector<Vertex> > closestNeighborTSP(const std::vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd);
