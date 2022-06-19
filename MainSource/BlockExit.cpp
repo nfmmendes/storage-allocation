@@ -48,8 +48,8 @@ void BlockExit::setCoordY(double value) { coordY = value; }
 void BlockExit::setBlockAName(double value) { blockAName = value; }
 void BlockExit::setBlockBName(double value) { blockBName = value; }
 
-bool BlockExit::operator==(const BlockExit &other) { return this->Id == other.Id; }
-bool BlockExit::operator!=(const BlockExit &other) { return this->Id != other.Id; }
+bool BlockExit::operator==(const BlockExit &other) const { return this->Id == other.Id; }
+bool BlockExit::operator!=(const BlockExit &other) const { return this->Id != other.Id; }
 
 
 /**

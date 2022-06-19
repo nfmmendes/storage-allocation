@@ -16,11 +16,11 @@ class Block{
         std::vector<Shelf> shelves;						///< Stores all shelves
 		std::map<long int, Shelf> shelvesById;			///< Stores a map connecting a shelf id to the object
         std::vector<BlockExit> exits;					///< Store all the exists
-        std::vector<Corridor> corridors;					///< Store all the corridors 
+        std::vector<Corridor> corridors;				///< Store all the corridors 
         std::vector<Curve> curves;						///< Store all the curves that conects two corridors 
-        string name; 								///< Name of block
-        double length;								///< Block length 
-        double width; 								///< Block width 
+        string name; 								    ///< Name of block
+        double length;								    ///< Block length 
+        double width; 								    ///< Block width 
         std::pair<double,double> bottomLeftCoords;		///< Bottom left extremety of the block 
         
     public:
@@ -51,7 +51,7 @@ class Block{
         std::vector<Curve> getCurves();
         std::pair<double,double> getBottomLeftCoords();
     
-        bool isInBlock(const Point &point)const;
+        bool isInBlock(const Point &point) const;
 
 		void setName(const std::string &name);
 

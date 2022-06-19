@@ -37,8 +37,8 @@ class BlockExit{
         void setBlockAName(double value);
         void setBlockBName(double value);
     
-        bool operator==(const BlockExit &other);
-        bool operator!=(const BlockExit &other);
+        bool operator==(const BlockExit &other) const;
+        bool operator!=(const BlockExit &other) const;
         bool operator<(const BlockExit & other) const;
 		BlockExit & operator=(const BlockExit &other);
 		

@@ -58,7 +58,6 @@ WarehouseToGraphConverter::WarehouseToGraphConverter(Warehouse &warehouse){
  */
 void WarehouseToGraphConverter::generateGraph(){
     
-    
     set<Arc> arcs;                                      //Store the arcs of the resulting graph
     map<long int, vector<Curve> > curvesByCorridor;     //Stores all curves from or to a corridor
     
@@ -101,7 +100,6 @@ void WarehouseToGraphConverter::generateGraph(){
                 connectCellLevels(cells[k], cellPositions, arcs);
 			
 			//// FILL VERTEX BY CELL
-			//TODO:
         
             //Connects cells with corridors and internal nodes with border nodes in a shelf.
             for(int k=1; k< (int) numRows+1; k++){
@@ -116,16 +114,13 @@ void WarehouseToGraphConverter::generateGraph(){
                 }
             }
 		
-           // cout<<"Connecting shelf to corridor"<<endl;
             connectShelvesToCorridor(shelves[j], adjacentCorridors,cellPositions, numRows, numColumns, arcs);
-			
         }
-		
-	//	cout<<"Splitting corridors\n";
+	
         //This will allow to create arcs in the interior of corridors
         for(int j = 0; j<(int)curves.size(); j++)
             splitCorridorByCurves(curves[j], curvesByCorridor);
-	//	cout<<"Creating arcs on corridors\n"; 
+	
         for(int j=0; j< (int)corridors.size(); j++)
             createArcsOnCorridors(corridors[j],arcs);
         connectCorridorsByCurves(curves,arcs);
@@ -136,7 +131,7 @@ void WarehouseToGraphConverter::generateGraph(){
 	// It is important to remember that block exits does not belongs exclusivelly to one block
 	// We will consider here (and other parts of code) that the exit belongs to only one block (blockA) for 
 	// simplicity, but if it is needed this can be changed 
-	for(int i= 0; i<(int) blocks.size(); i++){
+	for(int i = 0; i < (int) blocks.size(); i++){
 		vector<BlockExit> blockExits = blocks[i].getExits(); 
 		for(int j=0; j<(int) blockExits.size();j++)
 			connectBlockExits(blockExits[j], arcs, blocksByName);
@@ -167,27 +162,26 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
 		#if DEBUG_LEVEL > 0
 			cout<<"Connecting cell: \t"<<cell.getCode()<<" which has a single level\n";
 		#endif 
-        Vertex firstLevel( cell.getCode(), UNIQUE_LEVEL_CELL);			/// All the vertexes created based on cell position have 
+        Vertex firstLevel(cell.getCode(), UNIQUE_LEVEL_CELL);	/// All the vertexes created based on cell position have 
 		vertexByCell[make_pair(cell,1)] = firstLevel;
-		//cout<<"point 3 :"<<firstLevel<<endl; 
 		
 		/// the world "Cell" in their type name
         initializeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
 		
-    }else if(numLevels > 1){
+    } else if(numLevels > 1){
         Vertex firstLevel(cell.getCode()+"_L_1", FIRST_LEVEL_CELL);
-		//cout<<"point 4 :"<<firstLevel<<endl; 
+
         initializeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
 		vertexByCell[make_pair(cell,1)] = firstLevel;
+
 		#if DEBUG_LEVEL > 0
 			cout<<"Connecting cell levels of cell "<<cell.getCode()<<" which has " <<numLevels<<" levels\n";
 		#endif
 		
-		
         //Create the vertexes to represent the higher levels and the arcs to connect them
         for(int l=2; l<= (int) numLevels; l++){
             Vertex vertex( cell.getCode()+"_L_"+to_string(l) , UPPER_LEVEL_CELL);		/// To the graph is irrelevant if a vertex
-																									/// can not connect directly with each other 
+																						/// can not connect directly with each other 
             vertexByCode[vertex.getLabel()] = vertex;
             vertexByCell[make_pair(cell,l)] = vertex;
             //We suppose that the pickers came from the lower level, take a product on the first or upper leves
@@ -351,7 +345,6 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::getInternalAndExternalCellsVerte
     }
 
     return make_pair(vertexCell, cellOther);				
-
 }
 
 /**
@@ -371,12 +364,12 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(co
     
     Vertex vertexCell(cellName, "CellVertex");
 	 
-	if(vertexByCode.find(cellName)!=vertexByCode.end())
+	if(vertexByCode.find(cellName) != vertexByCode.end())
 		vertexCell = vertexByCode[cellName]; 
 	else
 		vertexByCode[vertexCell.getLabel()] = vertexCell;
 	
-    Vertex vertexCorridor("corridor_"+to_string(corridor->getId())+"_cell_"+cellName,PICK_VERTEX);
+    Vertex vertexCorridor("corridor_"+to_string(corridor->getId())+"_cell_"+ cellName, PICK_VERTEX);
 
 	
     vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
@@ -407,7 +400,7 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 	if(up == down){ //Just to remove a warning 
 		//Search and identify the adjacent corridors
 		//Get the most to the right left-corridor (so the closest corridor on left side)
-		for(unsigned int i=0;i< adjacents.size();i++){
+		for(auto i=0;i< adjacents.size();i++){
 			double xValue = adjacents[i].getBeginCoords().first; 
 			if(adjacents[i].getDirection() == VERTICAL && xValue < shelf.getBottomLeftCoordX() && xValue > extremeLeft ){
 				left =  new Corridor(adjacents[i]);
@@ -425,7 +418,7 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 		}
 		
 		//Get the most to down up-corridor (so the closest corridor on up side)
-		for(unsigned int i=0;i<adjacents.size();i++){
+		for(auto i=0; i<adjacents.size(); i++){
 			double yValue = adjacents[i].getBeginCoords().second;
     
 			if(adjacents[i].getDirection() == HORIZONTAL && yValue > shelf.getBottomLeftCoordY() + shelfLength && yValue < extremeUp ){
@@ -437,7 +430,7 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 		}
 		
 		//Get the most to the up down-corridor (so the closest corridor on down side)
-		for(unsigned int i=0;i<adjacents.size();i++){
+		for(auto i=0; i<adjacents.size(); i++){
 			double yValue = adjacents[i].getBeginCoords().second;
     
 			if(adjacents[i].getDirection() == HORIZONTAL && yValue < shelf.getBottomLeftCoordY() && yValue > extremeDown){
@@ -464,21 +457,19 @@ void WarehouseToGraphConverter::createArcsCellToCorridor(Vertex vertexCell, Vert
 	arcs.insert(picking);
 }
 
-
-
 /**
  * Connect two corridors using one curve. This curve 
  */
 void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, set<Arc> &arcs){
 	
     for(int i=0; i< (int)curves.size();i++){
+        // Todo: test if the points exist as vertices
         Vertex begin = vertexByPoint[curves[i].getStartingPoint()];
         Vertex end = vertexByPoint[curves[i].getEndingPoint()];
 		
         double distance = curves[i].getStartingPoint().getDistance(curves[i].getEndingPoint());
         arcs.insert(Arc("arc_"+begin.getLabel()+ "_"+end.getLabel(),distance,begin, end));
     }
-    
 }
 
 /**
@@ -486,7 +477,6 @@ void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, s
  */
 void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, set<Arc> &arcs){
     
-	
     long int id = corridor.getId();
 	Point beginCorridor("beginCorridor_"+to_string(id), corridor.getBeginCoords().first, corridor.getBeginCoords().second, 0); 
 	Point endCorridor("endCorridor_"+to_string(id), corridor.getEndCoords().first, corridor.getEndCoords().second,0); 

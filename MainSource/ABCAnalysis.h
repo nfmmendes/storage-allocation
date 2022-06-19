@@ -24,9 +24,9 @@ class ABCAnalysis{
 
     public: 
         ABCAnalysis();
-        ABCAnalysis(vector<Order> &orders,unsigned int numClasses, vector<double> &thresholds);
+        ABCAnalysis(const vector<Order> &orders,unsigned int numClasses, vector<double> &thresholds);
         void execute();
-		void printClassification();
+		void printClassification() const;
         void setOrders(vector<Order> &orders);
         void setNumClasses(int num);
         void setThresholds(vector<double> &thre);

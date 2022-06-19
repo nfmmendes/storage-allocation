@@ -39,7 +39,6 @@ namespace QuickTSP{
                 void removeArc(Vertex vertex,int i);
                 std::vector<Vertex> getAdjacentVertexes(Vertex & v);
                 static Graph convertArcsToGraph(std::set<Arc> &arcs, std::string name="");
-				void print(); 
+				void print() const; 
         };
-    
 }

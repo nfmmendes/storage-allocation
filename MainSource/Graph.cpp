@@ -33,14 +33,11 @@ Graph::Graph(const vector<Vertex> &vertexes, map<Vertex, vector<Arc> > &arcs, st
         this->vertexes.push_back(vertexes[i]);
     
     for(map<Vertex, vector<Arc> >::iterator it = arcs.begin(); it != arcs.end(); it++){
-        
         for(unsigned int i=0; i < it->second.size(); i++){
             this->arcsByVertex[it->first].push_back(it->second[i]);
         }
     }
-
 }
-
 
 Graph & Graph::operator=(const Graph &other){
    
@@ -121,7 +118,6 @@ void Graph::setVertexes(vector<Vertex> other){
 	for(map<Vertex, vector<Arc> >::iterator it = this->arcsByVertex.begin(); it!= this->arcsByVertex.end();it++)
 		if(presentVertexes[it->first] == false)
 			this->arcsByVertex[it->first].clear(); 
-	
 }
 
 /**
@@ -185,7 +181,7 @@ vector<Vertex> Graph::getAdjacentVertexes(Vertex & v){
 }
 
 
-void Graph::print(){
+void Graph::print() const{
 	cout<<vertexes.size() <<" vertexes \n";
 	for(unsigned int i=0;i<vertexes.size();i++)
 		cout<<vertexes[i]<<endl;
@@ -212,13 +208,11 @@ Graph Graph::convertArcsToGraph(set<Arc> &arcs,string name){
         
         listOfArcs[it->getBeginVertex()].push_back(*it);
     }
-  
-    
+
     for(set<Vertex>::iterator it=allVertexes.begin(); it!= allVertexes.end(); it++)
         listOfVertexes.push_back(*it);
 
     Graph returned(listOfVertexes, listOfArcs, name);
     return returned;
-
 } 
 

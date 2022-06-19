@@ -1,19 +1,13 @@
-#pragma once
+#pragma once 
 
 #include "StorageAllocationSolution.h"
-#include "StorageSolutionEvaluator.h"
 #include "Heuristic.h"
 #include "NeighborhoodStructure.h"
-#include "DistanceMatrix.h"
-#include "OptimizationParameters.h"
-#include "Warehouse.h"
 #include "Cell.h"
 #include "Block.h"
 #include "Shelf.h"
-#include "OptimizationConstraints.h"
 #include "Vertex.h"
 #include "Arc.h"
-#include "ABCAnalysis.h"
 #include "Order.h"
 #include <stdio.h>
 #include <iostream> 
@@ -22,6 +16,10 @@
 #include <set>
 #include <map> 
 using namespace std; 
+
+class OptimizationConstrains;
+class StorageAllocationEvaluator;
+class Warehouse;
 
 
 /**
@@ -57,7 +55,6 @@ class InsideShelfSwap :public NeighborhoodStructure{
 		void setShelf(Shelf & shelf) { this->shelf = shelf;} 
         void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
-
 };
 
 /**
@@ -65,8 +62,7 @@ class InsideShelfSwap :public NeighborhoodStructure{
  * The list of producs that can have their position changed is given by the heuristic that is using the
  * neighborhood structure
  */
-class InsideBlockSwap:public NeighborhoodStructure{
-
+class InsideBlockSwap : public NeighborhoodStructure{
 
     private:
         int numberOfNeighbors;              // Max number of neighbors that will be created in this class when the 
@@ -102,7 +98,7 @@ class InsideBlockSwap:public NeighborhoodStructure{
  * It creates neighbors by swapping the position of the most frequent products. The list of 
  * the most frequent products is given 
  */
-class MostFrequentSwap :public NeighborhoodStructure{
+class MostFrequentSwap : public NeighborhoodStructure{
 
     private:
         int numberOfNeighbors;              // Max number of neighbors that will be created in this class when the 
@@ -132,8 +128,6 @@ class MostFrequentSwap :public NeighborhoodStructure{
         int getRandomSeed(){ return this->randomSeed; srand(this->randomSeed); }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
 };
-
-
 
 /**
  * It creates neighbors by swapping the position of the most frequent products. The list of 

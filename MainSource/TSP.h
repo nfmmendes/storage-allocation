@@ -4,9 +4,11 @@
 #include <vector>
 #include <utility>
 #include <unordered_map>
-#include "DistanceMatrix.h"
 #include "Vertex.h"
 using namespace QuickTSP; 
+
+template<class T=Vertex> 
+class DistanceMatrix; 
 
 typedef std::unordered_map<Vertex,Vertex> VertexVertexMap; 
 

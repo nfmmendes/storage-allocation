@@ -32,7 +32,7 @@ ABCAnalysis::ABCAnalysis(){
  * @param thresholds List of thresholds to define each class. Those thresholds goes from 0 to 100 and must be in 
  *	      non descending order. The number of thresholds considered will be numClasses - 1
  */
-ABCAnalysis::ABCAnalysis(vector<Order> &orders,unsigned int numClasses, vector<double> &thresholds){
+ABCAnalysis::ABCAnalysis(const vector<Order> &orders,unsigned int numClasses, vector<double> &thresholds){
     
     unsigned int distinctValues = 0;
     
@@ -170,11 +170,16 @@ void ABCAnalysis::execute(){
 }
 
 
-void ABCAnalysis::printClassification(){
+void ABCAnalysis::printClassification() const {
 	
+    using classMapIterator = map<Product, char>::const_iterator;
+
 	set<Product> products;
-	for(map<Product, char>::iterator it = volumeClasses.begin(); it != volumeClasses.end(); it++) products.insert(it->first);
-	for(map<Product, char>::iterator it = frequenceClasses.begin(); it != frequenceClasses.end(); it++) products.insert(it->first);
+	for(classMapIterator it = volumeClasses.begin(); it != volumeClasses.end(); it++) 
+        products.insert(it->first);
+
+	for(classMapIterator it = frequenceClasses.begin(); it != frequenceClasses.end(); it++) 
+        products.insert(it->first);
 	
 	
 	cout<<setw(50)<<"Product "<<setw(15)<<"Freq. Class" << setw(15)<<"Vol. Class."<<endl;
@@ -182,10 +187,13 @@ void ABCAnalysis::printClassification(){
 	for(set<Product>::iterator it = products.begin(); it != products.end();it++){
 		cout<<it->getID()<<" ";
 		
-		if(frequenceClasses.find(*it) != frequenceClasses.end())
-			cout<<frequenceClasses[*it]<<" ";
-		if(volumeClasses.find(*it) != volumeClasses.end())
-			cout<<volumeClasses[*it]<<" ";
+        auto frequenceClassIterator = frequenceClasses.find(*it);
+		if(frequenceClassIterator != frequenceClasses.end())
+			cout<<frequenceClassIterator->second<<" ";
+        
+        auto volumeClassIterator = volumeClasses.find(*it);
+		if(volumeClassIterator != volumeClasses.end())
+			cout<<volumeClassIterator->second<<" ";
 		cout<<endl; 
 	}
 	
