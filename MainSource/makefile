@@ -27,7 +27,6 @@ QuickTSP : PathUnity.h TSP.h QuickTSP.h State.h WarehouseToGraphConverter.h Laye
 Order : Order.h Product.o InputData.o 
 	$(CC) $(COMPILE_FLAGS) -c Order.cpp
 
-
 ProductAllocationProhibition: Product.o Cell.o Shelf.o Block.o ProductAllocationProhibition.h  IsolatedFamily.h
 	$(CC) $(COMPILE_FLAGS) -c ProductAllocationProhibition.cpp IsolatedFamily.cpp
 
