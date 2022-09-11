@@ -389,7 +389,7 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 	if(up == down){ //Just to remove a warning 
 		//Search and identify the adjacent corridors
 		//Get the most to the right left-corridor (so the closest corridor on left side)
-		for(auto i=0;i< adjacents.size();i++){
+		for(size_t i=0;i< adjacents.size();i++){
 			double xValue = adjacents[i].getBeginCoords().first; 
 			if(adjacents[i].getDirection() == VERTICAL && xValue < shelf.getBottomLeftCoordX() && xValue > extremeLeft){
 				left =  new Corridor(adjacents[i]);
@@ -398,7 +398,7 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 		}
 
 		//Get the most to the left right-corridor (so the closest corridor on right side)
-		for(unsigned int i=0;i< adjacents.size();i++){
+		for(size_t i=0;i< adjacents.size();i++){
 			double xValue = adjacents[i].getBeginCoords().first; 
 			if(adjacents[i].getDirection() == VERTICAL && xValue > shelf.getBottomLeftCoordX() + shelfWidth && xValue < extremeRight){
 				right =  new Corridor(adjacents[i]);
@@ -407,7 +407,7 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 		}
 		
 		//Get the most to down up-corridor (so the closest corridor on up side)
-		for(auto i=0; i<adjacents.size(); i++){
+		for(size_t i=0; i<adjacents.size(); i++){
 			double yValue = adjacents[i].getBeginCoords().second;
     
 			if(adjacents[i].getDirection() == HORIZONTAL && yValue > shelf.getBottomLeftCoordY() + shelfLength && yValue < extremeUp ){
@@ -419,7 +419,7 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 		}
 		
 		//Get the most to the up down-corridor (so the closest corridor on down side)
-		for(auto i=0; i<adjacents.size(); i++){
+		for(size_t i=0; i< adjacents.size(); i++){
 			double yValue = adjacents[i].getBeginCoords().second;
     
 			if(adjacents[i].getDirection() == HORIZONTAL && yValue < shelf.getBottomLeftCoordY() && yValue > extremeDown){
