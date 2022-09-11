@@ -521,8 +521,6 @@ vector<AbstractSolution *> IsolatedFamilySwap::createNeighbors(){
 	return solutions;
 }
 
-
-
 //////////////////////////////////////////////////////////////////////////////////////////
 ////                    Storage allocation ILS region
 ////
@@ -587,7 +585,7 @@ StorageILS::StorageILS(StorageILS &other){
  * 
  */
 bool StorageILS::StopCriteriaReached(){
-    return  this->numIterationsWithoutImprovement >= OptimizationParameters::MAX_ITERATIONS_WITHOUT_IMPROVEMENT;
+    return  this->numIterationsWithoutImprovement >= OptimizationParameters::instance()->MAX_ITERATIONS_WITHOUT_IMPROVEMENT;
 }
 
 
@@ -756,8 +754,8 @@ AbstractSolution * StorageILS::RunPerturbation(AbstractSolution *currentSolution
  * */
 map<Product, char> StorageILS::getProductABCClasses(){
 	vector<double> thresholds;
-	thresholds.push_back(OptimizationParameters::A_THRESHOLD_CLASS);
-	thresholds.push_back(OptimizationParameters::B_THRESHOLD_CLASS); 
+	thresholds.push_back(OptimizationParameters::instance()->A_THRESHOLD_CLASS);
+	thresholds.push_back(OptimizationParameters::instance()->B_THRESHOLD_CLASS); 
 	
 	ABCAnalysis abcAnalysis(orders,3, thresholds);
 	abcAnalysis.execute();

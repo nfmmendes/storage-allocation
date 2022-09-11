@@ -220,7 +220,7 @@ class StorageILS :public Heuristic{
         Warehouse *warehouse; 
 		std::vector<Order> orders; 
         std::vector<NeighborhoodStructure *> neighborhoodStructures;
-        int numIterationsWithoutImprovement; 
+        unsigned int numIterationsWithoutImprovement; 
         std::vector<std::string> neighborhoodType;
         std::map<Product, char> productClasses; 
 		

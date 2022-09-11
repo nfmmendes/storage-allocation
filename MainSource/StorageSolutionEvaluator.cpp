@@ -189,7 +189,6 @@ void StorageSolutionEvaluator::InitializeClosestDeliveryPoint()
 double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
     const Product product, const Cell& firstCell, const Cell& secondCell)
 {
-
     if (firstCell.getCode() == secondCell.getCode())
         return 0;
 
@@ -204,17 +203,17 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
     for (unsigned int i = 0; i < prohibitedCells->size(); i++) {
         const Cell* currentCell = &(*prohibitedCells)[i];
         if (currentCell->getCode() == firstCell.getCode())
-            oldPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
+            oldPenalty += OptimizationParameters::instance()->WEAK_ALLOCATION_PROHIBITION_PENALTY;
         if (currentCell->getCode() == secondCell.getCode())
-            newPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
+            newPenalty += OptimizationParameters::instance()->WEAK_ALLOCATION_PROHIBITION_PENALTY;
     }
 
     if (firstCell.getIdShelf() != secondCell.getIdShelf()) {
         for (unsigned int i = 0; i < prohibitedShelves->size(); i++) {
             if ((*prohibitedShelves)[i].getId() == firstCell.getIdShelf())
-                oldPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
+                oldPenalty += OptimizationParameters::instance()->WEAK_ALLOCATION_PROHIBITION_PENALTY;
             if ((*prohibitedShelves)[i].getId() == secondCell.getIdShelf())
-                newPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
+                newPenalty += OptimizationParameters::instance()->WEAK_ALLOCATION_PROHIBITION_PENALTY;
         }
     }
 
@@ -227,9 +226,9 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
     if (blockNameA != blockNameB) {
         for (unsigned int i = 0; i < prohibitedBlocks->size(); i++) {
             if ((*prohibitedBlocks)[i].getName() == blockNameA)
-                oldPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
+                oldPenalty += OptimizationParameters::instance()->WEAK_ALLOCATION_PROHIBITION_PENALTY;
             if ((*prohibitedBlocks)[i].getName() == blockNameB)
-                newPenalty += OptimizationParameters::WEAK_ALLOCATION_PROHIBITION_PENALTY;
+                newPenalty += OptimizationParameters::instance()->WEAK_ALLOCATION_PROHIBITION_PENALTY;
         }
     }
 
@@ -417,7 +416,7 @@ double StorageSolutionEvaluator::evaluatePenaltyOnLevel(
             total = isolatedAccum > notIsolatedAccum
                 ? (pow(notIsolatedAccum, 2) + remainingIsolated) * 1.0 / numAllocations
                 : pow(isolatedAccum, 2) * 1.0 / numAllocations;
-            total *= 1.0 * OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+            total *= 1.0 * OptimizationParameters::instance()->WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
         }
     }
 
@@ -502,10 +501,10 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(
 
             pair<double, vector<Vertex> > route;
             // This is just a limit to use the brute force TSP algorithm
-            if (storagePoints.size() < OptimizationParameters::ALL_PERMUTATIONS_TSP_THRESHOLD)
+            if (storagePoints.size() < OptimizationParameters::instance()->BRUTE_FORCE_TSP_THRESHOLD)
                 route = tsp.bruteForceTSP(storagePoints, closestStartPoint,
                     closestEndPoint);
-            else if (storagePoints.size() < OptimizationParameters::INSERTION_TSP_THRESHOLD)
+            else if (storagePoints.size() < OptimizationParameters::instance()->INSERTION_TSP_THRESHOLD)
                 route = tsp.quickLocalSearchTSP(storagePoints, closestStartPoint,
                     closestEndPoint);
             else
@@ -536,12 +535,12 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex>& route)
     else if (route.size() == 2) {
         totalDistance = this->getBetterRouteWithTwoPoints(route);
     }
-    if (route.size() < OptimizationParameters::ALL_PERMUTATIONS_TSP_THRESHOLD) // This is just a
+    if (route.size() < OptimizationParameters::instance()->BRUTE_FORCE_TSP_THRESHOLD) // This is just a
         // limit to use
         // the brute force
         // TSP algorithm
         routeEvaluation = tsp.bruteForceTSP(route, closestStartPoint, closestEndPoint);
-    else if (route.size() < OptimizationParameters::INSERTION_TSP_THRESHOLD) // This is a limit
+    else if (route.size() < OptimizationParameters::instance()->INSERTION_TSP_THRESHOLD) // This is a limit
         // to use
         routeEvaluation = tsp.quickLocalSearchTSP(route, closestStartPoint, closestEndPoint);
     else // All the other cases will use a closest neighbor inserction procedure

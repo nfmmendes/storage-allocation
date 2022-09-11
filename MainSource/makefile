@@ -31,10 +31,10 @@ ProductAllocationProhibition: Product.o Cell.o Shelf.o Block.o ProductAllocation
 	$(CC) $(COMPILE_FLAGS) -c ProductAllocationProhibition.cpp IsolatedFamily.cpp
 
 
-HeuristicPack: Warehouse Evaluator Parameter AbstractSolution.h NeighborhoodStructure.h Heuristic.h StorageILS.h StorageConstructiveHeuristic.h  VND.h
+HeuristicPack: Warehouse Evaluator AbstractSolution.h NeighborhoodStructure.h Heuristic.h StorageILS.h StorageConstructiveHeuristic.h  VND.h
 	$(CC) $(COMPILE_FLAGS) -c AbstractSolution.h  StorageConstructiveHeuristic.cpp NeighborhoodStructure.h StorageILS.cpp VND.cpp
 
-Evaluator: Parameter StorageSolutionEvaluator.h  Warehouse StorageAllocationSolution.h
+Evaluator: StorageSolutionEvaluator.h  Warehouse StorageAllocationSolution.h
 	$(CC) $(COMPILE_FLAGS) -c StorageSolutionEvaluator.cpp  StorageAllocationSolution.cpp
 
 Warehouse : Block.o Cell.o Shelf.o BlockExit.o Corridor.o

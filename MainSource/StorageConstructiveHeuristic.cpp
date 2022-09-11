@@ -274,7 +274,7 @@ double StorageConstructiveHeuristic::evaluatePenaltyOnLevel(vector<string> famil
 	int numAllocations = isolatedAccum + notIsolatedAccum; 
 	int remainingIsolated = (isolatedAccum - higherIsolatedQuantity);
 	totalPenalty = isolatedAccum > notIsolatedAccum ? (pow(notIsolatedAccum,2) + remainingIsolated)*1.0/numAllocations: pow(isolatedAccum,2)*1.0/numAllocations;
-	totalPenalty *= OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+	totalPenalty *= OptimizationParameters::instance()->WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
 
 	return totalPenalty; 
 }
@@ -337,7 +337,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			allocated.push_back(items[j].first);
 			storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
 		}else //If some item is not allocated it should be penalized 
-			nonExistentPositionPenalty += OptimizationParameters::NON_ALLOCATED_PRODUCT_PENALTY; 
+			nonExistentPositionPenalty += OptimizationParameters::instance()->NON_ALLOCATED_PRODUCT_PENALTY; 
 		}
 
 		if(allocated.size() == 1) {
@@ -351,9 +351,10 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			if(allocated.size() == 0)continue; 
 
 			pair<double, vector<Vertex> > route; 
-			if(storagePoints.size() < OptimizationParameters::ALL_PERMUTATIONS_TSP_THRESHOLD){ //This is just a limit to use the brute force TSP algorithm
+			//This is just a limit to use the brute force TSP algorithm
+			if(storagePoints.size() < OptimizationParameters::instance()->BRUTE_FORCE_TSP_THRESHOLD){ 
 				route = tsp.bruteForceTSP(storagePoints, closestStartPoint, closestEndPoint); 
-			}else if(storagePoints.size() < OptimizationParameters::INSERTION_TSP_THRESHOLD){ //This is a limit to use 
+			}else if(storagePoints.size() < OptimizationParameters::instance()->INSERTION_TSP_THRESHOLD){ //This is a limit to use 
 				route = tsp.quickLocalSearchTSP(storagePoints, closestStartPoint, closestEndPoint);
 			}else{ //All the other cases will use a closest neighbor inserction procedure 
 				route = tsp.closestNeighborTSP(storagePoints, closestStartPoint, closestEndPoint);
