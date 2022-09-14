@@ -18,6 +18,8 @@
 #include "Block.h"
 using namespace QuickTSP;
 
+class OptimizationParameters;
+
 typedef struct std::pair< std::vector<Vertex>, double> PickingRoute; 
 typedef struct std::map< Product, std::pair<Cell,int> > MapAllocation;  
 typedef struct std::pair<Cell, int> Position; 

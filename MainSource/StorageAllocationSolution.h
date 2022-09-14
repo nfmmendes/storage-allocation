@@ -14,6 +14,8 @@
 #include "Vertex.h"
 using namespace QuickTSP;
 
+class OptimizationParameters;
+
 //Represent a sequence of vertexes to be visited and the cost to visit them all
 typedef struct pair< vector<Vertex>, double> PickingRoute; 
 

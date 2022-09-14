@@ -13,9 +13,9 @@
 #include "Vertex.h"
 #include "Arc.h"
 #include "DistanceMatrix.h"
-#include "OptimizationParameters.h"
 #include "StorageSolutionEvaluator.h"
 #include "WarehouseToGraphConverter.h"
+#include "OptimizationParameters.h"
 #include "TSP.h"
 #include "Order.h"
 #include "Block.h"
@@ -416,7 +416,7 @@ double StorageSolutionEvaluator::evaluatePenaltyOnLevel(
             total = isolatedAccum > notIsolatedAccum
                 ? (pow(notIsolatedAccum, 2) + remainingIsolated) * 1.0 / numAllocations
                 : pow(isolatedAccum, 2) * 1.0 / numAllocations;
-            total *= 1.0 * OptimizationParameters::instance()->WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+            total *= 1.0 * OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
         }
     }
 
