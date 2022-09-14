@@ -6,7 +6,6 @@
 #include "PathUnity.h"
 #include "Order.h"
 #include "QuickTSP.h"
-using namespace std;
 using namespace QuickTSP; 
 
 _QuickTSP::_QuickTSP() {
@@ -26,10 +25,10 @@ _QuickTSP::_QuickTSP(HananGraph &graph,vector<Order> &orders){
 }
 
 void _QuickTSP::setHananGraph(HananGraph &graph){ this->graph = graph;}
-void _QuickTSP::setOrders(vector<Order>& orders){ this->orders = orders;}
+void _QuickTSP::setOrders(std::vector<Order>& orders){ this->orders = orders;}
 HananGraph & _QuickTSP::getHananGraph() { return this->graph; }
-vector<Order> & _QuickTSP::getOrders() { return this->orders;}
-vector<PathUnity> _QuickTSP::getSolution()    {return this->solution; }
+std::vector<Order> & _QuickTSP::getOrders() { return this->orders;}
+std::vector<PathUnity> _QuickTSP::getSolution()    {return this->solution; }
 
 void _QuickTSP::Run(){
     

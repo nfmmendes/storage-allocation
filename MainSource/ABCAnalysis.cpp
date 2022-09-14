@@ -10,9 +10,6 @@
 #include "Order.h"
 #include "Product.h"
 #include "ABCAnalysis.h"
-using namespace std;
-
-
 
 /**
  * 
@@ -196,10 +193,7 @@ void ABCAnalysis::printClassification() const {
 			cout<<volumeClassIterator->second<<" ";
 		cout<<endl; 
 	}
-	
 }
-
-
 
 /**
  * Set the orders that will be used in the analysis 
@@ -286,4 +280,3 @@ map<Product,char> ABCAnalysis::getFrequenceClasses() const{
 map<Product, int> ABCAnalysis::getProductFrequences() const{
 	return productFrequences; 
 }
-
