@@ -432,7 +432,6 @@ double StorageSolutionEvaluator::evaluatePenaltyOnLevel(
 double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(
     vector<Vertex>& vertexes)
 {
-
     assert(vertexes.size() >= 2);
     assert(closestEndPoint.find(vertexes[0]) != closestEndPoint.end());
     assert(closestEndPoint.find(vertexes[1]) != closestEndPoint.end());
@@ -458,8 +457,7 @@ double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(
     return min(firstOption, secondOption);
 }
 
-double
-StorageSolutionEvaluator::getOnePointsBestRouteDistance(Vertex& location)
+double StorageSolutionEvaluator::getOnePointsBestRouteDistance(Vertex& location)
 {
 
     auto begin = closestStartPoint[location];
@@ -475,7 +473,6 @@ StorageSolutionEvaluator::getOnePointsBestRouteDistance(Vertex& location)
 double StorageSolutionEvaluator::DoFullEvaluationWithTSP(
     vector<PickingRoute>& vertexesVisits)
 {
-
     TSP tsp(distances);
     vector<pair<Product, double> > items;
     vector<Vertex> storagePoints;
@@ -556,8 +553,6 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex>& route)
  */
 double StorageSolutionEvaluator::DoRouteEstimation(vector<Vertex>& solution)
 {
-    // int solutionSize = solution.size();
-    // cout<<solutionValue<<endl;
     for (unsigned int i = 0; i < solution.size(); i++) {
     }
 
@@ -587,7 +582,6 @@ double StorageSolutionEvaluator::sumDistances(vector<Vertex>& sequence)
 map<Product, int>
 StorageSolutionEvaluator::getRequestsByProduct(vector<Order>& orders)
 {
-
     map<Product, int> returnedValue;
 
     for (auto& order : orders) {

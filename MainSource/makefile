@@ -45,8 +45,8 @@ GraphPack: AbstractVertex.h DistanceMatrix.h Point.h Vertex.h Arc.h Graph.h Hana
 	$(CC) $(COMPILE_FLAGS) -c AbstractVertex.h DistanceMatrix.h Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.cpp DijkstraDistanceMatrixCalculator.h Line.cpp Transition.cpp
 
 #DAO CLASSES (DIRECTLY RELATED WITH THE DESCRIPTION OF DATA)
-WarehousePack : ExpeditionPoint.h Cell.h Shelf.h  Warehouse.h BlockExit.h Curve.h Client.h Product.h Order.h 
-	$(CC) $(COMPILE_FLAGS) -c ExpeditionPoint.cpp Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp
+WarehousePack : ExpeditionPoint.h Cell.h Shelf.h  Warehouse.h BlockExit.h Curve.h Client.h Product.h Order.h Corridor.h
+	$(CC) $(COMPILE_FLAGS) -c ExpeditionPoint.cpp Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp Corridor.cpp
 
 Parameter: Parameter.h OptimizationParameters.h
 	$(CC) $(COMPILE_FLAGS) -c Parameter.cpp OptimizationParameters.cpp

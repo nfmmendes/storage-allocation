@@ -295,13 +295,6 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	for(unsigned int i=0; i<secondRoutes.size(); i++)
 		delta += getVariationAndUpdateAfterSwap(secondRoutes[i], secondVertex, firstVertex, useTSPEvaluator);
 
-	//std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-	//std::cout << "First size: "<<firstRoutes.size()<<" Second size: "<<secondRoutes.size()<<endl;
-	//std::cout << "Penalty test runtime = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milliseconds_s]" << std::endl;
-	//cout<<" ================ Total delta : "<< delta<< " ======================== " << endl; 
-	//cout<<"_______________________________________________________________"<<endl;
-	//cout<<this->totalPenalty<<" "<<this->solutionValue<<" "<<delta<<" "<<penaltyDelta<<endl;
-	//system("pause");
 	this->solutionValue += delta + penaltyDelta; 
 }
 
@@ -321,16 +314,12 @@ double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *o
 	replace(original->first.begin(), original->first.end(), oldVertex, newVertex);
 	double oldValue = original->second; 
 
-//	cout<<"Use evaluator :"<<useTSPEvaluator<<" evaluator: "<<resultEvaluator<<" estimator: "<<resultEstimator<<endl;
 	original->second = useTSPEvaluator ? Evaluator->DoRouteEvaluation(original->first) : Evaluator->DoRouteEstimation(original->first);
-	//cout<<"Route size : "<<original->first.size() <<"\t Old value: "<<oldValue<<" \t New value: "<<original->second<<endl;
+	
 	if(original->first.size() <= 4){
-	//	for(int i=0;i< original->first.size(); i++)
-	//		cout<<original->first[i]<<" ";
-	//	cout<<endl<<"===========================================\n";
+	
 	}
 
-//	cout<<"Old value: "<<oldValue<<" New value: "<<original->second<<endl;
 	return original->second - oldValue; 
 }
 
@@ -383,9 +372,6 @@ void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRou
 			newSum += StorageAllocationSolution::Evaluator->DoRouteEvaluation(newRoutes[i].first);
 		else
 			newSum += StorageAllocationSolution::Evaluator->DoRouteEstimation(newRoutes[i].first);
-	
-
-	//cout<<newSum - oldSum <<endl; 
 
 	this->solutionValue += (newSum - oldSum);  
 }
@@ -393,7 +379,6 @@ void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRou
 /**
  *	Overload of the operator = 
  */
-
 StorageAllocationSolution & StorageAllocationSolution::operator=(const StorageAllocationSolution &other){
 	
 	this->solutionValue = other.solutionValue;
@@ -417,9 +402,6 @@ StorageAllocationSolution & StorageAllocationSolution::operator=(const StorageAl
 
 
 bool StorageAllocationSolution::checkSolution(){
-
-	//cout<<"Number of not allocated products: "<<notAllocatedProducts.size()<<endl; 
-	//cout<<"Total penalty: "<<totalPenalty<<endl;
 
 	set<pair<string,int>> positions; 
 	set<long> prods;

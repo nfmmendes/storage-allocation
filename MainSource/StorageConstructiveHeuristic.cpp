@@ -333,11 +333,12 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 		for(unsigned int j = 0; j<items.size();j++){
 			auto position = productAllocation[items[j].first ];
 					
-		if(vertexByCell.find(position) != vertexByCell.end()){
-			allocated.push_back(items[j].first);
-			storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
-		}else //If some item is not allocated it should be penalized 
-			nonExistentPositionPenalty += OptimizationParameters::instance()->NON_ALLOCATED_PRODUCT_PENALTY; 
+			if(vertexByCell.find(position) != vertexByCell.end()){
+				allocated.push_back(items[j].first);
+				storagePoints.push_back( vertexByCell[ productAllocation[items[j].first ] ] );
+			}else {//If some item is not allocated it should be penalized 
+				nonExistentPositionPenalty += OptimizationParameters::instance()->NON_ALLOCATED_PRODUCT_PENALTY; 
+			}
 		}
 
 		if(allocated.size() == 1) {

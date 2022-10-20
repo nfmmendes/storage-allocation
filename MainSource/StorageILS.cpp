@@ -609,8 +609,6 @@ AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *cur
 		double newSolutionValue = neighbors[0]->getSolutionValue();
 		for(unsigned int k=0;k<neighbors.size();k++){
 			newSolutionValue = neighbors[k]->getSolutionValue();
-			//cout<<"Neighbor "<<k<<"\t value: "<<newSolutionValue<<endl;
-			//cout<<"Comparison : "<<newSolutionValue<<" | "<<currentSolutionValue<<endl;
 
 			//If the neighbor has a better value than the current solution value, so update the current solution
 			//A margin of 0.1% is used to avoid to update constantly the current solution with solutions that 
@@ -625,7 +623,7 @@ AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *cur
 		}
 		
 	}
-	//cout<<"Current solution value Most frequent: "<<currentSolution->getSolutionValue()<< endl; 
+
 	return currentSolution; 
 }
 
