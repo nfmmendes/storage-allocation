@@ -5,10 +5,10 @@ BIN_NAME = StorageAllocation
 CC = g++ -g
 
 #FLAGS TO THE COMPILER
-COMPILE_FLAGS = -O3 -std=c++1z -Wall -Wextra
+COMPILE_FLAGS = -O2 -std=c++1z -Wall -Wextra
 
 
-all: GraphPack Input Parameter Evaluator HeuristicPack WarehousePack Block Warehouse ProductAllocationProhibition QuickTSP GeneralClasses
+all: GraphPack Input Parameter Evaluator HeuristicPack WarehousePack Warehouse ProductAllocationProhibition QuickTSP GeneralClasses
 	$(CC) $(COMPILE_FLAGS) -o run main.cpp *.o
 	
 
@@ -26,7 +26,7 @@ QuickTSP : PathUnity.h TSP.h QuickTSP.h State.h WarehouseToGraphConverter.h Orde
 Order : Order.h Product.h InputData.h 
 	$(CC) $(COMPILE_FLAGS) -c Order.cpp
 
-ProductAllocationProhibition: Product.h Cell.h Shelf.h Block.o ProductAllocationProhibition.h  IsolatedFamily.h
+ProductAllocationProhibition: WarehousePack Product.h Cell.h Shelf.h ProductAllocationProhibition.h  IsolatedFamily.h
 	$(CC) $(COMPILE_FLAGS) -c ProductAllocationProhibition.cpp IsolatedFamily.cpp
 
 HeuristicPack: Warehouse Evaluator AbstractSolution.h NeighborhoodStructure.h Heuristic.h StorageILS.h StorageConstructiveHeuristic.h  VND.h
@@ -35,24 +35,18 @@ HeuristicPack: Warehouse Evaluator AbstractSolution.h NeighborhoodStructure.h He
 Evaluator: StorageSolutionEvaluator.h  Warehouse StorageAllocationSolution.h
 	$(CC) $(COMPILE_FLAGS) -c  StorageSolutionEvaluator.cpp  StorageAllocationSolution.cpp
 
-Warehouse : Block WarehousePack Corridor.h
+Warehouse:
 	$(CC) $(COMPILE_FLAGS) -c Warehouse.cpp
-
-Block : WarehousePack Block.h 
-	$(CC) $(COMPILE_FLAGS) -c Block.cpp 
 
 GraphPack: AbstractVertex.h DistanceMatrix.h Point.h Vertex.h Arc.h Graph.h HananGraph.h Line.h Transition.h DistanceMatrixCalculator.h DijkstraDistanceMatrixCalculator.h
 	$(CC) $(COMPILE_FLAGS) -c AbstractVertex.h DistanceMatrix.h Point.cpp Vertex.cpp Arc.cpp Graph.cpp HananGraph.cpp DijkstraDistanceMatrixCalculator.h Line.cpp Transition.cpp
 
 #DAO CLASSES (DIRECTLY RELATED WITH THE DESCRIPTION OF DATA)
-WarehousePack : ExpeditionPoint.h Cell.h Shelf.h  Warehouse.h BlockExit.h Curve.h Client.h Product.h Order.h Corridor.h
-	$(CC) $(COMPILE_FLAGS) -c ExpeditionPoint.cpp Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp Corridor.cpp
+WarehousePack : ExpeditionPoint.h Cell.h Shelf.h  Warehouse.h BlockExit.h Curve.h Client.h Product.h Order.h Corridor.h Block.h
+	$(CC) $(COMPILE_FLAGS) -c ExpeditionPoint.cpp Cell.cpp Shelf.cpp  BlockExit.cpp  Curve.cpp Client.cpp Product.cpp Corridor.cpp Block.cpp
 
 Parameter: Parameter.h OptimizationParameters.h
 	$(CC) $(COMPILE_FLAGS) -c Parameter.cpp OptimizationParameters.cpp
-
-Corridor: Corridor.h
-	$(CC) $(COMPILE_FLAGS) -c Corridor.cpp
 
 Client: Client.h
 	$(CC) $(COMPILE_FLAGS) -c Client.cpp
