@@ -12,8 +12,8 @@ COMPILE_FLAGS = -O2 -std=c++1z -Wall -Wextra
 
 all: $(OBJECT_DIR) $(addprefix $(OBJECT_DIR)/, GraphPack.o Input.o Parameter.o WarehousePack.o Evaluator.o HeuristicPack.o \
 	ProductAllocationProhibition.o QuickTSP.o GeneralClasses.o)
-	$(CC) $(COMPILE_FLAGS) -o run main.cpp *.o
-	
+	$(CC) $(COMPILE_FLAGS) -o run main.cpp *.o 
+	$(clean)
 
 $(OBJECT_DIR)/Input.o: ProcessInputData.h InputData.h ABCAnalysis.h  OptimizationConstraints.h
 	$(CC) $(COMPILE_FLAGS) -c InputData.cpp ProcessInputData.cpp ABCAnalysis.cpp OptimizationConstraints.cpp
