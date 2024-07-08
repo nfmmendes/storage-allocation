@@ -1,7 +1,11 @@
 *.o
 *.gch
 /MainSource/*.exe
+/MainSource/build
+/MainSource/CMakeFiles
+/MainSource/CMakeCache.txt
 /MainSource/results
+/MainSource/cmake_install.cmake
 /MainSource/.vscode
 /MainSource/Instances/results
 /MainSource/Instances/*.exe

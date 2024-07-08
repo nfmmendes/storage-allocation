@@ -4,9 +4,7 @@
 #include<fstream>
 #include<cmath>
 #include<vector>
-#include<utility>
 #include<chrono> 
-#include<algorithm>
 #include "TSP.h"
 #include "VND.h"
 #include "InputData.h"
@@ -20,7 +18,6 @@
 #include "StorageILS.h"
 using namespace QuickTSP;
 
-
 struct Allocation{
 	
 	std::string productCode; 
@@ -30,7 +27,6 @@ struct Allocation{
 	Allocation(std::string prod, std::string _cell, int _level){ productCode = prod; cellCode = _cell; level = _level;}
 	
 };
-
 
 ABCAnalysis * createABCAnalysis(InputData &input){
 	
@@ -43,7 +39,6 @@ ABCAnalysis * createABCAnalysis(InputData &input){
 	
 	return analysis;
 }
-
 
 void initializeRuntimeParameters(map<std::string, char*> arguments) {
 	int abcAClassThresshold = -1;
@@ -98,20 +93,19 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-		
 	//Main input file name. This file will say which input files will be used
-	std::string indexFileName = argv[1];
-	InputData input(indexFileName);
-			
+	InputData input(fileName);
+	
 	ProcessInputData processInput(&input);
 	std::cout<<"Converting warehouse to graph\n";
 	processInput.ExecuteProcessData();
-	
+
 	Graph graph = processInput.getWarehouseToGraphConverter()->getGraph();
 	OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
+
 	Warehouse warehouse =  input.getWarehouse();
 	map<pair<Cell, int>, Vertex> vertexByCell = processInput.getWarehouseToGraphConverter()->getVertexByCell();
-	
+
 	StorageAllocationSolution::setEvaluator(processInput.getDistanceMatrix(),vertexByCell, warehouse.getBlocks(), cons);
 
 	cout<<"Initializing metaheuristic \n";
@@ -127,7 +121,6 @@ int main(int argc, char **argv){
 	cout<<"Solution is :"<<(resultCheck? "consistent\n ": "inconsistent \n");
 	((StorageAllocationSolution *) solution)->printSolution(); 
 		
-
     return 0; 
 }
 

@@ -5,8 +5,6 @@
 #include "HananGraph.h"
 #include "PathUnity.h"
 #include "Order.h"
-using namespace std;
-
     
 namespace QuickTSP{
         class _QuickTSP{

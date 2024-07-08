@@ -6,8 +6,6 @@
 #include<utility>
 #include "Cell.h"
 #include "Shelf.h"
-using namespace std;
-
 
 /**
  *	Default constructor 
@@ -35,7 +33,7 @@ Shelf::Shelf(const Shelf &other){
 /**
  *	Member constructor
  */
-Shelf::Shelf(long int Id,vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName,
+Shelf::Shelf(long int Id, std::vector<Cell> cells, std::pair<double, double> bottomLeftCoords, std::string blockName,
       int columns, int rows, double cellLength, double cellWidth){
     
     for(unsigned int i=0;i<cells.size(); i++){
@@ -56,9 +54,9 @@ Shelf::Shelf(long int Id,vector<Cell> cells, pair<double, double> bottomLeftCoor
 long int Shelf::getId() const { return Id;}
 double Shelf::getBottomLeftCoordX() const { return bottomLeftCoords.first; }
 double Shelf::getBottomLeftCoordY() const { return bottomLeftCoords.second; }
-pair<double,double> Shelf::getBottomLeftCoords() const { return bottomLeftCoords; }
-vector<Cell> Shelf::getCells(){ return cells;}
-string Shelf::getBlockName() const{ return blockName; }
+std::pair<double,double> Shelf::getBottomLeftCoords() const { return bottomLeftCoords; }
+std::vector<Cell> Shelf::getCells(){ return cells;}
+std::string Shelf::getBlockName() const{ return blockName; }
 int Shelf::getNumColumns() const { return columns;}
 int Shelf::getNumRows() const { return rows;}
 double Shelf::getCellLength()const { return cellLength;}
@@ -66,24 +64,24 @@ double Shelf::getCellWidth()const { return cellWidth;}
 
 void Shelf::setBottomLeftCoordX(double value) { this->bottomLeftCoords.first = value; }
 void Shelf::setBottomLeftCoordY(double value) { this->bottomLeftCoords.second = value; }
-void Shelf::setBottomLeftCoords(pair<double, double> value ) { this->bottomLeftCoords = value;}
-void Shelf::setCells(vector<Cell> &cells){ this->cells = cells;}
-void Shelf::setBlockName(string name){ this->blockName = name;}
+void Shelf::setBottomLeftCoords(std::pair<double, double> value ) { this->bottomLeftCoords = value;}
+void Shelf::setCells(std::vector<Cell> &cells){ this->cells = cells;}
+void Shelf::setBlockName(std::string name){ this->blockName = name;}
 void Shelf::setNumColumns(int value){ if(value > 0) columns = value; }
 void Shelf::setNumRows(int value){ if(value > 0) rows = value; }
 void Shelf::setCellLength(double value){ if(value>0) cellLength = value;}
 void Shelf::setCellWidth(double value){ if(value >0) cellWidth = value; }
 
 void Shelf::printShelfInformation(){
-	cout<<"_________________________\n";
-	cout<<"Shelf: \t" << this->Id  <<"\tBlock name: \t"<<this->blockName<<endl;
-	cout<<"Bottom-left coord: \t(x="<<this->bottomLeftCoords.first<<",y="<<this->bottomLeftCoords.second<<")"<<endl; 
-	cout<<"Number of rows: \t"<<this->rows<<"\tNumber of columns: \t"<<this->columns<<endl;
-	cout<<"Cell width: \t"<<this->cellWidth<<"\tCell length: \t"<<this->cellLength<<endl<<endl;
+	std::cout<<"_________________________\n";
+	std::cout<<"Shelf: \t" << this->Id  <<"\tBlock name: \t"<<this->blockName<<std::endl;
+	std::cout<<"Bottom-left coord: \t(x="<<this->bottomLeftCoords.first<<",y="<<this->bottomLeftCoords.second<<")"<<std::endl; 
+	std::cout<<"Number of rows: \t"<<this->rows<<"\tNumber of columns: \t"<<this->columns<<std::endl;
+	std::cout<<"Cell width: \t"<<this->cellWidth<<"\tCell length: \t"<<this->cellLength<<std::endl<<std::endl;
 	
 	for(unsigned int i=0;i<this->cells.size();i++)
 		this->cells[i].printCellInformation();
-	cout<<"_________________________\n";
+	std::cout<<"_________________________\n";
 }
 
 int Shelf::getNumberOfAvailablePositions(){
