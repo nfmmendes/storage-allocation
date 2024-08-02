@@ -13,6 +13,7 @@
 #include "Warehouse.h"
 #include "ProductAllocationProhibition.h"
 #include "IsolatedFamily.h"
+using std::vector; 
 
 
 //=======================================================================================
@@ -21,12 +22,12 @@
 class InputData{
     
     private:
-        static std::vector<Product> products;
-        static std::vector<Client> clients;
-        static std::vector<Order> orders;
-        static std::vector<Parameter> parameters;
-        static std::vector<ProductAllocationProhibitions> prohibitions;
-		static std::vector<IsolatedFamily> isolatedFamilies; 
+        static vector<Product> products;
+        static vector<Client> clients;
+        static vector<Order> orders;
+        static vector<Parameter> parameters;
+        static vector<ProductAllocationProhibitions> prohibitions;
+		static vector<IsolatedFamily> isolatedFamilies; 
         static Warehouse warehouse;
         bool alreadyCreated = false; 
     
@@ -34,19 +35,19 @@ class InputData{
         InputData();
         InputData(string  metadataFile);
     
-        void setProducts(std::vector<Product> products);
-        void setClients(std::vector<Client> clients);
-        void setOrders(std::vector<Order> orders);
-        void setParameters(std::vector<Parameter> parameters);
+        void setProducts(vector<Product> products);
+        void setClients(vector<Client> clients);
+        void setOrders(vector<Order> orders);
+        void setParameters(vector<Parameter> parameters);
         void setWarehouse(Warehouse warehouse);
-		void setIsolatedFamilies(std::vector<IsolatedFamily> &isolatedFamilies);
+		void setIsolatedFamilies(vector<IsolatedFamily> &isolatedFamilies);
     
-        std::vector<Product> &getProducts();
-        std::vector<Client> getClients();
-        std::vector<Order> &getOrders();
-        std::vector<Parameter> getParameters();
-		std::vector<IsolatedFamily> getIsolatedFamily();
-		std::vector<ProductAllocationProhibitions> getAllocationProhibitions(); 
+        vector<Product> &getProducts();
+        vector<Client> getClients();
+        vector<Order> &getOrders();
+        vector<Parameter> getParameters();
+		vector<IsolatedFamily> getIsolatedFamily();
+		vector<ProductAllocationProhibitions> getAllocationProhibitions(); 
         Warehouse & getWarehouse();
     
 };
