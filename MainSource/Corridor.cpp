@@ -52,14 +52,14 @@ std::pair<double, double> Corridor::getEndCoords() const {
 
     if(direction == HORIZONTAL){
         if( sense == LEFT_TO_RIGHT || sense == BOTH)
-            return std::make_pair<double,double>((double)begin.first + length, (double)begin.second);
+            return std::make_pair(begin.first + length, begin.second);
         else 
-            return std::make_pair<double,double>((double)begin.first - length, (double)begin.second); 				
+            return std::make_pair(begin.first - length, (double)begin.second); 				
     }else {
         if(sense == UP_DOWN)
-            return std::make_pair<double,double>((double)begin.first, (double) begin.second - length); 
+            return std::make_pair(begin.first, begin.second - length); 
         else 
-            return std::make_pair<double,double>((double)begin.first,(double) begin.second + length); 
+            return std::make_pair(begin.first, begin.second + length); 
     }
 }
 
