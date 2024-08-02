@@ -6,10 +6,13 @@
 #include<set>
 #include<map>
 #include<algorithm>
+#include<memory>
 #include<iomanip>
 #include "Order.h"
 #include "Product.h"
 #include "ABCAnalysis.h"
+using std::forward;
+using std::transform;
 
 /**
  * 
@@ -110,12 +113,9 @@ void ABCAnalysis::execute(){
     vector<pair<int,Product> > frequences;
     vector<pair<double, Product> > volumes;
 
-    for(map<Product, int>::iterator it= productFrequences.begin(); it!= productFrequences.end(); it++)
-        frequences.push_back(make_pair(it->second, it->first));
-
-    for(map<Product, double>::iterator it= productVolumes.begin(); it!= productVolumes.end(); it++){
-        volumes.push_back(make_pair(it->second, it->first));
-	}
+    auto swapValueProduct = [](auto&& f){ return make_pair(f.second, f.first); };
+    transform(begin(productFrequences), end(productFrequences), back_inserter(frequences), swapValueProduct);
+    transform(begin(productVolumes), end(productVolumes), back_inserter(volumes), swapValueProduct);
 
     //The products must be ordered in decreasing order because the most frequent/volumous products should 
     //be evaluated first 
