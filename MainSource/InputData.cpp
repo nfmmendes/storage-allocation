@@ -12,7 +12,10 @@
 #include "Warehouse.h"
 #include "ProductAllocationProhibition.h"
 #include "IsolatedFamily.h"
-using namespace std;
+using std::vector;
+using std::cout;
+using std::end;
+using std::ifstream;
 
 vector<Product> InputData::products;
 vector<Client> InputData::clients;
@@ -25,8 +28,6 @@ Warehouse InputData::warehouse;
 InputData::InputData(){
     alreadyCreated = true;
 }
-
-
 
 InputData::InputData(string  dataFile){
     
