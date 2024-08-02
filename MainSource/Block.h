@@ -43,13 +43,13 @@ class Block{
         std::string getName() const;
 		double getWidth();
 		double getLenght();
-        std::vector<Shelf> & getShelves();
-		std::map<long int, Shelf> getShelvesById(); 
+        const std::vector<Shelf> & getShelves();
+		const std::map<long int, Shelf> & getShelvesById(); 
 		
-        std::vector<BlockExit> getExits();
-        std::vector<Corridor> getCorridors();
-        std::vector<Curve> getCurves();
-        std::pair<double,double> getBottomLeftCoords();
+        const std::vector<BlockExit>& getExits();
+        const std::vector<Corridor>& getCorridors();
+        const std::vector<Curve>& getCurves();
+        const std::pair<double,double>& getBottomLeftCoords();
     
         bool isInBlock(const Point &point) const;
 

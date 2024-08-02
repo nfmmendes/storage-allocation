@@ -89,8 +89,7 @@ string Block::getName() const { return name; }
 /**
  *	Return the shelves of the block 
  */
-vector<Shelf> & Block::getShelves() {return shelves; }
-
+const vector<Shelf> & Block::getShelves() {return shelves; }
 
 double Block::getWidth(){ return this->width;}
 double Block::getLenght(){ return this->length;}
@@ -98,7 +97,7 @@ double Block::getLenght(){ return this->length;}
 /**
  * 
  **/
-map<long int, Shelf> Block::getShelvesById(){
+const map<long int, Shelf> & Block::getShelvesById(){
 	
 	return shelvesById;
 }
@@ -106,22 +105,22 @@ map<long int, Shelf> Block::getShelvesById(){
 /**
  *	Return the exits of the block 
  **/
-vector<BlockExit> Block::getExits() {return exits; }
+const vector<BlockExit> & Block::getExits() {return exits; }
 
 /**
  * Return the corridors of the block 
  */ 
-vector<Corridor> Block::getCorridors() { return corridors;}
+const vector<Corridor> & Block::getCorridors() { return corridors;}
 
 /**
  *	Return all the curves in a block 
  **/
-vector<Curve> Block::getCurves() { return curves; }
+const vector<Curve> & Block::getCurves() { return curves; }
 
 /**
  *	Return all the bottom left coordinates 
  **/
-pair<double,double> Block::getBottomLeftCoords() {return bottomLeftCoords; }
+const pair<double,double> & Block::getBottomLeftCoords() {return bottomLeftCoords; }
 
 
 
