@@ -243,8 +243,6 @@ void ABCAnalysis::setThresholds(vector<double>& thre){
     this->numClasses = thre.size()+1; 
 }
 
-
-
 /**
  * Return all the orders that were used in the ABC analysis
  */
