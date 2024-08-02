@@ -119,8 +119,8 @@ void ABCAnalysis::execute(){
 
     //The products must be ordered in decreasing order because the most frequent/volumous products should 
     //be evaluated first 
-    sort(frequences.begin(), frequences.end(), [](const auto &a, const auto& b) {return a.first >= b.first;});
-    sort(volumes.begin(), volumes.end(), [](const auto &a, const auto& b) {return a.first >= b.first;});
+    sort(frequences.begin(), frequences.end(), std::greater<decltype(frequences)::value_type>());
+    sort(volumes.begin(), volumes.end(), std::greater<decltype(frequences)::value_type>());
 
     //Compute the thresholds that will be used on the classification
     vector<double> volumeThresholds; 
