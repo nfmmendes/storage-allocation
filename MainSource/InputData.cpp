@@ -110,7 +110,7 @@ void InputData::setParameters(vector<Parameter> parameters){
     
 }
 
-void InputData::setWarehouse(Warehouse warehouse){
+void InputData::setWarehouse(Warehouse &&warehouse){
     InputData::warehouse = warehouse;
     
 }

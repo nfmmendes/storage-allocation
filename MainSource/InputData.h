@@ -39,7 +39,7 @@ class InputData{
         void setClients(vector<Client> clients);
         void setOrders(vector<Order> orders);
         void setParameters(vector<Parameter> parameters);
-        void setWarehouse(Warehouse warehouse);
+        void setWarehouse(Warehouse&& warehouse);
 		void setIsolatedFamilies(vector<IsolatedFamily> &isolatedFamilies);
     
         vector<Product> &getProducts();
