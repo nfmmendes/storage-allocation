@@ -134,9 +134,11 @@ void ABCAnalysis::execute(){
         frequenceThresholds.push_back(totalFrequence*this->thresholds[i]*1.0/100.0);
     }
 
+    /*
 	for(unsigned int i=0;i<numClasses;i++){
-	//	cout<<"Volume: "<<volumeThresholds[i]<<" Frequence: "<<frequenceThresholds[i]<<endl;
+	    cout<<"Volume: "<<volumeThresholds[i]<<" Frequence: "<<frequenceThresholds[i]<<endl;
 	}
+    */
 
     //Assign the classes. 
     char currentVolumeClass = 'A';
