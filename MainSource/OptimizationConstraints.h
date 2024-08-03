@@ -53,20 +53,20 @@ class OptimizationConstraints{
 		 *  @brief Get the list of optimization parameters.
 		 * @return A list containing the optimization parameters.
 		 */
-		vector<Parameter> getParameters()const;
+		const vector<Parameter>& getParameters()const;
 
 		/**
 		 *  @brief Get the list of product allocation prohibitions. 
 		 *  @return A list containinig all the product allocation prohibitions. 
 		 */
-		vector<ProductAllocationProhibitions> getProductAllocationProhibitions()const;
+		const vector<ProductAllocationProhibitions>& getProductAllocationProhibitions()const;
 
 		/**
 		 *  @brief Get the list of product families that must be isolated with their isolation levels. 
 		 *  @return A list containing all the product families that must be isolated with 
 		 *          their levels of isolations.  
 		 */
-		vector<IsolatedFamily> getIsolatedFamilies()const;
+		const vector<IsolatedFamily>& getIsolatedFamilies()const;
 
 		/**
 		 *  @brief Get the list of products with some kind of prohibition.

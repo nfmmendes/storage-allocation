@@ -24,15 +24,15 @@ OptimizationConstraints::OptimizationConstraints(vector<Parameter> param,  vecto
     setIsolatedFamilies(isolated); 
 }
 
-vector<Parameter> OptimizationConstraints::getParameters()const { 
+const vector<Parameter>& OptimizationConstraints::getParameters()const { 
     return parameters; 
 }
 
-vector<ProductAllocationProhibitions> OptimizationConstraints::getProductAllocationProhibitions()const{ 
+const vector<ProductAllocationProhibitions>& OptimizationConstraints::getProductAllocationProhibitions()const{ 
     return allocationProhitions; 
 }
 
-vector<IsolatedFamily> OptimizationConstraints::getIsolatedFamilies()const{ 
+const vector<IsolatedFamily> & OptimizationConstraints::getIsolatedFamilies()const{ 
     return isolatedFamilies; 
 } 
 
