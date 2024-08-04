@@ -39,7 +39,7 @@ Order::Order(vector< pair<Product, double> > items, Date dataDeadline, Time hour
 }
 
 
-void Order::setOrderItens(int i, Product &product, double quantity) {
+void Order::setOrderItem(int i, Product &product, double quantity) {
     if(i >=0 && i<(int)this->orderItens.size())
         this->orderItens[i] = make_pair(product, quantity);
 }
