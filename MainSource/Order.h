@@ -47,44 +47,12 @@ class Order{
          * @param client The client.
          */
         Order(std::vector<std::pair<Product, double> >items, Date dataDeadline, Time hourDeadline, std::string client);
-    
-        /** @brief Set an order item.
-         * @param i The product index.
-         * @param product The new product.
-         * @param quantity The item quantity in the order. 
-         */
-        void setOrderItem(int i, Product &product, double quantity);
-
-        /**
-         * @brief Remove a product from the order.
-         * @param i The product index. 
-         */
-        void removeOrderItens(int i);
-
-        /** 
-         * @brief Add a product to the order.
-         * @param product The new product.
-         * @param quantity The product quantity.
-         */
-        void addOrderItens(Product &product, double quantity);
 
         /**
          * @brief Set the product orders. 
          * @param The new products. 
          */
         void setOrders(std::vector<std::pair<Product, double> > orders);
-    
-        /**
-         * @brief Set the order deadline date. 
-         * @param date The deadline date. 
-         */
-        void setDateDeadline(Date &date);
-
-        /**
-         * @brief Set the order deadline time. 
-         * @param time The deadline date. 
-         */
-        void setTimeDeadline(Time &time);
 
         /** 
          * @brief Get the order items.

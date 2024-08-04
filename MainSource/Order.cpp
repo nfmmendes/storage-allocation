@@ -38,24 +38,6 @@ Order::Order(vector< pair<Product, double> > items, Date dataDeadline, Time hour
         this->orderItens.push_back(make_pair(items[i].first, items[i].second));
 }
 
-
-void Order::setOrderItem(int i, Product &product, double quantity) {
-    if(i >=0 && i<(int)this->orderItens.size())
-        this->orderItens[i] = make_pair(product, quantity);
-}
-
-
-void Order::removeOrderItens(int i){
-    if(i>=0 && i<(int)this->orderItens.size())
-        this->orderItens.erase(this->orderItens.begin()+i);
-}
-
-
-void Order::addOrderItens(Product &product, double quantity){
-    this->orderItens.push_back(make_pair(product,quantity));
-}
-
-
 void Order::setOrders(vector<pair<Product, double> > orders){
     this->orderItens.clear();
     
@@ -69,16 +51,6 @@ void Order::setOrders(vector<pair<Product, double> > orders){
  */
 const vector<pair<Product, double> > & Order::getOrderItems()const {
     return this->orderItens;
-}
-
-
-void Order::setDateDeadline(Date &date){
-    this->deadline.first = date;
-}
-
-
-void Order::setTimeDeadline(Time &time){
-    this->deadline.second = time;
 }
 
 vector<Order> Order::readOrdersData(ifstream &file){
