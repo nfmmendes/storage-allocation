@@ -45,10 +45,6 @@ void Order::setOrders(vector<pair<Product, double> > orders){
         this->orderItens.push_back(make_pair(orders[i].first, orders[i].second));
 }
 
-
-/**
- *  Return all the items of an order with their respective quantities
- */
 const vector<pair<Product, double> > & Order::getOrderItems()const {
     return this->orderItens;
 }
@@ -64,7 +60,6 @@ vector<Order> Order::readOrdersData(ifstream &file){
     Product product;
     string date, time;
     file>>numOrders;
-    //cout<<numOrders<<endl;
 	
     InputData input;
     vector<pair<Product, double> > items;
@@ -82,26 +77,20 @@ vector<Order> Order::readOrdersData(ifstream &file){
 		file.get();
 		string line;
 		getline(file,line);
-		//cout<<clientCode<<" "<<numItems<<"*************"<<line<<endl;
 		vector<string> date_time; 
 		Util::splitString(date_time, line, " ");
 		
 		if(date_time.size() > 1){
-			//cout<<"__"<<date_time[0]<<"___"<<date_time[1]<<endl;
 			date = date_time[0];
 			time = date_time[1];
 		}else{
 			date = "01/01/1990";
 			time = "12:00:00";
 		}
-      //  file>>date>>time;
-      //  cout<<"\t" <<clientCode<<" "<<date<<" "<<time<<endl;
-		
-        
+       
         for(int j=0;j<numItems;j++){
             file>>productName>>quantity;
             product = productByName[productName];
-			//cout<<productCode<<" "<<quantity<<endl;
             items.push_back(make_pair(product,quantity));
         }
 
