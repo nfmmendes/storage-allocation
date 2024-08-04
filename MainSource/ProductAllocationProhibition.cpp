@@ -6,57 +6,32 @@
 #include "ProductAllocationProhibition.h"
 using namespace std;
 
-/**
- * Default constructor 
- */
 ProductAllocationProhibitions::ProductAllocationProhibitions(){
     
 }
 
-/**
- *	Copy constructor 
- */
 ProductAllocationProhibitions::ProductAllocationProhibitions(const ProductAllocationProhibitions &other){
     this->product = other.product;
     
-    for(unsigned int i=0; i<other.forbiddenCells.size(); i++)
-        this->forbiddenCells.push_back(other.forbiddenCells[i]);
-    
-    for(unsigned int i=0; i<other.forbiddenShelves.size(); i++)
-        this->forbiddenShelves.push_back(other.forbiddenShelves[i]);
-    
-    for(unsigned int i=0; i<other.forbiddenBlocks.size(); i++)
-        this->forbiddenBlocks.push_back(other.forbiddenBlocks[i]);
+    copy(begin(other.forbiddenCells), end(other.forbiddenCells), back_inserter(this->forbiddenCells));
+    copy(begin(other.forbiddenShelves), end(other.forbiddenShelves), back_inserter(this->forbiddenShelves));
+    copy(begin(other.forbiddenBlocks), end(other.forbiddenBlocks), back_inserter(this->forbiddenBlocks));
 }
 
-/**
- *
- **/
 ProductAllocationProhibitions & ProductAllocationProhibitions::operator=(const ProductAllocationProhibitions &other){
     this->product = other.product;
     
 	this->forbiddenCells.clear();
-	for(unsigned int i=0; i<other.forbiddenCells.size(); i++)
-        this->forbiddenCells.push_back(other.forbiddenCells[i]);
-    
-	this->forbiddenShelves.clear();
-	for(unsigned int i=0; i<other.forbiddenShelves.size(); i++)
-        this->forbiddenShelves.push_back(other.forbiddenShelves[i]);
-    
+	this->forbiddenShelves.clear();    
 	this->forbiddenBlocks.clear();
-	for(unsigned int i=0; i<other.forbiddenBlocks.size(); i++)
-        this->forbiddenBlocks.push_back(other.forbiddenBlocks[i]);
+
+    copy(begin(other.forbiddenCells), end(other.forbiddenCells), back_inserter(this->forbiddenCells));
+    copy(begin(other.forbiddenShelves), end(other.forbiddenShelves), back_inserter(this->forbiddenShelves));
+    copy(begin(other.forbiddenBlocks), end(other.forbiddenBlocks), back_inserter(this->forbiddenBlocks));
 	
 	return *this;
 }
 
-
-
-
-
-/**
- *	Member constructor 
- */
 ProductAllocationProhibitions::ProductAllocationProhibitions(Product &product,vector<Shelf>forbiddenShelves,vector<Cell> forbiddenCells,vector<Block> &blocks){
     
 	this->product = product; 
