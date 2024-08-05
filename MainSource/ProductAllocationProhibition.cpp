@@ -58,10 +58,6 @@ const vector<Shelf>& ProductAllocationProhibitions::getForbiddenShelves(){ retur
 const vector<Cell>& ProductAllocationProhibitions::getForbiddenCells(){ return this->forbiddenCells; }
 const vector<Block>& ProductAllocationProhibitions::getForbiddenBlocks() { return this->forbiddenBlocks; }
 
-/**
- *	Read all the data concerning to individual product storage prohibitions 
- *  @param file File stream object that references the file where the data is stored 
- */
 vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProhibitionsData(ifstream &file){
     vector<ProductAllocationProhibitions> prohibitions;
     long int idShelve;
@@ -129,9 +125,7 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
                 for(int i=0;i<numProhibitions;i++)
                     file>>fake;
             }
-        }
-		
-		
+        }		
 	}
 
     return prohibitions;
