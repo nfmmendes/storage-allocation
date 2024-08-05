@@ -51,18 +51,6 @@ class Warehouse{
              * @param block The block to be inserted. 
              */
             void insertNewBlock(Block &block);
-            
-            /**
-             * @brief Remove one block in the warehouse. 
-             * @param block The block to be removed.  
-             */
-            void removeBlock(Block &b);
-
-            /**
-             * @brief Remove one block in the warehouse. 
-             * @param i The index of the block to be removed. 
-             */
-            void removeBlock(int i);
 
             /**
              * @brief Set the product allocation in the warehouse. 
@@ -75,18 +63,6 @@ class Warehouse{
              * @param productionAllocation A pair containing the product and its respective position.
              */
             void addProductAllocation(pair<Product, Cell> & productionAllocation);
-
-            /**
-             * @brief Remove a product allocation. 
-             * @param cell The cell that must be voided.  
-             */
-            void removeProductAllocation(Cell &cell); 
-
-            /**
-             * @brief Remove a product allocation. 
-             * @param i The allocation index.
-             */
-            void removeProductAllocation(int i); 
             
             /**
              * @brief Get the warehouse name. 

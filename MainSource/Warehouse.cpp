@@ -20,12 +20,7 @@
         this->expeditionPoints.push_back(other.expeditionPoints[i]);
 	 
  }
- 
- 
- /**
-  *
-  *
-  **/
+
  void Warehouse::readWarehouseData(ifstream &file){   
     int numBlocks;
     int numExits;
@@ -228,15 +223,6 @@
 void Warehouse::insertNewBlock(Block &b){
     this->blocks.push_back(Block(b));
 }
- 
-void Warehouse::removeBlock(Block &b){
-    remove(this->blocks.begin(), this->blocks.end(),b);
-}
-
-void Warehouse::removeBlock(int i){
-    if(i >= 0 && i <(int) this->blocks.size())
-        this->blocks.erase(this->blocks.begin()+i);
-}
 
 void Warehouse::setProductAllocation(vector<pair<Product, Cell> > & productAllocation){
     this->productAllocation.clear();
@@ -249,21 +235,6 @@ void Warehouse::addProductAllocation(pair<Product, Cell> & productAllocation){
     this->productAllocation.push_back(make_pair(productAllocation.first, productAllocation.second));
 }
 
-void Warehouse::removeProductAllocation(Cell &cell){
-    vector<pair<Product,Cell> >::iterator it = this->productAllocation.begin();
-    for(;it != this->productAllocation.end(); it++)
-        if(it->second == cell){
-            productAllocation.erase(it);
-            break;
-        }
-}
-
-void Warehouse::removeProductAllocation(int i){
-    
-    if(i >= 0 && i < (int) this->productAllocation.size())
-        this->productAllocation.erase(this->productAllocation.begin()+i);
-}
-            
 string Warehouse::getName() const { return this->name;}
 
 vector<Block> & Warehouse::getBlocks()  { return this->blocks;}
