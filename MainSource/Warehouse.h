@@ -38,55 +38,55 @@ class Warehouse{
              * @brief Read warehouse information from file. 
              * @param fileName The file name.
              */ 
-            void ReadWarehouseData(ifstream & fileName);
+            void readWarehouseData(ifstream & fileName);
 
             /**
              * @brief Write warehouse data to file. 
              * @param fileName The file name.
              */
-            void WriteWarehouseData(string fileName);
+            void writeWarehouseData(string fileName);
 
             /**
              * @brief Insert one block in the warehouse.
              * @param block The block to be inserted. 
              */
-            void InsertNewBlock(Block &block);
+            void insertNewBlock(Block &block);
             
             /**
              * @brief Remove one block in the warehouse. 
              * @param block The block to be removed.  
              */
-            void RemoveBlock(Block &b);
+            void removeBlock(Block &b);
 
             /**
              * @brief Remove one block in the warehouse. 
              * @param i The index of the block to be removed. 
              */
-            void RemoveBlock(int i);
+            void removeBlock(int i);
 
             /**
              * @brief Set the product allocation in the warehouse. 
              * @param productionAllocation A list of product/cell allocations.
              */
-            void SetProductAllocation(pair<Product, Cell> & productionAllocation); 
+            void setProductAllocation(pair<Product, Cell> & productionAllocation); 
 
             /**
              * @brief Add a product allocation.
              * @param productionAllocation A pair containing the product and its respective position.
              */
-            void AddProductAllocation(pair<Product, Cell> & productionAllocation);
+            void addProductAllocation(pair<Product, Cell> & productionAllocation);
 
             /**
              * @brief Remove a product allocation. 
              * @param cell The cell that must be voided.  
              */
-            void RemoveProductAllocation(Cell &cell); 
+            void removeProductAllocation(Cell &cell); 
 
             /**
              * @brief Remove a product allocation. 
              * @param i The allocation index.
              */
-            void RemoveProductAllocation(int i); 
+            void removeProductAllocation(int i); 
             
             /**
              * @brief Get the warehouse name. 

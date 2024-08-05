@@ -26,7 +26,7 @@
   *
   *
   **/
- void Warehouse::ReadWarehouseData(ifstream &file){   
+ void Warehouse::readWarehouseData(ifstream &file){   
     int numBlocks;
     int numExits;
     int numShelves;
@@ -218,22 +218,22 @@
     }
  }
  
- void Warehouse::WriteWarehouseData(string fileName){
+ void Warehouse::writeWarehouseData(string fileName){
      
      ofstream file;
      file.open(fileName, ios::out);
      file.close();
  }
  
-void Warehouse::InsertNewBlock(Block &b){
+void Warehouse::insertNewBlock(Block &b){
     this->blocks.push_back(Block(b));
 }
  
-void Warehouse::RemoveBlock(Block &b){
+void Warehouse::removeBlock(Block &b){
     remove(this->blocks.begin(), this->blocks.end(),b);
 }
 
-void Warehouse::RemoveBlock(int i){
+void Warehouse::removeBlock(int i){
     if(i >= 0 && i <(int) this->blocks.size())
         this->blocks.erase(this->blocks.begin()+i);
 }
@@ -245,11 +245,11 @@ void Warehouse::setProductAllocation(vector<pair<Product, Cell> > & productAlloc
         this->productAllocation.push_back(make_pair(productAllocation[i].first, productAllocation[i].second));
 }
 
-void Warehouse::AddProductAllocation(pair<Product, Cell> & productAllocation){
+void Warehouse::addProductAllocation(pair<Product, Cell> & productAllocation){
     this->productAllocation.push_back(make_pair(productAllocation.first, productAllocation.second));
 }
 
-void Warehouse::RemoveProductAllocation(Cell &cell){
+void Warehouse::removeProductAllocation(Cell &cell){
     vector<pair<Product,Cell> >::iterator it = this->productAllocation.begin();
     for(;it != this->productAllocation.end(); it++)
         if(it->second == cell){
@@ -258,7 +258,7 @@ void Warehouse::RemoveProductAllocation(Cell &cell){
         }
 }
 
-void Warehouse::RemoveProductAllocation(int i){
+void Warehouse::removeProductAllocation(int i){
     
     if(i >= 0 && i < (int) this->productAllocation.size())
         this->productAllocation.erase(this->productAllocation.begin()+i);

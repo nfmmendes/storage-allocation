@@ -50,7 +50,7 @@ InputData::InputData(string  dataFile){
         
         
         cout<<"Reading warehouse data...\n";
-        warehouse.ReadWarehouseData(file);
+        warehouse.readWarehouseData(file);
         
         cout<<"Reading products data..\n";
         products = Product::readProductsData(file);
