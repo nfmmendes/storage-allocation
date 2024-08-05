@@ -196,9 +196,9 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
     double newPenalty = 0;
     ProductAllocationProhibitions* firstProhibition = &prohibitionsByProduct[product.getName()];
 
-    vector<Cell>* prohibitedCells = &firstProhibition->getForbiddenCells();
-    vector<Shelf>* prohibitedShelves = &firstProhibition->getForbiddenShelves();
-    vector<Block>* prohibitedBlocks = &firstProhibition->getForbiddenBlocks();
+    auto* prohibitedCells = &firstProhibition->getForbiddenCells();
+    auto* prohibitedShelves = &firstProhibition->getForbiddenShelves();
+    auto* prohibitedBlocks = &firstProhibition->getForbiddenBlocks();
 
     for (unsigned int i = 0; i < prohibitedCells->size(); i++) {
         const Cell* currentCell = &(*prohibitedCells)[i];

@@ -4,7 +4,9 @@
 #include <map>
 #include "InputData.h"
 #include "ProductAllocationProhibition.h"
-using namespace std;
+using std::vector;
+using std::map;
+using std::ifstream;
 
 ProductAllocationProhibitions::ProductAllocationProhibitions(){
     
@@ -18,7 +20,7 @@ ProductAllocationProhibitions::ProductAllocationProhibitions(const ProductAlloca
     copy(begin(other.forbiddenBlocks), end(other.forbiddenBlocks), back_inserter(this->forbiddenBlocks));
 }
 
-ProductAllocationProhibitions & ProductAllocationProhibitions::operator=(const ProductAllocationProhibitions &other){
+const ProductAllocationProhibitions & ProductAllocationProhibitions::operator=(const ProductAllocationProhibitions &other){
     this->product = other.product;
     
 	this->forbiddenCells.clear();
@@ -51,10 +53,10 @@ void ProductAllocationProhibitions::setForbiddenShelves(vector<Shelf> & others){
 void ProductAllocationProhibitions::setForbiddenCells(vector<Cell> &others){  this->forbiddenCells = others; }
 void ProductAllocationProhibitions::setForbiddenBlocks(vector<Block> &others) {  this->forbiddenBlocks = others; }
 
-Product ProductAllocationProhibitions::getProduct() const{   return this->product;}
-vector<Shelf> & ProductAllocationProhibitions::getForbiddenShelves(){ return this->forbiddenShelves;}
-vector<Cell> & ProductAllocationProhibitions::getForbiddenCells(){ return this->forbiddenCells; }
-vector<Block> & ProductAllocationProhibitions::getForbiddenBlocks() { return this->forbiddenBlocks; }
+const Product& ProductAllocationProhibitions::getProduct() const{   return this->product;}
+const vector<Shelf>& ProductAllocationProhibitions::getForbiddenShelves(){ return this->forbiddenShelves;}
+const vector<Cell>& ProductAllocationProhibitions::getForbiddenCells(){ return this->forbiddenCells; }
+const vector<Block>& ProductAllocationProhibitions::getForbiddenBlocks() { return this->forbiddenBlocks; }
 
 /**
  *	Read all the data concerning to individual product storage prohibitions 
@@ -135,7 +137,7 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
     return prohibitions;
 }
 
-void ProductAllocationProhibitions::recoverWarehouseData(Warehouse & warehouse, map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName){
+void ProductAllocationProhibitions::recoverWarehouseData(Warehouse& warehouse, map<string, Cell> & cellsByCode, map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName){
     vector<Block> blocks = warehouse.getBlocks();
     vector<Shelf> shelves;
     vector<Cell> cells;
@@ -156,7 +158,6 @@ void ProductAllocationProhibitions::recoverWarehouseData(Warehouse & warehouse, 
         cells.insert(cells.end(), cellsOnShelf.begin(), cellsOnShelf.end());
     }
     
-	
     for(unsigned int i=0; i<cells.size();i++)
         cellsByCode[cells[i].getCode()] = cells[i];
 }
