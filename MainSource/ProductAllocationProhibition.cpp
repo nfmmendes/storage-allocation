@@ -84,41 +84,42 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
 		file>>numProhibitions;
 	
 		file>>numCellProhibitions>>numShelvesProhibitions>>numBlocksProhibitions;
+
+        if(numCellProhibitions <= 0 && numShelvesProhibitions < 0 && numBlocksProhibitions <= 0)
+            continue;
 	
-		if(numCellProhibitions > 0 || numShelvesProhibitions >0|| numBlocksProhibitions >0 ){	
-            ProductAllocationProhibitions prohibition;
-         
-            vector<Cell> _cells;
-            vector<Shelf> _shelves;
-            vector<Block> _blocks;
-            
-            if(productsByCode.find(productCode) != productsByCode.end()){
-                for(int i=0; i<numCellProhibitions; i++){
-					file>>cellCode;
-					_cells.push_back(cellsByCode[cellCode]);
-                }
-                
-                for(int i=0; i<numShelvesProhibitions; i++){
-                    file>>idShelve;
-                    _shelves.push_back(shelvesById[idShelve]);
-                }
-                
-                for(int i=0; i<numBlocksProhibitions; i++){
-                    file>>blockName;
-                    _blocks.push_back(blocksByName[blockName]);
-                }
-                
-                prohibition.setForbiddenCells(_cells);
-                prohibition.setForbiddenShelves(_shelves);
-                prohibition.setForbiddenBlocks(_blocks);
-                prohibition.setProduct(productsByCode[productCode]);
-                
-                prohibitions.push_back(prohibition);
-            }else{
-                string fake;
-                for(int i=0;i<numProhibitions;i++)
-                    file>>fake;
+        ProductAllocationProhibitions prohibition;
+        
+        vector<Cell> _cells;
+        vector<Shelf> _shelves;
+        vector<Block> _blocks;
+        
+        if(productsByCode.find(productCode) != productsByCode.end()){
+            for(int i=0; i<numCellProhibitions; i++){
+                file>>cellCode;
+                _cells.push_back(cellsByCode[cellCode]);
             }
+            
+            for(int i=0; i<numShelvesProhibitions; i++){
+                file>>idShelve;
+                _shelves.push_back(shelvesById[idShelve]);
+            }
+            
+            for(int i=0; i<numBlocksProhibitions; i++){
+                file>>blockName;
+                _blocks.push_back(blocksByName[blockName]);
+            }
+            
+            prohibition.setForbiddenCells(_cells);
+            prohibition.setForbiddenShelves(_shelves);
+            prohibition.setForbiddenBlocks(_blocks);
+            prohibition.setProduct(productsByCode[productCode]);
+            
+            prohibitions.push_back(prohibition);
+        }else{
+            string fake;
+            for(int i=0;i<numProhibitions;i++)
+                file>>fake;
         }		
 	}
 
