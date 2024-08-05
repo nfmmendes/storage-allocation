@@ -38,14 +38,9 @@ ProductAllocationProhibitions::ProductAllocationProhibitions(Product &product,ve
     
 	this->product = product; 
 	
-	for(unsigned int i=0; i<forbiddenCells.size(); i++)
-        this->forbiddenCells.push_back(forbiddenCells[i]);
-    
-    for(unsigned int i=0; i<forbiddenShelves.size(); i++)
-        this->forbiddenShelves.push_back(forbiddenShelves[i]);
-    
-    for(unsigned int i=0; i<blocks.size(); i++)
-        this->forbiddenBlocks.push_back(blocks[i]);
+    copy(begin(forbiddenCells), end(forbiddenCells), back_inserter(this->forbiddenCells));
+    copy(begin(forbiddenShelves), end(forbiddenShelves), back_inserter(this->forbiddenShelves));
+    copy(begin(forbiddenBlocks), end(forbiddenBlocks), back_inserter(this->forbiddenBlocks));
 }
 
 void ProductAllocationProhibitions::setProduct(Product & other){ this->product = other; }
@@ -112,7 +107,6 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
                     file>>blockName;
                     _blocks.push_back(blocksByName[blockName]);
                 }
-                
                 
                 prohibition.setForbiddenCells(_cells);
                 prohibition.setForbiddenShelves(_shelves);
