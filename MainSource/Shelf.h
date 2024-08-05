@@ -109,60 +109,12 @@ class Shelf{
          * @return THe shelf cells width. 
          */
         double getCellWidth() const;
-        
-        /**
-         * @brief Set the shelf bottom left coordinate X.
-         * @param value The new shelf bottom left coordinate X.
-         */ 
-        void setBottomLeftCoordX(double value);
-
-        /**
-         *  @brief Set the shelf bottom left coordinate Y.
-         *  @param value The new shelf bottom left coordinate Y.
-         */
-        void setBottomLeftCoordY(double value);
-
-        /**
-         * @brief Set the shelf bottom left coordinates. 
-         * @param value The new shelf bottom left coordinates. 
-         */
-        void setBottomLeftCoords(pair<double, double> value );
-
+       
         /**
          * @brief Set the shelf cells.
          * @param cells The shelf cells. 
          */
         void setCells(vector<Cell> &cells);
-
-        /**
-         * @brief Set the name of the block in which is located the shelf. 
-         * @param name The name of the block in which is located the shelf. 
-         */
-        void setBlockName(string name);
-
-        /**
-         * @brief Set the shelf number of columns.
-         * @param value The shelf number of columns. 
-         */
-        void setNumColumns(int value);
-
-        /**
-         * @brief Set the shelf number of rows. 
-         * @param value The shelf number of rows.
-         */  
-        void setNumRows(int value);
-
-        /**
-         * @brief Set the shelf cells length. 
-         * @param value The shelf cells length.
-         */
-        void setCellLength(double value);
-
-        /**
-         * @brief Set the shelf cells width.
-         * @param value The shelf cells width.
-         */
-        void setCellWidth(double value);
 		
         /**
 		 * @brief Print shelf information in the console. 

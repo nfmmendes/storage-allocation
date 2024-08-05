@@ -56,15 +56,7 @@ int Shelf::getNumRows() const { return rows;}
 double Shelf::getCellLength()const { return cellLength;}
 double Shelf::getCellWidth()const { return cellWidth;}
 
-void Shelf::setBottomLeftCoordX(double value) { this->bottomLeftCoords.first = value; }
-void Shelf::setBottomLeftCoordY(double value) { this->bottomLeftCoords.second = value; }
-void Shelf::setBottomLeftCoords(pair<double, double> value ) { this->bottomLeftCoords = value;}
 void Shelf::setCells(vector<Cell> &cells){ this->cells = cells;}
-void Shelf::setBlockName(string name){ this->blockName = name;}
-void Shelf::setNumColumns(int value){ if(value > 0) columns = value; }
-void Shelf::setNumRows(int value){ if(value > 0) rows = value; }
-void Shelf::setCellLength(double value){ if(value>0) cellLength = value;}
-void Shelf::setCellWidth(double value){ if(value >0) cellWidth = value; }
 
 void Shelf::printShelfInformation(){
 	cout<<"_________________________\n";
