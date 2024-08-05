@@ -217,7 +217,6 @@
         map<string, vector<Curve> > curvesByBlock;
         for(int i=0;i<numCurves;i++){
             file>>blockName>>idCurve>>startCorridor>>endCorridor>>beginCoordX>>beginCoordY>>endCoordX>>endCoordY;
-			//cout<<blockName<<" "<<idCurve<<" "<<startCorridor<<" "<<endCorridor<<" "<<beginCoordX<<" "<<beginCoordY<<" "<<endCoordX<<" "<<endCoordY;
             curvesByBlock[blockName].push_back(Curve(idCurve, startCorridor, endCorridor,
                                                     Point("beginCurve"+to_string(idCurve),beginCoordX, beginCoordY,0), 
 			  									    Point("endCurve"+to_string(idCurve),endCoordX, endCoordY,0)));
@@ -229,10 +228,6 @@
     }
  }
  
- /**
-  *
-  *
-  **/
  void Warehouse::WriteWarehouseData(string fileName){
      
      ofstream file;
@@ -294,29 +289,16 @@ void Warehouse::RemoveProductAllocation(Cell &cell){
         }
 }
 
-
-/**
- *
- **/
 void Warehouse::RemoveProductAllocation(int i){
     
     if(i >= 0 && i < (int) this->productAllocation.size())
         this->productAllocation.erase(this->productAllocation.begin()+i);
 }
             
-/**
- *
- **/
 string Warehouse::getName() const { return this->name;}
 
-/**
- *
- **/
 vector<Block> & Warehouse::getBlocks()  { return this->blocks;}
 
-/**
- *
- **/
 map<string, Block> Warehouse::getBlocksByName(){
 	map<string, Block> result; 
 	
@@ -326,23 +308,14 @@ map<string, Block> Warehouse::getBlocksByName(){
 	return result; 
 }
 
-/**
- *
- **/
- vector<pair<Product, Cell> > Warehouse::getProductAllocation() const {
+vector<pair<Product, Cell> > Warehouse::getProductAllocation() const {
     return this->productAllocation;
 }
 
-/**
- *
- **/
 void Warehouse::setName(string &name){
     this->name = name;
 }
 
-/**
- *
- **/
 void Warehouse::setBlocks(vector<Block>& blocks){
     this->blocks.clear();
     
@@ -350,17 +323,10 @@ void Warehouse::setBlocks(vector<Block>& blocks){
         this->blocks.push_back(Block(blocks[i]));
 }
 
-/**
- *
- **/
 vector<ExpeditionPoint> Warehouse::getExpeditionPoints(){
     return this->expeditionPoints;
 }
 
-
-/**
- *
- **/
 void Warehouse::printWarehouseInformation(){
 	
 	cout<<"Printing warehouse information...\n\n\n";
@@ -373,10 +339,6 @@ void Warehouse::printWarehouseInformation(){
 		this->blocks[i].printBlockInformation();
 }
 
-
-/**
- *
- **/
 Warehouse & Warehouse::operator=(const Warehouse &other){
 	this->name = other.name;
 	
