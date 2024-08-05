@@ -93,42 +93,6 @@ class ProductAllocationProhibitions{
          * @return The list of forbidden blocks. 
          */
         std::vector<Block> & getForbiddenBlocks();
-    
-        /**
-         * @brief Add one cell to the prohibition list.
-         * @param cell The cell to be prohibited. 
-         */
-        void addProhibition(Cell &cell);
-
-        /**
-         * @brief Add one shelf to the prohibition list. 
-         * @param shelf The shelf to be prohibited. 
-         */
-        void addProhibition(Shelf &shelf);
-
-        /**
-         * @brief Add one block to the prohibition list. 
-         * @param block The probhition list. 
-         */
-        void addProhibition(Block &block);
-
-        /**
-         * @brief Remove a cell from the prohibition list. 
-         * @param i The index of the cell to be removed. 
-         */
-        void removeProductCellProhibition(int i);
-    
-        /**
-         * @brief Remove a shelf from the prohibition list. 
-         * @param i The index of the shelf to be removed.
-         */
-        void removeProductShelfProhibition(int i);
-    
-        /**
-         * @brief Remove block from the prohibition list. 
-         * @param i The index of the block to be removed. 
-         */
-        void removeProductBlockProhibition(int i);
         
         /**
          * @brief Read prohibition data from a file. 
