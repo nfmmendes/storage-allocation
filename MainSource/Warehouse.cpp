@@ -9,12 +9,6 @@
 #include "Warehouse.h"
  
  using namespace std;
- 
- 
- 
- /**
-  *
-  **/
  Warehouse::Warehouse(const Warehouse &other){
 	
 	this->name = other.name;
@@ -32,9 +26,7 @@
   *
   *
   **/
- void Warehouse::ReadWarehouseData(ifstream &file){
-    
-    
+ void Warehouse::ReadWarehouseData(ifstream &file){   
     int numBlocks;
     int numExits;
     int numShelves;
@@ -70,8 +62,6 @@
     //
 
     if(file.is_open()){
-        
-
         //Those variables will store the basic data of each block in the warehouse
         string blockName;
         double blockBottomLeftCoordX;
@@ -159,14 +149,15 @@
         //We assume that it will be few blocks and each block will have few shelves, so this part of code will
         //not harm the code performance
         for(int i=0;i<(int)blocks.size();i++){
-	//		cout<<"Shelves on block: \n" <<shelvesByBlock[blocks[i].getName()].size()<<endl;
+	        // cout<<"Shelves on block: \n" <<shelvesByBlock[blocks[i].getName()].size()<<endl;
             this->blocks[i].setShelves(shelvesByBlock[blocks[i].getName()]);
         }
 		
-    //    cout<<"Reading corridors...\n";
+        // cout<<"Reading corridors...\n";
         //Read all data concerning corridors
         file>>numCorridors;
-	//	cout<<numCorridors<<endl;
+	    
+        // cout<<numCorridors<<endl;
         long int idCorridor;
         string dirCorridor, senseCorridor;
         double beginCoordX, beginCoordY,length;
@@ -184,8 +175,8 @@
         for(unsigned int i=0; i<blocks.size();i++)
             this->blocks[i].setCorridors(corridorsByBlock[this->blocks[i].getName()]);
         
-	//	cout<<"Reading cells...\n";
-        //Read all data concerning cells
+	    // cout<<"Reading cells...\n";
+        // Read all data concerning cells
         file>>numCells;
 		//cout<<numCells<<endl;
         int row, column;
@@ -209,9 +200,9 @@
             blocks[i].setShelves(blockShelves);
         }
         
-	//	cout<<"Reading curves...\n";
+	    //	cout<<"Reading curves...\n";
         file>>numCurves;
-	//	cout<<numCurves<<endl;
+    	//	cout<<numCurves<<endl;
         long int idCurve, startCorridor, endCorridor;
         double endCoordX, endCoordY;
         map<string, vector<Curve> > curvesByBlock;
@@ -219,8 +210,7 @@
             file>>blockName>>idCurve>>startCorridor>>endCorridor>>beginCoordX>>beginCoordY>>endCoordX>>endCoordY;
             curvesByBlock[blockName].push_back(Curve(idCurve, startCorridor, endCorridor,
                                                     Point("beginCurve"+to_string(idCurve),beginCoordX, beginCoordY,0), 
-			  									    Point("endCurve"+to_string(idCurve),endCoordX, endCoordY,0)));
-            
+			  									    Point("endCurve"+to_string(idCurve),endCoordX, endCoordY,0)));        
         }
         
         for(unsigned int i=0; i<blocks.size();i++)
@@ -235,34 +225,19 @@
      file.close();
  }
  
- /**
-  *    Insert the data of a new block in the warehouse
-  **/
 void Warehouse::InsertNewBlock(Block &b){
     this->blocks.push_back(Block(b));
 }
  
-/**
- *     Remove a block "b" in the blocks list
- **/
 void Warehouse::RemoveBlock(Block &b){
     remove(this->blocks.begin(), this->blocks.end(),b);
 }
 
-///////////////////////////////////////////////////////////////////
-///     Remove a block in the position i of blocks list
-/////////////////////////////////////////////////////////////////// 
 void Warehouse::RemoveBlock(int i){
     if(i >= 0 && i <(int) this->blocks.size())
         this->blocks.erase(this->blocks.begin()+i);
 }
 
-/**
- *         Sets the product allocation in a warehouse
- *     In this procedure is created a copy of the data,
- *       so the original one will be not referecend by the
- *             warehouse object
- **/
 void Warehouse::setProductAllocation(vector<pair<Product, Cell> > & productAllocation){
     this->productAllocation.clear();
     
@@ -270,16 +245,10 @@ void Warehouse::setProductAllocation(vector<pair<Product, Cell> > & productAlloc
         this->productAllocation.push_back(make_pair(productAllocation[i].first, productAllocation[i].second));
 }
 
-/**
- *     Inserts a new product allocation on the warehouse
- **/
 void Warehouse::AddProductAllocation(pair<Product, Cell> & productAllocation){
     this->productAllocation.push_back(make_pair(productAllocation.first, productAllocation.second));
 }
 
-/**
- *     Remove a allocation of a product
- **/
 void Warehouse::RemoveProductAllocation(Cell &cell){
     vector<pair<Product,Cell> >::iterator it = this->productAllocation.begin();
     for(;it != this->productAllocation.end(); it++)
