@@ -53,9 +53,9 @@ Shelf::Shelf(long int Id, const std::vector<Cell>& cells, const std::pair<double
 long int Shelf::getId() const { return Id;}
 double Shelf::getBottomLeftCoordX() const { return bottomLeftCoords.first; }
 double Shelf::getBottomLeftCoordY() const { return bottomLeftCoords.second; }
-std::pair<double,double> Shelf::getBottomLeftCoords() const { return bottomLeftCoords; }
-std::vector<Cell> Shelf::getCells(){ return cells;}
-std::string Shelf::getBlockName() const{ return blockName; }
+const std::pair<double,double>& Shelf::getBottomLeftCoords() const { return bottomLeftCoords; }
+const std::vector<Cell>& Shelf::getCells(){ return cells;}
+const std::string& Shelf::getBlockName() const{ return blockName; }
 int Shelf::getNumColumns() const { return columns;}
 int Shelf::getNumRows() const { return rows;}
 double Shelf::getCellLength()const { return cellLength;}

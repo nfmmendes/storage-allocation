@@ -31,9 +31,9 @@ class Shelf{
         long int getId() const;
         double getBottomLeftCoordX() const;
         double getBottomLeftCoordY() const;
-        pair<double,double> getBottomLeftCoords()const;
-        vector<Cell> getCells();
-        string getBlockName() const;
+        const pair<double,double>& getBottomLeftCoords()const;
+        const vector<Cell>& getCells();
+        const string& getBlockName() const;
         int getNumColumns() const;
         int getNumRows() const;
         double getCellLength() const;
