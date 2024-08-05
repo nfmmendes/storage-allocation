@@ -99,7 +99,7 @@ double Block::getLenght(){ return this->length;}
 /**
  * 
  **/
-const map<long int, Shelf> & Block::getShelvesById(){
+const map<long int, Shelf> & Block::getShelvesById() const{
 	
 	return shelvesById;
 }
@@ -107,24 +107,22 @@ const map<long int, Shelf> & Block::getShelvesById(){
 /**
  *	Return the exits of the block 
  **/
-const vector<BlockExit> & Block::getExits() {return exits; }
+const vector<BlockExit> & Block::getExits() const {return exits; }
 
 /**
  * Return the corridors of the block 
  */ 
-const vector<Corridor> & Block::getCorridors() { return corridors;}
+const vector<Corridor> & Block::getCorridors() const { return corridors;}
 
 /**
  *	Return all the curves in a block 
  **/
-const vector<Curve> & Block::getCurves() { return curves; }
+const vector<Curve> & Block::getCurves() const { return curves; }
 
 /**
  *	Return all the bottom left coordinates 
  **/
-const pair<double,double> & Block::getBottomLeftCoords() {return bottomLeftCoords; }
-
-
+const pair<double,double> & Block::getBottomLeftCoords() const { return bottomLeftCoords; }
 
 /**
  *	Set corridors in the block 
