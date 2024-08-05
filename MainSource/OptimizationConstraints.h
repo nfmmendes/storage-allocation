@@ -50,7 +50,7 @@ class OptimizationConstraints{
 		OptimizationConstraints(const OptimizationConstraints &other);
 
 		/**
-		 *  @brief Get the list of optimization parameters.
+		 * @brief Get the list of optimization parameters.
 		 * @return A list containing the optimization parameters.
 		 */
 		const vector<Parameter>& getParameters()const;
@@ -116,9 +116,14 @@ class OptimizationConstraints{
 		/**
 		 *  @brief Override of operator=.
 		 *  @param other The right side object.
-		 *  @return True if the objects contains the same values. False otherwise. 
+		 *  @return A reference to the modified object. 
 		 */
 		OptimizationConstraints & operator=(const OptimizationConstraints &other);
+
+		/// @brief Constructor.
+		/// @param param The list of parameters. 
+		/// @param prohibitions The list of allocation prohibitions.
+		/// @param isolated The list of allocation isolation constraints. 
 		OptimizationConstraints(vector<Parameter> param,  vector<ProductAllocationProhibitions> prohibitions, 
 								vector<IsolatedFamily> isolated);
 };
