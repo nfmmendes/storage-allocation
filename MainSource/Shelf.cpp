@@ -33,7 +33,7 @@ Shelf::Shelf(const Shelf &other){
 /**
  *	Member constructor
  */
-Shelf::Shelf(long int Id, std::vector<Cell> cells, std::pair<double, double> bottomLeftCoords, std::string blockName,
+Shelf::Shelf(long int Id, const std::vector<Cell>& cells, const std::pair<double, double>& bottomLeftCoords, std::string blockName,
       int columns, int rows, double cellLength, double cellWidth){
     
     for(unsigned int i=0;i<cells.size(); i++){
@@ -49,7 +49,6 @@ Shelf::Shelf(long int Id, std::vector<Cell> cells, std::pair<double, double> bot
     this->cellLength = cellLength;
     this->cellWidth = cellWidth;
 }
-
 
 long int Shelf::getId() const { return Id;}
 double Shelf::getBottomLeftCoordX() const { return bottomLeftCoords.first; }

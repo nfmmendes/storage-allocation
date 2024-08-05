@@ -25,7 +25,7 @@ class Shelf{
         Shelf();
         Shelf(const Shelf &other);
         
-        Shelf(long int Id, vector<Cell> cells, pair<double, double> bottomLeftCoords, string blockName,
+        Shelf(long int Id, const vector<Cell>& cells, const pair<double, double>& bottomLeftCoords, string blockName,
               int columns, int rows, double cellLength, double cellWidth);
     
         long int getId() const;
