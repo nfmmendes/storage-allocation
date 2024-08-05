@@ -68,7 +68,7 @@ class Warehouse{
              * @brief Get the warehouse name. 
              * @return The warehouse name. 
              */
-            string getName() const ;
+            const string& getName() const ;
 
             /**
 			 * @brief Get blocks mapped by their names. 
@@ -80,19 +80,19 @@ class Warehouse{
              * @brief Get the list of warehouse blocks. 
              * @return A list of blocks. 
              */
-            vector<Block> &getBlocks();
+            const vector<Block>& getBlocks();
 
             /**
 			 * @brief Get the warehouse expedition points. 
 			 * @return Get a list with the expedition points. 
              */
-			vector<ExpeditionPoint> getExpeditionPoints();
+			const vector<ExpeditionPoint>& getExpeditionPoints();
 
             /**
              * @brief Get warehouse product allocations. 
              * @return The list of product allocations. 
              */
-            vector<pair<Product, Cell> > getProductAllocation() const;
+            const vector<pair<Product, Cell>>& getProductAllocation() const;
 
             /**
 			 * @brief Warehouse assignment operator. 

@@ -104,7 +104,7 @@ StorageAllocationSolution::StorageAllocationSolution(double value, double time, 
 
 
 void StorageAllocationSolution::setEvaluator(const DistanceMatrix<Vertex> *distanceMatrix, map<Position , Vertex > &vertexByPosition,
-											vector<Block> &blocks, OptimizationConstraints &constraints){
+											const vector<Block> &blocks, OptimizationConstraints &constraints){
 	if(Evaluator != NULL)
 		delete Evaluator;
 	Evaluator = new StorageSolutionEvaluator(distanceMatrix,vertexByPosition, blocks, constraints);

@@ -43,7 +43,7 @@ class Block{
         std::string getName() const;
 		double getWidth();
 		double getLenght();
-        const std::vector<Shelf> & getShelves();
+        const std::vector<Shelf> & getShelves() const;
 		const std::map<long int, Shelf> & getShelvesById(); 
 		
         const std::vector<BlockExit>& getExits();

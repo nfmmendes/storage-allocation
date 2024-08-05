@@ -55,7 +55,7 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(
  */
 StorageSolutionEvaluator::StorageSolutionEvaluator(
     const DistanceMatrix<Vertex>* distances, map<Position, Vertex>& vertexByPosition,
-    vector<Block>& blocks, const OptimizationConstraints& constraints)
+    const vector<Block>& blocks, const OptimizationConstraints& constraints)
 {
 
     this->distances = distances;

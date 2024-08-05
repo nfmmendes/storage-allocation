@@ -42,7 +42,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		StorageAllocationSolution(StorageAllocationSolution &other);
 		StorageAllocationSolution(double value, double time, double minDelta = 1e-06,bool maximization = true);
 		~StorageAllocationSolution();
-		static void setEvaluator(const DistanceMatrix<Vertex> *, map<Position , Vertex > &, std::vector<Block> & ,OptimizationConstraints &);
+		static void setEvaluator(const DistanceMatrix<Vertex> *, map<Position , Vertex > &, const std::vector<Block> &, OptimizationConstraints &);
 		map<Product, pair<Cell, int> > & getProductAllocations();
 		std::set<Product> & getNonAllocatedProducts(); 		 
 		double getTotalPenalty(); 

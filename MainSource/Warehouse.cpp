@@ -235,9 +235,9 @@ void Warehouse::addProductAllocation(pair<Product, Cell> & productAllocation){
     this->productAllocation.push_back(make_pair(productAllocation.first, productAllocation.second));
 }
 
-string Warehouse::getName() const { return this->name;}
+const string& Warehouse::getName() const { return this->name;}
 
-vector<Block> & Warehouse::getBlocks()  { return this->blocks;}
+const vector<Block>& Warehouse::getBlocks()  { return this->blocks;}
 
 map<string, Block> Warehouse::getBlocksByName(){
 	map<string, Block> result; 
@@ -248,7 +248,7 @@ map<string, Block> Warehouse::getBlocksByName(){
 	return result; 
 }
 
-vector<pair<Product, Cell> > Warehouse::getProductAllocation() const {
+const vector<pair<Product, Cell>>& Warehouse::getProductAllocation() const {
     return this->productAllocation;
 }
 
@@ -263,7 +263,7 @@ void Warehouse::setBlocks(vector<Block>& blocks){
         this->blocks.push_back(Block(blocks[i]));
 }
 
-vector<ExpeditionPoint> Warehouse::getExpeditionPoints(){
+const vector<ExpeditionPoint>& Warehouse::getExpeditionPoints(){
     return this->expeditionPoints;
 }
 
@@ -272,14 +272,13 @@ void Warehouse::printWarehouseInformation(){
 	cout<<"Printing warehouse information...\n\n\n";
 	cout<<"\tNumber of pavilion: \t"<<this->blocks.size() <<endl;
 	cout<<"\tNumber of expedition points \t"<<this->expeditionPoints.size()<<endl;
-	
-	
+
 	cout<<"Printing detailed information of blocks...\n\n\n";
 	for(unsigned int i =0;i<blocks.size();i++)
 		this->blocks[i].printBlockInformation();
 }
 
-Warehouse & Warehouse::operator=(const Warehouse &other){
+Warehouse& Warehouse::operator=(const Warehouse &other){
 	this->name = other.name;
 	
 	for(unsigned int i=0; i<other.blocks.size();i++)
