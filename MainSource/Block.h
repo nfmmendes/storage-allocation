@@ -8,6 +8,9 @@
 #include "Corridor.h"
 #include "Point.h"
 #include "Curve.h"
+using std::vector;
+using std::pair;
+using std::map;
 
 /**
  * @brief The Block class handles information about a warehouse block. 
@@ -15,15 +18,15 @@
 class Block{
 
     private: 
-        std::vector<Shelf> shelves;						///< Stores all shelves
-		std::map<long int, Shelf> shelvesById;			///< Stores a map connecting a shelf id to the object
-        std::vector<BlockExit> exits;					///< Store all the exists
-        std::vector<Corridor> corridors;				///< Store all the corridors 
-        std::vector<Curve> curves;						///< Store all the curves that conects two corridors 
+        vector<Shelf> shelves;						///< Stores all shelves
+		map<long int, Shelf> shelvesById;			///< Stores a map connecting a shelf id to the object
+        vector<BlockExit> exits;					///< Store all the exists
+        vector<Corridor> corridors;				///< Store all the corridors 
+        vector<Curve> curves;						///< Store all the curves that conects two corridors 
         string name; 								    ///< Name of block
         double length;								    ///< Block length 
         double width; 								    ///< Block width 
-        std::pair<double,double> bottomLeftCoords;		///< Bottom left extremety of the block 
+        pair<double,double> bottomLeftCoords;		///< Bottom left extremety of the block 
         
     public:
         /**
@@ -45,7 +48,7 @@ class Block{
          * @param width The block width.
          * @param lenght The block weight. 
          */
-        Block(std::string blockName, double bottomLeftCoordX , double bottomLeftCoordY, double width, double lenght);
+        Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY, double width, double lenght);
         
         /**
          * @brief Get if the block has a valid configuration.
@@ -113,7 +116,7 @@ class Block{
          * @brief Get the block name.
          * @return The block name. 
          */
-        std::string getName() const;
+        string getName() const;
 
         /**
 		 * @brief Get the block width.
@@ -131,37 +134,37 @@ class Block{
          * @brief Get the block shelves. 
          * @return The block shelves. 
          */
-        const std::vector<Shelf> & getShelves() const;
+        const vector<Shelf> & getShelves() const;
 
         /**
 		 * @brief Get the block shelves by shelf id. 
 		 * @return A map from a shelf id to a shelf. 
          */
-		const std::map<long int, Shelf> & getShelvesById() const; 
+		const map<long int, Shelf> & getShelvesById() const; 
 		
         /**
          * @brief Get the block exits. 
          * @return The block exits. 
          */
-        const std::vector<BlockExit>& getExits() const;
+        const vector<BlockExit>& getExits() const;
 
         /**
          * @brief Get the block corridors. 
          * @return The block corridors.
          */
-        const std::vector<Corridor>& getCorridors() const;
+        const vector<Corridor>& getCorridors() const;
 
         /**
          * @brief Get the block curves. 
          * @return The block curves. 
          */
-        const std::vector<Curve>& getCurves() const;
+        const vector<Curve>& getCurves() const;
 
         /**
          * @brief Get the block bottom left coords. 
          * @return The block bottom left coords. 
          */
-        const std::pair<double,double>& getBottomLeftCoords() const;
+        const pair<double,double>& getBottomLeftCoords() const;
     
         /**
          * @brief Check if a point is inside the block. 
@@ -174,25 +177,25 @@ class Block{
 		 * @brief Set the block name. 
 		 * @param name The block name. 
          */
-		void setName(const std::string &name);
+		void setName(const string &name);
 
         /**
          * @brief Set the block corridors.
          * @param others The block corridors. 
          */
-        void setCorridors(std::vector<Corridor> & others);
+        void setCorridors(vector<Corridor> & others);
     
         /**
          * @brief Set the block shelves. 
          * @param other The block shelves. 
          */
-        void setShelves(std::vector<Shelf> & other);
+        void setShelves(vector<Shelf> & other);
     
         /**
          * @brief Set the block curves. 
          * @param other The block curves. 
          */
-        void setCurves(std::vector<Curve> &other);
+        void setCurves(vector<Curve> &other);
     
         //TODO: Improve this
         
