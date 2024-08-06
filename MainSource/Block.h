@@ -55,13 +55,6 @@ class Block{
          * @return True if the block has a valid configuration, false otherwise. 
          */
         bool hasValidConfiguration();
-    
-        /**
-		 * @brief Add a shelf to the block.
-		 * @param shelf The shelf to be added.
-		 * @return A reference to the modified block.
-         */
-		Block & addShelf(Shelf &shelf); 
 
         /**
 		 * @brief Add an exit to the block. 
@@ -69,49 +62,7 @@ class Block{
 		 * @return A reference to the modified block.
          */
 		Block & addExit(BlockExit &exit);
-
-        /**
-		 * @brief Add ca corridor to the block. 
-		 * @param corridor The added corridor. 
-		 * @return A reference to the modified block.
-         */
-		Block & addCorridor(Corridor &corridor); 
-
-        /**
-		 * @brief Add a curve to the block.
-		 * @param curve The added curve. 
-		 * @return A reference to the modified block.
-         */
-		Block & addCurve(Curve & curve); 
-		
-        /**
-		 * @brief Remove a block shelf.
-		 * @param shelf The removed shelf.
-		 * @return A reference to the modified block. 
-         */
-		Block & removeShelf(Shelf &shelf); 
-
-        /**
-		 * @brief Remove a block exit. 
-		 * @param exit The exit to be removed. 
-		 * @return A reference to the modified block. 
-         */
-		Block& removeExit(BlockExit &exit);
-
-        /**
-		 * @brief Remove a block corridor. 
-		 * @param corridor The block to be removed.
-		 * @return A reference to the modified block. 
-         */
-		Block& removeCorridor(Corridor &corridor); 
-
-        /**
-		 * @brief Remove block curve.
-		 * @param curve The curve to be removed. 
-		 * @return A reference to the modified block.
-         */
-		Block& removeCuve(Curve & curve); 
-
+        
         /**
          * @brief Get the block name.
          * @return The block name. 
