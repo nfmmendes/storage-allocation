@@ -21,14 +21,9 @@ Block::Block(const Block &other){
 		shelvesById[other.shelves[i].getId()]= other.shelves[i];
 	}
 	
-    for(unsigned int i=0; i < other.exits.size(); i++)
-        this->exits.push_back(BlockExit(other.exits[i]));
-    
-    for(unsigned int i=0; i< other.corridors.size(); i++)
-        this->corridors.push_back(Corridor(other.corridors[i]));
-    
-    for(unsigned int i=0;i < other.curves.size();i++)
-        this->curves.push_back(Curve(other.curves[i]));
+	copy(begin(other.exits), end(other.exits), back_inserter(exits));
+	copy(begin(other.corridors), end(other.corridors), back_inserter(corridors));
+	copy(begin(other.curves), end(other.curves), back_inserter(curves));
     
     this->name = other.name;
     this->bottomLeftCoords = other.bottomLeftCoords;
