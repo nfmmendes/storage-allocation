@@ -9,13 +9,13 @@
 #include "Corridor.h"
 #include "Point.h"
 #include "Block.h"
-using namespace std;
+using std::cout;
+using std::endl;
 
 /**
  * Constructor default
  */
 Block::Block(){}
-
 
 /**
  *	Copy constructor 
