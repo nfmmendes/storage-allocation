@@ -54,24 +54,18 @@ Block::Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY
 	
 }
 
-
 /**
  *	Define if the block has a valid configuration based on the position of exits, corridors and shelves 
  */
 bool Block::hasValidConfiguration(){
     bool isValid = true;
-    for(unsigned int i = 0; i <exits.size();i++)
-        if(exits[i].getCoordX() < bottomLeftCoords.first || exits[i].getCoordY() < bottomLeftCoords.second){
-            isValid = false;
-            break;
-        }
-    
-    for(unsigned int i = 0; i< shelves.size(); i++){
-        if(shelves[i].getBottomLeftCoordX() < bottomLeftCoords.first || shelves[i].getBottomLeftCoordY() < bottomLeftCoords.second){
-            isValid = false;
-            break;
-        }
-    }
+	isValid &= none_of(begin(exits), end(exits), [this](auto &e){ 
+		return e.getCoordX() < bottomLeftCoords.first || e.getCoordY() < bottomLeftCoords.second;
+	});
+
+	isValid &= none_of(begin(shelves), end(shelves), [this](auto &s) { 
+		return s.getBottomLeftCoordX() < bottomLeftCoords.first || s.getBottomLeftCoordY() < bottomLeftCoords.second;
+	});
     
     for(unsigned int i=0 ; i< corridors.size(); i++){
         /********** IMPLEMENT **+*/
@@ -131,8 +125,7 @@ const pair<double,double> & Block::getBottomLeftCoords() const { return bottomLe
 void Block::setCorridors(vector<Corridor> & others){
     this->corridors.clear();
     
-    for(unsigned int i=0; i<others.size();i++)
-        this->corridors.push_back(Corridor(others[i]));
+	copy(begin(others), end(others), back_inserter(this->corridors));
 }
 
 
@@ -142,13 +135,10 @@ void Block::setCorridors(vector<Corridor> & others){
 **/
 void Block::setShelves(vector<Shelf > & others){
     this->shelves.clear();
-	for(unsigned int i=0; i<others.size();i++)
-        this->shelves.push_back(Shelf(others[i]));
 	
-	//std::transform(shelves.begin(), shelves.end(), std::inserter(shelvesById, shelvesById.end()),
-      //         [](const Shelf &s) { return std::make_pair(s.getId(), s); });
-    for(Shelf & shelf : shelves )
-		shelvesById[shelf.getId()] = shelf;
+	copy(begin(others), end(others), back_inserter(this->shelves));
+	transform(begin(shelves), end(shelves), inserter(shelvesById, end(shelvesById)),
+		 [](auto& s){ return make_pair(s.getId(), s);  });
 }
 
 /**
@@ -157,8 +147,7 @@ void Block::setShelves(vector<Shelf > & others){
 **/ 
 void Block::setCurves(vector<Curve> & others){
     this->curves.clear();
-    for(unsigned int i=0; i < others.size(); i++)
-        this->curves.push_back(Curve(others[i]));
+	copy(begin(others),end(others), back_inserter(this->curves));
 }
 
 
@@ -168,8 +157,6 @@ void Block::setCurves(vector<Curve> & others){
 bool Block::operator<(const Block &other) const{
 	return this->name < other.name; 
 }
-
-
 
 /**
 *	Equals operator overload 	
