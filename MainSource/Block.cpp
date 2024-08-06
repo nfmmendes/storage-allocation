@@ -75,64 +75,26 @@ bool Block::hasValidConfiguration(){
     return isValid;
 }
 
-/**
- * Define the name of the block
- */
 string Block::getName() const { return name; }
-
-/**
- *	Return the shelves of the block 
- */
-const vector<Shelf> & Block::getShelves() const { 
-	return shelves; 
-}
-
+const vector<Shelf> & Block::getShelves() const {  return shelves; }
 double Block::getWidth(){ return this->width;}
 double Block::getLenght(){ return this->length;}
+const map<long int, Shelf> & Block::getShelvesById() const{ return shelvesById; }
 
-/**
- * 
- **/
-const map<long int, Shelf> & Block::getShelvesById() const{
-	
-	return shelvesById;
-}
-
-/**
- *	Return the exits of the block 
- **/
 const vector<BlockExit> & Block::getExits() const {return exits; }
 
-/**
- * Return the corridors of the block 
- */ 
 const vector<Corridor> & Block::getCorridors() const { return corridors;}
 
-/**
- *	Return all the curves in a block 
- **/
 const vector<Curve> & Block::getCurves() const { return curves; }
 
-/**
- *	Return all the bottom left coordinates 
- **/
 const pair<double,double> & Block::getBottomLeftCoords() const { return bottomLeftCoords; }
 
-/**
- *	Set corridors in the block 
- *  @param others List of block corridors. These blocks will replace the corridors currently in the block 
- **/
 void Block::setCorridors(vector<Corridor> & others){
     this->corridors.clear();
     
 	copy(begin(others), end(others), back_inserter(this->corridors));
 }
 
-
-/**
-*	Set all the shelves of a block
-*	@param others List of shelves. These shelves will replace the shelves currently in the block
-**/
 void Block::setShelves(vector<Shelf > & others){
     this->shelves.clear();
 	
@@ -141,27 +103,15 @@ void Block::setShelves(vector<Shelf > & others){
 		 [](auto& s){ return make_pair(s.getId(), s);  });
 }
 
-/**
-*	Set all the curves of a block
-*	@param others List of curves. These curves will replace the curves currently in the block 
-**/ 
 void Block::setCurves(vector<Curve> & others){
     this->curves.clear();
 	copy(begin(others),end(others), back_inserter(this->curves));
 }
 
-
-/**
- *
- **/
 bool Block::operator<(const Block &other) const{
 	return this->name < other.name; 
 }
 
-/**
-*	Equals operator overload 	
-*	@param other The block in the right side of the operator 
-*/
 bool Block::operator==(const Block &other){
 
 	if(! (this->name == other.name && fabs(this->length-other.length) <1e-5 && fabs(this->width - other.width)<1e-5))
@@ -218,11 +168,6 @@ bool Block::operator==(const Block &other){
     
 }
 
-	
-/**
- * Add an exit in the block. If an exit with the same ID already exists, it will be replaced
- * @param exit Exit to be added 
- **/
 Block & Block::addExit(BlockExit &exit){
 	unsigned int i=0; 
 
@@ -236,27 +181,16 @@ Block & Block::addExit(BlockExit &exit){
 	return *this;
 }
 
-/**
- * Controls if a point is inside or in the border of a block based on the position and size of this block 
- * @param point Point that will be checked 
- **/
 bool Block::isInBlock(const Point &point)const{
 	return point.getCoordX() >= bottomLeftCoords.first && point.getCoordX() <= bottomLeftCoords.first + width &&
 			point.getCoordY() >= bottomLeftCoords.second && point.getCoordY() <= bottomLeftCoords.second + length;
 }
 
 
-/**
- * Set the block name 
- * @param name New block name 
- */
 void Block::setName(const string &name){
 	this->name = name; 
 }
 
-/**
- *
- **/
 Block & Block::operator=(const Block &other){
 	
 	this->shelves.clear();
@@ -288,9 +222,6 @@ Block & Block::operator=(const Block &other){
 	return *this;
 }
 
-/**
- *
- */
 void Block::printBlockInformation(){
 	
 	cout<<"_________________________________________\n"; 
