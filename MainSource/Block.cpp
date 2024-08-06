@@ -330,7 +330,7 @@ bool Block::operator==(const Block &other){
 	/**
 	 *	Remove (if exists) a curve on the block
 	 **/
-	Block & Block::removeCuver(Curve & curve){
+	Block & Block::removeCuve(Curve & curve){
 
 		unsigned int i=0; 
 		for( ; i<curves.size() && curves[i].getId() != curve.getId(); i++);
