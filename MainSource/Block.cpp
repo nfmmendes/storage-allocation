@@ -12,14 +12,8 @@
 using std::cout;
 using std::endl;
 
-/**
- * Constructor default
- */
 Block::Block(){}
 
-/**
- *	Copy constructor 
- */
 Block::Block(const Block &other){
 	
     for(unsigned int i = 0; i< other.shelves.size();i++){
