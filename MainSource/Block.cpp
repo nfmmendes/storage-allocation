@@ -188,25 +188,15 @@ Block & Block::operator=(const Block &other){
 		shelvesById[other.shelves[i].getId()]= this->shelves[this->shelves.size()-1];
 	}
 
-	this->exits.clear();
-	for(unsigned int i=0; i < other.exits.size(); i++)
-		this->exits.push_back(BlockExit(other.exits[i]));
-	
-	this->corridors.clear();
-	for(unsigned int i=0; i< other.corridors.size(); i++)
-		this->corridors.push_back(Corridor(other.corridors[i]));
-	
-	this->curves.clear();
-	for(unsigned int i=0;i < other.curves.size();i++)
-		this->curves.push_back(Curve(other.curves[i]));
-	
+	this->exits.clear();	
+	copy(begin(other.exits), end(other.exits), back_inserter(this->exits));
+	copy(begin(other.corridors), end(other.corridors), back_inserter(this->corridors));
+	copy(begin(other.curves), end(other.curves), back_inserter(this->curves));
 
 	this->name = other.name;
 	this->bottomLeftCoords = other.bottomLeftCoords;
 	this->width = other.width;
 	this->length = other.length;
-	
-
 	
 	return *this;
 }
