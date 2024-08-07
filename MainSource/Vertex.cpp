@@ -5,8 +5,6 @@
 using namespace std;
 using namespace QuickTSP;
 
-
-
 Vertex::Vertex(){
     this->value = 0; 
     this->label = "";
