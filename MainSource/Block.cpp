@@ -31,9 +31,6 @@ Block::Block(const Block &other){
     this->length = other.length;
 }
 
-/**
- *	Member constructor 
- */
 Block::Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY, double width, double length){
 
     this->name = blockName;
@@ -43,9 +40,6 @@ Block::Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY
 	
 }
 
-/**
- *	Define if the block has a valid configuration based on the position of exits, corridors and shelves 
- */
 bool Block::hasValidConfiguration(){
     bool isValid = true;
 	isValid &= none_of(begin(exits), end(exits), [this](auto &e){ 
@@ -69,13 +63,9 @@ const vector<Shelf> & Block::getShelves() const {  return shelves; }
 double Block::getWidth(){ return this->width;}
 double Block::getLenght(){ return this->length;}
 const map<long int, Shelf> & Block::getShelvesById() const{ return shelvesById; }
-
 const vector<BlockExit> & Block::getExits() const {return exits; }
-
 const vector<Corridor> & Block::getCorridors() const { return corridors;}
-
 const vector<Curve> & Block::getCurves() const { return curves; }
-
 const pair<double,double> & Block::getBottomLeftCoords() const { return bottomLeftCoords; }
 
 void Block::setCorridors(vector<Corridor> & others){
@@ -197,7 +187,7 @@ Block & Block::operator=(const Block &other){
 	this->bottomLeftCoords = other.bottomLeftCoords;
 	this->width = other.width;
 	this->length = other.length;
-	
+
 	return *this;
 }
 
