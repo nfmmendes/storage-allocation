@@ -6,11 +6,7 @@
 
 using namespace std;
 
-
-
-Parameter::Parameter(){
-    
-}
+Parameter::Parameter(){}
 
 Parameter::Parameter(const Parameter & other){
     this->name = other.name;

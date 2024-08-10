@@ -8,16 +8,13 @@
 using namespace std;
 using namespace QuickTSP;
 
-
 Line::Line(){}
 
-///Copy constructor
 Line::Line(const Line &other){
     this->startPoint = Point(other.getStartPoint());
     this->slope = Point(other.getSlope());
 }
 
-///Constructor member by member
 Line::Line(string label, Point &pointA, Point &pointB){
     string pointLabel = label+string("_slope");
     this->slope = Point(pointLabel,pointA.getCoordX() - pointB.getCoordX(),pointA.getCoordY() - pointB.getCoordY(),pointA.getCoordZ() - pointB.getCoordZ());
@@ -31,4 +28,3 @@ string Line::getLabel() const { return  label; }
 void Line::setSlope(Point &value) { this->slope = value; }
 void Line::setStartPoint(Point &value) { this->startPoint = value; }
 void Line::setLabel(string value) { this->label = value;}
-

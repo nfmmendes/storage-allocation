@@ -10,7 +10,6 @@
 using namespace std;
 using namespace QuickTSP;
 
-/// Copy constructor
 Graph::Graph(const Graph &graph){
     this->name = graph.name;
 	
@@ -25,7 +24,6 @@ Graph::Graph(const Graph &graph){
 	
 }
 
-/// Graph constructor by members
 Graph::Graph(const vector<Vertex> &vertexes, map<Vertex, vector<Arc> > &arcs, string name){
     this->name = name;
     
@@ -63,9 +61,6 @@ map<Vertex, vector<Arc> > Graph::getArcs() const{
     return arcsByVertex;
 }
 
-/**
- *
- */
 map<string, set<Vertex> > Graph::getVertexesByType(){
 	map<string, set<Vertex> > returned; 
 	for(unsigned int i=0;i<this->vertexes.size();i++)
@@ -74,16 +69,10 @@ map<string, set<Vertex> > Graph::getVertexesByType(){
 	return returned; 
 }
 
-/**
- *
- */
 vector<Vertex> Graph::getVertexes()const {
     return vertexes;
 }
 
-/**
- *
- */
 string Graph::getName()const{
     return name;
 }
@@ -135,31 +124,19 @@ void Graph::addArc(Arc &arc){
     this->arcsByVertex[arc.getBeginVertex()].push_back(Arc(arc));
 }
 
-/**
- *
- */
 void Graph::removeVertex(Vertex &other){
     remove(this->vertexes.begin(), this->vertexes.end(), other);
 }
 
-/**
- *
- */
 void Graph::removeArc(Vertex vertex,Arc & arc){
     remove(this->arcsByVertex[vertex].begin(), this->arcsByVertex[vertex].end(), arc);
 }
 
-/**
- *
- */
 void Graph::removerVertex(int i){
     if(i >= 0 && i < (int)this->vertexes.size())
         this->vertexes.erase(this->vertexes.begin()+i);
 }
 
-/**
- *
- */
 void Graph::removeArc(Vertex vertex,int i){
     if(i >= 0 && i < (int)this->arcsByVertex[vertex].size())
         this->arcsByVertex[vertex].erase(this->arcsByVertex[vertex].begin()+i);
