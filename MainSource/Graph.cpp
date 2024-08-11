@@ -54,14 +54,11 @@ Graph & Graph::operator=(const Graph &other){
     return *this;
 }
 
-/**
- *
- */
-map<Vertex, vector<Arc> > Graph::getArcs() const{
+const map<Vertex, vector<Arc> >& Graph::getArcs() const{
     return arcsByVertex;
 }
 
-map<string, set<Vertex> > Graph::getVertexesByType(){
+const map<string, set<Vertex> >& Graph::getVertexesByType(){
 	map<string, set<Vertex> > returned; 
 	for(unsigned int i=0;i<this->vertexes.size();i++)
 		returned[vertexes[i].getType()].insert(vertexes[i]);
@@ -69,27 +66,19 @@ map<string, set<Vertex> > Graph::getVertexesByType(){
 	return returned; 
 }
 
-vector<Vertex> Graph::getVertexes()const {
+const vector<Vertex>& Graph::getVertexes() const {
     return vertexes;
 }
 
-string Graph::getName()const{
+const string& Graph::getName()const{
     return name;
 }
 
-/**
- * Set graph arcs 
- * @param arcs New arcs of the graph. Those arcs 
- */
 void Graph::setArcs(map<Vertex, vector<Arc> > arcs){
     this->arcsByVertex.clear();
     this->arcsByVertex = arcs;
 }
 
-/**
- *	Set the graph vertexes. This procedure replaces all the vertices and remove invalid arcs 
- *	@param other List of the new vertexes 
- */
 void Graph::setVertexes(vector<Vertex> other){
     this->vertexes.clear();
     
@@ -109,43 +98,15 @@ void Graph::setVertexes(vector<Vertex> other){
 			this->arcsByVertex[it->first].clear(); 
 }
 
-/**
- * Add one vertex in the graph 
- */
 void Graph::addVertex(Vertex &other){
     this->vertexes.push_back(Vertex(other));
 }
 
-/**
- * insert one arc in the graph 
- */
 void Graph::addArc(Arc &arc){
     
     this->arcsByVertex[arc.getBeginVertex()].push_back(Arc(arc));
 }
 
-void Graph::removeVertex(Vertex &other){
-    remove(this->vertexes.begin(), this->vertexes.end(), other);
-}
-
-void Graph::removeArc(Vertex vertex,Arc & arc){
-    remove(this->arcsByVertex[vertex].begin(), this->arcsByVertex[vertex].end(), arc);
-}
-
-void Graph::removerVertex(int i){
-    if(i >= 0 && i < (int)this->vertexes.size())
-        this->vertexes.erase(this->vertexes.begin()+i);
-}
-
-void Graph::removeArc(Vertex vertex,int i){
-    if(i >= 0 && i < (int)this->arcsByVertex[vertex].size())
-        this->arcsByVertex[vertex].erase(this->arcsByVertex[vertex].begin()+i);
-}
-
-/**
- * Get all the adjacent vertex of a vertex 
- * @param vertex Vertex to return its adjacences 
- */
 vector<Vertex> Graph::getAdjacentVertexes(Vertex & v){
     vector<Vertex> returned; 
 
@@ -168,11 +129,6 @@ void Graph::print() const{
 			cout<<mapPair.second[i]<<endl; 
 }
 
-/**
- * 
- * Convert a set of arcs in a graph. The set of arcs
- * 
- */
 Graph Graph::convertArcsToGraph(set<Arc> &arcs,string name){
 
     set<Vertex> allVertexes;

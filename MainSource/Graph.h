@@ -7,6 +7,10 @@
 #include<set>
 #include "Arc.h"
 #include "Vertex.h" 
+using std::vector;
+using std::map;
+using std::set;
+using std::string;
 
 namespace QuickTSP{
 
@@ -15,9 +19,9 @@ namespace QuickTSP{
          */
         class Graph{
             private:
-                std::vector<Vertex> vertexes;					        ///< List of graph vertexes 
-                std::map<Vertex, std::vector<Arc> > arcsByVertex;		///< Arcs that are incident on each vertex	
-                std::string name;								        ///< Graph name 
+                vector<Vertex> vertexes;					        ///< List of graph vertexes 
+                map<Vertex, vector<Arc> > arcsByVertex;		///< Arcs that are incident on each vertex	
+                string name;								        ///< Graph name 
             public:
                 /**
                  * @brief Constructor.
@@ -36,7 +40,7 @@ namespace QuickTSP{
                  * @param arc Graph arcs.
                  * @param name Graph name. 
                  */
-                Graph(const std::vector<Vertex> &vertexes, std::map<Vertex, std::vector<Arc> > &arc, std::string name);
+                Graph(const vector<Vertex> &vertexes, map<Vertex, vector<Arc> > &arc, string name);
             
                 /**
                  * @brief Assignment operator override. 
@@ -49,37 +53,37 @@ namespace QuickTSP{
                  * @brief Get the graph arcs.
                  * @return A map containing the arcs indexed by vertex. 
                  */
-                std::map<Vertex, std::vector<Arc> > getArcs() const;
+                const map<Vertex, vector<Arc> >& getArcs() const;
 
                 /**
 				 * @brief Get the graph vertexes grouped by type. 
 				 * @return A map containing the arcs indexed by type. 
                  */
-				std::map<std::string, std::set<Vertex>> getVertexesByType();
+				const map<string, set<Vertex>>& getVertexesByType();
 
                 /**
                  * @brief Get the graph vertexes. 
                  * @return The list of graph vertexes. 
                  */
-                std::vector<Vertex> getVertexes() const;
+                const vector<Vertex>& getVertexes() const;
 
                 /**
                  * @brief Get the graph name. 
                  * @return The graph name. 
                  */
-                std::string getName() const;
+                const string& getName() const;
             
                 /**
                  * @brief Get the graph arcs.  
                  * @param arcs A map containing the arcs indexed by vertex. 
                  */
-                void setArcs(std::map<Vertex , std::vector<Arc> > arcs);
+                void setArcs(map<Vertex , vector<Arc> > arcs);
 
                 /**
                  * @brief Set the graph vertexes. 
                  * @param other The list of vertexes. 
                  */
-                void setVertexes(std::vector<Vertex> other);
+                void setVertexes(vector<Vertex> other);
 
                 /**
                  * @brief Add a vertex to the graph. 
@@ -94,37 +98,11 @@ namespace QuickTSP{
                 void addArc(Arc &arc);
 
                 /**
-                 * @brief Remove a graph vertex. 
-                 * @param other The vertex to be removed. 
-                 */
-                void removeVertex(Vertex &other);
-
-                /**
-                 * @brief Remove an arc in the vertex. 
-                 * @param vertex The initial arc vertex. 
-                 * @param arc The arc to be removed. 
-                 */
-                void removeArc(Vertex vertex, Arc & arc);
-
-                /**
-                 * @brief Remove the vertex with index i. 
-                 * @param i The index of the vertex to be removed. 
-                 */
-                void removerVertex(int i);
-
-                /**
-                 * @brief Remove the arc with index i in the list indexed by vertex. 
-                 * @param vertex The vertex used as map index. 
-                 * @param i The index. 
-                 */
-                void removeArc(Vertex vertex,int i);
-
-                /**
                  * @brief Get the list of adjacent vertex of a vertex.
                  * @param v The vertex searchead. 
                  * @return A list containing all the adjacent vertexes.
                  */
-                std::vector<Vertex> getAdjacentVertexes(Vertex & v);
+                vector<Vertex> getAdjacentVertexes(Vertex & v);
 
                 /**
                  * @brief Convert a set of arcs in a graph. 
@@ -132,7 +110,7 @@ namespace QuickTSP{
                  * @param name The graph name. 
                  * @return Return a graph formed by the arcs in the set. 
                  */
-                static Graph convertArcsToGraph(std::set<Arc> &arcs, std::string name="");
+                static Graph convertArcsToGraph(set<Arc> &arcs, string name="");
 
                 /**
 				 * @brief Print graph info. 
