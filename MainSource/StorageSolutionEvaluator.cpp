@@ -22,9 +22,6 @@
 using namespace std;
 using namespace QuickTSP;
 
-/**
- *
- */
 StorageSolutionEvaluator::StorageSolutionEvaluator(
     const StorageSolutionEvaluator& sto)
 {
@@ -50,9 +47,6 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(
             this->shelfIdsSetByBlockName[key].insert(ID);
 }
 
-/**
- *
- */
 StorageSolutionEvaluator::StorageSolutionEvaluator(
     const DistanceMatrix<Vertex>* distances, map<Position, Vertex>& vertexByPosition,
     const vector<Block>& blocks, const OptimizationConstraints& constraints)
@@ -75,9 +69,6 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(
     }
 }
 
-/**
- *
- */
 void StorageSolutionEvaluator::InitializeIsolatedFamilies()
 {
     weaklyIsolatedFamilies.clear();
@@ -98,9 +89,6 @@ void StorageSolutionEvaluator::InitializeIsolatedFamilies()
         prohibitionsByProduct[item.getProduct().getName()] = item;
 }
 
-/**
- *
- */
 StorageSolutionEvaluator& StorageSolutionEvaluator::
 operator=(const StorageSolutionEvaluator& other)
 {
@@ -181,11 +169,6 @@ void StorageSolutionEvaluator::InitializeClosestDeliveryPoint()
     }
 }
 
-/**
- * Evaluate the prohibition penalty delta *after - before) product be moved to
- * another cell
- *
- * */
 double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
     const Product product, const Cell& firstCell, const Cell& secondCell)
 {
@@ -235,9 +218,6 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
     return newPenalty - oldPenalty;
 }
 
-/**
- *
- **/
 double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
     const Product& first, const Cell& firstCell, const Product& second,
     const Cell& secondCell)
@@ -260,12 +240,6 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
     return deltaFirstProduct + deltaSecondProduct;
 }
 
-/**
- *	Evaluate the penalty delta caused by a swap between two products. In
- *this function is supposed a valid swap, so
- *	strongly isolated families or strong allocation prohibitions will cause
- *a exception
- **/
 double StorageSolutionEvaluator::evaluatePenaltyDelta(
     MapAllocation& allocations, const Product& first, const Product& second)
 {
@@ -355,9 +329,6 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(
     return delta + deltaProhibitions;
 }
 
-/**
- *
- * */
 double StorageSolutionEvaluator::evaluatePenaltyDeltaByLevel(
     vector<string>& allocatedFamilies, const Product& first,
     const Product& second, string isolationLevel)
@@ -423,12 +394,6 @@ double StorageSolutionEvaluator::evaluatePenaltyOnLevel(
     return total;
 }
 
-/**
- *	Get the best route considering only two points (more the closest start
- *point and closest end point)
- *	@param vertexes List of vertexes (pair)
- *	@return Total distance between the two points
- **/
 double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(
     vector<Vertex>& vertexes)
 {
@@ -467,9 +432,6 @@ double StorageSolutionEvaluator::getOnePointsBestRouteDistance(Vertex& location)
     return distance;
 }
 
-/**
- *
- **/
 double StorageSolutionEvaluator::DoFullEvaluationWithTSP(
     vector<PickingRoute>& vertexesVisits)
 {
@@ -514,9 +476,7 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(
 
     return totalDistance + penalty;
 }
-/**
- *
- **/
+
 double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex>& route)
 {
 
@@ -548,9 +508,6 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex>& route)
     return totalDistance + penalty;
 }
 
-/**
- *
- */
 double StorageSolutionEvaluator::DoRouteEstimation(vector<Vertex>& solution)
 {
     for (unsigned int i = 0; i < solution.size(); i++) {
@@ -559,11 +516,6 @@ double StorageSolutionEvaluator::DoRouteEstimation(vector<Vertex>& solution)
     return 0;
 }
 
-/**
- *	Get the total distance of a route (sequence of visits)
- *	@param sequence Sequence of points visited
- *	@return Total distance
- **/
 double StorageSolutionEvaluator::sumDistances(vector<Vertex>& sequence)
 {
     double sum = 0.0;
@@ -575,10 +527,6 @@ double StorageSolutionEvaluator::sumDistances(vector<Vertex>& sequence)
     return sum;
 }
 
-/**
- * Return how many times each product is required in a list of orders
- * @param orders List of orders to be analyzed
- **/
 map<Product, int>
 StorageSolutionEvaluator::getRequestsByProduct(vector<Order>& orders)
 {
@@ -595,11 +543,6 @@ StorageSolutionEvaluator::getRequestsByProduct(vector<Order>& orders)
     return returnedValue;
 }
 
-/**
- * This function searches a vertex list value already calculated
- * @param vertexes Sequence that will be searched
- * @return The vertexes list value found or '-1' otherwise
- **/
 double
 StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex>& vertexes)
 {
@@ -640,9 +583,6 @@ StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex>& vertexes)
     return -1;
 }
 
-/**
- *
- * */
 PickingRoute
 StorageSolutionEvaluator::getVertexes(vector<Position>& positions)
 {
@@ -655,9 +595,6 @@ StorageSolutionEvaluator::getVertexes(vector<Position>& positions)
     return value;
 }
 
-/**
- *
- * */
 Vertex StorageSolutionEvaluator::getVertex(Position& position)
 {
     return this->vertexByCellPosition[position];
