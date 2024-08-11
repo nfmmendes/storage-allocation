@@ -24,9 +24,11 @@ typedef struct std::pair< std::vector<Vertex>, double> PickingRoute;
 typedef struct std::map< Product, std::pair<Cell,int> > MapAllocation;  
 typedef struct std::pair<Cell, int> Position; 
 
-/// This class is exclusivelly to evaluate the solutions provided by the a heuristic method
-/// All kind of evaluation are done in this class and it should be as independent as possible
-/// of the heuristic that call it 
+/** 
+ * @brief This class is exclusivelly to evaluate the solutions provided by the a heuristic method
+ * All kind of evaluation are done in this class and it should be as independent as possible
+ * of the heuristic that call it. 
+ */
 class StorageSolutionEvaluator{
 
 	private:
@@ -46,26 +48,156 @@ class StorageSolutionEvaluator{
 		std::map<long, Shelf> shelfById; 
 		std::map<std::string, set<long> > shelfIdsSetByBlockName;
 
+		/**
+		 * @brief Get the best of a route containing two product locations and initial/final expedition points.
+		 * @param vertexes The list of vertexes (pair). 
+		 * @return The minimal distance. 
+		 */
 		double getBetterRouteWithTwoPoints(std::vector<Vertex>& vertexes); 
+
+		/** 
+		 * @brief Get the minimum distance in a route containing only an initial expedition point, a product 
+		 * location and a final product location.
+		 * @param location The product location. 
+		 * @return The minimum distance in the route closest expedition point -> location -> expedition point. 
+		 */
 		double getOnePointsBestRouteDistance(Vertex &location);
+		
+		/**
+		 * @brief Initialize the data structures needed to handle the isolated families.
+		 */
 		void InitializeIsolatedFamilies();
+
+		/**
+		 * @brief Initialize the data structures needed to handle the warehouse delivery points.
+		 */
 		void InitializeClosestDeliveryPoint();
+
+		/**
+		 * @brief Evaluate the prohibition penalty delta (after - before) product be moved to
+ 		 * another cell.
+		 * @param product The product to be analyzed 
+		 * @param firstCell The old/first cell. 
+		 * @param secondCell The new/second cell.  
+		 * @return The total prohibition penalty delta caused by prohibitions. 
+		 */
 		double evaluatePenaltyDeltaByProhibition(const Product product, const Cell &firstCell, const Cell &secondCell);
+		
+		/**
+		 * @brief Evaluate the penalty delta caused by a swap between two products. In
+	     * this function is supposed a valid swap, so strongly isolated families or strong
+		 * allocation prohibitions will cause a exception.
+		 * @param first The first product.
+		 * @param firstCell The first product cell. 
+		 * @param second The second product. 
+		 * @param secondCell The second product cell. 
+		 * @return The delta on the value of prohibition penalty. 
+		 */
 		double evaluatePenaltyDeltaByProhibition(const Product &first, const Cell &firstCell, const Product &second, const Cell &secondCell);
+		
+		/**
+		 * @brief Evaluate the penalties by isolation level.
+		 * @param allocatedFamilies The allocated families on the level. 
+		 * @param first The current product. 
+		 * @param second The new product. 
+		 * @param isolationLevel The isolation level. 
+		 * @return The delta on the value of isolation penalty.
+		 */
 		double evaluatePenaltyDeltaByLevel(std::vector<string> &allocatedFamilies, const Product & first, const Product & second, std::string isolationLevel);
+		
+		/**
+		 * @brief Evaluate the penalties over the allocation of a product family with isolation contraints in a given isolation level.
+		 * @param allocationsByFamilyCode The product family code. 
+		 * @param isolationLevel The isolation level. 
+		 * @return The total penalty over the allocation of product family considering the given isolation level. 
+		 */
 		double evaluatePenaltyOnLevel(std::map<std::string, int> & allocationsByFamilyCode, std::string isolationLevel);
 
 	public:
+		/**
+		 * @brief Copy constructor. 
+		 * @param sto Object to be copied. 
+		 */
 		StorageSolutionEvaluator(const StorageSolutionEvaluator &sto);
-		StorageSolutionEvaluator(const DistanceMatrix<Vertex> * distanceMatrix, std::map<Position, Vertex> &vertexByPosition, const std::vector<Block> &blocks, const OptimizationConstraints &constraint); 
+
+		/**
+		 * @brief Constructor.
+		 * @param distanceMatrix The graph distance matrix. 
+		 * @param vertexByPosition Graph vertex by warehouse position. 
+		 * @param blocks Warehouse blocks. 
+		 * @param constraints Allocation constraints. 
+		 */
+		StorageSolutionEvaluator(const DistanceMatrix<Vertex> * distanceMatrix, std::map<Position, Vertex> &vertexByPosition, const std::vector<Block> &blocks, const OptimizationConstraints &constraints); 
+
+		/**
+		 * @brief Get the total distance between a sequence of vertexes. 
+		 * @param sequence The sequence of vertexes. 
+		 * @return The total distance between a sequence of vertexes. 
+		 */
 		double sumDistances(std::vector<Vertex> &sequence); 
+
+		/**
+		 * @brief Execute a route evaluation. 
+		 * @param route The list of vertexes to be visited in the route. 
+		 * @return The best route length found. 
+		 */
 		double DoRouteEvaluation(std::vector<Vertex> & route);
+
+		/**
+		 * @brief Estimate the route distance.
+		 * @param route The route to be estimated. 
+		 * @return The distance route estimation. 
+		 */
 		double DoRouteEstimation(std::vector<Vertex> & route);
+
+		/**
+		 * @brief Evaluate the route distance solving a TSP.
+		 * @param vertexesVisits The vertexes that need to be visited. 
+		 * @return The route distance. 
+		 */
 		double DoFullEvaluationWithTSP(std::vector<PickingRoute> &vertexesVisits);
+
+		/**
+		 * @brief Search a cached route distance passing by a list of vertexes.
+		 * @param vertexes The sequence of vertexes to be searched.
+		 * @return The distance, if the vertex sequence is found or -1 otherwise. 
+		 */
 		double searchSequenceOnCache(std::vector<Vertex> &vertexes);
+
+		/**
+		 * @brief Assignment operator override. 
+		 * @param other The object to be copied. 
+		 * @return A reference to the modified object. 
+		 */
 		StorageSolutionEvaluator & operator=(const StorageSolutionEvaluator &other);
+
+		/**
+		 * @brief Get how many times each product is required in a list of orders. 
+		 * @param orders The list of orders. 
+		 * @return A map containing the number of requests indexed by product. 
+		 */
 		std::map<Product, int> getRequestsByProduct(std::vector<Order> &orders);
+
+		/**
+		 * @brief Get the graph vertexes corresponding to warehouse positions.
+		 * @param positions The warehouse positions. 
+		 * @return The list of vertexes, in the same order of the positions. 
+		 */
 		PickingRoute getVertexes(std::vector<Position> &positions);
+
+		/**
+		 * @brief Get the graph vertex corresponding to a warehouse position. 
+		 * @param position The warehouse position.
+		 * @return The graph vertex. 
+		 */
 		Vertex getVertex(Position &position);
+
+		/**
+		 * @brief Evaluate the penalty variation on swapping the position of two products. 
+		 * @param allocations The allocation of all products. 
+		 * @param first The first product in the swap. 
+		 * @param second The second product in the swap. 
+		 * @return The total delta. 
+		 */
 		double evaluatePenaltyDelta(MapAllocation & allocations,const Product &first,const Product &second);
 };
