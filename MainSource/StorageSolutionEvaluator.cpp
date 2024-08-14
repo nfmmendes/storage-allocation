@@ -120,13 +120,8 @@ operator=(const StorageSolutionEvaluator& other)
     return *this;
 }
 
-/**
- * Set the closest expedition point of each storage point in both senses,
- *storage -> expedition, expedition -> storage
- **/
 void StorageSolutionEvaluator::InitializeClosestDeliveryPoint()
 {
-
     vector<Vertex> storagePoints;
     vector<Vertex> expeditionPoints;
     vector<Vertex> allVertexes = distances->getKeys();
@@ -274,8 +269,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(
         string secondBlockName = shelfById[secondCell.getIdShelf()].getBlockName();
 
         if (firstCell.getIdShelf() == secondCell.getIdShelf()) {
-            for (auto & [ product, cell ] :
-                allocations) { // Same shelf. Does not need to load shelf or block
+            for (auto & [ product, cell ] : allocations) { // Same shelf. Does not need to load shelf or block
                 // allocations
                 familyAllocationsByCell[cell.first.getCode()].push_back(
                     product.getFamily());
@@ -361,8 +355,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByLevel(
     return delta;
 }
 
-double StorageSolutionEvaluator::evaluatePenaltyOnLevel(
-    map<string, int>& allocationsByFamilyCode, string isolationLevel)
+double StorageSolutionEvaluator::evaluatePenaltyOnLevel(map<string, int>& allocationsByFamilyCode, string isolationLevel)
 {
     double total = 0;
     if (allocationsByFamilyCode.size() > 1) {
@@ -394,8 +387,7 @@ double StorageSolutionEvaluator::evaluatePenaltyOnLevel(
     return total;
 }
 
-double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(
-    vector<Vertex>& vertexes)
+double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(vector<Vertex>& vertexes)
 {
     assert(vertexes.size() >= 2);
     assert(closestEndPoint.find(vertexes[0]) != closestEndPoint.end());
@@ -424,7 +416,6 @@ double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(
 
 double StorageSolutionEvaluator::getOnePointsBestRouteDistance(Vertex& location)
 {
-
     auto begin = closestStartPoint[location];
     auto end = closestEndPoint[location];
     double distance = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end);
@@ -432,8 +423,7 @@ double StorageSolutionEvaluator::getOnePointsBestRouteDistance(Vertex& location)
     return distance;
 }
 
-double StorageSolutionEvaluator::DoFullEvaluationWithTSP(
-    vector<PickingRoute>& vertexesVisits)
+double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute>& vertexesVisits)
 {
     TSP tsp(distances);
     vector<pair<Product, double> > items;
@@ -527,8 +517,7 @@ double StorageSolutionEvaluator::sumDistances(vector<Vertex>& sequence)
     return sum;
 }
 
-map<Product, int>
-StorageSolutionEvaluator::getRequestsByProduct(vector<Order>& orders)
+map<Product, int> StorageSolutionEvaluator::getRequestsByProduct(vector<Order>& orders)
 {
     map<Product, int> returnedValue;
 
@@ -543,8 +532,7 @@ StorageSolutionEvaluator::getRequestsByProduct(vector<Order>& orders)
     return returnedValue;
 }
 
-double
-StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex>& vertexes)
+double StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex>& vertexes)
 {
 
     if (vertexes.size() == 0)
@@ -583,8 +571,7 @@ StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex>& vertexes)
     return -1;
 }
 
-PickingRoute
-StorageSolutionEvaluator::getVertexes(vector<Position>& positions)
+PickingRoute StorageSolutionEvaluator::getVertexes(vector<Position>& positions)
 {
     PickingRoute value;
     for (unsigned int i = 0; i < positions.size(); i++) {
