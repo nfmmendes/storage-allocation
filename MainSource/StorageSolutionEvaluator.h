@@ -17,12 +17,16 @@
 #include "OptimizationConstraints.h"
 #include "Block.h"
 using namespace QuickTSP;
+using std::map;
+using std::vector;
+using std::pair;
+using std::unordered_map;
 
 class OptimizationParameters;
 
-typedef struct std::pair< std::vector<Vertex>, double> PickingRoute; 
-typedef struct std::map< Product, std::pair<Cell,int> > MapAllocation;  
-typedef struct std::pair<Cell, int> Position; 
+typedef struct pair< vector<Vertex>, double> PickingRoute; 
+typedef struct map< Product, pair<Cell,int> > MapAllocation;  
+typedef struct pair<Cell, int> Position; 
 
 /** 
  * @brief This class is exclusivelly to evaluate the solutions provided by the a heuristic method
@@ -32,28 +36,28 @@ typedef struct std::pair<Cell, int> Position;
 class StorageSolutionEvaluator{
 
 	private:
-		std::map<Vertex, std::map<int, std::vector<PickingRoute > >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
+		map<Vertex, map<int, vector<PickingRoute > >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
 															 								   ///< the presence of a vertex and then by size.  
-		std::map<std::pair<Cell,int> , Vertex> vertexByCellPosition; 
+		map<pair<Cell,int> , Vertex> vertexByCellPosition; 
 		const DistanceMatrix<Vertex> *distances; 
 		OptimizationConstraints optimizationConstraints;	
 
 		//Auxiliary structures
-		std::set<std::string> weaklyIsolatedFamilies;  
-		std::set<std::string> stronglyIsolatedFamilies;
-		std::map<std::string, std::pair<std::string, std::string> > isolationDataByFamilyCode; 			// Isolation level and force by family code 
-		std::unordered_map<Vertex, Vertex> closestStartPoint;
-		std::unordered_map<Vertex, Vertex> closestEndPoint;
-		std::map<std::string, ProductAllocationProhibitions> prohibitionsByProduct; 
-		std::map<long, Shelf> shelfById; 
-		std::map<std::string, set<long> > shelfIdsSetByBlockName;
+		set<string> weaklyIsolatedFamilies;  
+		set<string> stronglyIsolatedFamilies;
+		map<string, pair<string, string> > isolationDataByFamilyCode; 			// Isolation level and force by family code 
+		unordered_map<Vertex, Vertex> closestStartPoint;
+		unordered_map<Vertex, Vertex> closestEndPoint;
+		map<string, ProductAllocationProhibitions> prohibitionsByProduct; 
+		map<long, Shelf> shelfById; 
+		map<string, set<long> > shelfIdsSetByBlockName;
 
 		/**
 		 * @brief Get the best of a route containing two product locations and initial/final expedition points.
 		 * @param vertexes The list of vertexes (pair). 
 		 * @return The minimal distance. 
 		 */
-		double getBetterRouteWithTwoPoints(std::vector<Vertex>& vertexes); 
+		double getBetterRouteWithTwoPoints(vector<Vertex>& vertexes); 
 
 		/** 
 		 * @brief Get the minimum distance in a route containing only an initial expedition point, a product 
@@ -103,7 +107,7 @@ class StorageSolutionEvaluator{
 		 * @param isolationLevel The isolation level. 
 		 * @return The delta on the value of isolation penalty.
 		 */
-		double evaluatePenaltyDeltaByLevel(std::vector<string> &allocatedFamilies, const Product & first, const Product & second, std::string isolationLevel);
+		double evaluatePenaltyDeltaByLevel(vector<string> &allocatedFamilies, const Product & first, const Product & second, string isolationLevel);
 		
 		/**
 		 * @brief Evaluate the penalties over the allocation of a product family with isolation contraints in a given isolation level.
@@ -111,7 +115,7 @@ class StorageSolutionEvaluator{
 		 * @param isolationLevel The isolation level. 
 		 * @return The total penalty over the allocation of product family considering the given isolation level. 
 		 */
-		double evaluatePenaltyOnLevel(std::map<std::string, int> & allocationsByFamilyCode, std::string isolationLevel);
+		double evaluatePenaltyOnLevel(map<string, int> & allocationsByFamilyCode, string isolationLevel);
 
 	public:
 		/**
@@ -127,42 +131,42 @@ class StorageSolutionEvaluator{
 		 * @param blocks Warehouse blocks. 
 		 * @param constraints Allocation constraints. 
 		 */
-		StorageSolutionEvaluator(const DistanceMatrix<Vertex> * distanceMatrix, std::map<Position, Vertex> &vertexByPosition, const std::vector<Block> &blocks, const OptimizationConstraints &constraints); 
+		StorageSolutionEvaluator(const DistanceMatrix<Vertex> * distanceMatrix, map<Position, Vertex> &vertexByPosition, const vector<Block> &blocks, const OptimizationConstraints &constraints); 
 
 		/**
 		 * @brief Get the total distance between a sequence of vertexes. 
 		 * @param sequence The sequence of vertexes. 
 		 * @return The total distance between a sequence of vertexes. 
 		 */
-		double sumDistances(std::vector<Vertex> &sequence); 
+		double sumDistances(vector<Vertex> &sequence); 
 
 		/**
 		 * @brief Execute a route evaluation. 
 		 * @param route The list of vertexes to be visited in the route. 
 		 * @return The best route length found. 
 		 */
-		double DoRouteEvaluation(std::vector<Vertex> & route);
+		double DoRouteEvaluation(vector<Vertex> & route);
 
 		/**
 		 * @brief Estimate the route distance.
 		 * @param route The route to be estimated. 
 		 * @return The distance route estimation. 
 		 */
-		double DoRouteEstimation(std::vector<Vertex> & route);
+		double DoRouteEstimation(vector<Vertex> & route);
 
 		/**
 		 * @brief Evaluate the route distance solving a TSP.
 		 * @param vertexesVisits The vertexes that need to be visited. 
 		 * @return The route distance. 
 		 */
-		double DoFullEvaluationWithTSP(std::vector<PickingRoute> &vertexesVisits);
+		double DoFullEvaluationWithTSP(vector<PickingRoute> &vertexesVisits);
 
 		/**
 		 * @brief Search a cached route distance passing by a list of vertexes.
 		 * @param vertexes The sequence of vertexes to be searched.
 		 * @return The distance, if the vertex sequence is found or -1 otherwise. 
 		 */
-		double searchSequenceOnCache(std::vector<Vertex> &vertexes);
+		double searchSequenceOnCache(vector<Vertex> &vertexes);
 
 		/**
 		 * @brief Assignment operator override. 
@@ -176,14 +180,14 @@ class StorageSolutionEvaluator{
 		 * @param orders The list of orders. 
 		 * @return A map containing the number of requests indexed by product. 
 		 */
-		std::map<Product, int> getRequestsByProduct(std::vector<Order> &orders);
+		map<Product, int> getRequestsByProduct(vector<Order> &orders);
 
 		/**
 		 * @brief Get the graph vertexes corresponding to warehouse positions.
 		 * @param positions The warehouse positions. 
 		 * @return The list of vertexes, in the same order of the positions. 
 		 */
-		PickingRoute getVertexes(std::vector<Position> &positions);
+		PickingRoute getVertexes(vector<Position> &positions);
 
 		/**
 		 * @brief Get the graph vertex corresponding to a warehouse position. 
