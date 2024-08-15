@@ -3,7 +3,7 @@
 #include<iostream>
 #include<string>
 #include "Point.h"
-using namespace std;
+using std::string;
 
 
 namespace QuickTSP{
@@ -16,7 +16,7 @@ namespace QuickTSP{
         private: 
             Point startPoint;
             Point slope;
-            std::string label; 
+            string label; 
             
         public:
             /**
@@ -54,7 +54,7 @@ namespace QuickTSP{
              * @brief Get the line label. 
              * @return The line label. 
              */
-            std::string getLabel() const;
+            string getLabel() const;
             
             /**
              * @brief Set the line slope.

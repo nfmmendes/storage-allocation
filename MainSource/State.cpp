@@ -38,8 +38,8 @@ namespace QuickTSP {
             int componentBegin = vertexComponent[begin];
             int componentEnd = vertexComponent[end];
             
-            int minimo = min(componentBegin, componentEnd);
-            int maximo = max(componentBegin, componentEnd);
+            int minimo = std::min(componentBegin, componentEnd);
+            int maximo = std::max(componentBegin, componentEnd);
             
             for(map<Vertex,int>::iterator it = vertexComponent.begin(); it != vertexComponent.end(); it++)
                 if(it->second == maximo)
