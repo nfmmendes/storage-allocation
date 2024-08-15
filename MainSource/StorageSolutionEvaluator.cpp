@@ -236,7 +236,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
 }
 
 double StorageSolutionEvaluator::evaluatePenaltyDelta(
-    MapAllocation& allocations, const Product& first, const Product& second)
+     MapAllocation& allocations, const Product& first, const Product& second)
 {
     pair<Cell, int> firstPosition = allocations[first];
     pair<Cell, int> secondPosition = allocations[second];
@@ -324,7 +324,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(
 }
 
 double StorageSolutionEvaluator::evaluatePenaltyDeltaByLevel(
-    vector<string>& allocatedFamilies, const Product& first,
+    const vector<string>& allocatedFamilies, const Product& first,
     const Product& second, string isolationLevel)
 {
     double delta = 0;
@@ -387,7 +387,7 @@ double StorageSolutionEvaluator::evaluatePenaltyOnLevel(map<string, int>& alloca
     return total;
 }
 
-double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(vector<Vertex>& vertexes)
+double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(const vector<Vertex>& vertexes)
 {
     assert(vertexes.size() >= 2);
     assert(closestEndPoint.find(vertexes[0]) != closestEndPoint.end());
@@ -414,7 +414,7 @@ double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(vector<Vertex>& ver
     return min(firstOption, secondOption);
 }
 
-double StorageSolutionEvaluator::getOnePointsBestRouteDistance(Vertex& location)
+double StorageSolutionEvaluator::getOnePointsBestRouteDistance(const Vertex& location)
 {
     auto begin = closestStartPoint[location];
     auto end = closestEndPoint[location];
@@ -467,7 +467,7 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute>& v
     return totalDistance + penalty;
 }
 
-double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex>& route)
+double StorageSolutionEvaluator::DoRouteEvaluation(const vector<Vertex>& route)
 {
 
     TSP tsp(distances);
@@ -498,7 +498,7 @@ double StorageSolutionEvaluator::DoRouteEvaluation(vector<Vertex>& route)
     return totalDistance + penalty;
 }
 
-double StorageSolutionEvaluator::DoRouteEstimation(vector<Vertex>& solution)
+double StorageSolutionEvaluator::DoRouteEstimation(const vector<Vertex>& solution)
 {
     for (unsigned int i = 0; i < solution.size(); i++) {
     }
@@ -506,7 +506,7 @@ double StorageSolutionEvaluator::DoRouteEstimation(vector<Vertex>& solution)
     return 0;
 }
 
-double StorageSolutionEvaluator::sumDistances(vector<Vertex>& sequence)
+double StorageSolutionEvaluator::sumDistances(const vector<Vertex>& sequence)
 {
     double sum = 0.0;
     int limit = sequence.size() > 0 ? sequence.size() - 1 : 0;
@@ -517,7 +517,7 @@ double StorageSolutionEvaluator::sumDistances(vector<Vertex>& sequence)
     return sum;
 }
 
-map<Product, int> StorageSolutionEvaluator::getRequestsByProduct(vector<Order>& orders)
+map<Product, int> StorageSolutionEvaluator::getRequestsByProduct(const vector<Order>& orders)
 {
     map<Product, int> returnedValue;
 
@@ -555,7 +555,7 @@ double StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex>& vertexes)
         return -1;
 
     sort(vertexes.begin(), vertexes.end(),
-        [](Vertex& a, Vertex& b) { return a.getLabel() < b.getLabel(); });
+        [](const Vertex& a, const Vertex& b) { return a.getLabel() < b.getLabel(); });
 
     vector<PickingRoute> cachedRoutes = routesByVertexAndSize[firstVertex][vertexes.size()];
     for (unsigned int i = 0; i < vertexes.size(); i++)
@@ -571,7 +571,7 @@ double StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex>& vertexes)
     return -1;
 }
 
-PickingRoute StorageSolutionEvaluator::getVertexes(vector<Position>& positions)
+PickingRoute StorageSolutionEvaluator::getVertexes(const vector<Position>& positions)
 {
     PickingRoute value;
     for (unsigned int i = 0; i < positions.size(); i++) {
@@ -582,7 +582,7 @@ PickingRoute StorageSolutionEvaluator::getVertexes(vector<Position>& positions)
     return value;
 }
 
-Vertex StorageSolutionEvaluator::getVertex(Position& position)
+Vertex StorageSolutionEvaluator::getVertex(const Position& position)
 {
     return this->vertexByCellPosition[position];
 }

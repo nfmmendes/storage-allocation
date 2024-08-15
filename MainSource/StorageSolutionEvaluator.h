@@ -36,7 +36,7 @@ typedef struct pair<Cell, int> Position;
 class StorageSolutionEvaluator{
 
 	private:
-		map<Vertex, map<int, vector<PickingRoute > >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
+		map<const Vertex, map<int, vector<PickingRoute > >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
 															 								   ///< the presence of a vertex and then by size.  
 		map<pair<Cell,int> , Vertex> vertexByCellPosition; 
 		const DistanceMatrix<Vertex> *distances; 
@@ -57,7 +57,7 @@ class StorageSolutionEvaluator{
 		 * @param vertexes The list of vertexes (pair). 
 		 * @return The minimal distance. 
 		 */
-		double getBetterRouteWithTwoPoints(vector<Vertex>& vertexes); 
+		double getBetterRouteWithTwoPoints(const vector<Vertex>& vertexes); 
 
 		/** 
 		 * @brief Get the minimum distance in a route containing only an initial expedition point, a product 
@@ -65,7 +65,7 @@ class StorageSolutionEvaluator{
 		 * @param location The product location. 
 		 * @return The minimum distance in the route closest expedition point -> location -> expedition point. 
 		 */
-		double getOnePointsBestRouteDistance(Vertex &location);
+		double getOnePointsBestRouteDistance(const Vertex &location);
 		
 		/**
 		 * @brief Initialize the data structures needed to handle the isolated families.
@@ -107,7 +107,7 @@ class StorageSolutionEvaluator{
 		 * @param isolationLevel The isolation level. 
 		 * @return The delta on the value of isolation penalty.
 		 */
-		double evaluatePenaltyDeltaByLevel(vector<string> &allocatedFamilies, const Product & first, const Product & second, string isolationLevel);
+		double evaluatePenaltyDeltaByLevel(const vector<string> &allocatedFamilies, const Product & first, const Product & second, string isolationLevel);
 		
 		/**
 		 * @brief Evaluate the penalties over the allocation of a product family with isolation contraints in a given isolation level.
@@ -138,21 +138,21 @@ class StorageSolutionEvaluator{
 		 * @param sequence The sequence of vertexes. 
 		 * @return The total distance between a sequence of vertexes. 
 		 */
-		double sumDistances(vector<Vertex> &sequence); 
+		double sumDistances(const vector<Vertex> &sequence); 
 
 		/**
 		 * @brief Execute a route evaluation. 
 		 * @param route The list of vertexes to be visited in the route. 
 		 * @return The best route length found. 
 		 */
-		double DoRouteEvaluation(vector<Vertex> & route);
+		double DoRouteEvaluation(const vector<Vertex> & route);
 
 		/**
 		 * @brief Estimate the route distance.
 		 * @param route The route to be estimated. 
 		 * @return The distance route estimation. 
 		 */
-		double DoRouteEstimation(vector<Vertex> & route);
+		double DoRouteEstimation(const vector<Vertex> & route);
 
 		/**
 		 * @brief Evaluate the route distance solving a TSP.
@@ -180,21 +180,21 @@ class StorageSolutionEvaluator{
 		 * @param orders The list of orders. 
 		 * @return A map containing the number of requests indexed by product. 
 		 */
-		map<Product, int> getRequestsByProduct(vector<Order> &orders);
+		map<Product, int> getRequestsByProduct(const vector<Order> &orders);
 
 		/**
 		 * @brief Get the graph vertexes corresponding to warehouse positions.
 		 * @param positions The warehouse positions. 
 		 * @return The list of vertexes, in the same order of the positions. 
 		 */
-		PickingRoute getVertexes(vector<Position> &positions);
+		PickingRoute getVertexes(const vector<Position> &positions);
 
 		/**
 		 * @brief Get the graph vertex corresponding to a warehouse position. 
 		 * @param position The warehouse position.
 		 * @return The graph vertex. 
 		 */
-		Vertex getVertex(Position &position);
+		Vertex getVertex(const Position &position);
 
 		/**
 		 * @brief Evaluate the penalty variation on swapping the position of two products. 
