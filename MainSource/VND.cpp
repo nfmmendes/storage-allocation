@@ -41,9 +41,6 @@ VND::VND(vector<Product> & prods, Warehouse &wh, DistanceMatrix<Vertex> distMatr
 	this->distanceMatrix = distMatrix;
 }
 
-/**
- *	Copy constructor 
- */
 VND::VND(const VND & other){
 
 	copy(begin(other.products), end(other.products), back_inserter(products));
@@ -57,10 +54,6 @@ AbstractSolution * VND::generateInitialSolution(){
 	return NULL; 
 }
 
-
-/**
- *	Algorithm main function 
- */ 
 void VND::run(){
     
 	int switchNeighborhood = 1; 
@@ -91,67 +84,37 @@ void VND::run(){
 		
 		if(/*put criteria*/false)
 			switchNeighborhood = 1;
-	}
-	
-	
+	}	
 }
 
-/**
- *	NOT IMPLEMENTED 
- */
 AbstractSolution * VND::getSolution(){
     return NULL; 
 }
 
-/**
- *	NOT IMPLEMENTED 
- */
 double VND::getSolutionValue(){
     return 0; 
 }
 
-/**
- *	NOT IMPLEMENTED 
- */
 void VND::pertubation(AbstractSolution &solution){
     double value = solution.getSolutionValue();
-	cout<<value<<endl;
 }
 
-/**
- *	Swap two products in a same shelf 
- */
 void VND::firstLocalSearch(AbstractSolution &solution){
     double value = solution.getSolutionValue();
-	cout<<value<<endl;
 }
 
-/**
- * Swap two produtc in the same block but different shelves 
- */
 void VND::secondLocalSearch(AbstractSolution &solution){
     double value = solution.getSolutionValue();
-	cout<<value<<endl;
 }
 
-/**
- *	Swap the position of two groups of correlated products
- */
 void VND::thirdLocalSearch(AbstractSolution &solution){
     double value = solution.getSolutionValue();
-	cout<<value<<endl;
 }
 
-/**
- *	NOT IMPLEMENTED 
- */
 bool VND::stopCriteria(){
    return false;  
 }
 
-/**
- *	NOT IMPLEMENTED 
- */
 bool VND::pertubationCriteria(){
     return false;
 }
