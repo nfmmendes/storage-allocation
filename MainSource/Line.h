@@ -18,12 +18,7 @@ namespace QuickTSP{
             Point slope;
             string label; 
             
-        public:
-            /**
-             * @brief Constructor. 
-             */
-            Line();
-        
+        public:       
             /**
              * @brief Copy constructor. 
              * @param other The object to be copied. 
@@ -55,23 +50,5 @@ namespace QuickTSP{
              * @return The line label. 
              */
             string getLabel() const;
-            
-            /**
-             * @brief Set the line slope.
-             * @param value The line slope. 
-             */
-            void setSlope(Point &value);
-
-            /**
-             * @brief Get the starting point. 
-             * @param value The starting point. 
-             */
-            void setStartPoint(Point &value);
-
-            /**
-             * @brief Set the line label.
-             * @param value The line label.
-            */
-            void setLabel(std::string value);
     };
 }
