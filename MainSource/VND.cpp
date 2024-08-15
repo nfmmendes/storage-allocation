@@ -46,19 +46,14 @@ VND::VND(vector<Product> & prods, Warehouse &wh, DistanceMatrix<Vertex> distMatr
  */
 VND::VND(const VND & other){
 
-	for(unsigned int i=0;i<other.products.size();i++)
-		this->products.push_back(other.products[i]); 
+	copy(begin(other.products), end(other.products), back_inserter(products));
+	copy(begin(other.orders), end(other.orders), back_inserter(orders));
 	
-	for(unsigned int i=0; i< other.orders.size(); i++)
-		this->orders.push_back(other.orders[i]); 
-    
 	this->warehouse = * (new Warehouse(other.warehouse)); 
 	this->constraints = other.constraints;
 }
 
-
 AbstractSolution * VND::generateInitialSolution(){
-	
 	return NULL; 
 }
 
