@@ -19,6 +19,9 @@
 #include "StorageAllocationSolution.h"
 #include "Vertex.h"
 using namespace QuickTSP; 
+using std::vector;
+using std::map;
+using std::pair;
 
 /**
  * @brief Class <c> VND </c> implements a Variable Neighborhood Descent heuristic
@@ -41,8 +44,8 @@ class VND {
          * @param orders Product orders.
          * @param cons Optimization constraints. 
          */
-        VND(std::vector<Product> & prods, Warehouse &wh, DistanceMatrix<Vertex> distMatrix, 
-			std::map<std::pair<Cell, int>, Vertex> &vertexByCell, std::vector<Order> &orders, OptimizationConstraints &cons);
+        VND(vector<Product> & prods, Warehouse &wh, DistanceMatrix<Vertex> distMatrix, 
+			map<pair<Cell, int>, Vertex> &vertexByCell, vector<Order> &orders, OptimizationConstraints &cons);
 
         /**
          * @brief Copy constructor. 
@@ -70,12 +73,12 @@ class VND {
     private:
         Warehouse warehouse;								    ///< Warehouse where the products will be stored 
 		DistanceMatrix<Vertex> distanceMatrix;                  ///< Warehouse distance matrix.
-		std::map<std::pair<Cell, int>, Vertex> vertexByCell;    ///< Map to convert a position (cell, level) in a vertex.
-        std::vector<Order> orders;								///< Orders to be used in the evaluation
+		map<pair<Cell, int>, Vertex> vertexByCell;    ///< Map to convert a position (cell, level) in a vertex.
+        vector<Order> orders;								///< Orders to be used in the evaluation
         OptimizationConstraints constraints; 				    ///< Allocation constraints and parameters 
         AbstractSolution * bestSolution;					    ///< Best solution found
         double bestSolutionValue;							    ///< Best solution value
-		std::vector<Product> products; 							///< List of products to be allocated; 
+		vector<Product> products; 							///< List of products to be allocated; 
 
         /**
          * @brief Pertubate a solution. 

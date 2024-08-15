@@ -12,7 +12,6 @@
 #include "Order.h"
 #include "Vertex.h"
 #include <vector>
-using namespace std; 
 using namespace QuickTSP; 
 
 /**
