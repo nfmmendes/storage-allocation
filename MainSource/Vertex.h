@@ -31,7 +31,7 @@ namespace QuickTSP{
             std::string getType() const;
             double getValue() const;
         
-            bool operator==(const Vertex & other)const;
+            bool operator==(const Vertex & other) const;
         
             bool operator!=(const Vertex & other);
 			Vertex &operator=(const Vertex &other); 
@@ -39,13 +39,13 @@ namespace QuickTSP{
             ///This overload allows the use of an object of this class as a key to a map
             bool operator<(const Vertex &other)const;
 			friend std::ostream &operator<<(std::ostream & pr, const Vertex &b){ pr<<b.type<<" label: "<<b.label; return pr;}
-            std::size_t hash_value(Vertex const& p);
+            std::size_t hash_value(const Vertex & p);
     };
 
     // custom hash can be a standalone function object:
     struct VertexHash
     {
-        std::size_t operator()(Vertex const& s) const noexcept
+        std::size_t operator()(const Vertex& s) const noexcept
         {
             std::size_t h1 = std::hash<std::string>{}(s.getLabel());
             std::size_t h2 = std::hash<std::string>{}(s.getType());
@@ -62,7 +62,7 @@ namespace QuickTSP{
     {
         template<> struct hash<QuickTSP::Vertex>
         {
-            std::size_t operator()(QuickTSP::Vertex const& s) const noexcept
+            std::size_t operator()(const QuickTSP::Vertex& s) const noexcept
             {
                 std::size_t h1 = std::hash<std::string>{}(s.getLabel());
                 std::size_t h2 = std::hash<std::string>{}(s.getType());
