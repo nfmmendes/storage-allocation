@@ -63,13 +63,13 @@ namespace QuickTSP{
              * @brief Get the vertex label. 
              * @return The vertex label. 
             */
-            string getLabel() const;
+            const string& getLabel() const;
 
             /**
              * @brief Get the vertex type. 
              * @return The vertex type. 
             */
-            string getType() const;
+            const string& getType() const;
             
             /**
              * @brief Get the vertex value. 

@@ -2,7 +2,6 @@
 #include<string>
 #include<cmath>
 #include "Vertex.h"
-using namespace std;
 using namespace QuickTSP;
 
 Vertex::Vertex(){
@@ -27,8 +26,8 @@ void Vertex::setLabel(string value){ this->label = value; }
 void Vertex::setType(string value) { this->type = value; }
 void Vertex::setValue(double value) { this->value = value; }
 
-string Vertex::getLabel() const { return this->label; }
-string Vertex::getType() const { return this->type; }
+const string& Vertex::getLabel() const { return this->label; }
+const string& Vertex::getType() const { return this->type; }
 double Vertex::getValue() const { return this->value; }
 
 bool Vertex::operator==(const Vertex & other)const {
