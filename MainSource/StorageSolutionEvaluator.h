@@ -180,7 +180,7 @@ class StorageSolutionEvaluator{
 		 * @param orders The list of orders. 
 		 * @return A map containing the number of requests indexed by product. 
 		 */
-		map<Product, int> getRequestsByProduct(const vector<Order> &orders);
+		const map<Product, int>& getRequestsByProduct(const vector<Order> &orders);
 
 		/**
 		 * @brief Get the graph vertexes corresponding to warehouse positions.
@@ -194,7 +194,7 @@ class StorageSolutionEvaluator{
 		 * @param position The warehouse position.
 		 * @return The graph vertex. 
 		 */
-		Vertex getVertex(const Position &position);
+		const Vertex& getVertex(const Position &position);
 
 		/**
 		 * @brief Evaluate the penalty variation on swapping the position of two products. 

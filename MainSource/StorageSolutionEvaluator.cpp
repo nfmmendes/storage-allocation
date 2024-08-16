@@ -517,7 +517,7 @@ double StorageSolutionEvaluator::sumDistances(const vector<Vertex>& sequence)
     return sum;
 }
 
-map<Product, int> StorageSolutionEvaluator::getRequestsByProduct(const vector<Order>& orders)
+const map<Product, int>& StorageSolutionEvaluator::getRequestsByProduct(const vector<Order>& orders)
 {
     map<Product, int> returnedValue;
 
@@ -534,7 +534,6 @@ map<Product, int> StorageSolutionEvaluator::getRequestsByProduct(const vector<Or
 
 double StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex>& vertexes)
 {
-
     if (vertexes.size() == 0)
         return -1;
 
@@ -582,7 +581,7 @@ PickingRoute StorageSolutionEvaluator::getVertexes(const vector<Position>& posit
     return value;
 }
 
-Vertex StorageSolutionEvaluator::getVertex(const Position& position)
+const Vertex& StorageSolutionEvaluator::getVertex(const Position& position)
 {
     return this->vertexByCellPosition[position];
 }
