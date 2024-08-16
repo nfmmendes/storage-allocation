@@ -4,6 +4,10 @@
 #include<functional>
 #include<string>
 #include "AbstractVertex.h"
+using std::string;
+using std::ostream;
+using std::size_t;
+using std::hash;
 
 namespace QuickTSP{
 
@@ -13,8 +17,8 @@ namespace QuickTSP{
     class Vertex : public AbstractVertex{
         
         private:
-            std::string label;
-            std::string type;
+            string label;
+            string type;
             double value;
         
         public:
@@ -35,19 +39,19 @@ namespace QuickTSP{
              * @param Type The vertex type.
              * @param value The vertex value. 
              */
-            Vertex(std::string label, std::string Type, double value = 0);
+            Vertex(string label, string Type, double value = 0);
         
             /**
              * @brief Set the vertex label. 
              * @param value The new vertex label. 
              */
-            void setLabel(std::string value);
+            void setLabel(string value);
 
             /**
              * @brief Set the vertex type. 
              * @param value The vertex type.
              */
-            void setType(std::string value);
+            void setType(string value);
 
             /**
              * @brief Set the vertex value. 
@@ -59,13 +63,13 @@ namespace QuickTSP{
              * @brief Get the vertex label. 
              * @return The vertex label. 
             */
-            std::string getLabel() const;
+            string getLabel() const;
 
             /**
              * @brief Get the vertex type. 
              * @return The vertex type. 
             */
-            std::string getType() const;
+            string getType() const;
             
             /**
              * @brief Get the vertex value. 
@@ -107,29 +111,29 @@ namespace QuickTSP{
 			 * @param b The vertex to be print. 
 			 * @return Return a reference to the ostream object received as parameter. 
             */
-			friend std::ostream &operator<<(std::ostream & pr, const Vertex &b){ pr<<b.type<<" label: "<<b.label; return pr;}
+			friend ostream &operator<<(ostream & pr, const Vertex &b){ pr<<b.type<<" label: "<<b.label; return pr;}
 
             /**
              * @brief Override the function hash value. 
              * @param p The vertex to have its hash value computed. 
              * @return The hash value. 
             */
-            std::size_t hash_value(const Vertex & p);
+            size_t hash_value(const Vertex & p);
     };
 
     // custom hash can be a standalone function object:
     struct VertexHash
     {
-        std::size_t operator()(const Vertex& s) const noexcept
+        size_t operator()(const Vertex& s) const noexcept
         {
-            std::size_t h1 = std::hash<std::string>{}(s.getLabel());
-            std::size_t h2 = std::hash<std::string>{}(s.getType());
-            std::size_t h3 = std::hash<double>{}(s.getValue());
+            size_t h1 = hash<string>{}(s.getLabel());
+            size_t h2 = hash<string>{}(s.getType());
+            size_t h3 = hash<double>{}(s.getValue());
             return h1 ^ (h2 << 1) ^ (h3 >> 2); 
         }
     };
     
-    // custom specialization of std::hash can be injected in namespace std
+    // custom specialization of hash can be injected in namespace std
     
 }
 
@@ -137,11 +141,11 @@ namespace std
 {
     template<> struct hash<QuickTSP::Vertex>
     {
-        std::size_t operator()(const QuickTSP::Vertex& s) const noexcept
+        size_t operator()(const QuickTSP::Vertex& s) const noexcept
         {
-            std::size_t h1 = std::hash<std::string>{}(s.getLabel());
-            std::size_t h2 = std::hash<std::string>{}(s.getType());
-            std::size_t h3 = std::hash<double>{}(s.getValue());
+            size_t h1 = hash<string>{}(s.getLabel());
+            size_t h2 = hash<string>{}(s.getType());
+            size_t h3 = hash<double>{}(s.getValue());
             return h1 ^ (h2 << 1) ^ (h3 >> 2); 
         }
     };
