@@ -14,7 +14,6 @@
 #include "WarehouseToGraphConverter.h"
 #include "Arc.h"
 using namespace QuickTSP;
-using namespace std;
 
 #define DEBUG_LEVEL -1
 #define MIN_DIFF 0.000001
