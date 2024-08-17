@@ -25,7 +25,7 @@ using std::unordered_map;
 class OptimizationParameters;
 
 typedef struct pair< vector<Vertex>, double> PickingRoute; 
-typedef struct map< Product, pair<Cell,int> > MapAllocation;  
+typedef class map< Product, pair<Cell,int> > MapAllocation;  
 typedef struct pair<Cell, int> Position; 
 
 /** 
