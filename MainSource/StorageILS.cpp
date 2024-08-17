@@ -114,7 +114,7 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 	srand(this->randomSeed); 
 
 	//It is not possible to do swaps 
-	int allocationsSize = shelfAllocations.size();
+	int allocationsSize = (int) shelfAllocations.size();
 	
 	if(shelfAllocations.size() <=2)
 		return solutions;
@@ -240,7 +240,7 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 			blockAllocations[position] = product;
 	}
 	
-	int allocationsSize = blockAllocations.size();
+	int allocationsSize = (int)blockAllocations.size();
 	if(allocationsSize <=2)
 		return solutions;
 	
@@ -367,7 +367,7 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 	int first; 
 	int second; 
 	set<pair<int,int> >swapsDone; 
-	int numInterchangeableProducts = this->interchangeableProducts.size(); 
+	int numInterchangeableProducts = (int)this->interchangeableProducts.size(); 
 	//cout<<"C"<<endl;
 
 	for(int i=0;i<this->numberOfNeighbors && numTries < 2*numberOfNeighbors;i++, numTries++){
@@ -447,7 +447,7 @@ bool StorageAllocationPertubation::isValidSwap(Product &first, Product &second, 
 vector<AbstractSolution *> StorageAllocationPertubation::createNeighbors(){
 	vector<AbstractSolution *> solutions;	
 	int first, second;
-	int numIterations = interchangeableProducts.size()/20;  
+	int numIterations = (int) interchangeableProducts.size()/20;  
 	set<pair<int,int> > swapsDone;
 	int numTries=0; 
  
@@ -596,11 +596,11 @@ AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *cur
 		if(cl == 'A')
 			mostFrequentProducts.push_back(product);
 
-	int maxNumberSwaps = sqrt(mostFrequentProducts.size()); 
+	int maxNumberSwaps = (int) sqrt((int) mostFrequentProducts.size()); 
 	for(int i=0; i <maxNumberSwaps; i++){
 		vector<AbstractSolution *> neighbors;
-		((MostFrequentSwap *) neighborhoodStructure)->setRandomSeed(randomSeed*products.size()+i);
-		((MostFrequentSwap *) neighborhoodStructure)->setNumberOfNeighbors( mostFrequentProducts.size()/4 );
+		((MostFrequentSwap *) neighborhoodStructure)->setRandomSeed(randomSeed*((int)products.size())+i);
+		((MostFrequentSwap *) neighborhoodStructure)->setNumberOfNeighbors( (int) mostFrequentProducts.size()/4 );
 		((MostFrequentSwap *) neighborhoodStructure)->setInterchangeableProducts( mostFrequentProducts);
 		neighborhoodStructure->setStartSolution(currentSolution); 
 		neighbors = ((MostFrequentSwap *) neighborhoodStructure)->createNeighbors(); 
@@ -639,7 +639,7 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 		vector<AbstractSolution *> neighbors;
 
 		((InsideBlockSwap *) neighborhoodStructure)->setBlock(blocks[j]); 
-		((InsideBlockSwap *) neighborhoodStructure)->setRandomSeed(randomSeed+j*shelves.size());
+		((InsideBlockSwap *) neighborhoodStructure)->setRandomSeed(randomSeed+j*((int) shelves.size()));
 		((InsideBlockSwap *) neighborhoodStructure)->setNumberOfNeighbors((int)sqrt(blocks[j].getShelves().size()));
 		neighborhoodStructure->setStartSolution(currentSolution); 
 		neighbors = ((InsideBlockSwap *) neighborhoodStructure)->createNeighbors(); 
@@ -687,7 +687,7 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 			int indexShelf = rand()%shelves.size();
 			((InsideShelfSwap *) neighborhoodStructure)->setShelf(shelves[indexShelf]);
 			((InsideShelfSwap *) neighborhoodStructure)->setShelfAllocations(shelfAllocations[shelves[indexShelf].getId()]); 
-			((InsideShelfSwap *) neighborhoodStructure)->setRandomSeed(randomSeed+j*shelves.size()+k);
+			((InsideShelfSwap *) neighborhoodStructure)->setRandomSeed(randomSeed+j*((int)shelves.size())+k);
 			((InsideShelfSwap *) neighborhoodStructure)->setNumberOfNeighbors((int)sqrt(shelves[k].getCells().size()));
 
 			neighborhoodStructure->setStartSolution(currentSolution); 

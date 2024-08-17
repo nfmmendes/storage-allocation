@@ -23,7 +23,7 @@ void Util::splitString(std::vector<std::string> & returned, std::string original
 	
 	
 	
-bool Util::ChooseTwoProductIndexes(int &first, int &second, int numProducts, const std::set<std::pair<int,int> > & swapsDone){
+bool Util::ChooseTwoProductIndexes(int &first, int &second, unsigned long long numProducts, const std::set<std::pair<int,int> > & swapsDone){
 	first = rand()%numProducts;
 	second = rand()%numProducts; 
 	
