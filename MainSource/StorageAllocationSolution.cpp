@@ -55,9 +55,6 @@ StorageAllocationSolution::StorageAllocationSolution(){
 	}
 }
 
-/**
- *
- **/
 StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &other):AbstractSolution(other){
 	
 	StorageAllocationSolution::countSolutions++;
@@ -110,9 +107,6 @@ void StorageAllocationSolution::setEvaluator(const DistanceMatrix<Vertex> *dista
 	Evaluator = new StorageSolutionEvaluator(distanceMatrix,vertexByPosition, blocks, constraints);
 }
 
-/**
- * Destructor
- **/
 StorageAllocationSolution::~StorageAllocationSolution(){
 	StorageAllocationSolution::countSolutions--;
 	 
@@ -128,30 +122,18 @@ StorageAllocationSolution::~StorageAllocationSolution(){
 	this->routesByProduct.clear();
 }
 
-/**
- * 
- **/
 void StorageAllocationSolution::setMinDelta(double minDelta){
     this->minDelta = minDelta;
 }
 
-/**
- * 
- **/
 void StorageAllocationSolution::setRuntime(double time){
     this->runtime = time;
 }
 
-/**
- * 
- **/
 void StorageAllocationSolution::setSolutionValue(double value){
     this->solutionValue = value; 
 }
 
-/**
- * 
- **/
 void StorageAllocationSolution::setRoutesByProduct(map<Product, vector<PickingRoute * > > &other){
 
 	for(map<Product, vector<PickingRoute *> >::iterator it = this->routesByProduct.begin(); it != this->routesByProduct.end(); it++ ){
@@ -172,9 +154,6 @@ void StorageAllocationSolution::setRoutesByProduct(map<Product, vector<PickingRo
 	}
 }
 
-/**
- * Print the solution in the folder results\\solution 
- **/
 void StorageAllocationSolution::printSolution() const{
 
     auto end = std::chrono::system_clock::now();
