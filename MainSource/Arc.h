@@ -22,11 +22,6 @@ namespace QuickTSP{
             bool directed;  
         
         public:
-            /**     
-             * @brief Constructor. 
-             */
-            Arc();
-
             /**
              * @brief Copy constructor.
              * @param arc Arc to be copied. 
@@ -42,30 +37,6 @@ namespace QuickTSP{
              * @param directed True if the arc is directed, false otherwise (it is an edge).
              */
             Arc(string label, double value, Vertex &begin, Vertex &end, bool directed=true);
-            
-            /** 
-             * @brief Set the arc label. 
-             * @param label The arc label. 
-            */
-            void setLabel(string label);
-
-            /** 
-             * @brief Set the arc value. 
-             * @param value The arc value. 
-            */
-            void setValue(double value);
-
-            /** 
-             * @brief Set the arc begin vertex. 
-             * @param vertex The arc begin vertex. 
-            */
-            void setBeginVertex(Vertex& vertex);
-            
-            /**
-             * @brief Set the arc end vertex. 
-             * @param vertex The arc end vertex. 
-            */
-            void setEndVertex(Vertex& vertex);
         
             /**
              * @brief Get the arc label. 
