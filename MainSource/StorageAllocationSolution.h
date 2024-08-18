@@ -13,6 +13,10 @@
 #include "Cell.h"
 #include "Vertex.h"
 using namespace QuickTSP;
+using std::map;
+using std::vector;
+using std::string;
+using std::set;
 
 class OptimizationParameters;
 
@@ -28,11 +32,11 @@ class StorageAllocationSolution : public AbstractSolution{
 	private: 
 	
 		static StorageSolutionEvaluator *Evaluator; 
-		static std::vector<StorageAllocationSolution *> currentSolutions;
+		static vector<StorageAllocationSolution *> currentSolutions;
 		unsigned long long int solutionIndex; 
-		std::map<Product, Position > productsAllocation; 
-		std::map<Product, std::vector<PickingRoute *> > routesByProduct; 
-		std::set<Product> notAllocatedProducts; 
+		map<Product, Position > productsAllocation; 
+		map<Product, vector<PickingRoute *> > routesByProduct; 
+		set<Product> notAllocatedProducts; 
 		double totalPenalty; 
         
 		/**
@@ -60,7 +64,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @param evaluateSolutionWithTSP True if the new solution value must be evaluated using 
 		 *                                 the TSP algorithm, false otherwise. 
 		 */
-		void updateSolutionValue(std::vector<PickingRoute> &oldRoutes, std::vector<PickingRoute> &newRoutes, bool evaluateSolutionWithTSP=false);
+		void updateSolutionValue(vector<PickingRoute> &oldRoutes, vector<PickingRoute> &newRoutes, bool evaluateSolutionWithTSP=false);
 
 		/**
 		 * @brief Update a picking route and returns the objective function variation after this update
@@ -112,7 +116,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @param optimizationConstraints The optimization constraints.
 		 */
 		static void setEvaluator(const DistanceMatrix<Vertex> *distanceMatrix, map<Position , Vertex > & positionToVertex, 
-								 const std::vector<Block> &blocks, OptimizationConstraints & optimizationConstraints);
+								 const vector<Block> &blocks, OptimizationConstraints & optimizationConstraints);
 		
 		/**
 		 * @brief The the product allocations. 
@@ -124,7 +128,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @brief Get the non-allocated products in the solution. 
 		 * @return The set of non allocated products. 
 		 */
-		std::set<Product> & getNonAllocatedProducts(); 		 
+		set<Product> & getNonAllocatedProducts(); 		 
 
 		/**
 		 * @brief Get solution total penalty.
@@ -151,19 +155,19 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @param allocations The product allocations.
 		 * @param orders The set of orders to the products allocated. 
 		 */
-		void setAllocation(MapAllocation &allocations,const std::vector<Order> &orders);
+		void setAllocation(MapAllocation &allocations,const vector<Order> &orders);
 		
 		/**
 		 * @brief Set the picking routes by each product. 
 		 * @param other A map from a product to its picking routes. 
 		 */
-		void setRoutesByProduct(std::map<Product, std::vector<PickingRoute * > > &other);
+		void setRoutesByProduct(map<Product, vector<PickingRoute * > > &other);
 		
 		/**
 		 * @brief Set the non allocated products in the solution.
 		 * @param nonAllocated The set of non allocated products. 
 		 */
-		void setNonAllocatedProducts(const std::set<Product> &nonAllocated);
+		void setNonAllocatedProducts(const set<Product> &nonAllocated);
 
 		/**
 		 * @brief Remove allocation from solution.
@@ -194,7 +198,7 @@ class StorageAllocationSolution : public AbstractSolution{
          * @brief Print the solution to file. 
          * @param out A reference to file stream object.
 		 */
-        void printToFile(std::ofstream & out) const override;
+        void printToFile(ofstream & out) const override;
 
 		/**
 		 * @brief Override assignment operator =.
