@@ -242,13 +242,6 @@ void StorageAllocationSolution::setTotalPenalty(const double value){
 	this->totalPenalty = value; 
 } 
  
-
-/**
- * Change the position of two products in the solution 
- * @param firstProduct First product to be changed
- * @param secondProduct Second product to be changed
- * @param useTSPEvaluator Defines if the method should use TSP Evaluator to define 
- */
 void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const Product &secondProduct, bool useTSPEvaluator){
 		
 	pair<Cell,int> first = productsAllocation[firstProduct];
@@ -277,13 +270,6 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	this->solutionValue += delta + penaltyDelta; 
 }
 
-/**
- * Update a picking route and returns the objective function variation after this update
- * @param original Picking route that will be alterated 
- * @param oldVertex Vertex that will be removed of the route
- * @param newVertex Vertex that will be included in the new route
- * @param useTSPEvaluator Param to define how the route new cost will be calculated 
- * */
 double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *original,Vertex &oldVertex, Vertex &newVertex, bool useTSPEvaluator){
 
 	//if a same route has both products in the swap the evaluation don't need to be done
@@ -302,10 +288,6 @@ double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *o
 	return original->second - oldValue; 
 }
 
-
-/**
- * Set the allocations on warehouse 
- **/
 void StorageAllocationSolution::setAllocation(MapAllocation &allocations,const vector<Order> &orders){
 	
 	for(auto &[product,allocation] : allocations)
@@ -330,15 +312,6 @@ void StorageAllocationSolution::setAllocation(MapAllocation &allocations,const v
 	}
 }
 
-
-
-/**
- * Updates the solution based on changing the routes needed to pick all the products in the warehouse,
- * in this way it is not necessary recalculate all the routes in a given 
- * @param oldRoutes Original routes, as they were before the solution change
- * @param newRoutes New routes, as they are after the solution changes 
- * @param useTSP Indicates if the solution needs to be reevaluated based on a TSP solving algorithm or a indirect method
- **/
 void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRoutes, vector<PickingRoute> &newRoutes, bool useTSP){
 	double oldSum =0;
 	double newSum = 0;
@@ -355,9 +328,6 @@ void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRou
 	this->solutionValue += (newSum - oldSum);  
 }
 
-/**
- *	Overload of the operator = 
- */
 StorageAllocationSolution & StorageAllocationSolution::operator=(const StorageAllocationSolution &other){
 	
 	this->solutionValue = other.solutionValue;
