@@ -12,7 +12,6 @@
 #include "StorageSolutionEvaluator.h"
 #include "AbstractSolution.h"
 #include "DistanceMatrix.h"
-using namespace std;
 using namespace QuickTSP; 
 
 
