@@ -17,17 +17,12 @@ using namespace QuickTSP;
 
 StorageSolutionEvaluator * StorageAllocationSolution::Evaluator = NULL;
 int StorageAllocationSolution::countSolutions = 0;
-/**
- * Default constructor. Creates an empty solution 
- **/
+
 StorageAllocationSolution::StorageAllocationSolution(){
 	StorageAllocationSolution::countSolutions++;
 }
 
-/**
- *
- **/
- StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution *other){
+StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution *other){
 	StorageAllocationSolution::countSolutions++;
 	this->solutionValue = other->solutionValue;
 	this->runtime = other->runtime;
@@ -81,13 +76,6 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &
 	
 }
 
-/**
- * Member constructor with the more strict informations
- * @param value Objective function value
- * @param time Algorithm runtime
- * @param minDelta The minimal value to consider a solution diferent of another (default value 1e-06)
- * @param maximization Defines if that solution is of a maximization problem (default value true)
- **/
 StorageAllocationSolution::StorageAllocationSolution(double value, double time, double minDelta,bool maximization){
 	StorageAllocationSolution::countSolutions++;
 	this->solutionValue = value;
@@ -185,11 +173,6 @@ void StorageAllocationSolution::Evaluate(bool evaluateWithTSP){
 	
 }
 
-
-/**
- * Print the solution to a given file defined by the ofstream object
- * @param out Ofstream object that carries the data about where the print should be done 
- **/
 void StorageAllocationSolution::printToFile(ofstream & out) const{
 	out<<productsAllocation.size()<<endl;
 	
@@ -199,16 +182,10 @@ void StorageAllocationSolution::printToFile(ofstream & out) const{
 	out.close(); 
 }
 
-/**
- * Return all the products allocations. Products not allocated are not returned 
- **/
 map<Product, pair<Cell,int> > & StorageAllocationSolution::getProductAllocations(){
 	return this->productsAllocation;
 }
 
-/**
- * 
- * */
 double StorageAllocationSolution::getTotalPenalty(){
 	return this->totalPenalty;
 }
@@ -217,26 +194,14 @@ set<Product> & StorageAllocationSolution::getNonAllocatedProducts(){
 	return this->notAllocatedProducts; 
 }
 
-/**
- * Set a specific product allocation 
- * @param cell Cell where the product will be allocated 
- * @param level Level inside the cell where the product will be allocated
- * @param product Product to be allocated 
- **/
 void StorageAllocationSolution::setAllocation(const Cell &cell, int level, const Product &product){
 	this->productsAllocation[product] =  make_pair(cell,level); 
 }
 
-/**
- * Remove the allocation of a product 
- */
 void StorageAllocationSolution::removeAllocation(Product &product){	
 	this->productsAllocation.erase(product);	
 } 
- 
-/**
- *
- **/
+
 void StorageAllocationSolution::setTotalPenalty(const double value){ 
 	this->totalPenalty = value; 
 } 
