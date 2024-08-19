@@ -36,15 +36,14 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution *
 	for(auto & [key, value] : other->productsAllocation)
 		this->productsAllocation[key] = value; 
 
-	for(map<Product,vector<PickingRoute*> >::iterator it = other->routesByProduct.begin(); it!= other->routesByProduct.end(); it++){
+	for(const auto&product : other->routesByProduct){
+		this->routesByProduct[product.first].resize(product.second.size());
 		
-		this->routesByProduct[it->first].resize(it->second.size());
-		
-		for(unsigned int i =0;i<it->second.size(); i++){
-			//cout<<it->first.getName()<<" "<<i<<" "<<it->second.size()<<" " <<endl;
-			this->routesByProduct[it->first][i] = new PickingRoute();
-			this->routesByProduct[it->first][i]->first = it->second[i]->first; 
-			this->routesByProduct[it->first][i]->second = it->second[i]->second; 
+		for(unsigned int i =0;i<product.second.size(); i++){
+			//cout<<product.first.getName()<<" "<<i<<" "<<product.second.size()<<" " <<endl;
+			this->routesByProduct[product.first][i] = new PickingRoute();
+			this->routesByProduct[product.first][i]->first = product.second[i]->first; 
+			this->routesByProduct[product.first][i]->second = product.second[i]->second; 
 		}
 	}
 }
@@ -67,7 +66,7 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &
 
 	for(const auto& product : other.routesByProduct){
 		this->routesByProduct[product.first].resize(product.second.size());
-		
+
 		for(unsigned int i =0;i< product.second.size(); i++){
 			this->routesByProduct[product.first][i] = new PickingRoute();
 			this->routesByProduct[product.first][i]->first = product.second[i]->first; 
