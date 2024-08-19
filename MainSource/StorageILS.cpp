@@ -27,6 +27,7 @@
 #include <set>
 #include <map> 
 #include <chrono>
+#include <cassert>
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -678,6 +679,9 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 	
 	for(auto &[product, position] : allocations)
 		shelfAllocations[position.first.getIdShelf()][position] = product;
+
+	auto insideShelfSwap = static_cast<InsideShelfSwap *>(neighborhoodStructure);
+	assert(insideShelfSwap != nullptr);
 	
 	for(unsigned int j=0;j<blocks.size();j++){
 		vector<Shelf> shelves = blocks[j].getShelves();
@@ -685,13 +689,13 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 	
 		for(unsigned int k=0;k<shelves.size();k++){
 			int indexShelf = rand()%shelves.size();
-			((InsideShelfSwap *) neighborhoodStructure)->setShelf(shelves[indexShelf]);
-			((InsideShelfSwap *) neighborhoodStructure)->setShelfAllocations(shelfAllocations[shelves[indexShelf].getId()]); 
-			((InsideShelfSwap *) neighborhoodStructure)->setRandomSeed(randomSeed+j*((int)shelves.size())+k);
-			((InsideShelfSwap *) neighborhoodStructure)->setNumberOfNeighbors((int)sqrt(shelves[k].getCells().size()));
+			insideShelfSwap->setShelf(shelves[indexShelf]);
+			insideShelfSwap->setShelfAllocations(shelfAllocations[shelves[indexShelf].getId()]); 
+			insideShelfSwap->setRandomSeed(randomSeed+j*((int)shelves.size())+k);
+			insideShelfSwap->setNumberOfNeighbors((int)sqrt(shelves[k].getCells().size()));
 
 			neighborhoodStructure->setStartSolution(currentSolution); 
-			neighbors = ((InsideShelfSwap *) neighborhoodStructure)->createNeighbors(); 
+			neighbors = insideShelfSwap->createNeighbors(); 
 			double currentSolutionValue = currentSolution->getSolutionValue();
 			double newSolutionValue = neighbors[0]->getSolutionValue();
 			for(unsigned int w=0;w<neighbors.size();w++){
