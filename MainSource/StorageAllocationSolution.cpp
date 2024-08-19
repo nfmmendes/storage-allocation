@@ -323,8 +323,6 @@ bool StorageAllocationSolution::checkSolution(){
 		positions.insert(make_pair(value.first.getCode(), value.second)); 
 		prods.insert(key.getID());
 	}
-	//cout<<prods.size()<<" "<<positions.size()<<endl; 
-	if(prods.size()!= positions.size())
-		return false; 
-	return true; 
+	
+	return prods.size() == positions.size();
 }
