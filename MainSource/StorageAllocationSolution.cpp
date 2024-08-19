@@ -64,13 +64,14 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &
 		this->notAllocatedProducts.insert(key); 
 	for(auto & [key, value] : other.productsAllocation)
 		this->productsAllocation[key] = value; 
-	
-	for(map<Product,vector<PickingRoute*> >::iterator it = other.routesByProduct.begin(); it!= other.routesByProduct.end(); it++){
-		this->routesByProduct[it->first].resize(it->second.size());
-		for(unsigned int i =0;i<it->second.size(); i++){
-			this->routesByProduct[it->first][i] = new PickingRoute();
-			this->routesByProduct[it->first][i]->first = it->second[i]->first; 
-			this->routesByProduct[it->first][i]->second = it->second[i]->second; 
+
+	for(const auto& product : other.routesByProduct){
+		this->routesByProduct[product.first].resize(product.second.size());
+		
+		for(unsigned int i =0;i< product.second.size(); i++){
+			this->routesByProduct[product.first][i] = new PickingRoute();
+			this->routesByProduct[product.first][i]->first = product.second[i]->first; 
+			this->routesByProduct[product.first][i]->second = product.second[i]->second; 
 		}
 	}
 	
@@ -323,6 +324,6 @@ bool StorageAllocationSolution::checkSolution(){
 		positions.insert(make_pair(value.first.getCode(), value.second)); 
 		prods.insert(key.getID());
 	}
-	
+
 	return prods.size() == positions.size();
 }
