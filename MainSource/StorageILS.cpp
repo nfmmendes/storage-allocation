@@ -532,13 +532,6 @@ StorageAllocationSolution * StorageILS::CreateInitialSolution(){
 /**
  * 
  */
-StorageAllocationSolution * StorageILS::ExecutePertubation(StorageAllocationSolution *_currentSolution){
-	return _currentSolution;
-}
-
-/**
- * 
- */
 void StorageILS::EvaluateSolution(AbstractSolution * solution){
 	((StorageAllocationSolution *)solution)->Evaluate(true);
 }

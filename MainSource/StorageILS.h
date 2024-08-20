@@ -255,13 +255,6 @@ class StorageILS : public Heuristic{
         bool StopCriteriaReached();
 
         /**
-         * @brief Perform a pertubation inside the ILS algorithm.
-         * @param solution The solution to be pertubated. 
-         * @return A pertubated solution. 
-         */
-        StorageAllocationSolution * ExecutePertubation(StorageAllocationSolution *solution);
-
-        /**
          * @brief Create an initial solution. 
          * @return A solution. 
          */
