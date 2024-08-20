@@ -688,10 +688,13 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 
 AbstractSolution * StorageILS::RunPerturbation(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure){
 
-	((StorageAllocationPertubation *) neighborhoodStructure)->setInterchangeableProducts(products); 
-	((StorageAllocationPertubation *) neighborhoodStructure)->setNumberOfNeighbors(1);
+	auto perturbationNeighborhood = static_cast<StorageAllocationPertubation *>(neighborhoodStructure);
+	assert(perturbationNeighborhood != nullptr);
+
+	perturbationNeighborhood->setInterchangeableProducts(products); 
+	perturbationNeighborhood->setNumberOfNeighbors(1);
 	neighborhoodStructure->setStartSolution(currentSolution); 
-	vector<AbstractSolution *> neighbors = ((StorageAllocationPertubation *) neighborhoodStructure)->createNeighbors(); 
+	vector<AbstractSolution *> neighbors = perturbationNeighborhood->createNeighbors(); 
 
 	return neighbors[0]; 
 }
