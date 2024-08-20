@@ -610,11 +610,14 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 		vector<Shelf> shelves = blocks[j].getShelves();
 		vector<AbstractSolution *> neighbors;
 
-		((InsideBlockSwap *) neighborhoodStructure)->setBlock(blocks[j]); 
-		((InsideBlockSwap *) neighborhoodStructure)->setRandomSeed(randomSeed+j*((int) shelves.size()));
-		((InsideBlockSwap *) neighborhoodStructure)->setNumberOfNeighbors((int)sqrt(blocks[j].getShelves().size()));
+		auto insideBlockSwap = static_cast<InsideBlockSwap*>(neighborhoodStructure);
+		assert(insideBlockSwap);
+
+		insideBlockSwap->setBlock(blocks[j]); 
+		insideBlockSwap->setRandomSeed(randomSeed+j*((int) shelves.size()));
+		insideBlockSwap->setNumberOfNeighbors((int)sqrt(blocks[j].getShelves().size()));
 		neighborhoodStructure->setStartSolution(currentSolution); 
-		neighbors = ((InsideBlockSwap *) neighborhoodStructure)->createNeighbors(); 
+		neighbors = insideBlockSwap->createNeighbors(); 
 
 		double currentSolutionValue = currentSolution->getSolutionValue();
 		double newSolutionValue = neighbors[0]->getSolutionValue();
