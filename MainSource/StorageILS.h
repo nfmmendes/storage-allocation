@@ -201,15 +201,39 @@ class StorageAllocationPertubation : public NeighborhoodStructure {
 };
 
 /**
- * 
+ * @brief Class <c>StorageILS</c> is used to execute a ILS based heuristic to
+ * improve a storage allocation.
  */
-class StorageILS :public Heuristic{
+class StorageILS : public Heuristic{
     
     public:
+        /**
+         * @brief Constructor
+         */
         StorageILS();
+
+        /**
+         * @brief Copy constructor.
+         * @param other The object to be copied.
+         */
         StorageILS(StorageILS &other);
+
+        /**
+		 * @brief Constructor.
+		 * @param prods The list of products.
+		 * @param wh The warehouse in which the products are allocated. 
+		 * @param distMatrix The warehouse distance matrix.
+		 * @param vertexByCell A map from the warehouse positions to the warehouse graph vertexes.
+		 * @param orders The product orders. 
+		 * @param cons The optimization constraints. 
+         */
 		StorageILS(std::vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex>* distMatrix,
 				   std::map<Position, Vertex> vertexByCell,std::vector<Order> &orders, OptimizationConstraints &cons);
+        
+        /**
+         * @brief Run the heuristic.
+         * @return A solution. 
+         */
         AbstractSolution * Execute(); 
 
     private:
@@ -224,14 +248,74 @@ class StorageILS :public Heuristic{
         std::vector<std::string> neighborhoodType;
         std::map<Product, char> productClasses; 
 		
+        /**
+         * @brief Get if the stop criteria has been reached. 
+         * @return True if the stop criteria has been reached, false otherwise. 
+         */
         bool StopCriteriaReached();
-        StorageAllocationSolution * ExecutePertubation(StorageAllocationSolution *);
+
+        /**
+         * @brief Perform a pertubation inside the ILS algorithm.
+         * @param solution The solution to be pertubated. 
+         * @return A pertubated solution. 
+         */
+        StorageAllocationSolution * ExecutePertubation(StorageAllocationSolution *solution);
+
+        /**
+         * @brief Create an initial solution. 
+         * @return A solution. 
+         */
         StorageAllocationSolution * CreateInitialSolution();
+
+        /**
+         * @brief Evaluate a solution solution.
+         * @param solution The solution to be evaluated.
+         */ 
         void EvaluateSolution(AbstractSolution * solution); 
+
+        /**
+		 * @brief Initialize the set of neighborhoods to be used in the heuristic. 
+         */
 		void InitializeNeighborhoods();
+
+        /**
+         * @brief Perform a local search inside a shelf. 
+         * @param currentSolution The solution that will be used as the center of the search. 
+         * @param neighborhoodStructure The neighborhood structure to be used in the search. 
+         * @param randomSeed The random seed of the search. 
+         * @return A new solution. 
+         */
         AbstractSolution * SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure,int randomSeed);
+        
+        /**
+         * @brief Perform a local search inside a block.
+         * @param currentSolution The solution that will be used as the center of the search. 
+         * @param neighborhoodStructure The neighborhood structure to be used in the search. 
+         * @param randomSeed The random seed of the search. 
+         * @return A new solution. 
+         */
         AbstractSolution * SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
+        
+        /**
+         * @brief Perform a local search considering only the most frequent products. 
+         * @param currentSolution The solution that will be used as the center of the search. 
+         * @param neighborhoodStructure The neighborhood structure to be used in the search. 
+         * @param randomSeed The random seed of the search. 
+         * @return A new solution.
+         */ 
         AbstractSolution * SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
+        
+        /**
+         * @brief Perform a pertubation in the given solution.
+         * @param currentSolution The solution to be pertubated. 
+         * @param neighborhoodStructure The neighborhood structure to be used in the pertubation. 
+         * @return A new solution. 
+         */
         AbstractSolution * RunPerturbation(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure);
+        
+        /**
+         * @brief Get a map from products to ABC frequence classes.
+         * @return A map from products to ABC frequence classes.
+         */
         std::map<Product, char> getProductABCClasses();
 };
