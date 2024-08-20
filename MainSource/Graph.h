@@ -59,7 +59,7 @@ namespace QuickTSP{
 				 * @brief Get the graph vertexes grouped by type. 
 				 * @return A map containing the arcs indexed by type. 
                  */
-				const map<string, set<Vertex>>& getVertexesByType();
+				const map<string, set<Vertex>> getVertexesByType();
 
                 /**
                  * @brief Get the graph vertexes. 

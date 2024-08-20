@@ -58,7 +58,7 @@ const map<Vertex, vector<Arc> >& Graph::getArcs() const{
     return arcsByVertex;
 }
 
-const map<string, set<Vertex> >& Graph::getVertexesByType(){
+const map<string, set<Vertex> > Graph::getVertexesByType(){
 	map<string, set<Vertex> > returned; 
 	for(unsigned int i=0;i<this->vertexes.size();i++)
 		returned[vertexes[i].getType()].insert(vertexes[i]);
