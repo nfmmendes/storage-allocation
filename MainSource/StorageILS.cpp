@@ -529,21 +529,12 @@ StorageAllocationSolution * StorageILS::CreateInitialSolution(){
 	return  constr.Execute(); 
 }
 
-/**
- * 
- */
 void StorageILS::EvaluateSolution(AbstractSolution * solution){
 	((StorageAllocationSolution *)solution)->Evaluate(true);
 }
 
-/**
- * 
- */
- StorageILS::StorageILS(){}
+StorageILS::StorageILS(){}
 
-/**
- * 
- */
 StorageILS::StorageILS(StorageILS &other){
 	this->distanceMatrix = other.distanceMatrix;
 	this->warehouse = other.warehouse;
@@ -552,17 +543,10 @@ StorageILS::StorageILS(StorageILS &other){
 	InitializeNeighborhoods();
 }
 
-/**
- * 
- */
 bool StorageILS::StopCriteriaReached(){
     return  this->numIterationsWithoutImprovement >= OptimizationParameters::instance()->MAX_ITERATIONS_WITHOUT_IMPROVEMENT;
 }
 
-
-/**
- * 
- */
 void StorageILS::InitializeNeighborhoods(){
 	this->neighborhoodStructures.push_back(new MostFrequentSwap());
 	this->neighborhoodStructures.push_back(new InsideShelfSwap());
@@ -580,9 +564,6 @@ void StorageILS::InitializeNeighborhoods(){
 	neighborhoodType.push_back("IsolatedFamilySwap"); 
 }
 
-/**
- * 
- **/
 AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
 	
 	vector<Product> mostFrequentProducts;
@@ -621,9 +602,6 @@ AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *cur
 	return currentSolution; 
 }
 
-/**
- * 
- **/
 AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
 	vector<Block> blocks = this->warehouse->getBlocks(); 
 				
@@ -661,9 +639,6 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 	return currentSolution;
 }
 
-/**
- * 
- * */
 AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
 	
 	vector<Block> blocks = this->warehouse->getBlocks(); 
@@ -721,9 +696,6 @@ AbstractSolution * StorageILS::RunPerturbation(AbstractSolution *currentSolution
 	return neighbors[0]; 
 }
 
-/**
- * 
- * */
 map<Product, char> StorageILS::getProductABCClasses(){
 	vector<double> thresholds;
 	thresholds.push_back(OptimizationParameters::instance()->A_THRESHOLD_CLASS);
@@ -735,9 +707,6 @@ map<Product, char> StorageILS::getProductABCClasses(){
 	return abcAnalysis.getFrequenceClasses();
 }
 
-/**
- * 
- */
 AbstractSolution * StorageILS::Execute(){
 
     this->numIterationsWithoutImprovement = 0;
