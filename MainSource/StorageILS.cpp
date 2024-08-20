@@ -712,21 +712,21 @@ AbstractSolution * StorageILS::Execute(){
     this->numIterationsWithoutImprovement = 0;
 	double bestGlobalSolutionValue; 
 	
-    AbstractSolution * initialSolution = CreateInitialSolution();
-	StorageAllocationSolution * bestGlobalSolution = new StorageAllocationSolution( (StorageAllocationSolution *) initialSolution);
-	StorageAllocationSolution * currentSolution = new StorageAllocationSolution(bestGlobalSolution); 
+    auto* initialSolution = CreateInitialSolution();
+	auto* bestGlobalSolution = new StorageAllocationSolution( (StorageAllocationSolution *) initialSolution);
+	auto* currentSolution = new StorageAllocationSolution(bestGlobalSolution); 
 
 	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue(); 
-	cout<<"Greed value : "<<bestGlobalSolutionValue<< " penalty: "<<((StorageAllocationSolution *) initialSolution)->getTotalPenalty()<<endl;
-	NeighborhoodStructure * perturbation = new StorageAllocationPertubation(&constraints); 
+	cout<<"Greed value : "<<bestGlobalSolutionValue<< " penalty: "<< initialSolution->getTotalPenalty()<<endl;
+	auto * perturbation = new StorageAllocationPertubation(&constraints); 
 
 	int randomSeed= 1;
-	auto allocations = ((StorageAllocationSolution *) initialSolution)->getProductAllocations(); 
+	auto allocations = initialSolution->getProductAllocations(); 
 	//cout<<"Total penalty init : "<<currentSolution->getTotalPenalty()<<endl; 
 	while(!StopCriteriaReached()){
 		
-		StorageAllocationSolution *bestLocalSearchSolution = new StorageAllocationSolution(*currentSolution);
-		StorageAllocationSolution *originalSolution = new StorageAllocationSolution(*currentSolution);
+		auto *bestLocalSearchSolution = new StorageAllocationSolution(*currentSolution);
+		auto *originalSolution = new StorageAllocationSolution(*currentSolution);
 
 		delete currentSolution;
 		double bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue();
