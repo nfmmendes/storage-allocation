@@ -3,6 +3,7 @@
 
 #include<vector>
 #include "AbstractSolution.h"
+#include "OptimizationConstraints.h"
 
 class NeighborhoodStructure{
 
@@ -19,6 +20,7 @@ class NeighborhoodStructure{
             }
             this->startSolution = solution; 
         }
+        virtual void setOptimizationConstraints(OptimizationConstraints * cons) = 0;
         virtual AbstractSolution * getStartSolution() const = 0; 
         virtual std::vector<AbstractSolution *> createNeighbors() =0;    
 
