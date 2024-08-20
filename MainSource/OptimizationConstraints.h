@@ -1,6 +1,7 @@
 #pragma once
 
 #include<string>
+#include <set>
 #include<vector>
 #include "IsolatedFamily.h"
 #include "ProductAllocationProhibition.h"
