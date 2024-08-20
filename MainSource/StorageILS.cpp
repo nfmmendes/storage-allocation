@@ -749,13 +749,9 @@ AbstractSolution * StorageILS::Execute(){
 				newSolutionValue = auxiliaryPointer->getSolutionValue();
 			}else if(neighborhoodType[i] == "MostFrequentSwap"){
 				cout<<"Most frequent Swap"<<endl;
-				//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 				auxiliaryPointer = (StorageAllocationSolution *) SwapMostFrequentLocalSearch(currentSolution, neighborhoodStructures[i], randomSeed);
 				newSolutionValue = auxiliaryPointer->getSolutionValue();
-				//std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-				//std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milliseconds_s]" << std::endl;
 			}else{
-			//	auxiliaryPointer = new StorageAllocationSolution(currentSolution); 
 				continue;
 			}
 			
