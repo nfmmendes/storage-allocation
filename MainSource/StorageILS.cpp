@@ -553,10 +553,10 @@ void StorageILS::InitializeNeighborhoods(){
 	this->neighborhoodStructures.push_back(new InsideBlockSwap());
 	this->neighborhoodStructures.push_back(new IsolatedFamilySwap());
 
-	((MostFrequentSwap   *) (this->neighborhoodStructures[0]))->setOptimizationConstraints(&constraints);
-	((InsideShelfSwap    *) (this->neighborhoodStructures[1]))->setOptimizationConstraints(&constraints);
-	((InsideBlockSwap    *) (this->neighborhoodStructures[2]))->setOptimizationConstraints(&constraints);
-	((IsolatedFamilySwap *) (this->neighborhoodStructures[3]))->setOptimizationConstraints(&constraints);
+	this->neighborhoodStructures[0]->setOptimizationConstraints(&constraints);
+	this->neighborhoodStructures[1]->setOptimizationConstraints(&constraints);
+	this->neighborhoodStructures[2]->setOptimizationConstraints(&constraints);
+	this->neighborhoodStructures[3]->setOptimizationConstraints(&constraints);
 	
 	neighborhoodType.push_back("MostFrequentSwap");
 	neighborhoodType.push_back("InsideShelfSwap");
