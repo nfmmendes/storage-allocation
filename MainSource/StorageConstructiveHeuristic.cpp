@@ -21,7 +21,7 @@ using namespace QuickTSP;
  * Member constructor
  **/
 StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex> *distMatrix,
-														   map<Position, Vertex> vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
+														   map<Position, Vertex>& vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
 	this->distanceMatrix = distMatrix; 
 	this->warehouse = &wh; 
 	this->orders= orders; 
@@ -137,7 +137,7 @@ bool StorageConstructiveHeuristic::StopCriteriaReached(){
  * @param product Product that will be evaluated 
  * @param vertex Vertex were we are trying to put the product 
  **/
-bool StorageConstructiveHeuristic::isForbiddenStore(Product &product, Vertex &vertex){
+bool StorageConstructiveHeuristic::isForbiddenStore(const Product &product, const Vertex &vertex){
 	
 	//If the cell does not exist (is not found in the set of cells) so obviously it is forbidden store something there 
 	if(cellByVertex.find(vertex) == cellByVertex.end())
@@ -181,14 +181,14 @@ bool StorageConstructiveHeuristic::isForbiddenStore(Product &product, Vertex &ve
  * @param product Product that will be checked
  * @return true if the product belongs to an isolated family, false otherwise 
  **/
-bool StorageConstructiveHeuristic::isIsolatedFamily(Product &product){
+bool StorageConstructiveHeuristic::isIsolatedFamily(const Product &product){
 	return isolatedFamilies.find(product.getFamily()) != isolatedFamilies.end();
 }
 
 /**
  * 
  **/
-bool StorageConstructiveHeuristic::hasConstraints(Product &prod){
+bool StorageConstructiveHeuristic::hasConstraints(const Product &prod){
 	return restrictedProducts.find(prod.getName()) != restrictedProducts.end() || 
 		   isolatedFamilies.find(prod.getFamily()) != isolatedFamilies.end();
 }
@@ -245,7 +245,7 @@ double StorageConstructiveHeuristic::evaluatePenaltiesByNonIsolation(MapAllocati
 /**
  * 
  * */
-double StorageConstructiveHeuristic::evaluatePenaltyOnLevel(vector<string> familyAllocated, string isolation){
+double StorageConstructiveHeuristic::evaluatePenaltyOnLevel(const vector<string>& familyAllocated, const string& isolation){
 	
 	double totalPenalty = 0; 
 	map<string, int> countByFamily; 	
@@ -385,7 +385,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
  * @return Two maps in a tuple, the first is a map with the products ordered by frequence, from the most frequent to the last frequent. The second	
  *	       map has the frequence of each family. Both maps have as keys the family name
  **/
-tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuristic::getProductAndFrequenceByFamily(set<Product> &notUsedProducts){
+tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuristic::getProductAndFrequenceByFamily(const set<Product> &notUsedProducts){
 	map<string, queue<Product> > productsByFamily; 
 	map<string, int> frequenceByFamily; 
 	
@@ -418,7 +418,7 @@ vector<pair<int, string > > StorageConstructiveHeuristic::orderFamilyByFrequence
 }
 
 
-tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAllocation(queue<Product> products, vector<Vertex> &vertexes){
+tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAllocation(queue<Product>& products, const vector<Vertex> &vertexes){
 	
 	int contFrequence = 0;
 	map<Vertex,Product> currentAllocation; 
@@ -441,7 +441,7 @@ tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAlloca
 	return {contFrequence, currentAllocation};
 }
 
-bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & allocations, vector<Vertex> vertexes, 
+bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & allocations, vector<Vertex>& vertexes, 
 										vector<string> familyCodes,  map<string, queue<Product> > &orderedProductsByFamily){
 
 	//Order the vertexes in the block by distance from the closest delivery point 

@@ -56,11 +56,11 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		map<string, vector<Vertex> > getVertexesByType();
 		vector<pair<Product,int> > getProductOrderByFrequence();
 		vector<Vertex> getStoragePoints(); 
-		bool isIsolatedFamily(Product &product);
+		bool isIsolatedFamily(const Product &product);
 		vector<Vertex> getStorageVertexesOrderedByDistance();
-		bool hasConstraints(Product &product);
+		bool hasConstraints(const Product &product);
 		void InitializeAuxiliaryDataStructures();
-		bool isForbiddenStore(Product &product, Vertex &vertex);
+		bool isForbiddenStore(const Product &product, const Vertex &vertex);
 		vector<Vertex> getStorageVertexes(map<string,vector<Vertex> > &vertexByType);
 		void InitializeClosestDeliveryPoint();
 		set<Product> getNotUsedProducts(const map<Vertex,Product> allocations); 
@@ -70,21 +70,21 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		void allocateStronglyIsolatedFamilies(map<Vertex, Product> & allocations);
 		double evaluatePenaltiesByNonIsolation(map <Product, Position > & allocations);
 		double getBestRouteWithTwoPoints(const vector<Product> &items, MapAllocation &productAllocation );
-		ProductAndFrequenceByFamily getProductAndFrequenceByFamily(set<Product> &notUsedProducts); 
+		ProductAndFrequenceByFamily getProductAndFrequenceByFamily(const set<Product> &notUsedProducts); 
 		vector<pair<int, string > > orderFamilyByFrequence(const map<string, int> &frequenceByFamily);
-		tuple<int, map<Vertex,Product> > testFamilyAllocation(queue<Product> products, vector<Vertex> &vertexes);
-		bool AllocateBestFamily(map<Vertex, Product> & allocations, vector<Vertex> vertexes, 
+		tuple<int, map<Vertex,Product> > testFamilyAllocation(queue<Product>& products, const vector<Vertex> &vertexes);
+		bool AllocateBestFamily(map<Vertex, Product> & allocations, vector<Vertex>& vertexes, 
 				  vector<string> familyCodes,  map<string, queue<Product> >  &orderedProductsByFamily);
 		tuple<set<Cell> , set<Shelf> , set<Block> > getNonUsedStructures(const map<Vertex,Product> &allocations);
 		double evaluatePenaltiesByAllocationProhibition(MapAllocation & allocation); 
 		void fillFrequenceByProduct();
 		void setBestSolution(map<Vertex, Product> &cellByVertex);
-		double evaluatePenaltyOnLevel(vector<string> familyAllocated, string isolation);
+		double evaluatePenaltyOnLevel(const vector<string>& familyAllocated, const string& isolation);
 
     public: 
         StorageAllocationSolution * Execute();
 		StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex> *distMatrix,
-									 map<Position, Vertex> vertexByCell,
+									 map<Position, Vertex>& vertexByCell,
 									vector<Order> &orders, OptimizationConstraints &cons);
 };
 
