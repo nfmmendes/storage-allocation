@@ -798,8 +798,6 @@ vector<pair<Product,int> > StorageConstructiveHeuristic::getProductOrderByFreque
 	
 }
 
-
-
 /**
  * Get the list of all expedition points
  **/
@@ -820,11 +818,10 @@ map<string, vector<Vertex> > StorageConstructiveHeuristic::getVertexesByType(){
  **/
 set<Cell> StorageConstructiveHeuristic::getNotUsedCells(const map<Vertex,Product> &allocations){
 	set<Cell> result; 
-	
-	for(const auto &[key,value] : vertexByCell){
-		(void) value; //Only to clean warnings about not using this variable
-		result.insert(key.first);
-	}
+
+	transform(begin(vertexByCell), end(vertexByCell), inserter(result, end(result)), [](auto& e) {
+		return e.first.first;
+	});
 	
 	for(const auto &[key, value] : allocations){
 		(void) value; //Only to clean warnings about not using this variable
@@ -840,11 +837,9 @@ set<Cell> StorageConstructiveHeuristic::getNotUsedCells(const map<Vertex,Product
 set<Shelf> StorageConstructiveHeuristic::getNotUsedShelves(const set<Cell> &usedCells){
 	set<Shelf> result; 
 	
-	for(const auto &[key, value] : shelvesById){
-		(void) key; 	//Only to clean warnings about not using this variable
-		result.insert(value); 
-	}
-	
+	transform(begin(shelvesById), end(shelvesById), 
+			  inserter(result, end(result)), [](auto& a){ return a.second; });
+
 	for(const auto &cell : usedCells)
 		result.erase(shelvesById[cell.getIdShelf()]);
 
@@ -858,8 +853,8 @@ set<Shelf> StorageConstructiveHeuristic::getNotUsedShelves(const set<Cell> &used
 set<Block> StorageConstructiveHeuristic::getNotUsedBlocks(const set<Shelf> &usedShelves){
 	set<Block> result; 
 	
-	for(const auto &block : blocksByName)
-		result.insert(block.second);
+	transform(begin(blocksByName), end(blocksByName), 
+			  inserter(result, end(result)), [](auto &a){ return a.second; });
 
 	for(const auto &shelf : usedShelves)
 		result.erase(blocksByName[shelf.getBlockName()]); 
@@ -881,7 +876,8 @@ tuple<set<Cell> , set<Shelf> , set<Block> > StorageConstructiveHeuristic::getNon
 	set<Shelf> notUsedShelves = getNotUsedShelves(usedCells);
 	set<Shelf> usedShelves; 
 	for(const auto & [id, shelf] : shelvesById) if(notUsedShelves.find(shelf) == notUsedShelves.end() ) usedShelves.insert(shelf);
-	
+
+
 	set<Block> notUsedBlocks = getNotUsedBlocks(usedShelves); 
 	
 	return {notUsedCells, notUsedShelves, notUsedBlocks};
