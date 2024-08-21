@@ -17,70 +17,75 @@
 #include "StorageAllocationSolution.h"
 #include "ProductAllocationProhibition.h"
 using namespace QuickTSP; 
+using std::vector;
+using std::set;
+using std::map;
+using std::tuple;
+using std::string;
 
-using ProductAndFrequenceByFamily = std::tuple <std::map<std::string, std::queue<Product> >, std::map<string, int> >;
+using ProductAndFrequenceByFamily = tuple <map<string, queue<Product> >, map<string, int> >;
 
 class StorageConstructiveHeuristic : public Heuristic  {
 
 	private:
 		OptimizationConstraints constraints;
-		std::map<Position, Vertex > vertexByCell; 
-		std::vector<Product> products; 
+		map<Position, Vertex > vertexByCell; 
+		vector<Product> products; 
         const DistanceMatrix<Vertex> *distanceMatrix; 
         Warehouse *warehouse; 
-		std::vector<Order> orders; 
+		vector<Order> orders; 
 		
 		//Auxiliary data structures
-		std::set<std::string> isolatedFamilies; 
-		std::set<std::string> restrictedProducts; 
-		std::map<std::string, std::vector<Product> > productsByFamily; 
-		std::map<std::string, IsolatedFamily > familyIsolationsByFamilyCode; 
-		std::map<std::string, ProductAllocationProhibitions > productAllocationsByProductName; 
-		std::map<Vertex, Position > cellByVertex;
-		std::map<std::string, vector<Vertex> > vertexByType; 
-		std::set<std::string> storageVertexTypes; 
-		std::map<std::string, Block> blocksByName; 
-		std::map<long int, Shelf> shelvesById; 
-		std::unordered_map<Vertex, Vertex> closestStartPoint;
-		std::unordered_map<Vertex, Vertex> closestEndPoint; 
-		std::vector<std::pair<Product, int> > productsSortedByFrequence;
-		std::map<Product, int> frequenceByProduct;
+		set<string> isolatedFamilies; 
+		set<string> restrictedProducts; 
+		map<string, vector<Product> > productsByFamily; 
+		map<string, IsolatedFamily > familyIsolationsByFamilyCode; 
+		map<string, ProductAllocationProhibitions > productAllocationsByProductName; 
+		map<Vertex, Position > cellByVertex;
+		map<string, vector<Vertex> > vertexByType; 
+		set<string> storageVertexTypes; 
+		map<string, Block> blocksByName; 
+		map<long int, Shelf> shelvesById; 
+		unordered_map<Vertex, Vertex> closestStartPoint;
+		unordered_map<Vertex, Vertex> closestEndPoint; 
+		vector<pair<Product, int> > productsSortedByFrequence;
+		map<Product, int> frequenceByProduct;
 		
 		bool StopCriteriaReached();
         void EvaluateSolution(AbstractSolution * solution); 
-		std::map<string, std::vector<Vertex> > getVertexesByType();
-		std::vector<std::pair<Product,int> > getProductOrderByFrequence();
-		std::vector<Vertex> getStoragePoints(); 
+		map<string, vector<Vertex> > getVertexesByType();
+		vector<pair<Product,int> > getProductOrderByFrequence();
+		vector<Vertex> getStoragePoints(); 
 		bool isIsolatedFamily(Product &product);
-		std::vector<Vertex> getStorageVertexesOrderedByDistance();
+		vector<Vertex> getStorageVertexesOrderedByDistance();
 		bool hasConstraints(Product &product);
 		void InitializeAuxiliaryDataStructures();
 		bool isForbiddenStore(Product &product, Vertex &vertex);
-		std::vector<Vertex> getStorageVertexes(std::map<string,vector<Vertex> > &vertexByType);
+		vector<Vertex> getStorageVertexes(map<string,vector<Vertex> > &vertexByType);
 		void InitializeClosestDeliveryPoint();
-		std::set<Product> getNotUsedProducts(const std::map<Vertex,Product> allocations); 
-		std::set<Cell> getNotUsedCells(const std::map<Vertex,Product> &allocations); 
-		std::set<Shelf> getNotUsedShelves(const std::set<Cell> &usedCells);
-		std::set<Block> getNotUsedBlocks(const std::set<Shelf> &usedShelves); 
-		void allocateStronglyIsolatedFamilies(std::map<Vertex, Product> & allocations);
-		double evaluatePenaltiesByNonIsolation(std::map <Product, Position > & allocations);
-		double getBetterRouteWithTwoPoints(std::vector<Product> &items, MapAllocation &productAllocation );
-		ProductAndFrequenceByFamily getProductAndFrequenceByFamily(std::set<Product> &notUsedProducts); 
-		std::vector<std::pair<int, std::string > > orderFamilyByFrequence(const std::map<std::string, int> &frequenceByFamily);
+		set<Product> getNotUsedProducts(const map<Vertex,Product> allocations); 
+		set<Cell> getNotUsedCells(const map<Vertex,Product> &allocations); 
+		set<Shelf> getNotUsedShelves(const set<Cell> &usedCells);
+		set<Block> getNotUsedBlocks(const set<Shelf> &usedShelves); 
+		void allocateStronglyIsolatedFamilies(map<Vertex, Product> & allocations);
+		double evaluatePenaltiesByNonIsolation(map <Product, Position > & allocations);
+		double getBetterRouteWithTwoPoints(vector<Product> &items, MapAllocation &productAllocation );
+		ProductAndFrequenceByFamily getProductAndFrequenceByFamily(set<Product> &notUsedProducts); 
+		vector<pair<int, string > > orderFamilyByFrequence(const map<string, int> &frequenceByFamily);
 		tuple<int, map<Vertex,Product> > testFamilyAllocation(queue<Product> products, vector<Vertex> &vertexes);
-		bool AllocateBestFamily(std::map<Vertex, Product> & allocations, std::vector<Vertex> vertexes, 
-				  std::vector<string> familyCodes,  std::map<std::string, std::queue<Product> >  &orderedProductsByFamily);
-		std::tuple<set<Cell> , std::set<Shelf> , std::set<Block> > getNonUsedStructures(const std::map<Vertex,Product> &allocations);
+		bool AllocateBestFamily(map<Vertex, Product> & allocations, vector<Vertex> vertexes, 
+				  vector<string> familyCodes,  map<string, queue<Product> >  &orderedProductsByFamily);
+		tuple<set<Cell> , set<Shelf> , set<Block> > getNonUsedStructures(const map<Vertex,Product> &allocations);
 		double evaluatePenaltiesByAllocationProhibition(MapAllocation & allocation); 
 		void fillFrequenceByProduct();
-		void setBestSolution(std::map<Vertex, Product> &cellByVertex);
-		double evaluatePenaltyOnLevel(std::vector<string> familyAllocated, std::string isolation);
+		void setBestSolution(map<Vertex, Product> &cellByVertex);
+		double evaluatePenaltyOnLevel(vector<string> familyAllocated, string isolation);
 
     public: 
         StorageAllocationSolution * Execute();
-		StorageConstructiveHeuristic(std::vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex> *distMatrix,
-									 std::map<Position, Vertex> vertexByCell,
-									std::vector<Order> &orders, OptimizationConstraints &cons);
+		StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex> *distMatrix,
+									 map<Position, Vertex> vertexByCell,
+									vector<Order> &orders, OptimizationConstraints &cons);
 };
 
 #endif 
