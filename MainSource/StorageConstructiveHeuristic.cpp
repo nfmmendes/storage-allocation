@@ -196,7 +196,7 @@ bool StorageConstructiveHeuristic::hasConstraints(Product &prod){
 /**
  *
  **/
-double StorageConstructiveHeuristic::getBetterRouteWithTwoPoints(vector<Product> &items, MapAllocation &productAllocation){
+double StorageConstructiveHeuristic::getBestRouteWithTwoPoints(const vector<Product> &items, MapAllocation &productAllocation){
 																	 
 	Vertex location = vertexByCell[ productAllocation[items[0] ] ]; 
 	Vertex begin = closestStartPoint[ location  ];
@@ -347,7 +347,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 			Vertex end =   closestEndPoint[   location  ] ; 
 			totalDistance += this->distanceMatrix->getDistance(begin, location) + this->distanceMatrix->getDistance(location, end); 
 		}else if(allocated.size() == 2){
-			totalDistance += this->getBetterRouteWithTwoPoints(allocated, productAllocation);
+			totalDistance += this->getBestRouteWithTwoPoints(allocated, productAllocation);
 		}else{
 			if(allocated.size() == 0)continue; 
 
