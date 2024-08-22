@@ -123,20 +123,11 @@ void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 	}	
 }
 
-
-/**
- * Overload function used to define if the algorithm has reached the stop criteria or not 
- **/
 bool StorageConstructiveHeuristic::StopCriteriaReached(){
 	
 	return false; 
 }
 
-/**
- * Analyse if a product can be allocated in a vertex based in the allocations prohibitions 
- * @param product Product that will be evaluated 
- * @param vertex Vertex were we are trying to put the product 
- **/
 bool StorageConstructiveHeuristic::isForbiddenStore(const Product &product, const Vertex &vertex){
 	
 	//If the cell does not exist (is not found in the set of cells) so obviously it is forbidden store something there 
@@ -176,11 +167,7 @@ bool StorageConstructiveHeuristic::isForbiddenStore(const Product &product, cons
 	return false; 
 }
 
-/**
- * Check if a product belongs to one of the family products that must be isolated inside the warehouse
- * @param product Product that will be checked
- * @return true if the product belongs to an isolated family, false otherwise 
- **/
+
 bool StorageConstructiveHeuristic::isIsolatedFamily(const Product &product){
 	return isolatedFamilies.find(product.getFamily()) != isolatedFamilies.end();
 }
@@ -206,9 +193,6 @@ double StorageConstructiveHeuristic::getBestRouteWithTwoPoints(const vector<Prod
 	
 }
 
-/**
- * Full evaluate a solution 
- **/	
 double StorageConstructiveHeuristic::evaluatePenaltiesByNonIsolation(MapAllocation & allocations){
 	map<string, vector<string> > familiesByCell; 
 	map<long, vector<string> > familiesByShelf; 
@@ -292,10 +276,6 @@ double StorageConstructiveHeuristic::evaluatePenaltiesByAllocationProhibition(Ma
 	return totalPenalty; 
 }
 
-
-/**
- * Full evaluate a solution 
- **/
 void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution){	
 	
 	TSP tsp(distanceMatrix); 
@@ -362,13 +342,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 	
 }
 
-/**
- * Return the frequence and the not used products of each product family
- * @param notUsedProducts Set of products that where not allocated yet in the warehouse 
- * @return Two maps in a tuple, the first is a map with the products ordered by frequence, 
- * 		   from the most frequent to the last frequent. The second map has the frequence of each family.
- *	       Both maps have as keys the family name
- **/
+
 tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuristic::getProductAndFrequenceByFamily(const set<Product> &notUsedProducts){
 	map<string, queue<Product> > productsByFamily; 
 	map<string, int> frequenceByFamily; 
