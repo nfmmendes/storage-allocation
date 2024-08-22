@@ -43,15 +43,15 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 	vector<ProductAllocationProhibitions> prohibitions = constraints.getProductAllocationProhibitions();
 
 	//Initialize isolated families structures
-	for(unsigned int i=0; i< isolatedFamiliesList.size(); i++){
-		familyIsolationsByFamilyCode[isolatedFamiliesList[i].getCode()] = isolatedFamiliesList[i];
-		isolatedFamilies.insert(isolatedFamiliesList[i].getCode());
+	for(const auto& isolatedFamily : isolatedFamiliesList){
+		familyIsolationsByFamilyCode[isolatedFamily.getCode()] = isolatedFamily;
+		isolatedFamilies.insert(isolatedFamily.getCode());
 	}		
 
 	//Initialize product allocation prohibitions structures 
-	for(unsigned int i= 0;i< prohibitions.size(); i++){
-		productAllocationsByProductName[prohibitions[i].getProduct().getName()] = prohibitions[i];
-		restrictedProducts.insert(prohibitions[i].getProduct().getName());
+	for(const auto& prohibition : prohibitions){
+		productAllocationsByProductName[prohibition.getProduct().getName()] = prohibition;
+		restrictedProducts.insert(prohibition.getProduct().getName());
 	}
 
 	//Initialize structures to recover quickly information about store positions on graph
