@@ -365,8 +365,9 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 /**
  * Return the frequence and the not used products of each product family
  * @param notUsedProducts Set of products that where not allocated yet in the warehouse 
- * @return Two maps in a tuple, the first is a map with the products ordered by frequence, from the most frequent to the last frequent. The second	
- *	       map has the frequence of each family. Both maps have as keys the family name
+ * @return Two maps in a tuple, the first is a map with the products ordered by frequence, 
+ * 		   from the most frequent to the last frequent. The second map has the frequence of each family.
+ *	       Both maps have as keys the family name
  **/
 tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuristic::getProductAndFrequenceByFamily(const set<Product> &notUsedProducts){
 	map<string, queue<Product> > productsByFamily; 
@@ -563,10 +564,6 @@ void StorageConstructiveHeuristic::fillFrequenceByProduct(){
 	}
 }
 
-
-/***
- *	 
- ***/
 void StorageConstructiveHeuristic::setBestSolution(map<Vertex, Product> &allocation){
 	bestSolution = new StorageAllocationSolution(0.0, 0.0, 1e-02,false); 
 	map<Product, pair<Cell, int> > allocationByProduct; 
@@ -710,11 +707,6 @@ vector<Vertex> StorageConstructiveHeuristic::getStoragePoints(){
 	return result; 
 }
 
-
-
-/**
- * 
- **/
 vector<Vertex> StorageConstructiveHeuristic::getStorageVertexesOrderedByDistance(){
 	
 	vector<pair< double,Vertex> > vertexesOrderedByDistance; 
@@ -850,8 +842,9 @@ tuple<set<Cell> , set<Shelf> , set<Block> > StorageConstructiveHeuristic::getNon
 	
 	set<Shelf> notUsedShelves = getNotUsedShelves(usedCells);
 	set<Shelf> usedShelves; 
-	for(const auto & [id, shelf] : shelvesById) if(notUsedShelves.find(shelf) == notUsedShelves.end() ) usedShelves.insert(shelf);
-
+	for(const auto & [id, shelf] : shelvesById) 
+		if(notUsedShelves.find(shelf) == notUsedShelves.end() ) 
+		usedShelves.insert(shelf);
 
 	set<Block> notUsedBlocks = getNotUsedBlocks(usedShelves); 
 	
