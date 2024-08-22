@@ -428,8 +428,9 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 
 	//Order the vertexes in the block by distance from the closest delivery point 
 	//Maybe it could be pre-evaluated 
-	sort(vertexes.begin(), vertexes.end(), [this](const Vertex &a,const Vertex &b){ 
-		return this->distanceMatrix->getDistance(this->closestStartPoint[a], a) < this->distanceMatrix->getDistance(this->closestStartPoint[b], b); 
+	auto &closestStartPointDistance = [this](const Vertex & v){ return distanceMatrix->getDistance(closestStartPoint[v], v); };
+	sort(vertexes.begin(), vertexes.end(), [this,&closestStartPointDistance](const Vertex &a,const Vertex &b){ 
+		return closestStartPointDistance(a) < closestStartPointDistance(b); 
 	});
 	 
 	string bestFamily; 
@@ -446,26 +447,25 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 		}
 	} 
 	
-	if(maxFrequence > 0){
+	if(maxFrequence <= 0)
+		return false;
 	
-		set<Product> allocatedProducts;
-		for(auto &[vertex, prod] : bestAllocation)
-			allocatedProducts.insert(prod);
-	
-		queue<Product> remainingOrderedProducts; 
+	set<Product> allocatedProducts;
+	for(auto &[vertex, prod] : bestAllocation)
+		allocatedProducts.insert(prod);
 
-		while(orderedProductsByFamily[bestFamily].size() > 0){
-			Product prod = orderedProductsByFamily[bestFamily].front(); 
-			if(allocatedProducts.find(prod)== allocatedProducts.end()) 
-				remainingOrderedProducts.push(prod); 
-			orderedProductsByFamily[bestFamily].pop();
-		}
+	queue<Product> remainingOrderedProducts; 
 
-		orderedProductsByFamily[bestFamily] = remainingOrderedProducts; 
-		for(auto &[vertex, prod] : bestAllocation)
-			allocations[vertex] = prod; 	 
-	
+	while(orderedProductsByFamily[bestFamily].size() > 0){
+		Product prod = orderedProductsByFamily[bestFamily].front(); 
+		if(allocatedProducts.find(prod)== allocatedProducts.end()) 
+			remainingOrderedProducts.push(prod); 
+		orderedProductsByFamily[bestFamily].pop();
 	}
+
+	orderedProductsByFamily[bestFamily] = remainingOrderedProducts; 
+	for(auto &[vertex, prod] : bestAllocation)
+		allocations[vertex] = prod; 	 
 	
 	return false;
 }
