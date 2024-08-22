@@ -390,14 +390,13 @@ tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuri
  * Order the families by number of requests 
  **/
 vector<pair<int, string > > StorageConstructiveHeuristic::orderFamilyByFrequence(const map<string, int> &frequenceByFamily){
-	vector<pair < int, string > > familiesOrderedByFrequence; 
+	vector<pair < int, string > > result; 
 	
-	for(const auto &[family,frequence] :  frequenceByFamily)
-		familiesOrderedByFrequence.push_back(make_pair(frequence,family));
+	auto inverter = [](auto& v){ return make_pair(v.second, v.first); };
+	transform(begin(frequenceByFamily), end(frequenceByFamily), inserter(result,end(result)), inverter);
+	sort(result.begin(), result.end());
 	
-	sort(familiesOrderedByFrequence.begin(), familiesOrderedByFrequence.end());
-	
-	return familiesOrderedByFrequence; 
+	return result; 
 }
 
 
