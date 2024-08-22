@@ -185,17 +185,11 @@ bool StorageConstructiveHeuristic::isIsolatedFamily(const Product &product){
 	return isolatedFamilies.find(product.getFamily()) != isolatedFamilies.end();
 }
 
-/**
- * 
- **/
 bool StorageConstructiveHeuristic::hasConstraints(const Product &prod){
 	return restrictedProducts.find(prod.getName()) != restrictedProducts.end() || 
 		   isolatedFamilies.find(prod.getFamily()) != isolatedFamilies.end();
 }
 
-/**
- *
- **/
 double StorageConstructiveHeuristic::getBestRouteWithTwoPoints(const vector<Product> &items, MapAllocation &productAllocation){
 																	 
 	Vertex location = vertexByCell[ productAllocation[items[0] ] ]; 
@@ -242,9 +236,6 @@ double StorageConstructiveHeuristic::evaluatePenaltiesByNonIsolation(MapAllocati
 	return totalPenalty;
 } 
 
-/**
- * 
- * */
 double StorageConstructiveHeuristic::evaluatePenaltyOnLevel(const vector<string>& familyAllocated, const string& isolation){
 	
 	double totalPenalty = 0; 
@@ -279,10 +270,6 @@ double StorageConstructiveHeuristic::evaluatePenaltyOnLevel(const vector<string>
 	return totalPenalty; 
 }
 
-
-/**
- *
- **/
 double StorageConstructiveHeuristic::evaluatePenaltiesByAllocationProhibition(MapAllocation & allocation){
 	double totalPenalty = 0.0;
 
@@ -372,7 +359,6 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 		}
 	}
 	penalty = nonExistentPositionPenalty + isolatedFamilyPenalty; 
-	//cout<<nonExistentPositionPenalty<<" "<<isolatedFamilyPenalty<<" "<<penalty<<" "<<totalDistance<<endl;
 	((StorageAllocationSolution *)solution)->setTotalPenalty(penalty);
 	solution->setSolutionValue(totalDistance+penalty);
 	((StorageAllocationSolution*)solution)->setRoutesByProduct(routesByProduct);
@@ -471,16 +457,14 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 			allocatedProducts.insert(prod);
 	
 		queue<Product> remainingOrderedProducts; 
-		//cout<<"Before "<<orderedProductsByFamily[bestFamily].size()<<endl;
+
 		while(orderedProductsByFamily[bestFamily].size() > 0){
-			//cout<<"During "<<orderedProductsByFamily[bestFamily].size()<<endl;
 			Product prod = orderedProductsByFamily[bestFamily].front(); 
 			if(allocatedProducts.find(prod)== allocatedProducts.end()) 
 				remainingOrderedProducts.push(prod); 
 			orderedProductsByFamily[bestFamily].pop();
 		}
-	
-		//cout<<"After "<<remainingOrderedProducts.size()<<" "<<allocatedProducts.size()<<endl;
+
 		orderedProductsByFamily[bestFamily] = remainingOrderedProducts; 
 		for(auto &[vertex, prod] : bestAllocation)
 			allocations[vertex] = prod; 	 
@@ -575,9 +559,6 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 	
 }
 
-/***
- * 
- **/
 void StorageConstructiveHeuristic::fillFrequenceByProduct(){
 	if(productsSortedByFrequence.size() == 0){
 		productsSortedByFrequence = getProductOrderByFrequence();
@@ -669,9 +650,7 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 		countTries = 0;
 	} 
 	
-	//cout<<"Allocated:\t" <<allocation.size()<<endl;
 	allocateStronglyIsolatedFamilies(allocation);
-	//cout<<"Allocated:\t" <<allocation.size()<<endl;
 	
 	setBestSolution(allocation); 
 	
