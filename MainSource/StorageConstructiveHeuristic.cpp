@@ -275,20 +275,18 @@ double StorageConstructiveHeuristic::evaluatePenaltiesByAllocationProhibition(Ma
 
 	vector<ProductAllocationProhibitions> prohibitions = this->constraints.getProductAllocationProhibitions();
 	for(auto & prohibition : prohibitions){
-		Product product = prohibition.getProduct(); 
-		Position position  = allocation[product];
-		Cell cell = position.first; 
-		Shelf shelf = shelvesById[cell.getIdShelf()];
-		Block block = blocksByName[shelf.getBlockName()];
+		const auto& product { prohibition.getProduct() }; 
+		const auto& cell { allocation[product].first }; 
+		const auto& shelf { shelvesById[cell.getIdShelf()] };
+		const auto& block { blocksByName[shelf.getBlockName()] } ;
 		
-
 		auto forbiddenCells = prohibition.getForbiddenCells(); 
 		auto forbiddenShelves = prohibition.getForbiddenShelves();
 		auto forbiddenBlocks = prohibition.getForbiddenBlocks(); 
-		int contA = count_if(forbiddenCells.begin(), forbiddenCells.end(), [cell](Cell &o){ return  cell.getCode() == o.getCode(); });
-		int contB = count_if(forbiddenShelves.begin(), forbiddenShelves.end(), [shelf](Shelf &o){ return shelf.getId()== o.getId(); });
-		int contC = count_if(forbiddenBlocks.begin(), forbiddenBlocks.end(), [block](Block &o){ return block.getName() == o.getName();});
-		totalPenalty += 20000*(contA+contB+contC);
+		totalPenalty += count_if(begin(forbiddenCells), end(forbiddenCells), [&](Cell &o){ return  cell.getCode() == o.getCode(); }) +
+						count_if(begin(forbiddenShelves), end(forbiddenShelves), [&](Shelf &o){ return shelf.getId()== o.getId(); }) +
+						count_if(begin(forbiddenBlocks), end(forbiddenBlocks), [&](Block &o){ return block.getName() == o.getName();});
+		totalPenalty *= 20000;
 	}
  
 	return totalPenalty; 
