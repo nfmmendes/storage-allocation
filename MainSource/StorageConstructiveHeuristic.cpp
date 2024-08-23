@@ -134,7 +134,7 @@ bool StorageConstructiveHeuristic::isForbiddenStore(const Product &product, cons
 		Block block = blocksByName[shelvesById[shelfId].getBlockName()];
 	
 		//The default return to this function is false 
-		bool result = false;
+		bool forbidden = false;
 		vector<Shelf> forbiddenShelves = allocationProhibition.getForbiddenShelves();
 		vector<Cell> forbiddenCells = allocationProhibition.getForbiddenCells();
 		vector<Block> forbiddenBlocks = allocationProhibition.getForbiddenBlocks(); 
@@ -142,12 +142,12 @@ bool StorageConstructiveHeuristic::isForbiddenStore(const Product &product, cons
 		//If there is a forbidden cell (shelf or block) with a code equals to the code of cell (shelf or block) represented by the 
 		//vertex passed as parameter, then the 
 		if(forbiddenCells.size() > 0)
-			result = count_if(forbiddenCells.begin(),forbiddenCells.end(), [&cell](Cell &itCell){return itCell.getCode() == cell.getCode();}) >0;
-		if(forbiddenShelves.size() > 0)
-			result = count_if(forbiddenShelves.begin(),forbiddenShelves.end(), [shelfId](Shelf &shelf){return shelf.getId() == shelfId;}) >0;
-		if(forbiddenBlocks.size() >0)
-			result = count_if(forbiddenBlocks.begin(),forbiddenBlocks.end(), [&block](Block &itBlock){return itBlock.getName() == block.getName();}) >0; 
-		return result; 
+			forbidden |= any_of(forbiddenCells.begin(),forbiddenCells.end(), [&cell](Cell &itCell){ return itCell.getCode() == cell.getCode(); });
+		if(forbiddenShelves.size() > 0 && !forbidden)
+			forbidden |= any_of(forbiddenShelves.begin(),forbiddenShelves.end(), [shelfId](Shelf &shelf){ return shelf.getId() == shelfId; });
+		if(forbiddenBlocks.size() >0 && !forbidden)
+			forbidden |= any_of(forbiddenBlocks.begin(),forbiddenBlocks.end(), [&block](Block &itBlock){ return itBlock.getName() == block.getName(); }); 
+		return forbidden; 
 	}
 	
 	//If the cell exists and there is not an allocation prohibition to the product, then the allocation is always permitted
