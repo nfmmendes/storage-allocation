@@ -702,14 +702,13 @@ AbstractSolution * StorageILS::RunPerturbation(AbstractSolution *currentSolution
 	return neighbors[0]; 
 }
 
-map<Product, char> StorageILS::getProductABCClasses(){
+const map<Product, char>& StorageILS::getProductABCClasses(){
 	vector<double> thresholds;
 	thresholds.push_back(OptimizationParameters::instance()->A_THRESHOLD_CLASS);
 	thresholds.push_back(OptimizationParameters::instance()->B_THRESHOLD_CLASS); 
 	ABCAnalysis abcAnalysis(orders,3, thresholds);
 	abcAnalysis.execute();
 
-	auto frequences = abcAnalysis.getProductFrequences();
 	return abcAnalysis.getFrequenceClasses();
 }
 

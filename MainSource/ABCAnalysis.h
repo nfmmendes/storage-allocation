@@ -33,10 +33,7 @@ class ABCAnalysis{
         void setNumClasses(int num);
         void setThresholds(vector<double> &thre);
         vector<Order> getOrders() const;
-        map<Product,char> getVolumeClasses() const;
-		map<Product, double> getProductVolumes() const;
-        map<Product,char> getFrequenceClasses() const;
-		map<Product, int> getProductFrequences() const; 
+        const map<Product,char>& getFrequenceClasses() const;
         int getNumClasses() const;
         vector<double> getThresholds() const;
 

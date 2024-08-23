@@ -310,5 +310,5 @@ class StorageILS : public Heuristic{
          * @brief Get a map from products to ABC frequence classes.
          * @return A map from products to ABC frequence classes.
          */
-        std::map<Product, char> getProductABCClasses();
+        const std::map<Product, char>& getProductABCClasses();
 };

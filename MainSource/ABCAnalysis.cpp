@@ -251,30 +251,8 @@ vector<Order> ABCAnalysis::getOrders() const {
 }
 
 /**
- * Get the classes by volume of all products 
- */
-map<Product,char> ABCAnalysis::getVolumeClasses() const{
-    return this->volumeClasses;
-}
-
-/**
- * Get the total volume of all products
- */
-map<Product, double> ABCAnalysis::getProductVolumes() const{
-	return productVolumes;
-}
-
-
-/**
  * Get the classes by frequence of all products  
  */
-map<Product,char> ABCAnalysis::getFrequenceClasses() const{
+const map<Product,char>& ABCAnalysis::getFrequenceClasses() const{
     return this->frequenceClasses; 
-}
-
-/**
- * Get all the product frequencies 
- */
-map<Product, int> ABCAnalysis::getProductFrequences() const{
-	return productFrequences; 
 }
