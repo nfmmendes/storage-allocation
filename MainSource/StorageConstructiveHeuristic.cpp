@@ -251,12 +251,12 @@ double StorageConstructiveHeuristic::evaluatePenaltiesByAllocationProhibition(Ma
 		const auto& shelf { shelvesById[cell.getIdShelf()] };
 		const auto& block { blocksByName[shelf.getBlockName()] } ;
 		
-		auto forbiddenCells = prohibition.getForbiddenCells(); 
-		auto forbiddenShelves = prohibition.getForbiddenShelves();
-		auto forbiddenBlocks = prohibition.getForbiddenBlocks(); 
-		totalPenalty += count_if(begin(forbiddenCells), end(forbiddenCells), [&](Cell &o){ return  cell.getCode() == o.getCode(); }) +
-						count_if(begin(forbiddenShelves), end(forbiddenShelves), [&](Shelf &o){ return shelf.getId()== o.getId(); }) +
-						count_if(begin(forbiddenBlocks), end(forbiddenBlocks), [&](Block &o){ return block.getName() == o.getName();});
+		auto& forbiddenCells { prohibition.getForbiddenCells() }; 
+		auto& forbiddenShelves { prohibition.getForbiddenShelves() };
+		auto& forbiddenBlocks { prohibition.getForbiddenBlocks() }; 
+		totalPenalty += count_if(begin(forbiddenCells), end(forbiddenCells), [&](const Cell &o){ return  cell.getCode() == o.getCode(); }) +
+						count_if(begin(forbiddenShelves), end(forbiddenShelves), [&](const Shelf &o){ return shelf.getId()== o.getId(); }) +
+						count_if(begin(forbiddenBlocks), end(forbiddenBlocks), [&](const Block &o){ return block.getName() == o.getName();});
 		totalPenalty *= 20000;
 	}
  
