@@ -135,18 +135,18 @@ bool StorageConstructiveHeuristic::isForbiddenStore(const Product &product, cons
 	
 		//The default return to this function is false 
 		bool forbidden = false;
-		vector<Shelf> forbiddenShelves = allocationProhibition.getForbiddenShelves();
-		vector<Cell> forbiddenCells = allocationProhibition.getForbiddenCells();
-		vector<Block> forbiddenBlocks = allocationProhibition.getForbiddenBlocks(); 
+		const auto& forbiddenShelves { allocationProhibition.getForbiddenShelves() };
+		const auto& forbiddenCells { allocationProhibition.getForbiddenCells() };
+		const auto& forbiddenBlocks { allocationProhibition.getForbiddenBlocks() }; 
 		
 		//If there is a forbidden cell (shelf or block) with a code equals to the code of cell (shelf or block) represented by the 
 		//vertex passed as parameter, then the 
 		if(forbiddenCells.size() > 0)
-			forbidden |= any_of(forbiddenCells.begin(),forbiddenCells.end(), [&cell](Cell &itCell){ return itCell.getCode() == cell.getCode(); });
+			forbidden |= any_of(forbiddenCells.begin(),forbiddenCells.end(), [&cell](const Cell &itCell){ return itCell.getCode() == cell.getCode(); });
 		if(forbiddenShelves.size() > 0 && !forbidden)
-			forbidden |= any_of(forbiddenShelves.begin(),forbiddenShelves.end(), [shelfId](Shelf &shelf){ return shelf.getId() == shelfId; });
+			forbidden |= any_of(forbiddenShelves.begin(),forbiddenShelves.end(), [shelfId](const Shelf &shelf){ return shelf.getId() == shelfId; });
 		if(forbiddenBlocks.size() >0 && !forbidden)
-			forbidden |= any_of(forbiddenBlocks.begin(),forbiddenBlocks.end(), [&block](Block &itBlock){ return itBlock.getName() == block.getName(); }); 
+			forbidden |= any_of(forbiddenBlocks.begin(),forbiddenBlocks.end(), [&block](const Block &itBlock){ return itBlock.getName() == block.getName(); }); 
 		return forbidden; 
 	}
 	
