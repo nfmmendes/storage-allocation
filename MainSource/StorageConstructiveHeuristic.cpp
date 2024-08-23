@@ -85,28 +85,28 @@ void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 	vector<Vertex> storagePoints = getStoragePoints(); 
 	vector<Vertex> expeditionPoints = vertexByType[WarehouseToGraphConverter::EXPEDITION_POINT_VERTEX]; 
 	
-	for(unsigned int i=0;i<storagePoints.size();i++){
+	for(const auto& storagePoint : storagePoints){
 		double minStartDistance = 1e100;
 		double minEndDistance = 1e100; 
 		Vertex bestStart, bestEnd; 
 
-		for(unsigned int j=0;j<expeditionPoints.size();j++){
-			double startDistance = distanceMatrix->getDistance(expeditionPoints[j], storagePoints[i]);
-			double endDistance = distanceMatrix->getDistance(storagePoints[i], expeditionPoints[j]); 
+		for(const auto& expeditionPoint : expeditionPoints){
+			double startDistance = distanceMatrix->getDistance(expeditionPoint, storagePoint);
+			double endDistance = distanceMatrix->getDistance(storagePoint, expeditionPoint); 
 
 			if(startDistance < minStartDistance){
 				minStartDistance = startDistance; 
-				bestStart = expeditionPoints[j]; 
+				bestStart = expeditionPoint; 
 			}
 			
 			if(endDistance < minEndDistance){
 				minEndDistance = endDistance; 
-				bestEnd = expeditionPoints[j]; 
+				bestEnd = expeditionPoint; 
 			}
 		}
 		
-		closestStartPoint[storagePoints[i]] = bestStart;
-		closestEndPoint[storagePoints[i] ] = bestEnd; 
+		closestStartPoint[storagePoint] = bestStart;
+		closestEndPoint[storagePoint ] = bestEnd; 
 	}	
 }
 
