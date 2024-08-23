@@ -16,10 +16,6 @@
 using namespace std;
 using namespace QuickTSP; 
 
-
-/***
- * Member constructor
- **/
 StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex> *distMatrix,
 														   map<Position, Vertex>& vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
 	this->distanceMatrix = distMatrix; 
@@ -32,11 +28,6 @@ StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & pro
 	InitializeAuxiliaryDataStructures(); 
 }
 
-/**
- * Initialize all the relevant data structures that will be used by the algorithm
- * Most of structures initialized here will be used in more than one function and several times, then is not 
- * elegant to initialize them all the time it is needed 
- **/
 void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 
 	vector<IsolatedFamily> isolatedFamiliesList = constraints.getIsolatedFamilies(); 
@@ -89,10 +80,6 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 	storageVertexTypes.insert(WarehouseToGraphConverter::FIRST_LEVEL_CELL);
 }
 
-
-/**
- * Set the closest expedition point of each storage point in both senses, storage -> expedition, expedition -> storage
- **/
 void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 	
 	vector<Vertex> storagePoints = getStoragePoints(); 
@@ -361,9 +348,6 @@ tuple <map<string, queue<Product> >, map<string, int> > StorageConstructiveHeuri
 	return {productsByFamily,  frequenceByFamily};
 }
 
-/**
- * Order the families by number of requests 
- **/
 vector<pair<int, string > > StorageConstructiveHeuristic::orderFamilyByFrequence(const map<string, int> &frequenceByFamily){
 	vector<pair < int, string > > result; 
 	
@@ -445,12 +429,6 @@ bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & all
 	return false;
 }
 
-
-/**
- * Allocate products that belongs to strongly isolated families and were not allocated in the initial solution 
- * @param allocations Maps all the already allocated products to its positions 
- * @param usedVertex Lists which vertex were already used or not 
- **/
 void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,Product> & allocations){
 
 	//First of all it is needed to know which cells were used (or not) as well as the shelves and blocks, in this way we are 
@@ -549,10 +527,6 @@ void StorageConstructiveHeuristic::setBestSolution(map<Vertex, Product> &allocat
 	EvaluateSolution(bestSolution);
 }
 
-
-/**
- * Overloaded function that runs the algorithm 
- **/
 StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	
 	map<string, vector<Vertex> > vertexByType = getVertexesByType(); 	///< Store the vertex classification
@@ -572,11 +546,10 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	
 	unsigned int numPositions = vertexesOrderedByDistance.size(); 
 	usedVertex.resize(numPositions, false); 
-	//cout<<"NUM PRODUCTS \n"<<productsSortedByFrequence.size()<<endl;
+
 	for(unsigned int i=0;i<productsSortedByFrequence.size();i++){
 		auto & item  = productsSortedByFrequence[i]; 
 	
-	//	cout<<"Product : "<<productsSortedByFrequence[i].first.getName()<<" Frequence: "<<productsSortedByFrequence[i].second<<endl;
 		if(!hasConstraints(item.first)){				// All the products that have not a allocation constraint are inserted in 
 														// the first available cell
 			while(usedVertex[lastOnSequence%numPositions] && numPositions> countTries++)lastOnSequence++;
@@ -618,17 +591,11 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	} 
 	
 	allocateStronglyIsolatedFamilies(allocation);
-	
 	setBestSolution(allocation); 
 	
 	return (StorageAllocationSolution *)bestSolution; 
 }
 
-
-/**
- *	Get all the vertexes where is possible to store a product, following the vertex typedef
- *  @param vertexByType A map where each element is a list with vertexes of an unique type (given by the key)
- */
 vector<Vertex> StorageConstructiveHeuristic::getStorageVertexes(map<string,vector<Vertex> > &vertexByType){
 	vector<Vertex> result; 
 	
@@ -642,10 +609,6 @@ vector<Vertex> StorageConstructiveHeuristic::getStorageVertexes(map<string,vecto
 	return result; 
 }
 
-/**
- * Get the list of products non allocated in the warehouse after an initial allocation 
- * @param allocations initial allocation 
- **/ 
 set<Product>  StorageConstructiveHeuristic::getNotUsedProducts(const map<Vertex,Product> allocations){
 	set<Product> result;
 	
@@ -660,10 +623,6 @@ set<Product>  StorageConstructiveHeuristic::getNotUsedProducts(const map<Vertex,
 	return result; 
 }
 
-
-/**
- * Get the list of all the vertexes in the graph that can be used as a storage point 
- **/
 vector<Vertex> StorageConstructiveHeuristic::getStoragePoints(){
 	
 	storageVertexTypes.insert(WarehouseToGraphConverter::UPPER_LEVEL_CELL);
@@ -705,10 +664,6 @@ vector<Vertex> StorageConstructiveHeuristic::getStorageVertexesOrderedByDistance
 	return result;
 }
 
-
-/**
- * Get the products ordered by descending order of frequence and with its respective frequencies
- **/
 vector<pair<Product,int> > StorageConstructiveHeuristic::getProductOrderByFrequence(){
 	
 	map<Product, int> productCount; 
@@ -739,9 +694,6 @@ vector<pair<Product,int> > StorageConstructiveHeuristic::getProductOrderByFreque
 	
 }
 
-/**
- * Get the list of all expedition points
- **/
 map<string, vector<Vertex> > StorageConstructiveHeuristic::getVertexesByType(){
 	map<string, vector<Vertex> > result; 
 	
@@ -754,9 +706,6 @@ map<string, vector<Vertex> > StorageConstructiveHeuristic::getVertexesByType(){
 	return result;
 }
 
-/**
- * Get the set of non used cells after an initial allocation of products
- **/
 set<Cell> StorageConstructiveHeuristic::getNotUsedCells(const map<Vertex,Product> &allocations){
 	set<Cell> result; 
 
@@ -772,9 +721,6 @@ set<Cell> StorageConstructiveHeuristic::getNotUsedCells(const map<Vertex,Product
 	return result; 
 }
 
-/** 
- * Get the set of non used shelves after an initial allocation of products
- **/
 set<Shelf> StorageConstructiveHeuristic::getNotUsedShelves(const set<Cell> &usedCells){
 	set<Shelf> result; 
 	
@@ -787,10 +733,6 @@ set<Shelf> StorageConstructiveHeuristic::getNotUsedShelves(const set<Cell> &used
 	return result; 
 }
 
-
-/**
- * Get the set of non used blocks after an initial allocation of products 
- **/
 set<Block> StorageConstructiveHeuristic::getNotUsedBlocks(const set<Shelf> &usedShelves){
 	set<Block> result; 
 	
