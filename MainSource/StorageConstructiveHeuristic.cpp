@@ -364,7 +364,7 @@ tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAlloca
 	int contFrequence = 0;
 	map<Vertex,Product> currentAllocation; 
 
-	while(products.size() > 0){
+	while(!products.empty()){
 		auto prod = products.front();
 
 		products.pop(); 
