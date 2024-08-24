@@ -42,7 +42,7 @@ namespace QuickTSP{
              * @brief Get the arc label. 
              * @return The arc label. 
             */
-            string getLabel() const;
+            const string& getLabel() const;
 
             /**
              * @brief Get the arc value. 
@@ -54,13 +54,13 @@ namespace QuickTSP{
              * @brief Get the arc begin vertex. 
              * @return The arc begin vertex. 
             */
-            Vertex getBeginVertex() const;
+            const Vertex& getBeginVertex() const;
 
             /**
              * @brief Get the arc end vertex. 
              * @return The arc end vertex.
             */
-            Vertex getEndVertex() const;
+            const Vertex& getEndVertex() const;
         
             /**
              * @brief Override the assignament operator =. 

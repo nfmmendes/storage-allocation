@@ -22,10 +22,10 @@ Arc::Arc(string label, double value, Vertex &begin, Vertex &end, bool directed){
     this->directed = directed;
 }
 
-string Arc::getLabel() const { return label; }
+const string& Arc::getLabel() const { return label; }
 double Arc::getValue() const  { return value; }
-Vertex Arc::getBeginVertex() const { return beginVertex; }
-Vertex Arc::getEndVertex() const  {return endVertex; }
+const Vertex& Arc::getBeginVertex() const { return beginVertex; }
+const Vertex& Arc::getEndVertex() const  {return endVertex; }
 
 Arc& Arc::operator=(const Arc & other)
 {
