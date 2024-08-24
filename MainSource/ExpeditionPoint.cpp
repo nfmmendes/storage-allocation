@@ -38,6 +38,6 @@ void ExpeditionPoint::setCode(const string code){ this->code = code;}
 void ExpeditionPoint::setBlockCode(const string blockCode){ this->blockCode = blockCode;}
 void ExpeditionPoint::setCoordinates(const pair<double, double> &coordinates){this->coordinates = coordinates;}
 	
-string ExpeditionPoint::getCode() const { return this->code; }
-string ExpeditionPoint::getBlockCode() const  {return this->blockCode; }
-pair<double,double> ExpeditionPoint::getCoordinates() const { return this->coordinates; }
+const string& ExpeditionPoint::getCode() const { return this->code; }
+const string& ExpeditionPoint::getBlockCode() const  {return this->blockCode; }
+const pair<double,double>& ExpeditionPoint::getCoordinates() const { return this->coordinates; }
