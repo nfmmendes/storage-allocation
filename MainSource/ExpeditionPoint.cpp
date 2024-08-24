@@ -31,12 +31,6 @@ ExpeditionPoint::ExpeditionPoint(const ExpeditionPoint &other){
 	this->blockCode = other.blockCode;
 	this->coordinates = other.coordinates;
 }
-
-
-void ExpeditionPoint::setCode(const string code){ this->code = code;}
-
-void ExpeditionPoint::setBlockCode(const string blockCode){ this->blockCode = blockCode;}
-void ExpeditionPoint::setCoordinates(const pair<double, double> &coordinates){this->coordinates = coordinates;}
 	
 const string& ExpeditionPoint::getCode() const { return this->code; }
 const string& ExpeditionPoint::getBlockCode() const  {return this->blockCode; }

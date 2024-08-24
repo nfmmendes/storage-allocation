@@ -37,24 +37,6 @@ class ExpeditionPoint{
 		ExpeditionPoint(const ExpeditionPoint &other);
 		
 		/**
-		 * @brief Set the expedition point code.
-		 * @param code The expedition point code. 
-		 */
-		void setCode(const string code);
-
-		/**
-		 * @brief Set the expedition point block code.
-		 * @param blockCode The expedition point block code. 
-		 */
-		void setBlockCode(const string blockCode);
-
-		/**
-		 * @brief Set the expedition point coordinate.
-		 * @param coordinates The expedition point coordinate. 
-		 */
-		void setCoordinates(const pair<double, double> &coordinates);
-		
-		/**
 		 * @brief Get the expedition point code. 
 		 * @return The expedition point code. 
 		 */
