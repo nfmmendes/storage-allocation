@@ -44,25 +44,25 @@ class Warehouse{
              * @brief Write warehouse data to file. 
              * @param fileName The file name.
              */
-            void writeWarehouseData(string fileName);
+            void writeWarehouseData(const string& fileName);
 
             /**
              * @brief Insert one block in the warehouse.
              * @param block The block to be inserted. 
              */
-            void insertNewBlock(Block &block);
+            void insertNewBlock(const Block &block);
 
             /**
              * @brief Set the product allocation in the warehouse. 
              * @param productionAllocation A list of product/cell allocations.
              */
-            void setProductAllocation(pair<Product, Cell> & productionAllocation); 
+            void setProductAllocation(const pair<Product, Cell> & productionAllocation); 
 
             /**
              * @brief Add a product allocation.
              * @param productionAllocation A pair containing the product and its respective position.
              */
-            void addProductAllocation(pair<Product, Cell> & productionAllocation);
+            void addProductAllocation(const pair<Product, Cell> & productionAllocation);
             
             /**
              * @brief Get the warehouse name. 
@@ -111,13 +111,13 @@ class Warehouse{
              * @brief Set the warehouse blocks.
              * @param blocks A list of blocks. 
              */
-            void setBlocks(vector<Block>& blocks);
+            void setBlocks(const vector<Block>& blocks);
 
             /**
              * @brief Set the warehouse production allocations.
              * @param productAllocation The list of product allocations. 
              */
-            void setProductAllocation(vector<pair<Product, Cell> > & productAllocation);
+            void setProductAllocation(const vector<pair<Product, Cell> > & productAllocation);
 
             /**
 			 * @brief Set the list of expedition points. 

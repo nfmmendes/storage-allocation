@@ -213,25 +213,25 @@
     }
  }
  
- void Warehouse::writeWarehouseData(string fileName){
+ void Warehouse::writeWarehouseData(const string& fileName){
      
      ofstream file;
      file.open(fileName, ios::out);
      file.close();
  }
  
-void Warehouse::insertNewBlock(Block &b){
+void Warehouse::insertNewBlock(const Block &b){
     this->blocks.push_back(Block(b));
 }
 
-void Warehouse::setProductAllocation(vector<pair<Product, Cell> > & productAllocation){
+void Warehouse::setProductAllocation(const vector<pair<Product, Cell> > & productAllocation){
     this->productAllocation.clear();
     
     for(int i=0; i<(int)productAllocation.size(); i++)
         this->productAllocation.push_back(make_pair(productAllocation[i].first, productAllocation[i].second));
 }
 
-void Warehouse::addProductAllocation(pair<Product, Cell> & productAllocation){
+void Warehouse::addProductAllocation(const pair<Product, Cell> & productAllocation){
     this->productAllocation.push_back(make_pair(productAllocation.first, productAllocation.second));
 }
 
@@ -256,7 +256,7 @@ void Warehouse::setName(string &name){
     this->name = name;
 }
 
-void Warehouse::setBlocks(vector<Block>& blocks){
+void Warehouse::setBlocks(const vector<Block>& blocks){
     this->blocks.clear();
     
     for(unsigned int i=0; i < blocks.size(); i++)
