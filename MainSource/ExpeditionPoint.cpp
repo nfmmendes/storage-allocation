@@ -9,7 +9,7 @@ using std::pair;
 ExpeditionPoint::ExpeditionPoint(){
 }
 
-ExpeditionPoint::ExpeditionPoint(string &code, string &blockCode, pair<double,double> coord){
+ExpeditionPoint::ExpeditionPoint(const string &code,const string &blockCode, const pair<double,double>& coord){
 	this->code = code;
 	this->blockCode = blockCode;
 	this->coordinates = coord; 

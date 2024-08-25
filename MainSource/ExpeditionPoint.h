@@ -28,7 +28,7 @@ class ExpeditionPoint{
 		 * @param blockCode Code of the block in which is located the expedition point.
 		 * @param coord The expedition point coordinate. 
 		 */
-		ExpeditionPoint(string &code, string &blockCode, pair<double,double> coord);
+		ExpeditionPoint(const string &code, const string &blockCode, const pair<double,double>& coord);
 
 		/**
 		 * @brief Copy constructor.
