@@ -12,41 +12,25 @@
 #include "Arc.h"
 #include "AbstractVertex.h"
 using namespace QuickTSP; 
-using namespace std;
 
-/**
- *
- */
 ProcessInputData::ProcessInputData(){
 	this->input = NULL;
 }
 
-/**
- *
- */
 ProcessInputData::ProcessInputData(InputData *input):warehouseToGraphConverter(input->getWarehouse()){
 	this->input = input;
 }
 
-/**
- *
- */
 ProcessInputData::ProcessInputData(ProcessInputData & other){
 	this->input = other.input;
 	this->distanceMatrix = other.distanceMatrix; 
 }
 
-/**
- *
- */
 void ProcessInputData::CreateGraph(){
 	cout<<"Starting conversion of warehouse to graph\n";
 	warehouseToGraphConverter.generateGraph();
 }
 
-/**
- * 
- */
 void ProcessInputData::CalculateMatrixDistances(){
 	Graph graph = warehouseToGraphConverter.getGraph();
 	map<string, set<Vertex> > vertexesByType = graph.getVertexesByType();
@@ -62,7 +46,7 @@ void ProcessInputData::CalculateMatrixDistances(){
 				desirableVertexes.push_back((Vertex)(*vt)); 
 		}
 	}
-//	cout<<"DesirableVertexes : "<<desirableVertexes.size()<<endl;
+
 	if(desirableVertexes.size()>0){
 		DijkstraDistanceMatrixCalculator<Graph, Vertex > dijkstra; 
 		this->distanceMatrix = new DistanceMatrix<Vertex>(dijkstra.calculateMatrixDistance(graph, desirableVertexes)); 
