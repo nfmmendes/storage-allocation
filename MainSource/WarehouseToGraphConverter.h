@@ -55,7 +55,7 @@ namespace QuickTSP{
         public:
             WarehouseToGraphConverter();
             WarehouseToGraphConverter(WarehouseToGraphConverter & other);
-            WarehouseToGraphConverter(Warehouse &warehouse);
+            WarehouseToGraphConverter(const Warehouse &warehouse);
             void generateGraph(); 
             Graph & getGraph();
             Warehouse & getWarehouse();
