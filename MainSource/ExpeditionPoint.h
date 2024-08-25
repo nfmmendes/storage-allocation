@@ -19,11 +19,6 @@ class ExpeditionPoint{
 	public:
 		/**
 		 * @brief Constructor.
-		 */
-		ExpeditionPoint();
-
-		/**
-		 * @brief Constructor.
 		 * @param code Expedition point code.
 		 * @param blockCode Code of the block in which is located the expedition point.
 		 * @param coord The expedition point coordinate. 

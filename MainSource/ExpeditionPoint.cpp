@@ -6,9 +6,6 @@
 using std::string;
 using std::pair;
 
-ExpeditionPoint::ExpeditionPoint(){
-}
-
 ExpeditionPoint::ExpeditionPoint(const string &code,const string &blockCode, const pair<double,double>& coord){
 	this->code = code;
 	this->blockCode = blockCode;
