@@ -505,8 +505,8 @@ vector<AbstractSolution *> IsolatedFamilySwap::createNeighbors(){
 ////                    Storage allocation ILS region
 ////
 /////////////////////////////////////////////////////////////////////////////////////////
-StorageILS::StorageILS(vector<Product> & prods, Warehouse &wh,const DistanceMatrix<Vertex> *distMatrix,
-					   map<pair<Cell, int>, Vertex> vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
+StorageILS::StorageILS(const vector<Product> & prods, Warehouse &wh,const DistanceMatrix<Vertex> *distMatrix,
+					   map<pair<Cell, int>, Vertex>& vertexByCell, const vector<Order> &orders, const OptimizationConstraints &cons){
 	this->distanceMatrix = distMatrix; 
 	this->warehouse = &wh;
 	this->orders= orders;

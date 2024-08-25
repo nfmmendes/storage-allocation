@@ -229,8 +229,8 @@ class StorageILS : public Heuristic{
 		 * @param orders The product orders. 
 		 * @param cons The optimization constraints. 
          */
-		StorageILS(vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex>* distMatrix,
-				   map<Position, Vertex> vertexByCell,vector<Order> &orders, OptimizationConstraints &cons);
+		StorageILS(const vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex>* distMatrix,
+				   map<Position, Vertex>& vertexByCell, const vector<Order> &orders, const OptimizationConstraints &cons);
         
         /**
          * @brief Run the heuristic.
