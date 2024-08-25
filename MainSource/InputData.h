@@ -83,41 +83,41 @@ class InputData{
          * @brief Get the list of products in the input. 
          * @return A list of products. 
          */
-        vector<Product> &getProducts();
+        const vector<Product> &getProducts();
 
         /**
          * @brief Get the list of clients in the input. 
          * @return A list of clients. 
          */
-        vector<Client> getClients();
+        const vector<Client>& getClients();
 
         /**
          * @brief Get the list of orders in the input. 
          * @return A list of orders. 
          */
-        vector<Order> &getOrders();
+        const vector<Order> &getOrders();
 
         /**
          * @brief Get the list of parameters in the input.
          * @return A list of parameters. 
          */
-        vector<Parameter> getParameters();
+        const vector<Parameter>& getParameters();
 
         /**
 		 * @brief Get the list of isolated families in the input.
 		 * @return A list of isolated famlies.
          */
-		vector<IsolatedFamily> getIsolatedFamily();
+		const vector<IsolatedFamily>& getIsolatedFamily();
 
         /**
 		 * @brief Get a list of allocation prohibitions in the input.
 		 * @return A list of allocation prohibitions. 
          */
-		vector<ProductAllocationProhibitions> getAllocationProhibitions(); 
+		const vector<ProductAllocationProhibitions>& getAllocationProhibitions(); 
 
         /**
          * @brief Get the input warehouse layout. 
          * @return A warehouse layout object. 
          */
-        Warehouse& getWarehouse();  
+        const Warehouse& getWarehouse();  
 };

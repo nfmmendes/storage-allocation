@@ -73,8 +73,6 @@ InputData::InputData(string  dataFile){
     }
 }
 
-
-
 void InputData::setProducts(vector<Product> products){
     InputData::products.clear();
     
@@ -120,16 +118,16 @@ void InputData::setIsolatedFamilies(vector<IsolatedFamily> &_isolatedFamilies){
 		this->isolatedFamilies.push_back(IsolatedFamily(_isolatedFamilies[i]));
 }
 
-vector<Product> &InputData::getProducts(){return products;}
+const vector<Product> &InputData::getProducts(){return products;}
 
-vector<Client> InputData::getClients(){ return clients;}
+const vector<Client>& InputData::getClients(){ return clients;}
 
-vector<Order> &InputData::getOrders() { return orders;}
+const vector<Order> &InputData::getOrders() { return orders;}
 
-vector<Parameter> InputData::getParameters() { return parameters;}
+const vector<Parameter>& InputData::getParameters() { return parameters;}
 
-Warehouse & InputData::getWarehouse() { return warehouse; }
+const Warehouse & InputData::getWarehouse() { return warehouse; }
 
-vector<IsolatedFamily> InputData::getIsolatedFamily(){ return isolatedFamilies; }
+const vector<IsolatedFamily>& InputData::getIsolatedFamily(){ return isolatedFamilies; }
 
-vector<ProductAllocationProhibitions> InputData::getAllocationProhibitions(){ return prohibitions;	}
+const vector<ProductAllocationProhibitions>& InputData::getAllocationProhibitions(){ return prohibitions;	}
