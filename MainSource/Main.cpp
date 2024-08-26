@@ -17,22 +17,28 @@
 #include "StorageConstructiveHeuristic.h"
 #include "StorageILS.h"
 using namespace QuickTSP;
+using std::string;
+using std::cout;
+using std::endl;
+using std::vector;
+using std::map;
+using std::pair;
 
 struct Allocation{
 	
-	std::string productCode; 
-	std::string cellCode;
+	string productCode; 
+	string cellCode;
 	int level; 
 	
-	Allocation(std::string prod, std::string _cell, int _level){ productCode = prod; cellCode = _cell; level = _level;}
+	Allocation(string prod, string _cell, int _level){ productCode = prod; cellCode = _cell; level = _level;}
 	
 };
 
 ABCAnalysis * createABCAnalysis(InputData &input){
 	
-	std::vector<Order> orders = input.getOrders();
+	vector<Order> orders = input.getOrders();
 	const int numClasses = 3; 
-	std::vector<double> thresholds;
+	vector<double> thresholds;
 	
 	thresholds.push_back(30);	thresholds.push_back(70);
 	ABCAnalysis *analysis = new ABCAnalysis(orders,numClasses, thresholds); 
@@ -40,7 +46,7 @@ ABCAnalysis * createABCAnalysis(InputData &input){
 	return analysis;
 }
 
-void initializeRuntimeParameters(map<std::string, char*> arguments) {
+void initializeRuntimeParameters(map<string, char*> arguments) {
 	int abcAClassThresshold = -1;
 	int abcBClassThresshold = -1;
 	int maxPertubations = -1;
@@ -74,22 +80,22 @@ int main(int argc, char **argv){
 	// Check the list of arguments. The unique mandatory argument is -f (file name). All the others 
 	// are used to algorithm tunning and are then optional. 
 	if(argc <= 1){
-		std::cerr << "There are missing arguments. Set at least the input file name." << std::endl;
+		cerr << "There are missing arguments. Set at least the input file name." << endl;
 		return 1; 
 	}
 
-	map<std::string, char*> arguments; 
+	map<string, char*> arguments; 
 	for(auto i=1; i<argc; i+= 2){
 		arguments[argv[i]] = argv[i+1];
 	}
 
 	initializeRuntimeParameters(arguments); 
 
-	std::string fileName; 
+	string fileName; 
 	if(arguments.find("-f") != arguments.end())
 	 	fileName = arguments["-f"];
 	else {
-		std::cerr << "File name does not specified.";
+		cerr << "File name does not specified.";
 		return 1;
 	}
 
@@ -97,7 +103,7 @@ int main(int argc, char **argv){
 	InputData input(fileName);
 	
 	ProcessInputData processInput(&input);
-	std::cout<<"Converting warehouse to graph\n";
+	cout<<"Converting warehouse to graph\n";
 	processInput.ExecuteProcessData();
 
 	Graph graph = processInput.getWarehouseToGraphConverter()->getGraph();
@@ -112,11 +118,11 @@ int main(int argc, char **argv){
 	
 	StorageILS ils(input.getProducts(),warehouse, processInput.getDistanceMatrix(), vertexByCell, input.getOrders(),cons);
 
-	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	chrono::steady_clock::time_point begin = chrono::steady_clock::now();
 	auto solution = ils.Execute();
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-	std::cout<<"Final value : "<<((StorageAllocationSolution *) solution)->getSolutionValue()<< " penalty: "<<((StorageAllocationSolution *) solution)->getTotalPenalty()<<endl;
-	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milli_sec]" << std::endl;
+	chrono::steady_clock::time_point end = chrono::steady_clock::now();
+	cout<<"Final value : "<<((StorageAllocationSolution *) solution)->getSolutionValue()<< " penalty: "<<((StorageAllocationSolution *) solution)->getTotalPenalty()<<endl;
+	cout << "Time difference = " << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << "[milli_sec]" << endl;
 	bool resultCheck = ((StorageAllocationSolution *) solution)->checkSolution();
 	cout<<"Solution is :"<<(resultCheck? "consistent\n ": "inconsistent \n");
 	((StorageAllocationSolution *) solution)->printSolution(); 
