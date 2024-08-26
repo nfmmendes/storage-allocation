@@ -18,12 +18,7 @@ class NeighborhoodStructure{
          * @brief Constructor.
          */
         NeighborhoodStructure(){ }
-
-        /**
-         * @brief Destructor.
-         */
-        virtual ~NeighborhoodStructure(){}
-
+        
         /**
          * @brief Constructor.
          * @param solution Initial solution.
