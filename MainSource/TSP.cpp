@@ -5,47 +5,25 @@
 #include <map>
 #include "TSP.h"
 #include "DistanceMatrix.h"
-using namespace std;
+using std::set;
 
-/**
- * Default constructor
- **/
 TSP::TSP() {}
 
-/**
- * Copy constructor
- **/
 TSP::TSP(const DistanceMatrix<Vertex>* distanceMatrix)
 {
     this->distanceMatrix = distanceMatrix;
     this->distanceMatrixSet = true;
 }
 
-/**
- *
- **/
 const DistanceMatrix<Vertex>* TSP::getDistanceMatrix() const { return distanceMatrix; }
 
-/**
- *
- **/
+
 void TSP::setDistanceMatrix(const DistanceMatrix<Vertex>* matrix)
 {
     this->distanceMatrix = matrix;
     this->distanceMatrixSet = true;
 }
 
-/**
- *	Evaluate the best route testing all the possible options
- *  @param points Vector of vertexes that need to be visited. The first point is
- *the the departure and the last the destination
- *				  The first and last point does not need to be the
- *same
- *  @param bestStart Map the closest delivery point for each storage point in
- *the sense delivery point --> storage point
- *  @param bestEnd Map the closest delivery point for each storage point in the
- *sense storage point --> delivery point
- **/
 pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
     VertexVertexMap& bestStart,
     VertexVertexMap& bestEnd)
@@ -75,17 +53,6 @@ pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
     return make_pair(bestCost, solution);
 }
 
-/**
- *	Evaluate the best route based on the closest neighbor algorithm
- *  @param points Vector of vertexes that need to be visited. The first point is
- *the the departure and the last the destination
- *				  The first and last point does not need to be the
- *same
- *  @param bestStart Map the closest delivery point for each storage point in
- *the sense delivery point --> storage point
- *  @param bestEnd Map the closest delivery point for each storage point in the
- *sense storage point --> delivery point
- */
 pair<double, vector<Vertex> >
 TSP::closestNeighborTSP(const vector<Vertex>& points,
     VertexVertexMap& bestStart,
@@ -144,10 +111,6 @@ TSP::closestNeighborTSP(const vector<Vertex>& points,
     return make_pair(sumCost, solution);
 }
 
-/**
- *  Return a route with a good cost (without warranty of optimality) for a
- *average size sequence of points
- **/
 pair<double, vector<Vertex> >
 TSP::quickLocalSearchTSP(const vector<Vertex>& points,
     VertexVertexMap& bestStart,
