@@ -6,11 +6,15 @@
 #include <unordered_map>
 #include "Vertex.h"
 using namespace QuickTSP; 
+using std::vector;
+using std::pair;
+using std::unordered_map;
+
 
 template<class T=Vertex> 
 class DistanceMatrix; 
 
-typedef std::unordered_map<Vertex,Vertex> VertexVertexMap; 
+typedef unordered_map<Vertex,Vertex> VertexVertexMap; 
 
 class TSP {
 
@@ -24,7 +28,7 @@ class TSP {
 		const DistanceMatrix<Vertex>* getDistanceMatrix() const; 
 		void setDistanceMatrix(const DistanceMatrix<Vertex>* matrix);
 		TSP(const TSP &other);
-		std::pair<double , std::vector<Vertex> > bruteForceTSP(const std::vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd);
-		std::pair<double , std::vector<Vertex> > closestNeighborTSP(const std::vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd);
-		std::pair<double , std::vector<Vertex> > quickLocalSearchTSP(const std::vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd); 
+		pair<double , vector<Vertex> > bruteForceTSP(const vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd);
+		pair<double , vector<Vertex> > closestNeighborTSP(const vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd);
+		pair<double , vector<Vertex> > quickLocalSearchTSP(const vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd); 
 }; 
