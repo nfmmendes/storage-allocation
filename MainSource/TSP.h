@@ -37,19 +37,7 @@ class TSP {
 		 * @param distanceMatrix Distance matrix to evaluate the routes. 
 		 */
 		explicit TSP(const DistanceMatrix<Vertex>* distanceMatrix);
-
-		/**
-		 * @brief Get the algorithm distance matrix. 
-		 * @return A distance matrix. 
-		 */
-		const DistanceMatrix<Vertex>* getDistanceMatrix() const; 
-
-		/**
-		 * @brief Set the distance matrix.
-		 * @param matrix A distance matrix. 
-		 */
-		void setDistanceMatrix(const DistanceMatrix<Vertex>* matrix);
-
+		
 		/**
 		 * @brief Copy constructor.
 		 * @param other The object to be copied. 

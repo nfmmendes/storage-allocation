@@ -15,15 +15,6 @@ TSP::TSP(const DistanceMatrix<Vertex>* distanceMatrix)
     this->distanceMatrixSet = true;
 }
 
-const DistanceMatrix<Vertex>* TSP::getDistanceMatrix() const { return distanceMatrix; }
-
-
-void TSP::setDistanceMatrix(const DistanceMatrix<Vertex>* matrix)
-{
-    this->distanceMatrix = matrix;
-    this->distanceMatrixSet = true;
-}
-
 pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
     VertexVertexMap& bestStart,
     VertexVertexMap& bestEnd)
