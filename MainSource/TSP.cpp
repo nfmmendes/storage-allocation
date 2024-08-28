@@ -23,7 +23,7 @@ pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
     vector<Vertex> currentOrder = points;
     vector<Vertex> solution = points;
     double bestCost = std::numeric_limits<double>::max();
-    int orderSize = currentOrder.size();
+    auto orderSize {currentOrder.size()};
 
     do {
         double sum = 0.0;
@@ -58,8 +58,8 @@ TSP::closestNeighborTSP(const vector<Vertex>& points,
     double lowerDistance = 1e100;
     int bestVertexToInit = 0;
     double distance;
-    int numPoints = points.size();
-    for (int i = 0; i < numPoints; i++) {
+
+    for (auto i = 0; i < points.size(); i++) {
         distance = distanceMatrix->getDistance(bestStart[points[i]], points[i]);
         // find the closest point to a delivery point
         if (distance < lowerDistance) {
