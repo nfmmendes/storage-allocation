@@ -103,31 +103,25 @@ TSP::closestNeighborTSP(const vector<Vertex>& points,
 }
 
 pair<double, vector<Vertex> >
-TSP::quickLocalSearchTSP(const vector<Vertex>& points,
-    VertexVertexMap& bestStart,
+TSP::quickLocalSearchTSP(const vector<Vertex>& points, VertexVertexMap& bestStart,
     VertexVertexMap& bestEnd)
 {
-
     pair<double, vector<Vertex> > currentOrder = closestNeighborTSP(points, bestStart, bestEnd);
-    int orderSize = currentOrder.second.size();
+    const auto& order { currentOrder.second };
+    auto orderSize = order.size();
 
     for (int i = 1; i + 1 < orderSize; i++) {
         double costReduction = 0;
         int changingPoint = 0;
 
         for (int j = 1; j + 2 < orderSize; j++) {
-            double oldCost = distanceMatrix->getDistance(currentOrder.second[j - 1],
-                                 currentOrder.second[j])
-                + distanceMatrix->getDistance(currentOrder.second[j],
-                      currentOrder.second[j + 1])
-                + distanceMatrix->getDistance(currentOrder.second[j + 1],
-                      currentOrder.second[j + 2]);
-            double newCost = distanceMatrix->getDistance(currentOrder.second[j - 1],
-                                 currentOrder.second[j + 1])
-                + distanceMatrix->getDistance(currentOrder.second[j + 1],
-                      currentOrder.second[j])
-                + distanceMatrix->getDistance(currentOrder.second[j],
-                      currentOrder.second[j + 2]);
+            auto oldCost = distanceMatrix->getDistance(order[j - 1], order[j])
+                + distanceMatrix->getDistance(order[j], order[j + 1])
+                + distanceMatrix->getDistance(order[j + 1], order[j + 2]);
+
+            auto newCost = distanceMatrix->getDistance(order[j - 1], order[j + 1])
+                + distanceMatrix->getDistance(order[j + 1], order[j])
+                + distanceMatrix->getDistance(order[j], order[j + 2]);
 
             if (newCost - oldCost < costReduction) {
                 costReduction = newCost - oldCost;
