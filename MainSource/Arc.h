@@ -61,6 +61,12 @@ namespace QuickTSP{
              * @return The arc end vertex.
             */
             const Vertex& getEndVertex() const;
+
+            /**
+             * @brief Get if the arc is directed.
+             * @return True if the arc is directed, false otherwise.
+             */
+            bool isDirected() const;
         
             /**
              * @brief Override the assignament operator =. 

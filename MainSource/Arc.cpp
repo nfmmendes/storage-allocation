@@ -27,6 +27,11 @@ double Arc::getValue() const  { return value; }
 const Vertex& Arc::getBeginVertex() const { return beginVertex; }
 const Vertex& Arc::getEndVertex() const  {return endVertex; }
 
+bool Arc::isDirected() const
+{
+    return directed;
+}
+
 Arc& Arc::operator=(const Arc & other)
 {
     this->label = other.label;
