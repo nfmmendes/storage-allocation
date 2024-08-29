@@ -12,6 +12,7 @@ Arc::Arc(const Arc &arc){
     this->value = arc.getValue();
     this->beginVertex = arc.getBeginVertex();
     this->endVertex = arc.getEndVertex();
+    this->directed = arc.isDirected();
 }
 
 Arc::Arc(string label, double value, Vertex &begin, Vertex &end, bool directed){
