@@ -10,6 +10,12 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/RelWithDebInfo/SLAP.exe",
             "args": ["-f", "${workspaceFolder}/w1_(P100_O500)_2_IS4.txt", "--athreshold", "20", "--bthreshold", "50"]
+        },
+        { 
+            "name": "Tests",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/RelWithDebInfo/tests.exe",
         }
     ]
 }
