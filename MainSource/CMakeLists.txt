@@ -12,11 +12,15 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 enable_testing()
 
+### MAIN CODE
 project(SLAP)
 file(GLOB SOURCE_CODE "*.cpp" "*.h")
 add_executable(${PROJECT_NAME} ${SOURCE_CODE} )
 
+### TEST CODE
 set(TESTS_SOURCE_DIRECTORY "${CMAKE_SOURCE_DIR}/tests/")
 file(GLOB TESTS_SOURCE_CODE "${TESTS_SOURCE_DIRECTORY}/*.cpp")
-add_executable(tests ${TESTS_SOURCE_CODE})
+list(REMOVE_ITEM SOURCE_CODE "${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp")
+
+add_executable(tests ${TESTS_SOURCE_CODE}  ${SOURCE_CODE})
 target_link_libraries(tests GTest::gtest_main)
