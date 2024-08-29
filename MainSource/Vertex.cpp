@@ -34,7 +34,7 @@ bool Vertex::operator==(const Vertex & other)const {
     return label == other.label && type == other.type && fabs(value-other.value) < 0.000001;
 }
 
-bool Vertex::operator!=(const Vertex & other){
+bool Vertex::operator!=(const Vertex & other) const{
     return label != other.label || type != other.type || fabs(value-other.value) > 0.000001;
 }
 

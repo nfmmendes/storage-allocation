@@ -89,7 +89,7 @@ namespace QuickTSP{
              * @param other The right side operator.
              * @return True if the objects are not equals, false otherwise. 
             */
-            bool operator!=(const Vertex & other);
+            bool operator!=(const Vertex & other) const;
 
             /**
 			 * @brief Override the assignment operator. 
