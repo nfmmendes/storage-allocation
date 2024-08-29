@@ -41,32 +41,8 @@ class InputData{
          * @brief Constructor
          * @param metadataFile Name of the file containing the input data.  
          */
-        InputData(string  metadataFile);
+        InputData(const string&  metadataFile);
     
-        /**
-         * @brief Set the list of products. 
-         * @param products The list of products. 
-         */
-        void setProducts(vector<Product> products);
-
-        /**
-         * @brief Set the list of clients. 
-         * @param clients The list of clients. 
-         */
-        void setClients(vector<Client> clients);
-
-        /**
-         * @brief Set the list of orders. 
-         * @param orders The list of orders. 
-         */
-        void setOrders(vector<Order> orders);
-
-        /**
-         * @brief Set the list of optimization parameters. 
-         * @param parameters The list of optimization parameters. 
-         */
-        void setParameters(vector<Parameter> parameters);
-
         /**
          * @brief Set the warehouse layout. 
          * @param warehouse The hourehouse layout. 

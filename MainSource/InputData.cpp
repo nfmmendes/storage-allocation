@@ -29,7 +29,7 @@ InputData::InputData(){
     alreadyCreated = true;
 }
 
-InputData::InputData(string  dataFile){
+InputData::InputData(const string&  dataFile){
     
     ///Input file names
     string warehouseDescriptionFileName;
@@ -73,49 +73,10 @@ InputData::InputData(string  dataFile){
     }
 }
 
-void InputData::setProducts(vector<Product> products){
-    InputData::products.clear();
-    
-    for(unsigned int i=0; i< products.size(); i++)
-        InputData::products.push_back(Product( products[i]));
-    
-}
-
-void InputData::setClients(vector<Client> clients){
-    InputData::clients.clear();
-    
-    for(unsigned int i=0; i<clients.size(); i++)
-        InputData::clients.push_back(Client(clients[i]));
-    
-}
-
-void InputData::setOrders(vector<Order> orders){
-    InputData::orders.clear();
-    
-    for(unsigned int i=0; i< orders.size(); i++)
-        InputData::orders.push_back(Order(orders[i]));
-    
-}
-
-//==============================================================
-//
-//==============================================================
-void InputData::setParameters(vector<Parameter> parameters){
-    InputData::parameters.clear();
-    
-    for(unsigned int i=0; i< parameters.size(); i++)
-        InputData::parameters.push_back(Parameter(parameters[i]));
-    
-}
 
 void InputData::setWarehouse(Warehouse &&warehouse){
     InputData::warehouse = warehouse;
     
-}
-
-void InputData::setIsolatedFamilies(vector<IsolatedFamily> &_isolatedFamilies){
-	for(unsigned int i=0; i < _isolatedFamilies.size(); i++)
-		this->isolatedFamilies.push_back(IsolatedFamily(_isolatedFamilies[i]));
 }
 
 const vector<Product> &InputData::getProducts(){return products;}
