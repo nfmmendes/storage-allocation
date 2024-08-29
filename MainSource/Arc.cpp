@@ -39,6 +39,7 @@ Arc& Arc::operator=(const Arc & other)
     this->value = other.value;
     this->beginVertex = other.beginVertex;
     this->endVertex = other.endVertex;
+    this->directed = other.directed;
 
     return *this;
 }
