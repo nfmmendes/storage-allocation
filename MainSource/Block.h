@@ -23,9 +23,9 @@ class Block{
         vector<BlockExit> exits;					///< Store all the exists
         vector<Corridor> corridors;				    ///< Store all the corridors 
         vector<Curve> curves;						///< Store all the curves that conects two corridors 
-        string name; 								///< Name of block
-        double length;								///< Block length 
-        double width; 							    ///< Block width 
+        string name {}; 							///< Name of block
+        double length {};							///< Block length 
+        double width {}; 							///< Block width 
         pair<double,double> bottomLeftCoords;		///< Bottom left extremety of the block 
         
     public:
