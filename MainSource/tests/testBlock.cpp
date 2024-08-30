@@ -67,3 +67,88 @@ TEST(BlockTests, TestCopyConstructor){
     });
     EXPECT_TRUE(result);
 }
+
+TEST(BlockTests, TestSetBlockCurvesEmpty){
+    Block block;
+    block.setCurves(vector<Curve>());
+
+    EXPECT_TRUE(block.getCurves().empty());
+}
+
+
+TEST(BlockTests, TestSetBlockCurves){
+    Curve a(5, 1, 2, Point("A", 3, 4), Point("B", 5, 6));
+    Curve b(6, 5, 6, Point("C", 8, 9), Point("D", 1, 4));
+    Curve c(7, 0, 3, Point("E", 7, 5), Point("F", 3, 9));
+
+    vector<Curve> curves {a, b, c};
+
+    Block block;
+    block.setCurves(curves);
+
+    EXPECT_EQ(block.getCurves().size(), curves.size());
+    for(auto i = 0; i< curves.size(); i++){
+        EXPECT_EQ(curves[i] , block.getCurves()[i]);
+    }
+}
+
+TEST(BlockTests, TestSetBlockCorridorsEmpty){
+    Block b;
+    b.setCorridors(vector<Corridor>());
+
+    EXPECT_TRUE(b.getCorridors().empty());
+}
+
+TEST(BlockTests, TestSetBlockCorridors){ 
+    Corridor a (1, "A", "HORIZONTAL", "LEFT_TO_RIGHT", {2, 4}, 3);
+    Corridor b (2, "B", "VERTICAL", "UP_DOWN", {2, 4}, 3);
+    Corridor c (3, "C", "HORIZONTAL", "RIGHT_TO_LEFT", {2, 4}, 3);
+
+    vector<Corridor> corridors{a, b, c};
+
+    Block block;
+    block.setCorridors(corridors);
+
+    EXPECT_EQ(corridors.size(), block.getCorridors().size());
+    for(auto i=0; i< corridors.size(); i++){
+        EXPECT_EQ(corridors[i], block.getCorridors()[i]);
+    }
+}
+
+TEST(BlockTests, TestSetShelvesEmpty){
+    Block b;
+    b.setShelves(vector<Shelf>());
+
+    EXPECT_TRUE(b.getShelves().empty());
+}
+
+TEST(BlockTests, TestSetShelves){
+    Shelf a(1, {}, {1, 2}, "A", 3, 5, 2, 7);
+    Shelf b(2, {}, {3, 5}, "A", 6, 2, 1, 5);
+    Shelf c(3, {}, {4, 7}, "A", 1, 4, 3, 8);
+
+    vector<Shelf> shelves{a,b, c};
+
+    Block block;
+    block.setShelves(shelves);
+
+    EXPECT_EQ(shelves.size(), block.getShelves().size());
+
+    for(auto i=0; i<shelves.size(); i++){
+        EXPECT_EQ(shelves[i], block.getShelves()[i]);
+    }
+    
+    auto result = all_of(begin(shelves), end(shelves),[&block](const auto& elem){    
+        return block.getShelvesById().at(elem.getId()) == elem; 
+    });
+    EXPECT_TRUE(result);
+}
+
+TEST(BlockTests, TestAddExits){
+    Block b;
+    BlockExit exit(1, 9, 2, "A", "B");
+
+    b.addExit(exit);
+    EXPECT_EQ(b.getExits().size(), 1);
+    EXPECT_EQ(b.getExits()[0], exit);
+}
