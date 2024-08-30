@@ -99,7 +99,7 @@ Corridor & Corridor::operator=(const Corridor &other){
  *
  */
 bool Corridor::operator==(const Corridor &other)const{
-    return this->Id == other.Id && this->blockName == other.blockName && direction == other.direction && this->sense != other.sense &&
+    return this->Id == other.Id && this->blockName == other.blockName && direction == other.direction && this->sense == other.sense &&
             this->begin == other.begin && this->length == other.length; 
 }
 
