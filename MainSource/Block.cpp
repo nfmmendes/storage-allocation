@@ -88,62 +88,6 @@ bool Block::operator<(const Block &other) const{
 	return this->name < other.name; 
 }
 
-bool Block::operator==(const Block &other){
-
-	if(! (name == other.name && fabs(length-other.length) <1e-5 && fabs(width - other.width)<1e-5))
-		return false; 
-
-	if( bottomLeftCoords != other.bottomLeftCoords)
-		return false; 
-
-	//If the blocks don't have the same number of exits, corridors and curves they are not equals 
-	bool equalVertexes = shelves.size() == other.shelves.size();
-	bool equalExits = exits.size() == other.exits.size(); 
-	bool equalCorridors = corridors.size() == other.corridors.size(); 
-	bool equalCurves = curves.size() == other.curves.size(); 
-
-	if(!(equalVertexes && equalExits && equalCorridors && equalCurves))
-		return false; 
-
-	//The shelves, exits, corridors and curves are sort to be compared. Otherwise two lists with the same elements could 
-	// result in a "false" return
-	vector<Shelf> otherShelves = other.shelves; 	
-	sort(shelves.begin(), shelves.end());
-	sort(otherShelves.begin(), otherShelves.end()); 	
-
-	vector<BlockExit> otherExits = other.exits;
-	sort(exits.begin(), exits.end());
-	sort(otherExits.begin(), otherExits.end()); 
-
-	vector<Corridor> otherCorridors = other.corridors; 
-	sort(corridors.begin(), corridors.end()); 
-	sort(otherCorridors.begin(), otherCorridors.end()); 
-
-	vector<Curve> otherCurves = other.curves;
-	sort(curves.begin(), curves.end());
-	sort(otherCurves.begin(), otherCurves.end()); 
-
-	
-	for(unsigned int i = 0; i< shelves.size(); i++)
-		if(shelves[i] != otherShelves[i])  
-			return false; 
-
-	for(unsigned int i = 0; i< exits.size(); i++)
-		if(exits[i] != otherExits[i])
-			return false; 
-		
-	for(unsigned int i = 0; i < corridors.size(); i++)
-		if(corridors[i] != otherCorridors[i])
-			return false; 
-	
-	for(unsigned int i=0; i < curves.size(); i++)
-		if(curves[i] != otherCurves[i])
-			return false; 
-	
-	return true;
-    
-}
-
 Block & Block::addExit(const BlockExit &exit){
 	unsigned int i=0; 
 

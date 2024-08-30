@@ -147,15 +147,6 @@ class Block{
          * @param other The block curves. 
          */
         void setCurves(const vector<Curve> &other);
-    
-        //TODO: Improve this
-        
-        /**
-         * @brief Equals operator override.
-         * @param other The right hand side object.
-         * @return True if the objects are equal. False otherwise. 
-         */
-        bool operator==(const Block &other);
 
         /**
 		 * @brief Less than operator override.
