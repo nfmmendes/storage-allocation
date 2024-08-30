@@ -61,7 +61,7 @@ class Block{
 		 * @param exit The exit to be added. 
 		 * @return A reference to the modified block.
          */
-		Block & addExit(BlockExit &exit);
+		Block & addExit(const BlockExit &exit);
         
         /**
          * @brief Get the block name.
@@ -134,19 +134,19 @@ class Block{
          * @brief Set the block corridors.
          * @param others The block corridors. 
          */
-        void setCorridors(vector<Corridor> & others);
+        void setCorridors(const vector<Corridor> & others);
     
         /**
          * @brief Set the block shelves. 
          * @param other The block shelves. 
          */
-        void setShelves(vector<Shelf> & other);
+        void setShelves(const vector<Shelf> & other);
     
         /**
          * @brief Set the block curves. 
          * @param other The block curves. 
          */
-        void setCurves(vector<Curve> &other);
+        void setCurves(const vector<Curve> &other);
     
         //TODO: Improve this
         

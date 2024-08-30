@@ -68,13 +68,13 @@ const vector<Corridor> & Block::getCorridors() const { return corridors;}
 const vector<Curve> & Block::getCurves() const { return curves; }
 const pair<double,double> & Block::getBottomLeftCoords() const { return bottomLeftCoords; }
 
-void Block::setCorridors(vector<Corridor> & others){
+void Block::setCorridors(const vector<Corridor> & others){
     this->corridors.clear();
     
 	copy(begin(others), end(others), back_inserter(this->corridors));
 }
 
-void Block::setShelves(vector<Shelf > & others){
+void Block::setShelves(const vector<Shelf > & others){
     this->shelves.clear();
 	
 	copy(begin(others), end(others), back_inserter(this->shelves));
@@ -82,7 +82,7 @@ void Block::setShelves(vector<Shelf > & others){
 		 [](auto& s){ return make_pair(s.getId(), s);  });
 }
 
-void Block::setCurves(vector<Curve> & others){
+void Block::setCurves(const vector<Curve> & others){
     this->curves.clear();
 	copy(begin(others),end(others), back_inserter(this->curves));
 }
@@ -147,7 +147,7 @@ bool Block::operator==(const Block &other){
     
 }
 
-Block & Block::addExit(BlockExit &exit){
+Block & Block::addExit(const BlockExit &exit){
 	unsigned int i=0; 
 
 	for( ; i<exits.size() && exits[i].getId() != exit.getId(); i++);
