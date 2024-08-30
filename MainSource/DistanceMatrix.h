@@ -1,5 +1,4 @@
-#ifndef DISTANCE_MATRIX_H
-#define DISTANCE_MATRIX_H
+#pragma once
 
 #include <iostream>
 #include <map>
@@ -134,13 +133,14 @@ double DistanceMatrix<T>::getDistance(const T& first, const T& second) const
 template <class T>
 void DistanceMatrix<T>::setRow(std::vector<double>& d, T& elem)
 {
-    typename std::vector<T>::iterator itFirst = keyIndex.find(elem);
-    if (itFirst != orderedKeys.end()) {
-        int index = keyIndex[itFirst];
-        int maxAdvance = min(orderedKeys.size(), distances.size());
-        for (int i = 0; i < maxAdvance; i++)
-            orderedKeys[index][i] = d[i];
-    }
+    auto itFirst = keyIndex.find(elem);
+    if(itFirst == orderedKeys.end())
+        return;
+
+    int index = keyIndex[itFirst];
+    int maxAdvance = min(orderedKeys.size(), distances.size());
+    for (int i = 0; i < maxAdvance; i++)
+        orderedKeys[index][i] = d[i];
 }
 
 template <class T>
@@ -174,7 +174,6 @@ void DistanceMatrix<T>::setColumnOnIndex(std::vector<double>& d, int index)
 template <class T>
 void DistanceMatrix<T>::print()
 {
-
     std::cout << std::setw(15) << "****************\n";
     for (unsigned int i = 0; i < orderedKeys.size(); i++) {
         std::cout << std::setw(15) << orderedKeys[i] << std::endl;
@@ -187,5 +186,3 @@ void DistanceMatrix<T>::print()
         std::cout << std::endl;
     }
 }
-
-#endif
