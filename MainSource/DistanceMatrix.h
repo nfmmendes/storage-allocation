@@ -75,15 +75,11 @@ DistanceMatrix<T>& DistanceMatrix<T>::buildMatrix(std::map<std::pair<T, T>, doub
 template <class T>
 DistanceMatrix<T>::DistanceMatrix(DistanceMatrix<T>& other)
 {
-    for (unsigned int i = 0; i < other.orderedKeys.size(); i++)
-        this->orderedKeys.push_back(other.orderedKeys[i]);
+    copy(begin(other.orderedKeys), end(other.orderedKeys), back_inserter(orderedKeys));
 
     this->distances.resize(orderedKeys.size());
     for (unsigned int i = 0; i < orderedKeys.size(); i++) {
-        this->distances[i].resize(orderedKeys.size());
-
-        for (unsigned int j = 0; j < orderedKeys.size(); j++)
-            this->distances[i][j] = other.distances[i][j];
+        copy(begin(other.distances[i]), end(other.distances[i]), back_inserter(distances[i]));
     }
 
     for (unsigned int i = 0; i < this->orderedKeys.size(); i++)
