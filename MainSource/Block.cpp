@@ -10,11 +10,14 @@
 #include "Point.h"
 #include "Block.h"
 using std::cout;
+using std::max;
 using std::endl;
 
-Block::Block(){}
+Block::Block(): length(0), width(0), name(""){
+}
 
-Block::Block(const Block &other){
+Block::Block(const Block &other): name(other.name), width(max(0.0, other.width)), 
+    length(max(0.0, other.length)){
 	
     for(unsigned int i = 0; i< other.shelves.size();i++){
         this->shelves.push_back(Shelf(other.shelves[i]));
@@ -24,20 +27,14 @@ Block::Block(const Block &other){
 	copy(begin(other.exits), end(other.exits), back_inserter(exits));
 	copy(begin(other.corridors), end(other.corridors), back_inserter(corridors));
 	copy(begin(other.curves), end(other.curves), back_inserter(curves));
-    
-    this->name = other.name;
-    this->bottomLeftCoords = other.bottomLeftCoords;
-    this->width = other.width;
-    this->length = other.length;
+	
+	this->bottomLeftCoords = other.bottomLeftCoords;
 }
 
-Block::Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY, double width, double length){
-
-    this->name = blockName;
+Block::Block(string blockName, double bottomLeftCoordX , double bottomLeftCoordY, double width, double length):
+	length(max(0.0, length)), width(max(0.0, width)), name(blockName)
+{
     this->bottomLeftCoords = make_pair(bottomLeftCoordX, bottomLeftCoordY);
-    this->width = width;
-    this->length = length;
-	
 }
 
 bool Block::hasValidConfiguration(){
@@ -185,8 +182,8 @@ Block & Block::operator=(const Block &other){
 
 	this->name = other.name;
 	this->bottomLeftCoords = other.bottomLeftCoords;
-	this->width = other.width;
-	this->length = other.length;
+	this->width = max(0.0, other.width);
+	this->length = max(0.0, other.length);
 
 	return *this;
 }

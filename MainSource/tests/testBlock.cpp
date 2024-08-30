@@ -36,6 +36,18 @@ TEST(BlockTests, TestMemberConstructor){
     EXPECT_TRUE(b.getCurves().empty());
 }
 
+TEST(BlockTests, TestMemberConstructorWithNegativeWidth){
+    Block b("", 0, 0, -5, 1);
+
+    EXPECT_DOUBLE_EQ(b.getWidth(), 0);
+}
+
+TEST(BlockTests, TestMemberConstructorWithNegativeLength){
+    Block b("", 0, 0, 1, -5);
+
+    EXPECT_DOUBLE_EQ(b.getLenght(), 0);
+}
+
 TEST(BlockTests, TestCopyConstructor){
     Shelf s1(15, {}, {0,0}, "Block", 1, 1, 1, 1);
     Shelf s2(13, {}, {0,0}, "Block", 1, 1, 1, 1);
