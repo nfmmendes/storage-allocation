@@ -111,12 +111,6 @@ std::map<T, int> DistanceMatrix<T>::getElementsMap() const
 }
 
 template <class T>
-std::vector<std::vector<double> > DistanceMatrix<T>::getDistances() const
-{
-    return distances;
-}
-
-template <class T>
 const std::vector<T>& DistanceMatrix<T>::getKeys() const
 {
     return orderedKeys;
