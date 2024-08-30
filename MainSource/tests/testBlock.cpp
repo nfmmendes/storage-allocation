@@ -164,3 +164,50 @@ TEST(BlockTests, TestAddExits){
     EXPECT_EQ(b.getExits().size(), 1);
     EXPECT_EQ(b.getExits()[0], exit);
 }
+
+TEST(BlockTests, TestSetName){
+    Block b;
+
+    b.setName("Test");
+
+    EXPECT_EQ(b.getName(), "Test");
+}
+
+TEST(BlockTests, TestLowerThanOperator){
+    Block b("AAA", 0, 0, 0, 0); 
+    Block c("BBB", 0, 0, 0, 0);
+
+    EXPECT_TRUE(b < c);
+}
+
+TEST(BlockTests, TestAssignmentOperator){
+    Shelf s1(15, {}, {0,0}, "Block", 1, 1, 1, 1);
+    Shelf s2(13, {}, {0,0}, "Block", 1, 1, 1, 1);
+    Shelf s3(28, {}, {0,0}, "Block", 1, 1, 1, 1);
+
+    Block a("Block", 8, 9, 15, 12);
+    a.setShelves(vector<Shelf>({ s1, s2, s3}));
+    a.setCurves(vector<Curve>(5));
+    a.setCorridors(vector<Corridor>(10));
+    a.addExit(BlockExit());
+    a.addExit(BlockExit());
+    a.addExit(BlockExit());
+
+    Block b = a;
+
+    EXPECT_EQ(a.getName(), b.getName());
+    EXPECT_DOUBLE_EQ(a.getWidth(), b.getWidth());
+    EXPECT_DOUBLE_EQ(a.getLenght(), b.getLenght());
+    
+    EXPECT_EQ(a.getBottomLeftCoords(), b.getBottomLeftCoords());
+    EXPECT_EQ(a.getCorridors().size(), b.getCorridors().size());
+    EXPECT_EQ(a.getCurves().size(), b.getCurves().size());
+    EXPECT_EQ(a.getExits().size(), b.getExits().size());
+    EXPECT_EQ(a.getShelves().size(), b.getShelves().size());
+    
+    const auto & shelfList { a.getShelvesById() };
+    auto result = all_of(begin(shelfList), end(shelfList),[&b, &shelfList](const auto& elem){    
+        return b.getShelvesById().at(elem.first) == elem.second; 
+    });
+    EXPECT_TRUE(result);
+}
