@@ -76,7 +76,7 @@ Curve & Curve::operator=(const Curve &other){
  * Equals operator overload 
  * @param other Curve in the right hand side of the operator 
  */
-bool Curve::operator==(const Curve &other){
+bool Curve::operator==(const Curve &other) const {
 	return this->Id == other.Id && this->startingCorridorId == other.startingCorridorId && this->endingCorridorId == other.endingCorridorId && 
 		   this->startingPoint == other.startingPoint && this->endingPoint == other.endingPoint;
 }
@@ -85,7 +85,7 @@ bool Curve::operator==(const Curve &other){
  *	Not equal operator overload 
  * @param other Curve in the right hand side of the operator 
  */
-bool Curve::operator!=(const Curve &other){
+bool Curve::operator!=(const Curve &other) const {
 	return !(*this == other);
 }
 
