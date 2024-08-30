@@ -90,17 +90,17 @@ bool Block::operator<(const Block &other) const{
 
 bool Block::operator==(const Block &other){
 
-	if(! (this->name == other.name && fabs(this->length-other.length) <1e-5 && fabs(this->width - other.width)<1e-5))
+	if(! (name == other.name && fabs(length-other.length) <1e-5 && fabs(width - other.width)<1e-5))
 		return false; 
 
-	if( this->bottomLeftCoords != other.bottomLeftCoords)
+	if( bottomLeftCoords != other.bottomLeftCoords)
 		return false; 
 
 	//If the blocks don't have the same number of exits, corridors and curves they are not equals 
-	bool equalVertexes = this->shelves.size() == other.shelves.size();
-	bool equalExits = this->exits.size() == other.exits.size(); 
-	bool equalCorridors = this->corridors.size() == other.corridors.size(); 
-	bool equalCurves = this->curves.size() == other.curves.size(); 
+	bool equalVertexes = shelves.size() == other.shelves.size();
+	bool equalExits = exits.size() == other.exits.size(); 
+	bool equalCorridors = corridors.size() == other.corridors.size(); 
+	bool equalCurves = curves.size() == other.curves.size(); 
 
 	if(!(equalVertexes && equalExits && equalCorridors && equalCurves))
 		return false; 
@@ -108,36 +108,36 @@ bool Block::operator==(const Block &other){
 	//The shelves, exits, corridors and curves are sort to be compared. Otherwise two lists with the same elements could 
 	// result in a "false" return
 	vector<Shelf> otherShelves = other.shelves; 	
-	sort(this->shelves.begin(), this->shelves.end());
+	sort(shelves.begin(), shelves.end());
 	sort(otherShelves.begin(), otherShelves.end()); 	
 
 	vector<BlockExit> otherExits = other.exits;
-	sort(this->exits.begin(), this->exits.end());
+	sort(exits.begin(), exits.end());
 	sort(otherExits.begin(), otherExits.end()); 
 
 	vector<Corridor> otherCorridors = other.corridors; 
-	sort(this->corridors.begin(), this->corridors.end()); 
+	sort(corridors.begin(), corridors.end()); 
 	sort(otherCorridors.begin(), otherCorridors.end()); 
 
 	vector<Curve> otherCurves = other.curves;
-	sort(this->curves.begin(), this->curves.end());
+	sort(curves.begin(), curves.end());
 	sort(otherCurves.begin(), otherCurves.end()); 
 
 	
-	for(unsigned int i = 0; i< this->shelves.size(); i++)
-		if(this->shelves[i] != otherShelves[i])  
+	for(unsigned int i = 0; i< shelves.size(); i++)
+		if(shelves[i] != otherShelves[i])  
 			return false; 
 
-	for(unsigned int i = 0; i< this->exits.size(); i++)
-		if(this->exits[i] != otherExits[i])
+	for(unsigned int i = 0; i< exits.size(); i++)
+		if(exits[i] != otherExits[i])
 			return false; 
 		
-	for(unsigned int i = 0; i < this->corridors.size(); i++)
-		if(this->corridors[i] != otherCorridors[i])
+	for(unsigned int i = 0; i < corridors.size(); i++)
+		if(corridors[i] != otherCorridors[i])
 			return false; 
 	
-	for(unsigned int i=0; i < this->curves.size(); i++)
-		if(this->curves[i] != otherCurves[i])
+	for(unsigned int i=0; i < curves.size(); i++)
+		if(curves[i] != otherCurves[i])
 			return false; 
 	
 	return true;
