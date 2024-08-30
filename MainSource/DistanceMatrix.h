@@ -146,13 +146,14 @@ void DistanceMatrix<T>::setRow(std::vector<double>& d, T& elem)
 template <class T>
 void DistanceMatrix<T>::setColumn(std::vector<double>& d, T& elem)
 {
-    typename std::vector<T>::iterator itFirst = keyIndex.find(elem);
-    if (itFirst != orderedKeys.end()) {
-        int index = keyIndex[itFirst];
-        int maxAdvance = min(orderedKeys.size(), distances.size());
-        for (int i = 0; i < maxAdvance; i++)
-            orderedKeys[i][index] = d[i];
-    }
+    auto itFirst = keyIndex.find(elem);
+    if(itFirst == orderedKeys.end())
+        continue;
+        
+    int index = keyIndex[itFirst];
+    int maxAdvance = min(orderedKeys.size(), distances.size());
+    for (int i = 0; i < maxAdvance; i++)
+        orderedKeys[i][index] = d[i];
 }
 
 template <class T>
