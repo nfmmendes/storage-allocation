@@ -24,11 +24,11 @@ class BlockExit{
         
         BlockExit(long int id, double coordX, double coordY, std::string blockA, std::string blockB="");
         
-        long int getId();
-        double getCoordX();
-        double getCoordY();
-        std::string getBlockAName();
-        std::string getBlockBName();
+        long int getId() const;
+        double getCoordX() const;
+        double getCoordY() const;
+        std::string getBlockAName() const;
+        std::string getBlockBName() const;
         std::pair<double, double> getCoords();
     
         void setId(long int value);

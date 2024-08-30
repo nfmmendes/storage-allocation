@@ -33,11 +33,11 @@ BlockExit::BlockExit(long int id, double coordX, double coordY, string blockA, s
     this->blockBName = blockB;
 }
 
-long int BlockExit::getId() { return Id; }
-double BlockExit::getCoordX() {return coordX; }
-double BlockExit::getCoordY() {return coordY; }
-string BlockExit::getBlockAName() { return blockAName; }
-string BlockExit::getBlockBName() { return blockBName; }
+long int BlockExit::getId() const { return Id; }
+double BlockExit::getCoordX() const {return coordX; }
+double BlockExit::getCoordY() const {return coordY; }
+string BlockExit::getBlockAName() const { return blockAName; }
+string BlockExit::getBlockBName() const { return blockBName; }
 pair<double, double> BlockExit::getCoords(){ return make_pair(coordX, coordY); }
 
 
