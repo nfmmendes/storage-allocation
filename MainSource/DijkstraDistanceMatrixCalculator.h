@@ -1,5 +1,4 @@
-#ifndef DIJKSTRA_DISTANCE_METRIC_CALCULATOR_H
-#define DIJKSTRA_DISTANCE_METRIC_CALCULATOR_H
+#pragma once
 
 #include<iostream>
 #include<utility>
@@ -17,15 +16,36 @@
 using namespace std;
 using namespace QuickTSP; 
 
-
-
+/**
+ * @brief Template class <c> DistanceMatrixCalculator </c> contains the algorithms and data structures
+ *        needed to calculate and store a distance matrix from a subset of vertices of a graph and all
+ *        the other vertexes of this graph.
+ * @tparam Graph The class used to represent the graph.
+ * @tparam Vertex The class used to represent a graph vertex. 
+*/ 
 template <class Graph, class Vertex>
 class DijkstraDistanceMatrixCalculator : public DistanceMatrixCalculator<Graph,  Vertex > {
 
     public:  
+        /**
+         * @brief Constructor.
+         */
         DijkstraDistanceMatrixCalculator(){}
+
+        /**
+         * @brief Copy constructor.
+         * @param other The object to be copied. 
+         */
         DijkstraDistanceMatrixCalculator(DijkstraDistanceMatrixCalculator &other);
+
+        /**
+         * @brief Calculate the distance matrix. 
+         * @param graph The weighted graph.
+         * @param sourceVertexes The list of source vertexes
+         * @return A matrix indicating the distance from each source vertex to all other source vertexes. 
+         */
         DistanceMatrix<Vertex> &calculateMatrixDistance(Graph &graph, vector<Vertex> sourceVertexes); 
+
 		DistanceMatrix<Vertex> distanceMatrix; 
 
 };
@@ -33,24 +53,18 @@ class DijkstraDistanceMatrixCalculator : public DistanceMatrixCalculator<Graph, 
 
 typedef pair<int, double> iPair; 
 
-
-
-/**
- * 
- * 
- */
 template <class Graph, class Vertex>
 DijkstraDistanceMatrixCalculator<Graph, Vertex>::DijkstraDistanceMatrixCalculator(DijkstraDistanceMatrixCalculator<Graph,Vertex> &other){
     this = &other;
 };
 
-/**
- *  Based on the code presented on https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/ 
- *  It is a very efficient implementation that works in O(n log n) for each source point (if there is more than one). 
- */
+
 template <class Graph, class Vertex >
 DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calculateMatrixDistance(Graph &graph, vector<Vertex> sourceVertexes){
 
+    //  Based on the code presented on 
+    //  https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/ 
+    //  It is a very efficient implementation that works in O(n log n) for each source point (if there is more than one). 
     vector<Vertex> vertexes = graph.getVertexes(); 
 	map<Vertex, vector<Arc> > arcs = graph.getArcs();
     map<Vertex, int> indexVertex;
@@ -125,5 +139,3 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
 		
 	return distanceMatrix.buildMatrix(distancePairs); 
 }
-
-#endif
