@@ -65,16 +65,16 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
     //  Based on the code presented on 
     //  https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/ 
     //  It is a very efficient implementation that works in O(n log n) for each source point (if there is more than one). 
-    vector<Vertex> vertexes = graph.getVertexes(); 
-	map<Vertex, vector<Arc> > arcs = graph.getArcs();
+    const auto& vertexes { graph.getVertexes() }; 
+	const auto& arcs = graph.getArcs() ;
     map<Vertex, int> indexVertex;
 	
-    for(unsigned int i= 0; i<vertexes.size(); i++)
+    for(auto i= 0; i<vertexes.size(); i++)
 		indexVertex[ vertexes[i] ] = i;
 
 	map<pair<Vertex,Vertex> , double> distancePairs; 
 
-    for(unsigned int i= 0; i<sourceVertexes.size(); i++){
+    for(auto i= 0; i<sourceVertexes.size(); i++){
         
         // Create a priority queue to store vertices that 
         // are being preprocessed. This is weird syntax in C++. 
@@ -106,23 +106,17 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             pq.pop(); 
     
             // Get the adjacent vertexes of vertex with index u 
-			vector<Arc> incidentArcs = arcs[vertexes[u] ];
+			auto & incidentArcs = arcs.at(vertexes[u]);
             list<pair<int, double> > adj;
 		
 			
             // Get the indexes of the adjacent vertexes
-            for(unsigned int j= 0; j<incidentArcs.size(); j++)
+            for(auto j= 0; j<incidentArcs.size(); j++)
                 adj.push_back(make_pair( indexVertex[incidentArcs[j].getEndVertex()] , incidentArcs[j].getValue()  ) );
 
 
-            // 'it' is used to get all adjacent vertices of a vertex 
-            for (list< pair<int, double> >::iterator it = adj.begin(); it !=  adj.end(); ++it) { 
-                // Get vertex label and weight of current adjacent 
-                // of u. 
-                int v = (*it).first; 
-                int weight = (*it).second; 
-				
-				//cout<<vertexes[v].getLabel()<<" "<<it->first<<" "<<dist[v]<<" "<<dist[u]<<" "<<weight<<endl;
+            // Get vertex label and weight of current adjacent of u. 
+            for(auto [v, weight] : adj){
                 //  If there is shorted path to v through u. 
                 if (dist[v] > dist[u] + weight) { 
                     // Updating distance of v 
@@ -132,7 +126,7 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             } 
         }
 		
-		for(unsigned int j=0;j<sourceVertexes.size();j++){
+		for(auto j=0;j<sourceVertexes.size();j++){
 			distancePairs[make_pair(sourceVertexes[i], sourceVertexes[j])] = dist[indexVertex[sourceVertexes[j] ]]; 
 		}	
     }
