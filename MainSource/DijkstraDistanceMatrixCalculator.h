@@ -118,9 +118,9 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             // Get vertex label and weight of current adjacent of u. 
             for(auto [v, weight] : adj){
                 //  If there is shorted path to v through u. 
-                if (dist[v] > dist[u] + weight) { 
+                if (auto newDistance = dist[u] + weight ; dist[v] > newDistance) { 
                     // Updating distance of v 
-                    dist[v] = dist[u] + weight;
+                    dist[v] = newDistance;
                     pq.push(make_pair(dist[v], v)); 
                 } 
             } 
