@@ -66,7 +66,7 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
     //  https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/ 
     //  It is a very efficient implementation that works in O(n log n) for each source point (if there is more than one). 
     const auto& vertexes { graph.getVertexes() }; 
-	const auto& arcs = graph.getArcs() ;
+	const auto& arcs { graph.getArcs() };
     map<Vertex, int> indexVertex;
 	
     for(auto i= 0; i<vertexes.size(); i++)
@@ -88,7 +88,7 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
     
         // Insert source itself in priority queue and initialize 
         // its distance as 0. 
-        int src = indexVertex[outerVertex]; 
+        auto src { indexVertex[outerVertex] }; 
         pq.push(make_pair(0, src )); 
         dist[src] = 0; 
     
@@ -102,11 +102,11 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             // has to be done this way to keep the vertices 
             // sorted distance (distance must be first item 
             // in pair) 
-            int u = pq.top().second; 
+            auto u { pq.top().second }; 
             pq.pop(); 
     
             // Get the adjacent vertexes of vertex with index u 
-			auto & incidentArcs = arcs.at(vertexes[u]);
+			const auto & incidentArcs = arcs.at(vertexes[u]);
             list<pair<int, double> > adj;
 		
 			
