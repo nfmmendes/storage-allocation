@@ -106,7 +106,7 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             pq.pop(); 
     
             // Get the adjacent vertexes of vertex with index u 
-			const auto & incidentArcs = arcs.at(vertexes[u]);
+			const auto & incidentArcs { arcs.at(vertexes[u]) };
             list<pair<int, double> > adj;
 		
 			
