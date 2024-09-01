@@ -78,7 +78,7 @@ class Shelf{
          * @brief Get the shelf cells.
          * @return A list containing the shelf cells.
          */
-        const vector<Cell>& getCells();
+        const vector<Cell>& getCells() const;
 
         /**
          * @brief Get the name of the block in which the shelf is located.
