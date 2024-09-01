@@ -51,7 +51,7 @@ class DijkstraDistanceMatrixCalculator : public DistanceMatrixCalculator<Graph, 
 };
 
 
-typedef pair<int, double> iPair; 
+typedef pair<double, int> iPair; 
 
 template <class Graph, class Vertex>
 DijkstraDistanceMatrixCalculator<Graph, Vertex>::DijkstraDistanceMatrixCalculator(DijkstraDistanceMatrixCalculator<Graph,Vertex> &other){
@@ -84,7 +84,7 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
     
         // Create a vector for distances and initialize all 
         // distances as infinite (INF) 
-        vector<int> dist(vertexes.size(), INF); 
+        vector<double> dist(vertexes.size(), INF); 
     
         // Insert source itself in priority queue and initialize 
         // its distance as 0. 
