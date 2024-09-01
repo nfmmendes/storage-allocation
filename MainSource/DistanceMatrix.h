@@ -68,11 +68,11 @@ DistanceMatrix<T>& DistanceMatrix<T>::buildMatrix(map<pair<T, T>, double>& dista
         distances[i].resize(distances.size(),1e5);
 
     int firstIndex, secondIndex;
-    for (const auto& pair : distancesPairs) {
-        firstIndex = keyIndex[pair.first.first];
-        secondIndex = keyIndex[pair.first.second];
+    for (const auto& [extremities, distance] : distancesPairs) {
+        firstIndex = keyIndex[extremities.first];
+        secondIndex = keyIndex[extremities.second];
 
-        distances[firstIndex][secondIndex] = pair.second;
+        distances[firstIndex][secondIndex] = distance;
     }
 
     return *this;
