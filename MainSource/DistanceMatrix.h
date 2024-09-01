@@ -57,9 +57,9 @@ DistanceMatrix<T>& DistanceMatrix<T>::buildMatrix(map<pair<T, T>, double>& dista
     }
 
     T aux;
-    for (auto it = keys.begin(); it != keys.end(); it++) {
-        keyIndex[*it] = orderedKeys.size();
-        aux = *it;
+    for (const auto& key : keys){
+        keyIndex[key] = orderedKeys.size();
+        aux = key;
         orderedKeys.push_back(aux);
     }
 
@@ -84,11 +84,11 @@ DistanceMatrix<T>::DistanceMatrix(const DistanceMatrix<T>& other)
     copy(begin(other.orderedKeys), end(other.orderedKeys), back_inserter(orderedKeys));
 
     this->distances.resize(orderedKeys.size());
-    for (unsigned int i = 0; i < orderedKeys.size(); i++) {
+    for (auto i = 0; i < orderedKeys.size(); i++) {
         copy(begin(other.distances[i]), end(other.distances[i]), back_inserter(distances[i]));
     }
 
-    for (unsigned int i = 0; i < this->orderedKeys.size(); i++)
+    for (auto i = 0; i < orderedKeys.size(); i++)
         this->keyIndex[orderedKeys[i]] = i;
 }
 
