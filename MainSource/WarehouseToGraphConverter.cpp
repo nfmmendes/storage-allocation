@@ -64,28 +64,28 @@ void WarehouseToGraphConverter::generateGraph(){
 
     //This loop creates a subgraph of the final graph to each block. These blocks will be connected by block exits in
     //second loop
-    for(int i= 0; i<(int) blocks.size(); i++){
+    for(const auto& block : blocks){
 	
-		vector<Shelf> shelves = blocks[i].getShelves();
-        vector<Corridor> corridors = blocks[i].getCorridors();
-        vector<Curve> curves = blocks[i].getCurves();        
+		const auto& shelves = block.getShelves();
+        const auto& corridors = block.getCorridors();
+        const auto& curves = block.getCurves();        
         //Create a subgraph for each shelf in the blocks. These subgraphs will be connected through the corridors in a
         //second part of the algorithm
-        for(int j = 0; j < (int) shelves.size(); j++){
+        for(const auto &shelf : shelves){
             
-            vector<Cell> cells = shelves[j].getCells();
-            vector<vector<string> > cellPositions;      //It stores each vertex in its line and row at cell
-                                                        //respective shelf. You should verify if it is updated anytime
-														// the current shelf changes
-            vector<Corridor> adjacentCorridors = getAdjacentCorridors(corridors, shelves[j]);
-            
-			//The width and length of each cell is relevant to define cells coordinates 
-            double cellWidth = shelves[j].getCellWidth();
-            double cellLenght = shelves[j].getCellLength();
-            int numRows = shelves[j].getNumRows();
-            int numColumns = shelves[j].getNumColumns();
-			
-            cellPositions.resize(shelves[j].getNumRows()+1);
+            const auto& cells { shelf.getCells() };
+            const auto adjacentCorridors { getAdjacentCorridors(corridors, shelf) };
+            //The width and length of each cell is relevant to define cells coordinates 
+            double cellWidth = shelf.getCellWidth();
+            double cellLenght = shelf.getCellLength();
+            int numRows = shelf.getNumRows();
+            int numColumns = shelf.getNumColumns();
+
+
+             //It stores each vertex in its line and row at cell respective shelf. You should verify if it is 
+             // updated anytime the current shelf changes
+            vector<vector<string> > cellPositions;     
+            cellPositions.resize(shelf.getNumRows()+1);
             for(int k=1; k < (int) numRows+1; k++)
                 cellPositions[k].resize(numColumns+1);
 
@@ -107,7 +107,7 @@ void WarehouseToGraphConverter::generateGraph(){
                 }
             }
 		
-            connectShelvesToCorridor(shelves[j], adjacentCorridors,cellPositions, numRows, numColumns, arcs);
+            connectShelvesToCorridor(shelf, adjacentCorridors,cellPositions, numRows, numColumns, arcs);
         }
 	
         //This will allow to create arcs in the interior of corridors
