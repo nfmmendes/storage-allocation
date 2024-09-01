@@ -52,9 +52,8 @@ DistanceMatrix<T>& DistanceMatrix<T>::buildMatrix(map<pair<T, T>, double>& dista
 {
     set<T> keys;
 
-    for (auto& mapPair : distancesPairs) {
-        keys.insert(mapPair.first.first);
-        keys.insert(mapPair.first.second);
+    for (const auto& [extremities, distance] : distancesPairs) {
+        keys.insert({extremities.first, extremities.second});
     }
 
     T aux;
