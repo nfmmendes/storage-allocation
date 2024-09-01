@@ -74,7 +74,7 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
 
 	map<pair<Vertex,Vertex> , double> distancePairs; 
 
-    for(auto i= 0; i<sourceVertexes.size(); i++){
+    for(const Vertex& outerVertex : sourceVertexes){
         
         // Create a priority queue to store vertices that 
         // are being preprocessed. This is weird syntax in C++. 
@@ -88,7 +88,7 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
     
         // Insert source itself in priority queue and initialize 
         // its distance as 0. 
-        int src = indexVertex[(Vertex)sourceVertexes[i]]; 
+        int src = indexVertex[outerVertex]; 
         pq.push(make_pair(0, src )); 
         dist[src] = 0; 
     
@@ -111,8 +111,8 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
 		
 			
             // Get the indexes of the adjacent vertexes
-            for(auto j= 0; j<incidentArcs.size(); j++)
-                adj.push_back(make_pair( indexVertex[incidentArcs[j].getEndVertex()] , incidentArcs[j].getValue()  ) );
+            for(const auto& arc : incidentArcs)
+                adj.push_back(make_pair( indexVertex[arc.getEndVertex()] , arc.getValue()));
 
 
             // Get vertex label and weight of current adjacent of u. 
@@ -126,9 +126,8 @@ DistanceMatrix<Vertex> &DijkstraDistanceMatrixCalculator< Graph,Vertex>::calcula
             } 
         }
 		
-		for(auto j=0;j<sourceVertexes.size();j++){
-			distancePairs[make_pair(sourceVertexes[i], sourceVertexes[j])] = dist[indexVertex[sourceVertexes[j] ]]; 
-		}	
+        for(auto &innerVertex : sourceVertexes)
+			distancePairs[make_pair(outerVertex, innerVertex)] = dist[indexVertex[innerVertex]]; 
     }
 		
 	return distanceMatrix.buildMatrix(distancePairs); 
