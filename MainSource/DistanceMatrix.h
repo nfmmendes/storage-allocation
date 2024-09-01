@@ -26,18 +26,18 @@ private:
 
 public:
     DistanceMatrix() {}
-    DistanceMatrix(DistanceMatrix<T>& other);
+    DistanceMatrix(const DistanceMatrix<T>& other);
     DistanceMatrix(map<pair<T, T>, double>& distances);
     DistanceMatrix<T>& buildMatrix(map<pair<T, T>, double>& distances);
     const vector<T>& getKeys() const;
     vector<vector<double> > getDistances() const;
     map<T, int> getElementsMap() const;
     double getDistance(const T& first, const T& second) const;
-    void setRow(vector<double>& d, T&);
-    void setColumn(vector<double>& d, T&);
-    void setRowOnIndex(vector<double>& d, int);
-    void setColumnOnIndex(vector<double>& d, int);
-    DistanceMatrix<T>& operator=(DistanceMatrix<T>& other);
+    void setRow(const vector<double>& d, T&);
+    void setColumn(const vector<double>& d, T&);
+    void setRowOnIndex(const vector<double>& d, int);
+    void setColumnOnIndex(const vector<double>& d, int);
+    DistanceMatrix<T>& operator=(const DistanceMatrix<T>& other);
     void print();
 };
 
@@ -80,7 +80,7 @@ DistanceMatrix<T>& DistanceMatrix<T>::buildMatrix(map<pair<T, T>, double>& dista
 }
 
 template <class T>
-DistanceMatrix<T>::DistanceMatrix(DistanceMatrix<T>& other)
+DistanceMatrix<T>::DistanceMatrix(const DistanceMatrix<T>& other)
 {
     copy(begin(other.orderedKeys), end(other.orderedKeys), back_inserter(orderedKeys));
 
@@ -94,7 +94,7 @@ DistanceMatrix<T>::DistanceMatrix(DistanceMatrix<T>& other)
 }
 
 template <class T>
-DistanceMatrix<T>& DistanceMatrix<T>::operator=(DistanceMatrix<T>& other)
+DistanceMatrix<T>& DistanceMatrix<T>::operator=(const DistanceMatrix<T>& other)
 {
     this->orderedKeys.clear();
     copy(begin(other.orderedKeys), end(other.orderedKeys), back_inserter(orderedKeys));
@@ -139,7 +139,7 @@ double DistanceMatrix<T>::getDistance(const T& first, const T& second) const
 }
 
 template <class T>
-void DistanceMatrix<T>::setRow(vector<double>& d, T& elem)
+void DistanceMatrix<T>::setRow(const vector<double>& d, T& elem)
 {
     auto itFirst = keyIndex.find(elem);
     if(itFirst == orderedKeys.end())
@@ -152,7 +152,7 @@ void DistanceMatrix<T>::setRow(vector<double>& d, T& elem)
 }
 
 template <class T>
-void DistanceMatrix<T>::setColumn(vector<double>& d, T& elem)
+void DistanceMatrix<T>::setColumn(const vector<double>& d, T& elem)
 {
     auto itFirst = keyIndex.find(elem);
     if(itFirst == orderedKeys.end())
@@ -165,7 +165,7 @@ void DistanceMatrix<T>::setColumn(vector<double>& d, T& elem)
 }
 
 template <class T>
-void DistanceMatrix<T>::setRowOnIndex(vector<double>& d, int index)
+void DistanceMatrix<T>::setRowOnIndex(const vector<double>& d, int index)
 {
     int maxAdvance = min(orderedKeys.size(), distances.size());
     for (int i = 0; i < maxAdvance; i++)
@@ -173,7 +173,7 @@ void DistanceMatrix<T>::setRowOnIndex(vector<double>& d, int index)
 }
 
 template <class T>
-void DistanceMatrix<T>::setColumnOnIndex(vector<double>& d, int index)
+void DistanceMatrix<T>::setColumnOnIndex(const vector<double>& d, int index)
 {
     int maxAdvance = min(orderedKeys.size(), distances.size());
     for (int i = 0; i < maxAdvance; i++)
