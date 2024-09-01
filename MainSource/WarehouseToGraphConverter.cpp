@@ -74,7 +74,7 @@ void WarehouseToGraphConverter::generateGraph(){
         for(const auto &shelf : shelves){
             
             const auto& cells { shelf.getCells() };
-            const auto adjacentCorridors { getAdjacentCorridors(corridors, shelf) };
+            const auto& adjacentCorridors { getAdjacentCorridors(corridors, shelf) };
             //The width and length of each cell is relevant to define cells coordinates 
             double cellWidth = shelf.getCellWidth();
             double cellLenght = shelf.getCellLength();
@@ -111,11 +111,11 @@ void WarehouseToGraphConverter::generateGraph(){
         }
 	
         //This will allow to create arcs in the interior of corridors
-        for(int j = 0; j<(int)curves.size(); j++)
-            splitCorridorByCurves(curves[j], curvesByCorridor);
+        for(const auto& curve : curves)
+            splitCorridorByCurves(curve, curvesByCorridor);
 	
-        for(int j=0; j< (int)corridors.size(); j++)
-            createArcsOnCorridors(corridors[j],arcs);
+        for(const auto& corridor : corridors)
+            createArcsOnCorridors(corridor,arcs);
         connectCorridorsByCurves(curves,arcs);
     }
 	
