@@ -618,29 +618,31 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
     bool left, right, up, down=false;
     left = right = up = down;	
     
-    pair<double,double> shelfCoords = shelf.getBottomLeftCoords();
+    auto& shelfCoords { shelf.getBottomLeftCoords() };
     
     //This first if looks for the closest corridors in vertical direction, if the shelf is also in this same position
     //If numColumns == numRows the two ifs will be executed
     if(numColumns <= numLines){
-        for(int i=0;i<(int)corridors.size();i++){
-            if(corridors[i].getDirection() ==  VERTICAL && doCorridorTranverse(corridors[i], shelf)){
-                double xCoordCorridor = corridors[i].getBeginCoords().first;
-				
-                //If the corridor has a lower x coordinate so it is in the shelf left
-                if(xCoordCorridor - shelfCoords.first < -1*MIN_DIFF  && shelfCoords.first - xCoordCorridor < minDistanceLeft){
-                    minDistanceLeft = shelfCoords.first - xCoordCorridor;
-                    closestAtLeft = corridors[i];
-                    left = true;
-                }else if(xCoordCorridor - shelfCoords.first > MIN_DIFF && xCoordCorridor - shelfCoords.first  < minDistanceRight){
-                    minDistanceRight = xCoordCorridor - shelfCoords.first ;
-                    closestAtRight = corridors[i];
-                    right = true;
-                }else if(fabs(xCoordCorridor - shelfCoords.first) > MIN_DIFF){
-                 //   closestAtLeft = corridors[i];
-                 //   left = true;
-                }
+        for(const auto& corridor : corridors){
+            if(corridor.getDirection() !=  VERTICAL || !doCorridorTranverse(corridor, shelf))
+                continue;
+            
+            double xCoordCorridor = corridor.getBeginCoords().first;
+            
+            //If the corridor has a lower x coordinate so it is in the shelf left
+            if(xCoordCorridor - shelfCoords.first < -1*MIN_DIFF  && shelfCoords.first - xCoordCorridor < minDistanceLeft){
+                minDistanceLeft = shelfCoords.first - xCoordCorridor;
+                closestAtLeft = corridor;
+                left = true;
+            }else if(xCoordCorridor - shelfCoords.first > MIN_DIFF && xCoordCorridor - shelfCoords.first  < minDistanceRight){
+                minDistanceRight = xCoordCorridor - shelfCoords.first ;
+                closestAtRight = corridor;
+                right = true;
+            }else if(fabs(xCoordCorridor - shelfCoords.first) > MIN_DIFF){
+                //   closestAtLeft = corridors[i];
+                //   left = true;
             }
+            
         }
     }
     
