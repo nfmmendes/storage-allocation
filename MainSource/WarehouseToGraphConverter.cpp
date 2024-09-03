@@ -658,22 +658,23 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
     //If numColumns == numRows the two ifs will be executed
     if(numLines <= numColumns){
         for(int i=0; i<(int)corridors.size();i++){
-            if(corridors[i].getDirection() == HORIZONTAL && doCorridorTranverse(corridors[i], shelf)){
-                double yCoordCorridor = corridors[i].getBeginCoords().second;
-                
-                //If the corridor has a lower x coordinate so it is in the shelf left
-                if(yCoordCorridor - shelfCoords.second < -1*MIN_DIFF  && shelfCoords.second - yCoordCorridor < minDistanceDown){
-                    minDistanceDown = shelfCoords.second - yCoordCorridor;
-                    closestBellow = corridors[i];
-                    down = true;
-                }else if(yCoordCorridor - shelfCoords.second > MIN_DIFF &&  yCoordCorridor - shelfCoords.second < minDistanceOver){
-                    minDistanceOver =  yCoordCorridor - shelfCoords.second;
-                    closestOver = corridors[i];
-                    up = true;
-                }else if(fabs(yCoordCorridor - shelfCoords.second) < MIN_DIFF){
-                  //  closestOver = corridors[i];
-                  //  down = true;
-                }
+            if(corridors[i].getDirection() != HORIZONTAL || !doCorridorTranverse(corridors[i], shelf))
+                continue;
+            
+            double yCoordCorridor = corridors[i].getBeginCoords().second;
+            
+            //If the corridor has a lower x coordinate so it is in the shelf left
+            if(yCoordCorridor - shelfCoords.second < -1*MIN_DIFF  && shelfCoords.second - yCoordCorridor < minDistanceDown){
+                minDistanceDown = shelfCoords.second - yCoordCorridor;
+                closestBellow = corridors[i];
+                down = true;
+            }else if(yCoordCorridor - shelfCoords.second > MIN_DIFF &&  yCoordCorridor - shelfCoords.second < minDistanceOver){
+                minDistanceOver =  yCoordCorridor - shelfCoords.second;
+                closestOver = corridors[i];
+                up = true;
+            }else if(fabs(yCoordCorridor - shelfCoords.second) < MIN_DIFF){
+                //  closestOver = corridors[i];
+                //  down = true;
             }
         }
     }
