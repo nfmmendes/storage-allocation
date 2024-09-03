@@ -337,9 +337,6 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::getInternalAndExternalCellsVerte
     return make_pair(vertexCell, cellOther);				
 }
 
-/**
- *  
- */
 pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(const Corridor *corridor, pair<double,double> coords, 
                                                                               string cellName, string position){
 
@@ -371,10 +368,6 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(co
     return make_pair(vertexCell, vertexCorridor); 
 }
 
-
-/**
- *
- **/
 void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corridor *&down,Corridor *& left,Corridor *&right,
 															const vector<Corridor>& adjacents,Shelf shelf){
 	
@@ -432,9 +425,6 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 	}
 }
 
-/**
- *
- */
 void WarehouseToGraphConverter::createArcsCellToCorridor(Vertex vertexCell, Vertex vertexCorridor,double value, set<Arc> &arcs){	
 	
 	Arc leaving("arc("+ vertexCell.getLabel() + ","+ vertexCorridor.getLabel() +")", value, vertexCell, vertexCorridor);
@@ -760,11 +750,6 @@ void WarehouseToGraphConverter::initializeCellFirstLevel(vector<Vertex> & vertex
 			cellPositions[row][column] = firstLevel.getLabel();
 }
 
-
-/**
- * 
- * 
- */
 void WarehouseToGraphConverter::connectExpeditionPoint(ExpeditionPoint &expeditionPoint, set<Arc> & arcs, map<string, Block> &blocksByName){
     Vertex closestVertex; 
 	 
@@ -806,10 +791,6 @@ void WarehouseToGraphConverter::connectExpeditionPoint(ExpeditionPoint &expediti
     
 }
 
-/**
- * 
- * 
- */
 void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & arcs, map<string, Block> &blocksByName){
     Vertex closestVertexA, closestVertexB; 
     double minDistanceA = 1e20;
@@ -884,23 +865,14 @@ void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & ar
 	}
 }
 
-/**
- * 
- */
 Graph & WarehouseToGraphConverter::getGraph(){
     return this->graph;
 }
 
-/**
- * 
- */
 Warehouse & WarehouseToGraphConverter::getWarehouse(){
     return this->warehouse;
 }
 
-/**
- * 
- */
 map<pair<Cell,int>, Vertex> WarehouseToGraphConverter::getVertexByCell(){
     return this->vertexByCell;
 }
