@@ -17,12 +17,7 @@ class Point {
         Point();
         Point(std::string label, double coordX=0, double coordY=0, double coordZ=0);
         Point(const Point &point);
-        void setCoordX(double value);
-        void setCoordY(double value);
-    
-        void setCoordZ(double value);
-        void setPoint(Point &point);
-        
+                
         double getCoordX() const;
         double getCoordY() const;
         double getCoordZ() const;
