@@ -698,13 +698,13 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
  *  a shelf and finish at the end (or after) of a shelf
  */
 bool WarehouseToGraphConverter::doCorridorTranverse(const Corridor &corridor,const Shelf &shelf){
-    int numLines = shelf.getNumRows();
-    int numColumns = shelf.getNumColumns();
-    pair<double,double> coordCorridor = corridor.getBeginCoords();
-    pair<double, double> shelfCoords = shelf.getBottomLeftCoords();
-    double len = corridor.getLength();
-	double shelfLen = numLines*shelf.getCellLength();
-	double shelfWidth = numLines*shelf.getCellWidth();
+    auto numLines { shelf.getNumRows() };
+    auto numColumns {shelf.getNumColumns() };
+    const auto& coordCorridor { corridor.getBeginCoords() };
+    const auto& shelfCoords { shelf.getBottomLeftCoords() };
+    auto len { corridor.getLength() };
+	auto shelfLen { numLines*shelf.getCellLength() };
+	auto shelfWidth { numLines*shelf.getCellWidth() };
     
     if(numColumns < numLines && corridor.getDirection() == VERTICAL){
 		if(corridor.getSense() == BOTTOM_UP || corridor.getSense()== BOTH)
@@ -722,8 +722,8 @@ bool WarehouseToGraphConverter::doCorridorTranverse(const Corridor &corridor,con
         if(corridor.getDirection() == VERTICAL)
             return coordCorridor.second <= shelfCoords.second && coordCorridor.second + len >= shelfCoords.second + shelfLen;
     }
+
     return false;
-    
 }
 
 /**
