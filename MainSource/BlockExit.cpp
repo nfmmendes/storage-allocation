@@ -32,16 +32,8 @@ string BlockExit::getBlockBName() const { return blockBName; }
 pair<double, double> BlockExit::getCoords() const { return make_pair(coordX, coordY); }
 
 
-
-void BlockExit::setId(long int value) { Id = value; }  //There is no Id value validation
-void BlockExit::setCoordX(double value) { coordX = value; }
-void BlockExit::setCoordY(double value) { coordY = value; }
-void BlockExit::setBlockAName(double value) { blockAName = value; }
-void BlockExit::setBlockBName(double value) { blockBName = value; }
-
 bool BlockExit::operator==(const BlockExit &other) const { return this->Id == other.Id; }
 bool BlockExit::operator!=(const BlockExit &other) const { return this->Id != other.Id; }
-
 bool BlockExit::operator<(const BlockExit & other) const { 
 		
 		if(this->Id > other.Id)

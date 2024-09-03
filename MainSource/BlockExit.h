@@ -76,37 +76,7 @@ class BlockExit{
          * @return The exit coordinates.
          */
         std::pair<double, double> getCoords() const;
-    
-        /**
-         * @brief Set the exit id.
-         * @param value The exit id.
-         */
-        void setId(long int value);
 
-        /**
-         * @brief Set the exit coordinate X.
-         * @param value The exit coordinate X.
-         */
-        void setCoordX(double value);
-
-        /**
-         * @brief Set the exit coordinate Y.
-         * @param value The exit coordinate Y.
-         */
-        void setCoordY(double value);
-
-        /**
-         * @brief Set the block A (origin) name.
-         * @param value The block A name. 
-         */
-        void setBlockAName(double value);
-
-        /**
-         * @brief Set the block B (destination) name.
-         * @param value The block B name.
-         */
-        void setBlockBName(double value);
-    
         /**
          * @brief Equal operator override.
          * @param other The right hand side object. 
