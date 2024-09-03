@@ -49,8 +49,8 @@ namespace QuickTSP{
             pair<Vertex, Vertex> createCellAndCorridorVertexes( const Corridor *corridor, pair<double,double> coords, string cellName, string position);
             void connectSingleCellToSingleCorridor(const Shelf &shelf, Corridor * corridor,set<Arc> &arcs, string cellName, string position,int row, int column);
             pair<Vertex, Vertex> getInternalAndExternalCellsVertexes(string cellNameA, string cellNameB);
-            void connectExpeditionPoint(ExpeditionPoint &expedition, set<Arc> &arcs, map<string, Block> &blocksByName);
-            void connectBlockExits(BlockExit &exit, set<Arc> & arcs, map<string, Block> &blocksByName);
+            void connectExpeditionPoint(const ExpeditionPoint &expedition, set<Arc> &arcs, map<string, Block> &blocksByName);
+            void connectBlockExits(const BlockExit &exit, set<Arc> & arcs, map<string, Block> &blocksByName);
 
         public:
             WarehouseToGraphConverter();

@@ -54,9 +54,9 @@ void WarehouseToGraphConverter::generateGraph(){
     set<Arc> arcs;                                      //Store the arcs of the resulting graph
     map<long int, vector<Curve> > curvesByCorridor;     //Stores all curves from or to a corridor
     
-    vector<Block> blocks = this->warehouse.getBlocks(); //Get the list of warehouse blocks  
+    const auto& blocks { this->warehouse.getBlocks() }; //Get the list of warehouse blocks  
+    const auto& expeditionPoints { this->warehouse.getExpeditionPoints() };
     map<string, Block> blocksByName;
-    vector<ExpeditionPoint> expeditionPoints = this->warehouse.getExpeditionPoints();
     
 	for(int i= 0; i<(int) blocks.size(); i++){
         blocksByName[blocks[i].getName()] = blocks[i];
@@ -148,7 +148,7 @@ void WarehouseToGraphConverter::generateGraph(){
  */
 void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string> > &cellPositions,set<Arc> &arcs){
     
-    int numLevels = cell.getLevels();
+    auto numLevels { cell.getLevels() };
     
     if(numLevels == 1){
 		#if DEBUG_LEVEL > 0
@@ -196,8 +196,8 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
  */
 void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,const vector<Corridor>& adjacentCorridor,
                                                        const StringMatrix &cellPositions, int numRows,int numColumns,set<Arc> &arcs ){
-    double cellWidth = shelf.getCellWidth();
-    double cellLength = shelf.getCellLength();
+    auto cellWidth { shelf.getCellWidth() };
+    auto cellLength { shelf.getCellLength() };
     
     Corridor *corridorUp= nullptr;
     Corridor *corridorDown= nullptr;
@@ -292,9 +292,10 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
 void WarehouseToGraphConverter::connectSingleCellToSingleCorridor(const Shelf &shelf,Corridor * corridor, set<Arc> &arcs, 
                                                                string cellName, string position,int row, int column){
 
-    double coordX=0, coordY=0; 
-    double cellWidth = shelf.getCellWidth();
-    double cellLength = shelf.getCellLength();
+    auto coordX { 0.0 };
+    auto coordY { 0.0 }; 
+    auto cellWidth { shelf.getCellWidth() } ;
+    auto cellLength { shelf.getCellLength() };
     
     if(position == "LEFT" || position == "RIGHT"){
         coordX = corridor->getBeginCoords().first;
@@ -304,9 +305,9 @@ void WarehouseToGraphConverter::connectSingleCellToSingleCorridor(const Shelf &s
         coordY = corridor->getBeginCoords().second; 
     }
                     
-    pair<Vertex,Vertex> extremes = createCellAndCorridorVertexes(corridor, make_pair(coordX, coordY), cellName, position);
-    double corridorCoordX = shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth;
-    double corridorCoordY = shelf.getBottomLeftCoords().second + cellLength*(row-1) + 0.5*cellLength;
+    const auto& extremes { createCellAndCorridorVertexes(corridor, make_pair(coordX, coordY), cellName, position) };
+    const auto corridorCoordX { shelf.getBottomLeftCoords().first+ cellWidth*(column-1) + 0.5*cellWidth };
+    const auto corridorCoordY { shelf.getBottomLeftCoords().second + cellLength*(row-1) + 0.5*cellLength };
 
     if(position == "LEFT" || position == "RIGHT"){
         createArcsCellToCorridor(extremes.first, extremes.second, fabs(corridorCoordX-coordX), arcs);
@@ -340,8 +341,8 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::getInternalAndExternalCellsVerte
 pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(const Corridor *corridor, pair<double,double> coords, 
                                                                               string cellName, string position){
 
-    double corridorCoordX = corridor->getBeginCoords().first;
-    double corridorCoordY = corridor->getBeginCoords().second;
+    const auto corridorCoordX { corridor->getBeginCoords().first };
+    const auto corridorCoordY { corridor->getBeginCoords().second };
 
     bool horizontal = (position == "LEFT" || position == "RIGHT");
     Point corridorPoint("", ( horizontal ? corridorCoordX :  coords.first) , (horizontal ?  coords.second : corridorCoordY ),0);
@@ -373,16 +374,16 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 	
 	up = down = right = left = NULL;
 	
-	double shelfWidth = shelf.getCellWidth()*shelf.getNumColumns();
-	double shelfLength = shelf.getCellLength()*shelf.getNumRows(); 
+	auto shelfWidth { shelf.getCellWidth()*shelf.getNumColumns() };
+	auto shelfLength { shelf.getCellLength()*shelf.getNumRows() }; 
 	
 	double extremeLeft = -1e100, extremeRight = 1e100, extremeUp = 1e100, extremeDown = -1e100; 
 
 	if(up == down){ //Just to remove a warning 
 		//Search and identify the adjacent corridors
 		//Get the most to the right left-corridor (so the closest corridor on left side)
-		for(size_t i=0;i< adjacents.size();i++){
-			double xValue = adjacents[i].getBeginCoords().first; 
+		for(auto i=0;i< adjacents.size();i++){
+			auto xValue { adjacents[i].getBeginCoords().first }; 
 			if(adjacents[i].getDirection() == VERTICAL && xValue < shelf.getBottomLeftCoordX() && xValue > extremeLeft){
 				left =  new Corridor(adjacents[i]);
 				extremeLeft = xValue; 
@@ -390,8 +391,8 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 		}
 
 		//Get the most to the left right-corridor (so the closest corridor on right side)
-		for(size_t i=0;i< adjacents.size();i++){
-			double xValue = adjacents[i].getBeginCoords().first; 
+		for(auto i=0;i< adjacents.size();i++){
+			auto xValue { adjacents[i].getBeginCoords().first }; 
 			if(adjacents[i].getDirection() == VERTICAL && xValue > shelf.getBottomLeftCoordX() + shelfWidth && xValue < extremeRight){
 				right =  new Corridor(adjacents[i]);
 				extremeRight = xValue; 
@@ -488,8 +489,8 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
 		vertexByCode[second.getLabel()] = second;
 		
 		
-		double distance = sqrt(pow(processedPoints[k].getCoordX()-processedPoints[k-1].getCoordX(),2)+
-							   pow(processedPoints[k].getCoordY()-processedPoints[k-1].getCoordY(),2));
+		auto distance = sqrt(pow(processedPoints[k].getCoordX()-processedPoints[k-1].getCoordX(),2)+
+							 pow(processedPoints[k].getCoordY()-processedPoints[k-1].getCoordY(),2));
 		
 		arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
 		
@@ -752,7 +753,7 @@ void WarehouseToGraphConverter::initializeCellFirstLevel(vector<Vertex> & vertex
 			cellPositions[row][column] = firstLevel.getLabel();
 }
 
-void WarehouseToGraphConverter::connectExpeditionPoint(ExpeditionPoint &expeditionPoint, set<Arc> & arcs, map<string, Block> &blocksByName){
+void WarehouseToGraphConverter::connectExpeditionPoint(const ExpeditionPoint &expeditionPoint, set<Arc> & arcs, map<string, Block> &blocksByName){
     Vertex closestVertex; 
 	 
     double minDistance = 1e20;
@@ -793,7 +794,7 @@ void WarehouseToGraphConverter::connectExpeditionPoint(ExpeditionPoint &expediti
     
 }
 
-void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & arcs, map<string, Block> &blocksByName){
+void WarehouseToGraphConverter::connectBlockExits(const BlockExit &exit, set<Arc> & arcs, map<string, Block> &blocksByName){
     Vertex closestVertexA, closestVertexB; 
     double minDistanceA = 1e20;
 	double minDistanceB = 1e20;
@@ -808,7 +809,7 @@ void WarehouseToGraphConverter::connectBlockExits(BlockExit &exit, set<Arc> & ar
     Block blockA = blocksByName[exit.getBlockAName()];
     Block blockB = blocksByName[exit.getBlockBName()];
 
-    pair<double,double> reference = exit.getCoords(); 
+    const auto reference { exit.getCoords() }; 
     Point referencePoint("blockExit_"+to_string(exit.getId()), reference.first, reference.second, 0); 
     
     auto twoPointsDistance = [](const Point& a, const pair<double, double>& b){
