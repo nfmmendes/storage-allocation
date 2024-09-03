@@ -449,12 +449,12 @@ void WarehouseToGraphConverter::createArcsCellToCorridor(Vertex vertexCell, Vert
  */
 void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, set<Arc> &arcs){
 	
-    for(int i=0; i< (int)curves.size();i++){
+    for(auto& curve : curves){
         // Todo: test if the points exist as vertices
-        Vertex begin = vertexByPoint[curves[i].getStartingPoint()];
-        Vertex end = vertexByPoint[curves[i].getEndingPoint()];
+        Vertex begin = vertexByPoint[curve.getStartingPoint()];
+        Vertex end = vertexByPoint[curve.getEndingPoint()];
 		
-        double distance = curves[i].getStartingPoint().getDistance(curves[i].getEndingPoint());
+        double distance = curve.getStartingPoint().getDistance(curve.getEndingPoint());
         arcs.insert(Arc("arc_"+begin.getLabel()+ "_"+end.getLabel(),distance,begin, end));
     }
 }
