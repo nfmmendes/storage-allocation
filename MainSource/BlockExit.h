@@ -29,7 +29,7 @@ class BlockExit{
         double getCoordY() const;
         std::string getBlockAName() const;
         std::string getBlockBName() const;
-        std::pair<double, double> getCoords();
+        std::pair<double, double> getCoords() const;
     
         void setId(long int value);
         void setCoordX(double value);

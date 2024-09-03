@@ -38,7 +38,7 @@ double BlockExit::getCoordX() const {return coordX; }
 double BlockExit::getCoordY() const {return coordY; }
 string BlockExit::getBlockAName() const { return blockAName; }
 string BlockExit::getBlockBName() const { return blockBName; }
-pair<double, double> BlockExit::getCoords(){ return make_pair(coordX, coordY); }
+pair<double, double> BlockExit::getCoords() const { return make_pair(coordX, coordY); }
 
 
 
