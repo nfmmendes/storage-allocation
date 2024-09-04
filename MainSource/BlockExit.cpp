@@ -16,7 +16,7 @@ BlockExit::BlockExit(const BlockExit &other){
     this->blockBName = other.blockBName;
 }
  
-BlockExit::BlockExit(long int id, double coordX, double coordY, string blockA, string blockB){
+BlockExit::BlockExit(unsigned long int id, double coordX, double coordY, string blockA, string blockB){
     this->Id = id;
     this->coordX = coordX;
     this->coordY = coordY;
@@ -24,7 +24,7 @@ BlockExit::BlockExit(long int id, double coordX, double coordY, string blockA, s
     this->blockBName = blockB;
 }
 
-long int BlockExit::getId() const { return Id; }
+unsigned long int BlockExit::getId() const { return Id; }
 double BlockExit::getCoordX() const {return coordX; }
 double BlockExit::getCoordY() const {return coordY; }
 string BlockExit::getBlockAName() const { return blockAName; }

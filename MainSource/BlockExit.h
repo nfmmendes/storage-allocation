@@ -15,7 +15,7 @@ using std::pair;
 class BlockExit{
     
     private:
-        long int Id { 0 };
+        unsigned long int Id { 0 };
         double coordX { 0.0 };					    ///< X-coordinate of central exit point 
         double coordY { 0.0 };					    ///< Y-coordinate of central exit point  
         string blockAName { "" };   				///< First block of exit 
@@ -40,13 +40,13 @@ class BlockExit{
          * @param blockA The exit block A (origin) name.
          * @param blockB The exit block B (destination) name.
          */
-        BlockExit(long int id, double coordX, double coordY, std::string blockA, std::string blockB="");
+        BlockExit(unsigned long int id, double coordX, double coordY, std::string blockA, std::string blockB="");
         
         /**
          * @brief Get the exit id.
          * @return The exit id. 
          */
-        long int getId() const;
+        unsigned long int getId() const;
 
         /**
          * @brief Get the exit coordinate x.
