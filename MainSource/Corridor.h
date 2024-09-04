@@ -19,8 +19,8 @@ const string RIGHT_TO_LEFT = "RIGHT_TO_LEFT";
 const string BOTH = "BOTH";
 
 /**
- *     Class to represent corridors. This class is used to describe only retilinear corridors
- *     and not transversal ones 
+ * @brief Class <c> Corridor </c> represents a warehouse corridor. This class is used to describe only 
+ *        to rectilinear corridors that are parallel to the block walls. 
  */
 class Corridor{
     
@@ -33,23 +33,108 @@ class Corridor{
         double length;				  ///< Length of corridor 
     
     public:
+        /**
+         * @brief Constructor.
+         */
         Corridor();
+
+        /**
+         * @brief Copy constructor.
+         * @param other The object to be copied. 
+         */
         Corridor(const Corridor & other);
-        Corridor(long int Id, string blockName, string dir, string sense, pair<double,double> begin, double length);
+
+        /**
+         * @brief Constructor.
+         * @param Id The corridor id. 
+         * @param blockName The corridor block name. 
+         * @param dir The corridor direction: "HORIZONTAL" or "VERTICAL"
+         * @param sense The corridors sense: "UP_DOWN", "BOTTOM_UP", "LEFT_TO_RIGHT", "RIGHT_TO_LEFT", "BOTH"
+         * @param begin The corridor begin coordinates. 
+         * @param length The corridor length.
+         */
+        Corridor(long int Id, string blockName, string dir, string sense, pair<double,double> begin, 
+                double length);
         
+        /**
+         * @brief Get the corridor direction. 
+         * @return The corridor direction.
+         */
         string getDirection() const;
+
+        /**
+         * @brief Get the corridor sense. 
+         * @return The corridor sense. 
+         */
         string getSense()const; 
+
+        /**
+         * @brief Get the corridor id.
+         * @return The corridor id. 
+         */
         long int getId() const;
+
+        /**
+         * @brief Get the corridor block id. 
+         * @return The corridor block id. 
+         */
         string getBlockId();
+
+        /**
+         * @brief Get the corridor begin coordinates. 
+         * @return The corridor begin coordinates. 
+         */
         pair<double, double> getBeginCoords() const;
 		
-        double getLength()const;
+        /**
+         * @brief Get the corridor length.
+         * @return The corridor length
+         */
+        double getLength() const;
 
-		pair<double, double> getEndCoords() const;
+        /**
+		 * @brief Get the corridor end coordinates. 
+		 * @return The corridor end coordinates. 
+		 */
+        pair<double, double> getEndCoords() const;
+
+        /**
+         * @brief Sort the corridor internal points.
+         * @param points The corridor internal points. 
+         */
         void orderCorridorPoints(vector<Point> & points)const;
+
+        /**
+         * @brief Assignment operator override. 
+         * @param other The right hand side object.
+         * @return A reference to the modified left hand side object. 
+         */
         Corridor & operator=(const Corridor &other);
-		bool operator==(const Corridor &other)const;
-		bool operator!=(const Corridor &other)const;
-		bool operator<(const Corridor &other)const;
+
+        /**
+		 * @brief Equality operator override. 
+		 * @param other The right hand side object.
+		 * @return True if the objects are considered equals. False otherwise.
+		 */
+        bool operator==(const Corridor &other)const;
+		
+        /**
+         * @brief Inequality operator override. 
+		 * @param other The right hand side object.
+		 * @return True if the objects are considered inequals. False otherwise.
+		 */
+        bool operator!=(const Corridor &other)const;
+
+        /**
+		 * @brief Less than operator override. 
+		 * @param other The right hand side object.
+		 * @return True if the left hand side object is considered lower than the right
+         *         hand side object. False otherwise. 
+		 */
+        bool operator<(const Corridor &other)const;
+
+        /**
+		 * @brief Print corridor information.
+         */
 		void printCorridorInformation();
 };
