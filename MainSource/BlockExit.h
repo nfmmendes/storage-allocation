@@ -15,11 +15,11 @@ using std::pair;
 class BlockExit{
     
     private:
-        long int Id;
-        double coordX;					///< X-coordinate of central exit point 
-        double coordY;					///< Y-coordinate of central exit point  
-        string blockAName; 				///< First block of exit 
-        string blockBName;				///< Second block of exit. The second block can be empty if the exit goes out of warehouse
+        long int Id { 0 };
+        double coordX { 0.0 };					    ///< X-coordinate of central exit point 
+        double coordY { 0.0 };					    ///< Y-coordinate of central exit point  
+        string blockAName { "" };   				///< First block of exit 
+        string blockBName { "" };	    			///< Second block of exit. The second block can be empty if the exit goes out of warehouse
     public:
         /**
          * @brief 
