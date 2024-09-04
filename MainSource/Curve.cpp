@@ -35,24 +35,6 @@ Curve::Curve(long int id, long int startingCorridor, long int endingCorridor, Po
     this->endingPoint = endingPoint;
 }
 
-/**
- * 
- */
-void Curve::setStartingCorridorId(long int &startId){
-    if(startId >= 0) this->startingCorridorId = startId;
-}
-
-/**
- * 
- */
-void Curve::setEndingCorridorId(long int &endId){
-    if(endId >= 0) this->endingCorridorId = endId;
-}
-
-void Curve::setStartingPoint(Point &point){ this->startingPoint = point; }
-void Curve::setEndingPoint(Point &point){ this->endingPoint = point; }
-void Curve::setId(long int id){ this->Id = id;}
-
 long int Curve::getStartCorridor() const { return startingCorridorId; }
 long int Curve::getEndCorridor() const { return endingCorridorId; }
 Point Curve::getStartingPoint() const { return startingPoint;}

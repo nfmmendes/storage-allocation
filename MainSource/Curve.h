@@ -18,11 +18,6 @@ class Curve{
         Curve();
         Curve(const Curve & other);
         Curve(long int id, long int startingCorridor, long int endingCorridor, Point startingPoint, Point endingPoint);
-        void setStartingCorridorId(long int &startId);
-        void setEndingCorridorId(long int &endId);
-        void setStartingPoint(Point &point);
-        void setEndingPoint(Point &point);
-        void setId(long int id);
     
         long int getStartCorridor() const;
         long int getEndCorridor() const;
@@ -33,7 +28,7 @@ class Curve{
 		bool operator<(const Curve &other) const;
 		bool operator==(const Curve &other) const; 
 		bool operator!=(const Curve &other) const; 
-		
+
 		void printCurveInformation();
 };
 
