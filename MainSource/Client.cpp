@@ -27,12 +27,8 @@ Client::Client(const Client &other){
     this->coordinates = other.coordinates;
 }
 
-void Client::setName(string value){ this->name = value;}
-void Client::setType(string value){ this->type = value; }
-void Client::setCoordinates(pair<double,double> value){ this->coordinates =value; }
-
 string Client::getName(){ return name;}
-string Client::setType() { return type;}
+string Client::getType() { return type;}
 pair<double, double> Client::getCoordinates(){ return coordinates;}
 
 
