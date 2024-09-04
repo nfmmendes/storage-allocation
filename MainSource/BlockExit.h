@@ -5,6 +5,7 @@
 #include<string>
 #include<utility>
 using std::string;
+using std::pair;
 
 /** 
  * @brief Class <c> BlockExit </c> describes a block exit. These exits can connect one warehouse
@@ -63,19 +64,19 @@ class BlockExit{
          * @brief Get the block A (origin) name.
          * @return The block A name. 
          */
-        std::string getBlockAName() const;
+        string getBlockAName() const;
 
         /**
          * @brief Get the block B (destination) name.
          * @return The block B name. 
          */
-        std::string getBlockBName() const;
+        string getBlockBName() const;
 
         /**
          * @brief Get the exit coordinates. 
          * @return The exit coordinates.
          */
-        std::pair<double, double> getCoords() const;
+        pair<double, double> getCoords() const;
 
         /**
          * @brief Equal operator override.
