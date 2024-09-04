@@ -5,6 +5,8 @@
 #include<vector>
 #include<map>
 #include<utility>
+using std::pair;
+using std::string;
 
 
 /**
@@ -15,9 +17,9 @@
 class Client{
     
     private:
-        std::string name;						///< Client name (or address) 
-        std::string type;						///< Client type 
-        std::pair<double,double> coordinates;	///< Coordinates for product deliveries (optional) 
+        string name;						///< Client name (or address) 
+        string type;						///< Client type 
+        pair<double,double> coordinates;	///< Coordinates for product deliveries (optional) 
     
     public:
         /**
@@ -31,7 +33,7 @@ class Client{
          * @param type The client type.
          * @param coordinates The client location coordinates. 
          */
-        Client(std::string name, std::string type,  std::pair<double, double> coordinates );
+        Client(string name, string type,  std::pair<double, double> coordinates );
 
         /**
          * @brief Copy constructor.
@@ -43,19 +45,19 @@ class Client{
          * @brief Get the client name.
          * @return The client name.
          */
-        std::string getName();
+        string getName();
 
         /**
          * @brief Get the client type.
          * @return The client type.
          */
-        std::string getType();
+        string getType();
 
         /**
          * @brief Get the client location coordinates.
          * @return The client location coordinates. 
          */
-        std::pair<double, double> getCoordinates();
+        pair<double, double> getCoordinates();
     
         /**
          * @brief Assignment operator overide. 
