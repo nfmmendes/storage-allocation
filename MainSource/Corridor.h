@@ -53,20 +53,20 @@ class Corridor{
          * @param begin The corridor begin coordinates. 
          * @param length The corridor length.
          */
-        Corridor(long int Id, string blockName, string dir, string sense, pair<double,double> begin, 
-                double length);
+        Corridor(long int Id, const string& blockName, const string& dir, const string& sense,
+                 const pair<double,double>& begin, double length);
         
         /**
          * @brief Get the corridor direction. 
          * @return The corridor direction.
          */
-        string getDirection() const;
+        const string& getDirection() const;
 
         /**
          * @brief Get the corridor sense. 
          * @return The corridor sense. 
          */
-        string getSense()const; 
+        const string& getSense()const; 
 
         /**
          * @brief Get the corridor id.
@@ -78,13 +78,13 @@ class Corridor{
          * @brief Get the corridor block id. 
          * @return The corridor block id. 
          */
-        string getBlockId();
+        const string& getBlockId() const;
 
         /**
          * @brief Get the corridor begin coordinates. 
          * @return The corridor begin coordinates. 
          */
-        pair<double, double> getBeginCoords() const;
+        const pair<double, double>& getBeginCoords() const;
 		
         /**
          * @brief Get the corridor length.
@@ -96,20 +96,20 @@ class Corridor{
 		 * @brief Get the corridor end coordinates. 
 		 * @return The corridor end coordinates. 
 		 */
-        pair<double, double> getEndCoords() const;
+        const pair<double, double>& getEndCoords() const;
 
         /**
          * @brief Sort the corridor internal points.
          * @param points The corridor internal points. 
          */
-        void orderCorridorPoints(vector<Point> & points)const;
+        void orderCorridorPoints(vector<Point> & points) const;
 
         /**
          * @brief Assignment operator override. 
          * @param other The right hand side object.
          * @return A reference to the modified left hand side object. 
          */
-        Corridor & operator=(const Corridor &other);
+        Corridor& operator=(const Corridor &other);
 
         /**
 		 * @brief Equality operator override. 
@@ -136,5 +136,5 @@ class Corridor{
         /**
 		 * @brief Print corridor information.
          */
-		void printCorridorInformation();
+		void printCorridorInformation() const;
 };

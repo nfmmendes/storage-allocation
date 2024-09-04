@@ -4,7 +4,10 @@
 #include<vector>
 #include<utility>
 #include<algorithm>
-using namespace std;
+using std::cout;
+using std::endl;
+using std::sort;
+using std::reverse;
 
 
 Corridor::Corridor(){}
@@ -20,7 +23,8 @@ Corridor::Corridor(const Corridor & other){
 }
 
 
-Corridor::Corridor(long int Id, string blockName, string dir, string sense, pair<double,double> begin, double length){
+Corridor::Corridor(long int Id, const string& blockName, const string& dir, const string& sense, 
+                   const pair<double,double>& begin, double length){
     this->Id = Id;
     this->blockName = blockName;
     this->direction = dir;
@@ -29,19 +33,16 @@ Corridor::Corridor(long int Id, string blockName, string dir, string sense, pair
     this->length = length;
 }
 
-std::string Corridor::getDirection() const{ return direction; }
-std::string Corridor::getSense()const  { return sense; } 
+const string& Corridor::getDirection() const{ return direction; }
+const string& Corridor::getSense()const  { return sense; } 
 long int Corridor::getId() const { return Id; }
-std::string Corridor::getBlockId() {return blockName; }
-std::pair<double, double> Corridor::getBeginCoords() const { return begin; }
+const string& Corridor::getBlockId() const { return blockName; }
+const std::pair<double, double>& Corridor::getBeginCoords() const { return begin; }
 
 
 double Corridor::getLength()const { return length; }
 
-/**
- *
- */
-std::pair<double, double> Corridor::getEndCoords() const { 
+const pair<double, double>& Corridor::getEndCoords() const { 
 
     if(direction == HORIZONTAL){
         if( sense == LEFT_TO_RIGHT || sense == BOTH)
@@ -56,27 +57,20 @@ std::pair<double, double> Corridor::getEndCoords() const {
     }
 }
 
-
-/**
- *
- */
-void Corridor::orderCorridorPoints(std::vector<Point> & points)const{
+void Corridor::orderCorridorPoints(vector<Point>& points) const {
     
     if(this->getDirection() ==  VERTICAL){
-        std::sort(points.begin(), points.end(), Point::isMinorY);
+        sort(points.begin(), points.end(), Point::isMinorY);
         if(this->getSense() == UP_DOWN)
-            std::reverse(points.begin(), points.end());
+            reverse(points.begin(), points.end());
         
     }else if(this->getDirection() == HORIZONTAL){
-        std::sort(points.begin(), points.end(), Point::isMinorX);
+        sort(points.begin(), points.end(), Point::isMinorX);
         if(this->getSense() == RIGHT_TO_LEFT)
-            std::reverse(points.begin(), points.end());
+            reverse(points.begin(), points.end());
     }
 }
 
-/**
- *
- */
 Corridor & Corridor::operator=(const Corridor &other){
     this->Id = other.Id;
     this->blockName = other.blockName;
@@ -88,25 +82,15 @@ Corridor & Corridor::operator=(const Corridor &other){
     return *this;
 }
 
-/**
- *
- */
 bool Corridor::operator==(const Corridor &other)const{
     return this->Id == other.Id && this->blockName == other.blockName && direction == other.direction && this->sense == other.sense &&
             this->begin == other.begin && this->length == other.length; 
 }
 
-/**
- *
- */
 bool Corridor::operator!=(const Corridor &other)const{
     return !(*this == other); 
 }
 
-
-/**
- *
- */
 bool Corridor::operator<(const Corridor &other)const{
     
     if(this->begin > other.begin)
@@ -146,7 +130,7 @@ bool Corridor::operator<(const Corridor &other)const{
 }
 
 
-void Corridor::printCorridorInformation(){
+void Corridor::printCorridorInformation() const{
     cout<<"___________________________________\n";
     cout<<"Corridor :\t"<<this->Id<<endl;
     cout<<"Block name :\t"<<this->blockName<<"\tDirection: \t"<<this->direction<<"\tSense: \t"<<this->sense<<endl;
