@@ -8,6 +8,7 @@ using std::cout;
 using std::endl;
 using std::sort;
 using std::reverse;
+using std::make_pair;
 
 
 Corridor::Corridor(){}
@@ -37,7 +38,7 @@ const string& Corridor::getDirection() const{ return direction; }
 const string& Corridor::getSense()const  { return sense; } 
 long int Corridor::getId() const { return Id; }
 const string& Corridor::getBlockId() const { return blockName; }
-const std::pair<double, double>& Corridor::getBeginCoords() const { return begin; }
+const pair<double, double>& Corridor::getBeginCoords() const { return begin; }
 
 
 double Corridor::getLength()const { return length; }
@@ -46,14 +47,14 @@ const pair<double, double>& Corridor::getEndCoords() const {
 
     if(direction == HORIZONTAL){
         if( sense == LEFT_TO_RIGHT || sense == BOTH)
-            return std::make_pair(begin.first + length, begin.second);
+            return make_pair(begin.first + length, begin.second);
         else 
-            return std::make_pair(begin.first - length, (double)begin.second); 				
+            return make_pair(begin.first - length, (double)begin.second); 				
     }else {
         if(sense == UP_DOWN)
-            return std::make_pair(begin.first, begin.second - length); 
+            return make_pair(begin.first, begin.second - length); 
         else 
-            return std::make_pair(begin.first, begin.second + length); 
+            return make_pair(begin.first, begin.second + length); 
     }
 }
 
