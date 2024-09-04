@@ -33,7 +33,7 @@ class Client{
          * @param type The client type.
          * @param coordinates The client location coordinates. 
          */
-        Client(string name, string type,  std::pair<double, double> coordinates );
+        Client(string name, string type,  pair<double, double> coordinates );
 
         /**
          * @brief Copy constructor.
@@ -45,19 +45,19 @@ class Client{
          * @brief Get the client name.
          * @return The client name.
          */
-        string getName();
+        const string& getName() const;
 
         /**
          * @brief Get the client type.
          * @return The client type.
          */
-        string getType();
+        const string& getType() const;
 
         /**
          * @brief Get the client location coordinates.
          * @return The client location coordinates. 
          */
-        pair<double, double> getCoordinates();
+        const pair<double, double>& getCoordinates() const;
     
         /**
          * @brief Assignment operator overide. 

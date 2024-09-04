@@ -20,9 +20,9 @@ Client::Client(const Client &other){
     this->coordinates = other.coordinates;
 }
 
-string Client::getName(){ return name;}
-string Client::getType() { return type;}
-pair<double, double> Client::getCoordinates(){ return coordinates;}
+const string& Client::getName() const { return name;}
+const string& Client::getType() const { return type;}
+const pair<double, double>& Client::getCoordinates() const { return coordinates;}
 
 
 Client & Client::operator=(const Client &other){
