@@ -23,12 +23,6 @@ class Cell{
         bool operator<=(const Cell & other) const;
         bool operator<(const Cell & other) const;
 		Cell & operator=(const Cell & other); 
-
-        void setCode(std::string value);
-        void setIdShelf(long int value );
-        void setRow(int value);
-        void setColumn(int value);
-        void setLevels(int value);
         
         std::string getCode()const;
         long int getIdShelf()const;

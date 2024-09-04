@@ -93,12 +93,6 @@ Cell & Cell::operator=(const Cell &other){
 	return *this;
 }
 
-void Cell::setCode(string value){ this->code = value;}
-void Cell::setIdShelf(long int value ){ if(value >= 0) this->idShelf = value;}
-void Cell::setRow(int value){ if(value >= 0)this->row = value; }
-void Cell::setColumn(int value) { if(value >=0) this->column = value;}
-void Cell::setLevels(int value){ if(value > 0) this->levels = value; }
-
 string Cell::getCode() const{ return code;}
 long int Cell::getIdShelf() const { return idShelf;}
 int Cell::getRow() const { return row;}
