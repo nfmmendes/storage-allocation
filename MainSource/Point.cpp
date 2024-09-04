@@ -13,22 +13,15 @@ using namespace std;
 Point::Point(){
     coordX = coordY = coordZ = 0;
 }
-    
-    //Full constructor
-    //Null values are not allowed
+
 Point::Point(string label, double coordX, double coordY, double coordZ){
-    
-   // if(label == "")
-   //     throw("Error");
     
     this->label = label;
     this->coordX = coordX;
     this->coordY = coordY;
     this->coordZ = coordZ;
 }
-    
-    //Copy constructor
-    //Null values are not allowed
+
 Point::Point(const Point &point){
     
     this->label = point.getLabel();
@@ -42,31 +35,18 @@ double Point::getCoordY() const { return coordY; }
 double Point::getCoordZ() const { return coordZ; }
 string Point::getLabel()  const { return label; }
 
-
-/**
- *
- */
 bool Point::isMinorX(const Point &a,const Point &b){
     return a.getCoordX() < b.getCoordX();
 }
 
-/**
- *
- */
 bool Point::isMinorY(const Point &a,const Point &b){
     return a.getCoordY() < b.getCoordY();
 }
 
-/**
- *
- */
 bool Point::isMinorZ(const Point &a,const Point &b){
     return a.getCoordZ() < b.getCoordZ();
 }
 
-/**
- *
- */
 bool Point::operator<(const Point &other)const{
 	if(fabs(this->coordX - other.coordX) > TOLERANCE)
 		return this->coordX < other.coordX; 
@@ -78,17 +58,10 @@ bool Point::operator<(const Point &other)const{
 	return false; 
 }
 
-/**
- *
- */
 bool Point::operator>(const Point &other)const{
 	return !(*this < other && *this == other);
 }
 
-/**
- * Overload of == operator
- * This operator considers only the points coordinates 
- */
 bool Point::operator==(const Point &other) const{
 	return fabs(this->coordX - other.coordX) <= 1e-5 &&  fabs(this->coordY - other.coordY)<=1e-5 && fabs(this->coordZ - other.coordZ) <= 1e-5;
 }
@@ -102,9 +75,6 @@ Point & Point::operator=(const Point &other){
 	return *this; 
 }
 
-/**
- *
- */
 vector<Point>  Point::removeDuplicates(vector<Point> & points){
 	
 	sort(points.begin(), points.end()); 
@@ -136,9 +106,6 @@ vector<Point>  Point::removeDuplicates(vector<Point> & points){
 		
 }
 
-/**
- *
- */
 double Point::getDistance(const Point &other){
     return sqrt(pow(this->coordX-other.coordX,2)+pow(this->coordY-other.coordY,2)+ pow(this->coordZ,2));
 }
