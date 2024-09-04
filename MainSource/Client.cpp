@@ -31,43 +31,4 @@ Client & Client::operator=(const Client &other){
     this->coordinates = other.coordinates;
     
     return *this;
-    }
-
-
-vector<Client> Client::readClientData(string fileName){
-    vector<Client> clients;
-    pair<double,double> coordinates;
-    string _name, _type;
-    
-    ifstream file;
-    file.open(fileName,ios::in);
-    
-    int numClients;
-    file>>numClients;
-    
-    for(int i=0; i<numClients; i++){
-        file>>_name>>_type;
-        clients.push_back(Client(_name,_type, coordinates));
-    }
-    
-    return clients;
-}
-
-vector<Client> Client::readClientDataWithCoordinates(string fileName){
-    vector<Client> clients;
-    pair<double,double> coordinates;
-    string _name, _type;
-    
-    ifstream file;
-    file.open(fileName,ios::in);
-    
-    int numClients;
-    file>>numClients;
-    
-    for(int i=0; i<numClients; i++){
-        file>>_name>>_type>>coordinates.first>>coordinates.second;
-        clients.push_back(Client(_name,_type, coordinates));
-    }
-    
-    return clients;    
 }

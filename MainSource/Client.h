@@ -63,19 +63,5 @@ class Client{
          * @return A reference to the modified left side hand object.
          */
         Client & operator=(const Client &other);
-
-        /**
-         * @brief Read the client data from file. 
-         * @param fileName The name of the file with the client's information. 
-         * @return A vector of clients. 
-         */
-        static std::vector<Client> readClientData(std::string fileName);
-
-        /**
-         * @brief Read the client data from file with their location coordinates. 
-         * @param fileName The name of the file with the client's information. 
-         * @return A vector of clients. 
-         */
-        static std::vector<Client> readClientDataWithCoordinates(std::string fileName);
 };
 
