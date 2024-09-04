@@ -18,14 +18,6 @@ Cell::Cell(const Cell & other){
     this->levels = other.levels;
 }
 
-/**
- * Member constructor 
- * @param code    Cell code 
- * @param idShelf Id of the shelf where the cell is  
- * @param levels  Number of vertical divisions of the cell
- * @param row 	  The shelf row where the cell is
- * @param column  The column row where the cell is 
- */
 Cell::Cell(string code, long int IdShelf,int levels, int row, int column){
     this->code = code;
     this->idShelf = IdShelf;
@@ -34,17 +26,10 @@ Cell::Cell(string code, long int IdShelf,int levels, int row, int column){
     this->levels = levels;
 }
 
-/**
- * Equals operator overload 
- */
 bool Cell::operator==(const Cell & other) const{
     return code == other.code && idShelf == other.idShelf && row == other.row && column == other.column && levels == other.levels;
 }
 
-/**
- * Less than or equal operator overload 
- * @param other Cell in the right hand of the operator 
- */
 bool Cell::operator<=(const Cell & other) const{
     if(*this == other)
         return true; 
@@ -73,11 +58,6 @@ bool Cell::operator<=(const Cell & other) const{
 
 }
 
-
-/**
- * Less operator overload 
- * @param other Cell in the right hand of the operator
- */
 bool Cell::operator<(const Cell & other) const{
     return *this == other ? false: *this <= other; 
 }
@@ -99,9 +79,6 @@ int Cell::getRow() const { return row;}
 int Cell::getColumn() const { return column; }
 int Cell::getLevels() const { return levels; }
 
-/**
- * 
- */
 void Cell::printCellInformation(){ 
 
 	cout<<"_____________________________\n";
