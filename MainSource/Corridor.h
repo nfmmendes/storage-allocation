@@ -75,12 +75,6 @@ class Corridor{
         long int getId() const;
 
         /**
-         * @brief Get the corridor block id. 
-         * @return The corridor block id. 
-         */
-        const string& getBlockId() const;
-
-        /**
          * @brief Get the corridor begin coordinates. 
          * @return The corridor begin coordinates. 
          */

@@ -37,7 +37,6 @@ Corridor::Corridor(long int Id, const string& blockName, const string& dir, cons
 const string& Corridor::getDirection() const{ return direction; }
 const string& Corridor::getSense()const  { return sense; } 
 long int Corridor::getId() const { return Id; }
-const string& Corridor::getBlockId() const { return blockName; }
 const pair<double, double>& Corridor::getBeginCoords() const { return begin; }
 
 
