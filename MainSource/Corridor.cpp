@@ -29,13 +29,6 @@ Corridor::Corridor(long int Id, string blockName, string dir, string sense, pair
     this->length = length;
 }
 
-void Corridor::setDirection(std::string value){  direction = value;}
-void Corridor::setSense(std::string value) { sense = value; }
-void Corridor::setId( long int value ) { if(value > 0) Id = value; else throw("Error. Invalid negative Id"); }
-void Corridor::setIdBlock (std::string value) {blockName = value;}
-void Corridor::setBeginCoords(std::pair<double,double> value){ begin = value; }
-void Corridor::setLength(double value){ length = value; }
-
 std::string Corridor::getDirection() const{ return direction; }
 std::string Corridor::getSense()const  { return sense; } 
 long int Corridor::getId() const { return Id; }

@@ -36,13 +36,6 @@ class Corridor{
         Corridor();
         Corridor(const Corridor & other);
         Corridor(long int Id, string blockName, string dir, string sense, pair<double,double> begin, double length);
-    
-        void setDirection(std::string value);
-        void setSense(std::string value);
-        void setId( long int value );
-        void setIdBlock (std::string value);
-        void setBeginCoords(std::pair<double,double> value);
-        void setLength(double value);
         
         std::string getDirection() const;
         std::string getSense()const; 
