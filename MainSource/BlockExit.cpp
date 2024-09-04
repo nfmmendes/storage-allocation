@@ -32,8 +32,20 @@ string BlockExit::getBlockBName() const { return blockBName; }
 pair<double, double> BlockExit::getCoords() const { return make_pair(coordX, coordY); }
 
 
-bool BlockExit::operator==(const BlockExit &other) const { return this->Id == other.Id; }
-bool BlockExit::operator!=(const BlockExit &other) const { return this->Id != other.Id; }
+bool BlockExit::operator==(const BlockExit &other) const { 
+	// We connsider that double values are equal only if they effectivelly 
+	// are represented by the same double representation.
+	return Id == other.Id && 
+		   coordX == other.coordX && coordY == other.coordY && 
+		   blockAName == other.blockAName && blockBName == other.blockBName; 	
+}
+bool BlockExit::operator!=(const BlockExit &other) const 
+{ 
+	return Id != other.Id ||
+		   coordX != other.coordX || coordY != other.coordY ||
+		   blockAName != other.blockAName || blockBName != other.blockBName; 
+
+}
 bool BlockExit::operator<(const BlockExit & other) const { 
 		
 		if(this->Id > other.Id)
