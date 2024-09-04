@@ -1,5 +1,6 @@
 #include "Curve.h"
-
+using std::cout;
+using std::endl;
 
 /**
  *	Default constructor 

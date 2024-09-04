@@ -12,6 +12,7 @@
 using std::cout;
 using std::max;
 using std::endl;
+using std::make_pair;
 
 Block::Block(): length(0), width(0), name(""){
 }
