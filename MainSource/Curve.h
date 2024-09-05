@@ -11,11 +11,11 @@
 class Curve{
     
     private:
-        long int startingCorridorId;			///< Id of corridor where the curve starts 
-        long int endingCorridorId;				///< Id of corridor where the curve ends 
-        Point startingPoint;					///< Coordinates of curve starting point 
-        Point endingPoint;						///< Coordinates of curve ending point 
-        long int Id;							///< Curve id 
+        long int startingCorridorId { 0 };			///< Id of corridor where the curve starts 
+        long int endingCorridorId { 0 };			///< Id of corridor where the curve ends 
+        Point startingPoint { };					///< Coordinates of curve starting point 
+        Point endingPoint { };						///< Coordinates of curve ending point 
+        long int Id { 0 };							///< Curve id 
     
     public:
         /**
