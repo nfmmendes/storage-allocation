@@ -103,11 +103,6 @@ bool Corridor::operator<(const Corridor &other)const{
     else if(this->length < other.length)
         return true; 
     
-    if(this->Id > other.Id)
-        return false; 
-    else if(this->Id < other.Id)
-        return true; 
-    
     if(this->blockName > other.blockName)
         return false;
     else if(this->blockName < other.blockName)
