@@ -36,7 +36,8 @@ class Curve{
          * @param startingPoint The curve begin coordinates. 
          * @param endingPoint The curve ending coordinates.
          */
-        Curve(long int id, long int startingCorridor, long int endingCorridor, Point startingPoint, Point endingPoint);
+        Curve(long int id, long int startingCorridor, long int endingCorridor, 
+             const Point& startingPoint, const Point& endingPoint);
     
         /**
          * @brief Get the id of the curve start corridor.

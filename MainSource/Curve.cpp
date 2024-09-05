@@ -14,7 +14,8 @@ Curve::Curve(const Curve & other){
     
 }
 
-Curve::Curve(long int id, long int startingCorridor, long int endingCorridor, Point startingPoint, Point endingPoint){
+Curve::Curve(long int id, long int startingCorridor, long int endingCorridor, 
+            const Point& startingPoint, const Point& endingPoint){
     this->Id = id;
     this->startingCorridorId = startingCorridor;
     this->endingCorridorId = endingCorridor;
