@@ -25,12 +25,12 @@ const string BOTH = "BOTH";
 class Corridor{
     
     private:
-        unsigned long int Id;
-        string blockName;			  ///< Name of block where the corridor is 
-        string direction;       	  ///< Direction of The values can be: HORIZONTAL or VERTICAL
-        string sense;             	  ///< The values can be: UP_DOWN, BOTTOM_UP, LEFT_TO_RIGHT, RIGHT_TO_LEFT, BOTH
-        pair<double, double> begin;	  ///< Coordinates of the corridor begin
-        double length;				  ///< Length of corridor 
+        unsigned long int Id { 0 };
+        string blockName { };			            ///< Name of block where the corridor is 
+        string direction { VERTICAL };       	    ///< Direction of The values can be: HORIZONTAL or VERTICAL
+        string sense { UP_DOWN };             	    ///< The values can be: UP_DOWN, BOTTOM_UP, LEFT_TO_RIGHT, RIGHT_TO_LEFT, BOTH
+        pair<double, double> begin { 0.0, 0.0 };	///< Coordinates of the corridor begin
+        double length { 0.0 };				        ///< Length of corridor 
     
     public:
         /**
