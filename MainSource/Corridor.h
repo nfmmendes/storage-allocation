@@ -90,7 +90,7 @@ class Corridor{
 		 * @brief Get the corridor end coordinates. 
 		 * @return The corridor end coordinates. 
 		 */
-        const pair<double, double>& getEndCoords() const;
+        const pair<double, double> getEndCoords() const;
 
         /**
          * @brief Sort the corridor internal points.

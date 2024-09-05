@@ -42,7 +42,7 @@ const pair<double, double>& Corridor::getBeginCoords() const { return begin; }
 
 double Corridor::getLength()const { return length; }
 
-const pair<double, double>& Corridor::getEndCoords() const { 
+const pair<double, double> Corridor::getEndCoords() const { 
 
     if(direction == HORIZONTAL){
         if( sense == LEFT_TO_RIGHT || sense == BOTH)
