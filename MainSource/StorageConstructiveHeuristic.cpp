@@ -502,7 +502,7 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 			vertexes.push_back(vertexByCell[make_pair(cell,j+1)]); 
 		
 		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel[CELL_LEVEL], orderedProductsByFamily);
-		if(allocated > 0)
+		if(allocated)
 			notUsedCells.erase(cell);
 	}
 	
