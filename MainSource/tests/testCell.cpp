@@ -55,7 +55,21 @@ TEST(TestCell, CellEqualityOperator_Test){
 
 TEST(TestCell, CellTestAssignmentOperator_Test){
     Cell a("A", 2, 3, 5, 4);
-    Cell b = a;
+    Cell b("B", 3, 8, 4, 9);
+
+    EXPECT_NE(a.getCode(), b.getCode()); 
+    EXPECT_NE(a.getIdShelf(), b.getIdShelf()); 
+    EXPECT_NE(a.getLevels(), b.getLevels()); 
+    EXPECT_NE(a.getRow(), b.getRow()); 
+    EXPECT_NE(a.getColumn(), b.getColumn()); 
+
+    b = a;
+
+    EXPECT_EQ(a.getCode(), b.getCode()); 
+    EXPECT_EQ(a.getIdShelf(), b.getIdShelf()); 
+    EXPECT_EQ(a.getLevels(), b.getLevels()); 
+    EXPECT_EQ(a.getRow(), b.getRow()); 
+    EXPECT_EQ(a.getColumn(), b.getColumn()); 
 }
 
 TEST(TestCell, CellLessThanOperatorEqualValues_Test){
