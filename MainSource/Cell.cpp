@@ -7,9 +7,6 @@
 #include"Cell.h"
 using namespace std;
 
-/**
- * Copy constructor
- */
 Cell::Cell(const Cell & other){
     this->code = other.code;
     this->idShelf = other.idShelf;
