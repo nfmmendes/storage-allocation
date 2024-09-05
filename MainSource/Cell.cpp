@@ -18,7 +18,7 @@ Cell::Cell(const Cell & other){
     this->levels = other.levels;
 }
 
-Cell::Cell(string code, long int IdShelf,int levels, int row, int column){
+Cell::Cell(string code, unsigned long int IdShelf, unsigned short levels, unsigned short row, unsigned short column){
     this->code = code;
     this->idShelf = IdShelf;
     this->row = row;
@@ -74,10 +74,10 @@ Cell & Cell::operator=(const Cell &other){
 }
 
 string Cell::getCode() const{ return code;}
-long int Cell::getIdShelf() const { return idShelf;}
-int Cell::getRow() const { return row;}
-int Cell::getColumn() const { return column; }
-int Cell::getLevels() const { return levels; }
+unsigned long int Cell::getIdShelf() const { return idShelf;}
+unsigned short Cell::getRow() const { return row;}
+unsigned short Cell::getColumn() const { return column; }
+unsigned short Cell::getLevels() const { return levels; }
 
 void Cell::printCellInformation(){ 
 

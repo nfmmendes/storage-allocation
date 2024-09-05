@@ -1,6 +1,7 @@
 #pragma once
 
 #include<iostream>
+using std::string;
 
 /**
  * The <c> Cell </c> class defines a cell in a shelf warehouse
@@ -9,11 +10,11 @@
 class Cell{
 
     private: 
-        std::string code;		///< Cell code 
-        long int idShelf;	///< Id of shelf where the cell is located 
-        int row;			///< Row on shelf where the cell is located 
-        int column; 		///< Column on shelf where the cell is located 
-        int levels;         ///< Vertical sub-division
+        string code {}; 		            ///< Cell code 
+        unsigned long int idShelf {};	    ///< Id of shelf where the cell is located 
+        unsigned short row { 0 };			///< Row on shelf where the cell is located 
+        unsigned short column { 0 }; 		///< Column on shelf where the cell is located 
+        unsigned short levels { 1 };        ///< Vertical sub-division
   
     public:
         /**
@@ -35,7 +36,7 @@ class Cell{
          * @param row 	  The shelf row where the cell is
          * @param column  The column row where the cell is 
          */
-        Cell(std::string code, long int IdShelf,int levels, int row, int column);
+        Cell(string code, unsigned long int IdShelf, unsigned short levels, unsigned short row, unsigned short column);
         
         /**
          * @brief The equality operator override. 
@@ -71,31 +72,31 @@ class Cell{
          * @brief Get the cell code.
          * @return The cell code.
          */
-        std::string getCode()const;
+        string getCode()const;
         
         /**
          * @brief Get the cell shelf id.
          * @return The cell shelf id.
          */
-        long int getIdShelf()const;
+        unsigned long int getIdShelf()const;
         
         /**
          * @brief Get the cell row index.
          * @return The cell row index.
          */
-        int getRow() const;
+        unsigned short getRow() const;
         
         /**
          * @brief Get the cell column index.
          * @return The cell column index.
          */
-        int getColumn() const;
+        unsigned short getColumn() const;
         
         /**
          * @brief Get the cell number of levels.
          * @return The cell number of levels.
          */
-        int getLevels() const;
+        unsigned short getLevels() const;
 		
         /**
          * @brief Print cell information. 
