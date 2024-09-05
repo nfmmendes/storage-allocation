@@ -544,7 +544,7 @@ StorageAllocationSolution * StorageConstructiveHeuristic::Execute(){
 	vector<Vertex> vertexesOrderedByDistance = getStorageVertexesOrderedByDistance(); 
 	fillFrequenceByProduct();
 	
-	unsigned int numPositions = vertexesOrderedByDistance.size(); 
+	auto numPositions { vertexesOrderedByDistance.size() }; 
 	usedVertex.resize(numPositions, false); 
 
 	for(unsigned int i=0;i<productsSortedByFrequence.size();i++){
