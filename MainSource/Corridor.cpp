@@ -24,7 +24,7 @@ Corridor::Corridor(const Corridor & other){
 }
 
 
-Corridor::Corridor(long int Id, const string& blockName, const string& dir, const string& sense, 
+Corridor::Corridor(unsigned long int Id, const string& blockName, const string& dir, const string& sense, 
                    const pair<double,double>& begin, double length){
     this->Id = Id;
     this->blockName = blockName;
@@ -36,7 +36,7 @@ Corridor::Corridor(long int Id, const string& blockName, const string& dir, cons
 
 const string& Corridor::getDirection() const{ return direction; }
 const string& Corridor::getSense()const  { return sense; } 
-long int Corridor::getId() const { return Id; }
+unsigned long int Corridor::getId() const { return Id; }
 const pair<double, double>& Corridor::getBeginCoords() const { return begin; }
 
 

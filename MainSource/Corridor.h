@@ -25,7 +25,7 @@ const string BOTH = "BOTH";
 class Corridor{
     
     private:
-        long int Id;
+        unsigned long int Id;
         string blockName;			  ///< Name of block where the corridor is 
         string direction;       	  ///< Direction of The values can be: HORIZONTAL or VERTICAL
         string sense;             	  ///< The values can be: UP_DOWN, BOTTOM_UP, LEFT_TO_RIGHT, RIGHT_TO_LEFT, BOTH
@@ -53,7 +53,7 @@ class Corridor{
          * @param begin The corridor begin coordinates. 
          * @param length The corridor length.
          */
-        Corridor(long int Id, const string& blockName, const string& dir, const string& sense,
+        Corridor(unsigned long int Id, const string& blockName, const string& dir, const string& sense,
                  const pair<double,double>& begin, double length);
         
         /**
@@ -72,7 +72,7 @@ class Corridor{
          * @brief Get the corridor id.
          * @return The corridor id. 
          */
-        long int getId() const;
+        unsigned long int getId() const;
 
         /**
          * @brief Get the corridor begin coordinates. 
