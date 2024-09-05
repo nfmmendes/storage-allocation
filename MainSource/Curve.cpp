@@ -14,7 +14,7 @@ Curve::Curve(const Curve & other){
     
 }
 
-Curve::Curve(long int id, long int startingCorridor, long int endingCorridor, 
+Curve::Curve(unsigned long int id, unsigned long int startingCorridor, unsigned long int endingCorridor, 
             const Point& startingPoint, const Point& endingPoint){
     this->Id = id;
     this->startingCorridorId = startingCorridor;
@@ -23,11 +23,11 @@ Curve::Curve(long int id, long int startingCorridor, long int endingCorridor,
     this->endingPoint = endingPoint;
 }
 
-long int Curve::getStartCorridor() const { return startingCorridorId; }
-long int Curve::getEndCorridor() const { return endingCorridorId; }
+unsigned long int Curve::getStartCorridor() const { return startingCorridorId; }
+unsigned long int Curve::getEndCorridor() const { return endingCorridorId; }
 Point Curve::getStartingPoint() const { return startingPoint;}
 Point Curve::getEndingPoint() const { return endingPoint; }
-long int Curve::getId()const{ return Id; }
+unsigned long int Curve::getId()const{ return Id; }
 
 Curve & Curve::operator=(const Curve &other){
     this->Id = other.Id;

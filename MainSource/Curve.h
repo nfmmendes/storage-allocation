@@ -11,11 +11,11 @@
 class Curve{
     
     private:
-        long int startingCorridorId { 0 };			///< Id of corridor where the curve starts 
-        long int endingCorridorId { 0 };			///< Id of corridor where the curve ends 
+        unsigned int startingCorridorId { 0 };		///< Id of corridor where the curve starts 
+        unsigned long int endingCorridorId { 0 };	///< Id of corridor where the curve ends 
         Point startingPoint { };					///< Coordinates of curve starting point 
         Point endingPoint { };						///< Coordinates of curve ending point 
-        long int Id { 0 };							///< Curve id 
+        unsigned long int Id { 0 };					///< Curve id 
     
     public:
         /**
@@ -36,20 +36,20 @@ class Curve{
          * @param startingPoint The curve begin coordinates. 
          * @param endingPoint The curve ending coordinates.
          */
-        Curve(long int id, long int startingCorridor, long int endingCorridor, 
+        Curve(unsigned long int id, unsigned long int startingCorridor, unsigned long int endingCorridor, 
              const Point& startingPoint, const Point& endingPoint);
     
         /**
          * @brief Get the id of the curve start corridor.
          * @return The id of the curve start corridor.
          */
-        long int getStartCorridor() const;
+        unsigned long int getStartCorridor() const;
 
         /**
          * @brief Get the id of the curve end corridor.
          * @return The id of the curve end corridor.
          */
-        long int getEndCorridor() const;
+        unsigned long int getEndCorridor() const;
 
         /**
          * @brief Get the curve start point.
@@ -67,7 +67,7 @@ class Curve{
          * @brief Get the curve id.
          * @return The curve id. 
          */
-        long int getId() const;
+        unsigned long int getId() const;
 
         /**
          * @brief The assignment operator override. 
