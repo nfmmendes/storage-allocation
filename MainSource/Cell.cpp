@@ -23,40 +23,36 @@ Cell::Cell(string code, unsigned long int IdShelf, unsigned short levels, unsign
     this->levels = levels;
 }
 
-bool Cell::operator==(const Cell & other) const{
+bool Cell::operator==(const Cell & other) const {
     return code == other.code && idShelf == other.idShelf && row == other.row && column == other.column && levels == other.levels;
 }
 
-bool Cell::operator<=(const Cell & other) const{
-    if(*this == other)
+bool Cell::operator<(const Cell & other) const {
+    if(this->code > other.code)
+        return false;
+    if(this->code < other.code)                    
+        return true;
+    
+    // Same code.
+    if(this->idShelf > other.idShelf)          
+        return false;               
+    if(this->idShelf < other.idShelf)          
+        return true;
+    
+    // Same code and shelf.
+    if(this->row > other.row)
+        return false;        
+    if(this->row < other.row)              
+        return true;
+    
+    // Same code, shelf and row.
+    if(this->column > other.column)
+        return false;          
+    if(this->column < other.column)
         return true; 
 
-    if(this->code < other.code)                         //Code <
-        return true;
-    else if(this->code == other.code){                  //Code ==
-        if(this->idShelf < other.idShelf)                  //Shelf <
-            return true;
-        else if(this->idShelf == other.idShelf){        //Shelf ==
-            if(this->row < other.row)                   //Row <
-                return true;
-            else if(this->row == other.row){            //Row == 
-                if(this->column < other.column){
-                    return true; 
-                }else if(this->column == other.column){
-                    return this->levels <= other.levels; 
-                }else                                   // Else column
-                    return false;                       
-            }else                                       // Else row
-                return false;                           
-        }else                                           // Else Shelf
-            return false;
-    }else                                               // Else Code
-        return false;
-
-}
-
-bool Cell::operator<(const Cell & other) const{
-    return *this == other ? false: *this <= other; 
+    // Same code, shelf, row and column.
+    return this->levels < other.levels;     
 }
 
 

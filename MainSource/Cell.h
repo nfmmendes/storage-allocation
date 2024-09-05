@@ -46,14 +46,6 @@ class Cell{
         bool operator==(const Cell & other) const;
         
         /**
-         * @brief The less than or equal operator override. 
-         * @param other The right hand side object.
-         * @return True if the left side hand object is considered to be lower than
-         *          or equal to the right hand side object. False otwerwise
-         */
-        bool operator<=(const Cell & other) const;
-
-        /**
          * @brief The less thanoperator override. 
          * @param other The right hand side object.
          * @return True if the left side hand object is considered to be lower than
