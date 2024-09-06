@@ -1,9 +1,58 @@
 #include<gtest/gtest.h>
 #include <vector>
+#include <utility>
 #include "../Vertex.h"
 #include "../Arc.h"
 #include "../Graph.h"
+using std::make_pair;
 using namespace QuickTSP;
+
+vector<Vertex> vertexes { {"A", "X", 1}, 
+                              {"B", "X", 2}, 
+                              {"C", "Y", 3},
+                              {"D", "K", 4},
+                              {"E", "Y", 5}
+                              };
+    map<Vertex, vector<Arc>> arcs {
+        
+        {
+            vertexes[0], 
+            vector<Arc>({
+                            Arc("AB", 2, vertexes[0], vertexes[1]),
+                            Arc("AC", 5, vertexes[0], vertexes[2]),
+                            Arc("DA", 3, vertexes[3], vertexes[0]),
+                            Arc("AA", 1, vertexes[0], vertexes[0])
+                        })
+        },
+        {
+            vertexes[1], 
+            vector<Arc>({
+                            Arc("AB", 2, vertexes[0], vertexes[1]),
+                            Arc("BC", 9, vertexes[1], vertexes[2])
+                        })
+        },
+        {
+            vertexes[2], 
+            vector<Arc>({
+                            Arc("AC", 5, vertexes[0], vertexes[2]),
+                            Arc("BC", 9, vertexes[1], vertexes[2])
+                        })
+        },
+        {
+            vertexes[3],
+            vector<Arc>({ 
+                            Arc("DE", 8, vertexes[3], vertexes[4]),
+                            Arc("DA", 3, vertexes[3], vertexes[0])
+                        })
+        },
+        {
+            vertexes[4],
+            vector<Arc>({
+                            Arc("DE", 8, vertexes[3], vertexes[4])
+                        })
+        }
+    };
+
 
 TEST(TestGraph, GraphDefaultConstructor_Test){
     Graph a;
@@ -14,34 +63,6 @@ TEST(TestGraph, GraphDefaultConstructor_Test){
 }
 
 TEST(TestGraph, GraphMemberConstructor_Test){
-    vector<Vertex> vertexes { {"A", "X", 1}, 
-                              {"B", "X", 2}, 
-                              {"C", "Y", 3},
-                              {"D", "K", 4},
-                              {"E", "Y", 5}
-                              };
-    map<Vertex, vector<Arc>> arcs;
-    arcs[vertexes[0]] = vector<Arc>{
-                            {"AB", 2, vertexes[0], vertexes[1]},
-                            {"AC", 5, vertexes[0], vertexes[2]},
-                            {"DA", 3, vertexes[3], vertexes[0]},
-                            {"AA", 1, vertexes[0], vertexes[0]},
-                        };
-    arcs[vertexes[1]] = vector<Arc>{
-                            {"AB", 2, vertexes[0], vertexes[1]},
-                            {"BC", 9, vertexes[1], vertexes[2]}
-                        };
-    arcs[vertexes[2]] = {
-                            {"AC", 5, vertexes[0], vertexes[2]},
-                            {"BC", 9, vertexes[1], vertexes[2]},
-                        };
-    arcs[vertexes[3]] = { 
-                            {"DE", 8, vertexes[3], vertexes[4]},
-                            {"DA", 3, vertexes[3], vertexes[0]},
-                        };
-    arcs[vertexes[4]] = vector<Arc> {
-                            {"DE", 8, vertexes[3], vertexes[4]}
-                        }; 
 
     Graph a(vertexes, arcs, "graph");
 
@@ -79,35 +100,7 @@ TEST(TestGraph, GraphMemberConstructor_Test){
 }
 
 TEST(TestGraph, GraphCopyConstructor_Test){
-    vector<Vertex> vertexes { {"A", "X", 1}, 
-                              {"B", "X", 2}, 
-                              {"C", "Y", 3},
-                              {"D", "K", 4},
-                              {"E", "Y", 5}
-                              };
-    map<Vertex, vector<Arc>> arcs;
-    arcs[vertexes[0]] = vector<Arc>{
-                            {"AB", 2, vertexes[0], vertexes[1]},
-                            {"AC", 5, vertexes[0], vertexes[2]},
-                            {"DA", 3, vertexes[3], vertexes[0]},
-                            {"AA", 1, vertexes[0], vertexes[0]},
-                        };
-    arcs[vertexes[1]] = vector<Arc>{
-                            {"AB", 2, vertexes[0], vertexes[1]},
-                            {"BC", 9, vertexes[1], vertexes[2]}
-                        };
-    arcs[vertexes[2]] = {
-                            {"AC", 5, vertexes[0], vertexes[2]},
-                            {"BC", 9, vertexes[1], vertexes[2]},
-                        };
-    arcs[vertexes[3]] = { 
-                            {"DE", 8, vertexes[3], vertexes[4]},
-                            {"DA", 3, vertexes[3], vertexes[0]},
-                        };
-    arcs[vertexes[4]] = vector<Arc> {
-                            {"DE", 8, vertexes[3], vertexes[4]}
-                        }; 
-
+    
     Graph a(vertexes, arcs, "graph");
     Graph b { a };
 
@@ -141,35 +134,6 @@ TEST(TestGraph, GraphCopyConstructor_Test){
 
 
 TEST(TestGraph, GraphAssignmentOperator_Test){
-    vector<Vertex> vertexes { {"A", "X", 1}, 
-                              {"B", "X", 2}, 
-                              {"C", "Y", 3},
-                              {"D", "K", 4},
-                              {"E", "Y", 5}
-                              };
-    map<Vertex, vector<Arc>> arcs;
-    arcs[vertexes[0]] = vector<Arc>{
-                            {"AB", 2, vertexes[0], vertexes[1]},
-                            {"AC", 5, vertexes[0], vertexes[2]},
-                            {"DA", 3, vertexes[3], vertexes[0]},
-                            {"AA", 1, vertexes[0], vertexes[0]},
-                        };
-    arcs[vertexes[1]] = vector<Arc>{
-                            {"AB", 2, vertexes[0], vertexes[1]},
-                            {"BC", 9, vertexes[1], vertexes[2]}
-                        };
-    arcs[vertexes[2]] = {
-                            {"AC", 5, vertexes[0], vertexes[2]},
-                            {"BC", 9, vertexes[1], vertexes[2]},
-                        };
-    arcs[vertexes[3]] = { 
-                            {"DE", 8, vertexes[3], vertexes[4]},
-                            {"DA", 3, vertexes[3], vertexes[0]},
-                        };
-    arcs[vertexes[4]] = vector<Arc> {
-                            {"DE", 8, vertexes[3], vertexes[4]}
-                        }; 
-
     Graph a(vertexes, arcs, "graph");
     Graph b(vector<Vertex>{vertexes[0], 
                            vertexes[1], 
