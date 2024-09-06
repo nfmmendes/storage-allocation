@@ -72,13 +72,6 @@ namespace QuickTSP{
                  * @return The graph name. 
                  */
                 const string& getName() const;
-            
-                /**
-                 * @brief Get the list of adjacent vertex of a vertex.
-                 * @param v The vertex searchead. 
-                 * @return A list containing all the adjacent vertexes.
-                 */
-                vector<Vertex> getAdjacentVertexes(const Vertex & v);
 
                 /**
                  * @brief Convert a set of arcs in a graph. 

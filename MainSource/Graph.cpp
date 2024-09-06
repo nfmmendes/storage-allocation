@@ -74,18 +74,6 @@ const string& Graph::getName()const{
     return name;
 }
 
-vector<Vertex> Graph::getAdjacentVertexes(const Vertex & v){
-    vector<Vertex> returned; 
-
-    vector<Arc> incidentArcs = this->arcsByVertex[v];
-
-    for(unsigned int i=0; i<incidentArcs.size();i++)
-        returned.push_back(incidentArcs[i].getEndVertex());
-
-    return returned; 
-}
-
-
 void Graph::print() const{
 	cout<<vertexes.size() <<" vertexes \n";
 	for(unsigned int i=0;i<vertexes.size();i++)
