@@ -54,10 +54,26 @@ TEST(TestGraph, GraphMemberConstructor_Test){
 
     EXPECT_EQ(a.getArcs().size(), 5);
     EXPECT_EQ(a.getArcs().at(vertexes[0]).size(), 4);
+    EXPECT_EQ(a.getArcs().at(vertexes[0])[0], arcs[vertexes[0]][0]); 
+    EXPECT_EQ(a.getArcs().at(vertexes[0])[1], arcs[vertexes[0]][1]); 
+    EXPECT_EQ(a.getArcs().at(vertexes[0])[2], arcs[vertexes[0]][2]); 
+    EXPECT_EQ(a.getArcs().at(vertexes[0])[3], arcs[vertexes[0]][3]); 
+
     EXPECT_EQ(a.getArcs().at(vertexes[1]).size(), 2);
+    EXPECT_EQ(a.getArcs().at(vertexes[1])[0], arcs[vertexes[1]][0]); 
+    EXPECT_EQ(a.getArcs().at(vertexes[1])[1], arcs[vertexes[1]][1]); 
+
     EXPECT_EQ(a.getArcs().at(vertexes[2]).size(), 2);
+    EXPECT_EQ(a.getArcs().at(vertexes[2])[0], arcs[vertexes[2]][0]); 
+    EXPECT_EQ(a.getArcs().at(vertexes[2])[1], arcs[vertexes[2]][1]); 
+
     EXPECT_EQ(a.getArcs().at(vertexes[3]).size(), 2);
+    EXPECT_EQ(a.getArcs().at(vertexes[3])[0], arcs[vertexes[3]][0]); 
+    EXPECT_EQ(a.getArcs().at(vertexes[3])[1], arcs[vertexes[3]][1]); 
+
     EXPECT_EQ(a.getArcs().at(vertexes[4]).size(), 1); 
+    EXPECT_EQ(a.getArcs().at(vertexes[4])[0], arcs[vertexes[4]][0]); 
+
     EXPECT_EQ(a.getName(), "graph");
     
 }
@@ -104,10 +120,21 @@ TEST(TestGraph, GraphCopyConstructor_Test){
 
     EXPECT_EQ(a.getArcs().size(), b.getArcs().size());
     EXPECT_EQ(a.getArcs().at(vertexes[0]).size(), b.getArcs().at(vertexes[0]).size());
+    EXPECT_EQ(a.getArcs().at(vertexes[0])[0], b.getArcs().at(vertexes[0])[0]);
+    EXPECT_EQ(a.getArcs().at(vertexes[0])[1], b.getArcs().at(vertexes[0])[1]);
+    EXPECT_EQ(a.getArcs().at(vertexes[0])[2], b.getArcs().at(vertexes[0])[2]);
+    EXPECT_EQ(a.getArcs().at(vertexes[0])[3], b.getArcs().at(vertexes[0])[3]);
     EXPECT_EQ(a.getArcs().at(vertexes[1]).size(), b.getArcs().at(vertexes[1]).size());
+    EXPECT_EQ(a.getArcs().at(vertexes[1])[0], b.getArcs().at(vertexes[1])[0]);
+    EXPECT_EQ(a.getArcs().at(vertexes[1])[1], b.getArcs().at(vertexes[1])[1]);
     EXPECT_EQ(a.getArcs().at(vertexes[2]).size(), b.getArcs().at(vertexes[2]).size());
+    EXPECT_EQ(a.getArcs().at(vertexes[2])[0], b.getArcs().at(vertexes[2])[0]);
+    EXPECT_EQ(a.getArcs().at(vertexes[2])[1], b.getArcs().at(vertexes[2])[1]);
     EXPECT_EQ(a.getArcs().at(vertexes[3]).size(), b.getArcs().at(vertexes[3]).size());
+    EXPECT_EQ(a.getArcs().at(vertexes[3])[0], b.getArcs().at(vertexes[3])[0]);
+    EXPECT_EQ(a.getArcs().at(vertexes[3])[1], b.getArcs().at(vertexes[3])[1]);
     EXPECT_EQ(a.getArcs().at(vertexes[4]).size(), b.getArcs().at(vertexes[4]).size());
+    EXPECT_EQ(a.getArcs().at(vertexes[4])[0], b.getArcs().at(vertexes[4])[0]);
  
     EXPECT_EQ(a.getName(), "graph");   
 }
