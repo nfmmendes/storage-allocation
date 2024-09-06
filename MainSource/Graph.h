@@ -74,35 +74,11 @@ namespace QuickTSP{
                 const string& getName() const;
             
                 /**
-                 * @brief Get the graph arcs.  
-                 * @param arcs A map containing the arcs indexed by vertex. 
-                 */
-                void setArcs(map<Vertex , vector<Arc> > arcs);
-
-                /**
-                 * @brief Set the graph vertexes. 
-                 * @param other The list of vertexes. 
-                 */
-                void setVertexes(vector<Vertex> other);
-
-                /**
-                 * @brief Add a vertex to the graph. 
-                 * @param other The vertex to be added. 
-                 */
-                void addVertex(Vertex &other);
-
-                /**
-                 * @brief Add an arc to the graph. 
-                 * @param arc The arc to be added. 
-                 */
-                void addArc(Arc &arc);
-
-                /**
                  * @brief Get the list of adjacent vertex of a vertex.
                  * @param v The vertex searchead. 
                  * @return A list containing all the adjacent vertexes.
                  */
-                vector<Vertex> getAdjacentVertexes(Vertex & v);
+                vector<Vertex> getAdjacentVertexes(const Vertex & v);
 
                 /**
                  * @brief Convert a set of arcs in a graph. 
@@ -110,7 +86,7 @@ namespace QuickTSP{
                  * @param name The graph name. 
                  * @return Return a graph formed by the arcs in the set. 
                  */
-                static Graph convertArcsToGraph(set<Arc> &arcs, string name="");
+                static Graph convertArcsToGraph(const set<Arc> &arcs, const string& name="");
 
                 /**
 				 * @brief Print graph info. 

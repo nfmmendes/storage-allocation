@@ -74,40 +74,7 @@ const string& Graph::getName()const{
     return name;
 }
 
-void Graph::setArcs(map<Vertex, vector<Arc> > arcs){
-    this->arcsByVertex.clear();
-    this->arcsByVertex = arcs;
-}
-
-void Graph::setVertexes(vector<Vertex> other){
-    this->vertexes.clear();
-    
-	map<Vertex, bool> presentVertexes; 
-	
-	for(map<Vertex, vector<Arc> >::iterator it = this->arcsByVertex.begin(); it!= this->arcsByVertex.end();it++)
-		presentVertexes[it->first] = false; 
-	
-	
-    for(unsigned int i=0; i<other.size();i++){
-		presentVertexes[other[i]] = true; 
-        this->vertexes.push_back(Vertex(other[i]));
-	}	
-	
-	for(map<Vertex, vector<Arc> >::iterator it = this->arcsByVertex.begin(); it!= this->arcsByVertex.end();it++)
-		if(presentVertexes[it->first] == false)
-			this->arcsByVertex[it->first].clear(); 
-}
-
-void Graph::addVertex(Vertex &other){
-    this->vertexes.push_back(Vertex(other));
-}
-
-void Graph::addArc(Arc &arc){
-    
-    this->arcsByVertex[arc.getBeginVertex()].push_back(Arc(arc));
-}
-
-vector<Vertex> Graph::getAdjacentVertexes(Vertex & v){
+vector<Vertex> Graph::getAdjacentVertexes(const Vertex & v){
     vector<Vertex> returned; 
 
     vector<Arc> incidentArcs = this->arcsByVertex[v];
@@ -129,7 +96,7 @@ void Graph::print() const{
 			cout<<mapPair.second[i]<<endl; 
 }
 
-Graph Graph::convertArcsToGraph(set<Arc> &arcs,string name){
+Graph Graph::convertArcsToGraph(const set<Arc> &arcs,const string& name){
 
     set<Vertex> allVertexes;
     vector<Vertex> listOfVertexes;
