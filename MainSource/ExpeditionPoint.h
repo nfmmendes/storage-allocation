@@ -12,9 +12,9 @@ using std::pair;
 class ExpeditionPoint{
 
 	private: 
-		string code;						///< Code of the expedition point.
-		string blockCode;					///< Code of block where is located the expedition point (or from where the products come).
-		pair<double,double> coordinates;	///< Coordinates of expedition point.
+		string code {};							///< Code of the expedition point.
+		string blockCode {};					///< Code of block where is located the expedition point (or from where the products come).
+		pair<double,double> coordinates {};		///< Coordinates of expedition point.
 	
 	public:
 		/**
