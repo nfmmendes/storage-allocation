@@ -87,20 +87,18 @@ void Graph::print() const{
 Graph Graph::convertArcsToGraph(const set<Arc> &arcs,const string& name){
 
     set<Vertex> allVertexes;
-    vector<Vertex> listOfVertexes;
-    map<Vertex, vector<Arc> > listOfArcs; 
-
-    for(set<Arc>::iterator it = arcs.begin(); it != arcs.end(); it++){
-        allVertexes.insert(it->getBeginVertex());
-        allVertexes.insert(it->getEndVertex());
-        
-        listOfArcs[it->getBeginVertex()].push_back(*it);
+    vector<Vertex> vertexesList;
+    map<Vertex, vector<Arc> > arcsMap; 
+    
+    for(const auto &arc : arcs){
+        allVertexes.insert({ arc.getBeginVertex(), arc.getEndVertex()});
+        arcsMap[arc.getBeginVertex()].push_back(arc);
     }
 
-    for(set<Vertex>::iterator it=allVertexes.begin(); it!= allVertexes.end(); it++)
-        listOfVertexes.push_back(*it);
+    for(const auto& vertex : allVertexes)
+        vertexesList.push_back(vertex);
 
-    Graph returned(listOfVertexes, listOfArcs, name);
+    Graph returned(vertexesList, arcsMap, name);
     return returned;
 } 
 
