@@ -76,12 +76,12 @@ const string& Graph::getName()const{
 
 void Graph::print() const{
 	cout<<vertexes.size() <<" vertexes \n";
-	for(unsigned int i=0;i<vertexes.size();i++)
-		cout<<vertexes[i]<<endl;
+	for(const auto& vertex : vertexes)
+		cout<<vertex<<endl;
 	
-	for(auto & mapPair : arcsByVertex)
-		for(unsigned int i=0;i<mapPair.second.size(); i++)
-			cout<<mapPair.second[i]<<endl; 
+	for(const auto & [key, values] : arcsByVertex)
+		for(const auto& arc : values)
+			cout<<arc<<endl; 
 }
 
 Graph Graph::convertArcsToGraph(const set<Arc> &arcs,const string& name){
@@ -89,7 +89,7 @@ Graph Graph::convertArcsToGraph(const set<Arc> &arcs,const string& name){
     set<Vertex> allVertexes;
     vector<Vertex> vertexesList;
     map<Vertex, vector<Arc> > arcsMap; 
-    
+
     for(const auto &arc : arcs){
         allVertexes.insert({ arc.getBeginVertex(), arc.getEndVertex()});
         arcsMap[arc.getBeginVertex()].push_back(arc);
