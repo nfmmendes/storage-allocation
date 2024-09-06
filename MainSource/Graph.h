@@ -19,9 +19,9 @@ namespace QuickTSP{
          */
         class Graph{
             private:
-                vector<Vertex> vertexes;					        ///< List of graph vertexes 
-                map<Vertex, vector<Arc> > arcsByVertex;		///< Arcs that are incident on each vertex	
-                string name;								        ///< Graph name 
+                vector<Vertex> vertexes {};					        ///< List of graph vertexes 
+                map<Vertex, vector<Arc> > arcsByVertex {};		    ///< Arcs that are incident on each vertex	
+                string name {};								        ///< Graph name 
             public:
                 /**
                  * @brief Constructor.
