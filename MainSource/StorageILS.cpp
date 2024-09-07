@@ -125,13 +125,13 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 	set<pair<int,int> > swapsDone; 
 	int first, second; 
 	unsigned int numIterations = min(numberOfNeighbors, ((unsigned int) (allocationsSize-1)*allocationsSize) );
-	unsigned int numTries = 0; 
+	unsigned int numTries { 0 }; 
 
 	for(unsigned int i=0; i< numIterations && numTries < 2*numIterations; i++, numTries++){
 		if(!Util::ChooseTwoProductIndexes(first ,second,allocationsSize, swapsDone))
 			break;
 
-		std::map< Position , Product>::iterator it = shelfAllocations.begin();
+		auto it = shelfAllocations.begin();
 		advance(it,first); 
 		Product firstProduct = it->second; 
 		
@@ -139,13 +139,12 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 		advance(it,second); 
 		Product secondProduct = it->second; 
 		
-		bool isValid = isValidSwap(firstProduct, secondProduct, allocations); 
-		if(!isValid){
+		if(!isValidSwap(firstProduct, secondProduct, allocations)){
 			i--;
 			continue; 
 		}
 
-		StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution); 
+		auto newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution); 
 		newSolution->proceedSwap(firstProduct, secondProduct,true); 
 		
 		solutions.push_back(newSolution); 
