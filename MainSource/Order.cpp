@@ -102,18 +102,13 @@ vector<Order> Order::readOrdersData(ifstream &file){
 		else if(date.find('/') != std::string::npos)
 			parsedDate = Date::Parse(date, "yyyy/MM/dd");
 
-
-		
 		if(time.find('/') != std::string::npos)
 			parsedTime=Time::Parse(time,"HH:MM:SS AM/PM");
 		else
 			parsedTime=Time::Parse(time, "HH:MM:SS"); 
 		
-
 		orders.push_back(Order(items,parsedDate,parsedTime,clientCode));
 		items.clear();
-		
-		
     }
     
     return orders;
