@@ -167,9 +167,6 @@ InsideBlockSwap::~InsideBlockSwap(){
 		delete startSolution;
 }
 
-/**
- * 
- */
 InsideBlockSwap::InsideBlockSwap(StorageAllocationSolution *initial, OptimizationConstraints * constr, Block & block){
 	this->startSolution = initial;
 	this->constraints = constr;
@@ -213,19 +210,12 @@ bool InsideBlockSwap::isValidSwap(Product &first, Product &second, MapAllocation
 	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
 			return true; 
 
-	/**
-	 * 
-	 * */
 	if(firstPosition.first.getCode() == secondPosition.first.getCode())
 		return true; 
 	
 	return false;  
 }
 
-
-/**
- * 
- */
 vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 	std::map<Product, pair<Cell,int> > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
 	blockAllocations.clear(); 
@@ -295,18 +285,12 @@ MostFrequentSwap::~MostFrequentSwap(){
 	delete startSolution;
 }
 
-/**
- *
- */
 MostFrequentSwap::MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, vector<Product> &products){
 	this->startSolution = initial;
 	this->interchangeableProducts = products; 
 	this->constraints = constr; 
 }
 
-/**
- *
- **/
 AbstractSolution * MostFrequentSwap::getStartSolution() const{
 	return this->startSolution; 
 }
@@ -354,14 +338,10 @@ bool MostFrequentSwap::isValidSwap(Product &first, Product &second, MapAllocatio
 }
 
 
-/**
- *
- **/
 vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
-	//cout<<"A"<<endl;
 	vector<AbstractSolution *> solutions;
 	MapAllocation allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
-	//cout<<"B"<<endl;
+
 	if(this->interchangeableProducts.size()<3)
 		return solutions; 
 
@@ -370,13 +350,13 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 	int second; 
 	set<pair<int,int> >swapsDone; 
 	int numInterchangeableProducts = (int)this->interchangeableProducts.size(); 
-	//cout<<"C"<<endl;
+
 
 	for(int i=0;i<this->numberOfNeighbors && numTries < 2*numberOfNeighbors;i++, numTries++){
 		
 		if(!Util::ChooseTwoProductIndexes(first ,second,numInterchangeableProducts, swapsDone))
 			break;
-		//cout<<first<<" "<<second<<" "<<interchangeableProducts.size()<<endl; 
+ 
 		bool isValid = isValidSwap(this->interchangeableProducts[first], this->interchangeableProducts[second], allocations); 
 		if(!isValid){
 			i--;
@@ -387,7 +367,7 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 		newSolution->proceedSwap(this->interchangeableProducts[first], this->interchangeableProducts[second],true);  
 		solutions.push_back(newSolution);
 	}
-	//cout<<"D"<<endl;
+
 	return solutions; 
 }
 
@@ -434,18 +414,12 @@ bool StorageAllocationPertubation::isValidSwap(Product &first, Product &second, 
 	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
 			return true; 
 
-	/**
-	 * 
-	 * */
 	if(firstPosition.first.getCode() == secondPosition.first.getCode())
 		return true; 
 
 	return false;  
 }
 
-/**
- * 
- * */
 vector<AbstractSolution *> StorageAllocationPertubation::createNeighbors(){
 	vector<AbstractSolution *> solutions;	
 	int first, second;
@@ -784,6 +758,5 @@ AbstractSolution * StorageILS::Execute(){
 		randomSeed++; 
 	}
 	
-	//	cout<<"End function"<<endl;
 	return bestGlobalSolution;
 }
