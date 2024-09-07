@@ -65,17 +65,17 @@ InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, OptimizationConstrai
  * Function to control if a 
  * */
 bool InsideShelfSwap::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
-	std::string firstFamily = first.getFamily(); 
-	std::string secondFamily = second.getFamily(); 
+	const auto& firstFamily = first.getFamily(); 
+	const auto& secondFamily = second.getFamily(); 
 
 	//if one of products are not allocated, the swap is not valid
 	if(allocations.find(first) == allocations.end() || allocations.find(second) == allocations.end() )
 		return false; 
 
 	//Check the prohibitions
-	Position firstPosition =  allocations[first];
-	Position secondPosition = allocations[second];
-	set<std::string> prohibitedProducts = this->constraints->getProductsCodeWithProhibition(); 
+	const auto& firstPosition { allocations[first] };
+	const auto& secondPosition { allocations[second] };
+	const auto& prohibitedProducts = this->constraints->getProductsCodeWithProhibition(); 
 	auto firstProhibition = prohibitedProducts.find(first.getName());
 	auto secondProhibition = prohibitedProducts.find(second.getName());
 
@@ -619,8 +619,8 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 
 AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
 	
-	vector<Block> blocks = this->warehouse->getBlocks(); 
-	map<Product, Position > allocations = ((StorageAllocationSolution *) currentSolution)->getProductAllocations();
+	const auto& blocks = this->warehouse->getBlocks(); 
+	auto& allocations = ((StorageAllocationSolution *) currentSolution)->getProductAllocations();
 	map<long, map<Position,Product> > shelfAllocations; 
 	
 	for(auto &[product, position] : allocations)
