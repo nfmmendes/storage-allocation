@@ -38,13 +38,6 @@ Order::Order(const vector< pair<Product, double> >& items, const Date& dataDeadl
         this->orderItens.push_back(make_pair(items[i].first, items[i].second));
 }
 
-void Order::setOrders(const vector<pair<Product, double> >& orders){
-    this->orderItens.clear();
-    
-    for(unsigned int i= 0; i< orders.size(); i++)
-        this->orderItens.push_back(make_pair(orders[i].first, orders[i].second));
-}
-
 const vector<pair<Product, double> > & Order::getOrderItems()const {
     return this->orderItens;
 }

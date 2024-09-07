@@ -50,13 +50,7 @@ class Order{
          * @param client The client.
          */
         Order(const vector<pair<Product, double> >& items, const Date& dataDeadline, const Time& hourDeadline, const string& client);
-
-        /**
-         * @brief Set the product orders. 
-         * @param The new products. 
-         */
-        void setOrders(const vector<pair<Product, double> >& orders);
-
+        
         /** 
          * @brief Get the order items.
          * @return A list of pairs containing a product and its quantity. 
