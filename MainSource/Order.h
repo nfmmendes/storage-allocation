@@ -49,13 +49,13 @@ class Order{
          * @param hourDeadline The order hour deadline.
          * @param client The client.
          */
-        Order(vector<pair<Product, double> >items, Date dataDeadline, Time hourDeadline, string client);
+        Order(const vector<pair<Product, double> >& items, const Date& dataDeadline, const Time& hourDeadline, const string& client);
 
         /**
          * @brief Set the product orders. 
          * @param The new products. 
          */
-        void setOrders(vector<pair<Product, double> > orders);
+        void setOrders(const vector<pair<Product, double> >& orders);
 
         /** 
          * @brief Get the order items.

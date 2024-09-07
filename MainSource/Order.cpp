@@ -30,7 +30,7 @@ Order::Order(const  Order &other){
     }
 }
 
-Order::Order(vector< pair<Product, double> > items, Date dataDeadline, Time hourDeadline, string client){
+Order::Order(const vector< pair<Product, double> >& items, const Date& dataDeadline, const Time& hourDeadline, const string& client){
     this->deadline = make_pair(dataDeadline, hourDeadline);
     this->client = client;
     
@@ -38,7 +38,7 @@ Order::Order(vector< pair<Product, double> > items, Date dataDeadline, Time hour
         this->orderItens.push_back(make_pair(items[i].first, items[i].second));
 }
 
-void Order::setOrders(vector<pair<Product, double> > orders){
+void Order::setOrders(const vector<pair<Product, double> >& orders){
     this->orderItens.clear();
     
     for(unsigned int i= 0; i< orders.size(); i++)
