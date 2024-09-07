@@ -5,14 +5,18 @@
 #include<string>
 #include<vector>
 #include<fstream>
-using namespace std; 
-    
+using std::string; 
+using std::vector;
+using std::cout;
+using std::endl;
+using std::ifstream;
+
 class Product{
     
     private:
         long int ID;
-        std::string name;
-        std::string family;
+        string name;
+        string family;
         
     public:
         Product(){}
@@ -22,7 +26,7 @@ class Product{
             this->family = other.family;
         }
         
-        Product(long int ID, std::string name, std::string family){
+        Product(long int ID, const string& name, const string& family){
             this->ID = ID;
             this->name = name;
             this->family = family;
@@ -37,14 +41,14 @@ class Product{
 		}
     
         long int getID()const { return ID; }
-        std::string getName()const{ return name; }
-        std::string getFamily()const{ return family; }
+        string getName()const{ return name; }
+        string getFamily()const{ return family; }
     
         void setID(long int Id){ if(Id >= 0 ) this->ID = Id; }
-        void setName(std::string name){ this->name = name;}
-        void setFamily(std::string family){ this->family = family;}
+        void setName(const string& name){ this->name = name;}
+        void setFamily(const string& family){ this->family = family;}
 		bool operator<(const Product &other) const{ return this->ID < other.ID; }
-        static std::vector<Product> readProductsData(std::ifstream &file);
+        static vector<Product> readProductsData(std::ifstream &file);
 		void print()const{ std::cout<<ID<<" "<<name<<" "<<family<<std::endl; }
     
 };
