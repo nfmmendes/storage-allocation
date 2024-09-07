@@ -178,25 +178,25 @@ InsideBlockSwap::InsideBlockSwap(StorageAllocationSolution *initial, Optimizatio
  * Function to control if a 
  * */
 bool InsideBlockSwap::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
-	string firstFamily = first.getFamily(); 
-	string secondFamily = second.getFamily(); 
+	const auto& firstFamily { first.getFamily() }; 
+	const auto& secondFamily { second.getFamily() }; 
 
 	//if one of products are not allocated, the swap is not valid
 	if(allocations.find(first) == allocations.end() || allocations.find(second) == allocations.end() )
 		return false; 
 
 	//Check the prohibitions
-	Position firstPosition =  allocations[first];
-	Position secondPosition = allocations[second];
-	std::set<std::string> prohibitedProducts = this->constraints->getProductsCodeWithProhibition(); 
+	const auto& firstPosition { allocations[first] };
+	const auto& secondPosition { allocations[second] } ;
+	const auto& prohibitedProducts { this->constraints->getProductsCodeWithProhibition() }; 
 	auto firstProhibition = prohibitedProducts.find(first.getName());
 	auto secondProhibition = prohibitedProducts.find(second.getName());
 
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		bool isFirstAllowed = this->constraints->IsAllocationAllowed(first, secondPosition);
-		bool isSecondAllowed = this->constraints->IsAllocationAllowed(second, firstPosition);
+		auto isFirstAllowed = this->constraints->IsAllocationAllowed(first, secondPosition);
+		auto isSecondAllowed = this->constraints->IsAllocationAllowed(second, firstPosition);
 
 		if(! (isFirstAllowed && isSecondAllowed) )
 			return false; 
@@ -205,9 +205,10 @@ bool InsideBlockSwap::isValidSwap(Product &first, Product &second, MapAllocation
 	if(firstFamily == secondFamily)
 		return true; 
 		
-	auto stronglyIsolatedFamilies = this->constraints->getStronglyIsolatedFamilyCodes(); 
-	if(stronglyIsolatedFamilies.find(firstFamily) == stronglyIsolatedFamilies.end() && 
-	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
+	auto stronglyIsolatedFamilies = this->constraints->getStronglyIsolatedFamilyCodes();
+	auto endIterator = stronglyIsolatedFamilies.end();
+	if(stronglyIsolatedFamilies.find(firstFamily) == endIterator && 
+	   stronglyIsolatedFamilies.find(secondFamily) == endIterator)
 			return true; 
 
 	if(firstPosition.first.getCode() == secondPosition.first.getCode())
