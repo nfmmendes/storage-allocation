@@ -11,6 +11,9 @@
 #include "Client.h"
 #include "Time.h"
 #include "Date.h"
+using std::vector;
+using std::pair;
+using std::string;
 
 /**
  * @brief Class to describe the orders that arrives to a warehouse. It's independent of 
@@ -20,12 +23,12 @@
 class Order{
     
     private:
-        std::vector<std::pair<Product, double> > orderItens; //!< The first element describe the product and
-                                                             //!  the second the quantity
-        std::pair<Date, Time> deadline;                      //!< It can be initialized or not. If it is not
-                                                             //!  its default value will be 2001/01/01
+        vector<pair<Product, double> > orderItens;      //!< The first element describe the product and
+                                                        //!  the second the quantity
+        pair<Date, Time> deadline;                      //!< It can be initialized or not. If it is not
+                                                        //!  its default value will be 2001/01/01
     
-        std::string client;                                  //The amount of data needed in this object will depend of
+        string client;                                  //The amount of data needed in this object will depend of
         
     public:
         /**
@@ -46,24 +49,23 @@ class Order{
          * @param hourDeadline The order hour deadline.
          * @param client The client.
          */
-        Order(std::vector<std::pair<Product, double> >items, Date dataDeadline, Time hourDeadline, std::string client);
+        Order(vector<pair<Product, double> >items, Date dataDeadline, Time hourDeadline, string client);
 
         /**
          * @brief Set the product orders. 
          * @param The new products. 
          */
-        void setOrders(std::vector<std::pair<Product, double> > orders);
+        void setOrders(vector<pair<Product, double> > orders);
 
         /** 
          * @brief Get the order items.
          * @return A list of pairs containing a product and its quantity. 
          */
-        const std::vector<std::pair<Product, double> > & getOrderItems() const;
+        const vector<pair<Product, double> > & getOrderItems() const;
 
         /**
          * @brief Read orders data from file
          * @param file The file stream object. 
          */
-        static std::vector<Order> readOrdersData(ifstream &file);
-    
+        static vector<Order> readOrdersData(ifstream &file);
 };
