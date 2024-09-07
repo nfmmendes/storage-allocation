@@ -13,6 +13,14 @@
 #include "AbstractSolution.h"
 #include "DistanceMatrix.h"
 using namespace QuickTSP; 
+using std::ofstream;
+using std::to_string;
+using std::cout;
+using std::flush;
+using std::make_pair;
+using std::map;
+using std::vector;
+using std::pair;
 
 
 StorageSolutionEvaluator * StorageAllocationSolution::Evaluator = NULL;

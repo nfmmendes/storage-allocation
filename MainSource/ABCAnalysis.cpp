@@ -13,6 +13,11 @@
 #include "ABCAnalysis.h"
 using std::forward;
 using std::transform;
+using std::set;
+using std::cout;
+using std::endl;
+using std::setw;
+using std::make_pair;
 
 /**
  * 

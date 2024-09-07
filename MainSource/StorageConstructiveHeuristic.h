@@ -22,6 +22,7 @@ using std::set;
 using std::map;
 using std::tuple;
 using std::string;
+using std::queue;
 
 using ProductAndFrequenceByFamily = tuple <map<string, queue<Product> >, map<string, int> >;
 

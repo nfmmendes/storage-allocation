@@ -15,7 +15,9 @@
 using std::vector;
 using std::cout;
 using std::end;
+using std::ios;
 using std::ifstream;
+using std::cerr;
 
 vector<Product> InputData::products;
 vector<Client> InputData::clients;

@@ -13,7 +13,11 @@
 #include "StorageSolutionEvaluator.h"
 #include "IsolatedFamily.h"
 #include "TSP.h"
-using namespace std;
+using std::map;
+using std::vector;
+using std::queue;
+using std::make_pair;
+using std::min;
 using namespace QuickTSP; 
 
 StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex> *distMatrix,
