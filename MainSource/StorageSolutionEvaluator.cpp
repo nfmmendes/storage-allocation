@@ -561,16 +561,18 @@ double StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex>& vertexes)
         [](const Vertex& a, const Vertex& b) { return a.getLabel() < b.getLabel(); });
 
     vector<PickingRoute> cachedRoutes = routesByVertexAndSize[firstVertex][vertexes.size()];
-    for (unsigned int i = 0; i < vertexes.size(); i++)
-        if (cachedRoutes[i].first[0].getLabel() == firstVertex.getLabel()) {
-            unsigned j;
-            for (j = 1; j < cachedRoutes[i].first.size(); j++)
-                if (cachedRoutes[i].first[j].getLabel() != vertexes[j].getLabel())
-                    break;
+    for (unsigned int i = 0; i < vertexes.size(); i++){
+        if (cachedRoutes[i].first[0].getLabel() != firstVertex.getLabel()) 
+            continue;
+        
+        unsigned j;
+        for (j = 1; j < cachedRoutes[i].first.size(); j++)
+            if (cachedRoutes[i].first[j].getLabel() != vertexes[j].getLabel())
+                break;
 
-            if (j == cachedRoutes[i].first.size())
-                return cachedRoutes[i].second;
-        }
+        if (j == cachedRoutes[i].first.size())
+            return cachedRoutes[i].second;
+    }
     return -1;
 }
 
