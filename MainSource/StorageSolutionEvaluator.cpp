@@ -517,7 +517,7 @@ double StorageSolutionEvaluator::sumDistances(const vector<Vertex>& sequence)
     return sum;
 }
 
-const map<Product, int>& StorageSolutionEvaluator::getRequestsByProduct(const vector<Order>& orders)
+const map<Product, int> StorageSolutionEvaluator::getRequestsByProduct(const vector<Order>& orders)
 {
     map<Product, int> returnedValue;
 

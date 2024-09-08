@@ -180,7 +180,7 @@ class StorageSolutionEvaluator{
 		 * @param orders The list of orders. 
 		 * @return A map containing the number of requests indexed by product. 
 		 */
-		const map<Product, int>& getRequestsByProduct(const vector<Order> &orders);
+		const map<Product, int> getRequestsByProduct(const vector<Order> &orders);
 
 		/**
 		 * @brief Get the graph vertexes corresponding to warehouse positions.
