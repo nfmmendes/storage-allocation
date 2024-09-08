@@ -39,8 +39,8 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(
         this->closestEndPoint[key] = value;
     InitializeIsolatedFamilies();
 
-    for (auto & [ key, value ] : sto.shelfById)
-        this->shelfById[key] = value;
+    for (auto & [ key, value ] : sto.shelfPointerById)
+        this->shelfPointerById[key] = value;
 
     for (auto & [ key, value ] : sto.shelfIdsSetByBlockName)
         for (auto& ID : value)
@@ -62,8 +62,8 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(
 
     for (const auto& block : blocks) {
         const auto& shelves { block.getShelves() };
-        for (auto& shelf : shelves) {
-            this->shelfById[shelf.getId()] = shelf;
+        for (const auto& shelf : shelves) {
+            this->shelfPointerById[shelf.getId()] = &shelf;
             this->shelfIdsSetByBlockName[block.getName()].insert(shelf.getId());
         }
     }
@@ -110,9 +110,9 @@ operator=(const StorageSolutionEvaluator& other)
     InitializeIsolatedFamilies();
 
     this->shelfIdsSetByBlockName.clear();
-    this->shelfById.clear();
-    for (auto & [ key, value ] : other.shelfById)
-        this->shelfById[key] = value;
+    this->shelfPointerById.clear();
+    for (auto & [ key, value ] : other.shelfPointerById)
+        this->shelfPointerById[key] = value;
 
     for (auto & [ key, value ] : other.shelfIdsSetByBlockName)
         for (auto& ID : value)
@@ -195,11 +195,11 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
         }
     }
 
-    assert(shelfById.find(firstCell.getIdShelf()) != shelfById.end());
-    assert(shelfById.find(secondCell.getIdShelf()) != shelfById.end());
+    assert(shelfPointerById.find(firstCell.getIdShelf()) != shelfPointerById.end());
+    assert(shelfPointerById.find(secondCell.getIdShelf()) != shelfPointerById.end());
 
-    string blockNameA = shelfById[firstCell.getIdShelf()].getBlockName();
-    string blockNameB = shelfById[secondCell.getIdShelf()].getBlockName();
+    string blockNameA = shelfPointerById[firstCell.getIdShelf()]->getBlockName();
+    string blockNameB = shelfPointerById[secondCell.getIdShelf()]->getBlockName();
 
     if (blockNameA != blockNameB) {
         for (unsigned int i = 0; i < prohibitedBlocks->size(); i++) {
@@ -265,8 +265,8 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(
         map<string, vector<string> > familyAllocationsByCell;
         map<long, vector<string> > allocationsByShelf;
         map<string, vector<string> > allocationsByBlock;
-        string firstBlockName = shelfById[firstCell.getIdShelf()].getBlockName();
-        string secondBlockName = shelfById[secondCell.getIdShelf()].getBlockName();
+        string firstBlockName = shelfPointerById[firstCell.getIdShelf()]->getBlockName();
+        string secondBlockName = shelfPointerById[secondCell.getIdShelf()]->getBlockName();
 
         if (firstCell.getIdShelf() == secondCell.getIdShelf()) {
             for (auto & [ product, cell ] : allocations) { // Same shelf. Does not need to load shelf or block
@@ -291,7 +291,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDelta(
                         product.getFamily());
                     allocationsByShelf[value.first.getIdShelf()].push_back(
                         product.getFamily());
-                    allocationsByBlock[shelfById[value.first.getIdShelf()].getBlockName()]
+                    allocationsByBlock[shelfPointerById[value.first.getIdShelf()]->getBlockName()]
                         .push_back(product.getFamily());
                 }
             }

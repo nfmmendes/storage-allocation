@@ -49,7 +49,7 @@ class StorageSolutionEvaluator{
 		unordered_map<Vertex, Vertex> closestStartPoint;
 		unordered_map<Vertex, Vertex> closestEndPoint;
 		map<string, const ProductAllocationProhibitions* > prohibitionPointerByProductName; 
-		map<long, Shelf> shelfById; 
+		map<long, const Shelf*> shelfPointerById; 
 		map<string, set<long> > shelfIdsSetByBlockName;
 
 		/**
