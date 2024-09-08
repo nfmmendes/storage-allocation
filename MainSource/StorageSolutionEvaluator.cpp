@@ -73,9 +73,9 @@ void StorageSolutionEvaluator::InitializeIsolatedFamilies()
 {
     weaklyIsolatedFamilies.clear();
     stronglyIsolatedFamilies.clear();
-    prohibitionsByProduct.clear();
+    prohibitionPointerByProductName.clear();
 
-    vector<IsolatedFamily> isolatedFamilies = this->optimizationConstraints.getIsolatedFamilies();
+    const auto& isolatedFamilies = this->optimizationConstraints.getIsolatedFamilies();
     for (auto& item : isolatedFamilies) {
         isolationDataByFamilyCode[item.getCode()] = make_pair(item.getLevel(), item.getForce());
         if (item.getForce() == WEAK_ISOLATION)
@@ -84,9 +84,9 @@ void StorageSolutionEvaluator::InitializeIsolatedFamilies()
             stronglyIsolatedFamilies.insert(item.getCode());
     }
 
-    vector<ProductAllocationProhibitions> prohibitions = this->optimizationConstraints.getProductAllocationProhibitions();
+    const auto& prohibitions { this->optimizationConstraints.getProductAllocationProhibitions() };
     for (auto& item : prohibitions)
-        prohibitionsByProduct[item.getProductName()] = item;
+        prohibitionPointerByProductName[item.getProductName()] = &item;
 }
 
 StorageSolutionEvaluator& StorageSolutionEvaluator::
@@ -172,7 +172,7 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
 
     double oldPenalty = 0;
     double newPenalty = 0;
-    ProductAllocationProhibitions* firstProhibition = &prohibitionsByProduct[product.getName()];
+    const auto firstProhibition = prohibitionPointerByProductName[product.getName()];
 
     auto* prohibitedCells = &firstProhibition->getForbiddenCells();
     auto* prohibitedShelves = &firstProhibition->getForbiddenShelves();
@@ -217,19 +217,19 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
     const Product& first, const Cell& firstCell, const Product& second,
     const Cell& secondCell)
 {
-    auto firstResult = prohibitionsByProduct.find(first.getName());
-    auto secondResult = prohibitionsByProduct.find(second.getName());
+    auto firstResult = prohibitionPointerByProductName.find(first.getName());
+    auto secondResult = prohibitionPointerByProductName.find(second.getName());
 
-    if (firstResult == prohibitionsByProduct.end() && secondResult == prohibitionsByProduct.end())
+    if (firstResult == prohibitionPointerByProductName.end() && secondResult == prohibitionPointerByProductName.end())
         return 0;
 
     double deltaFirstProduct = 0;
     double deltaSecondProduct = 0;
 
-    if (firstResult != prohibitionsByProduct.end())
+    if (firstResult != prohibitionPointerByProductName.end())
         deltaFirstProduct = evaluatePenaltyDeltaByProhibition(first, firstCell, secondCell);
 
-    if (secondResult != prohibitionsByProduct.end())
+    if (secondResult != prohibitionPointerByProductName.end())
         deltaSecondProduct = evaluatePenaltyDeltaByProhibition(second, secondCell, firstCell);
 
     return deltaFirstProduct + deltaSecondProduct;

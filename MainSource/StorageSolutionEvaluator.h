@@ -48,7 +48,7 @@ class StorageSolutionEvaluator{
 		map<string, pair<string, string> > isolationDataByFamilyCode; 			// Isolation level and force by family code 
 		unordered_map<Vertex, Vertex> closestStartPoint;
 		unordered_map<Vertex, Vertex> closestEndPoint;
-		map<string, ProductAllocationProhibitions> prohibitionsByProduct; 
+		map<string, const ProductAllocationProhibitions* > prohibitionPointerByProductName; 
 		map<long, Shelf> shelfById; 
 		map<string, set<long> > shelfIdsSetByBlockName;
 
