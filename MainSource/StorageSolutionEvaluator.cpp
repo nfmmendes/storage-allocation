@@ -60,11 +60,11 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(
         vertexByCellPosition[key] = value;
     InitializeIsolatedFamilies();
 
-    for (unsigned int i = 0; i < blocks.size(); i++) {
-        vector<Shelf> shelves = blocks[i].getShelves();
+    for (const auto& block : blocks) {
+        const auto& shelves { block.getShelves() };
         for (auto& shelf : shelves) {
             this->shelfById[shelf.getId()] = shelf;
-            this->shelfIdsSetByBlockName[blocks[i].getName()].insert(shelf.getId());
+            this->shelfIdsSetByBlockName[block.getName()].insert(shelf.getId());
         }
     }
 }
