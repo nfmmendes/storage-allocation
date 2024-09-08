@@ -357,32 +357,36 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByLevel(
 
 double StorageSolutionEvaluator::evaluatePenaltyOnLevel(map<string, int>& allocationsByFamilyCode, string isolationLevel)
 {
+    if(allocationsByFamilyCode.size() <= 1)
+        return 0;
+
     double total = 0;
-    if (allocationsByFamilyCode.size() > 1) {
-        int isolatedAccum = 0;
-        int notIsolatedAccum = 0;
-        int higherIsolatedQuantity = 0;
-        for (auto & [ familyCode, quantity ] : allocationsByFamilyCode) {
-            if (isolationDataByFamilyCode[familyCode].first == isolationLevel && weaklyIsolatedFamilies.find(familyCode) != weaklyIsolatedFamilies.end()) {
-                isolatedAccum += quantity; //*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
-                higherIsolatedQuantity = (higherIsolatedQuantity < quantity)
-                    ? quantity
-                    : higherIsolatedQuantity;
-            }
-            else
-                notIsolatedAccum += quantity; //*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
-        }
+    int isolatedAccum = 0;
+    int notIsolatedAccum = 0;
+    int higherIsolatedQuantity = 0;
+    auto& endIterator { weaklyIsolatedFamilies. end() }; 
 
-        if (isolatedAccum > 0) {
-            int numAllocations = isolatedAccum + notIsolatedAccum;
-            int remainingIsolated = (isolatedAccum - higherIsolatedQuantity);
-
-            total = isolatedAccum > notIsolatedAccum
-                ? (pow(notIsolatedAccum, 2) + remainingIsolated) * 1.0 / numAllocations
-                : pow(isolatedAccum, 2) * 1.0 / numAllocations;
-            total *= 1.0 * OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+    for (auto & [ familyCode, quantity ] : allocationsByFamilyCode) {
+        if (isolationDataByFamilyCode[familyCode].first == isolationLevel && weaklyIsolatedFamilies.find(familyCode) != endIterator) {
+            isolatedAccum += quantity; //*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
+            higherIsolatedQuantity = (higherIsolatedQuantity < quantity)
+                ? quantity
+                : higherIsolatedQuantity;
         }
+        else
+            notIsolatedAccum += quantity; //*OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
     }
+
+    if(isolatedAccum <= 0)
+        return 0;
+
+    int numAllocations = isolatedAccum + notIsolatedAccum;
+    int remainingIsolated = (isolatedAccum - higherIsolatedQuantity);
+
+    total = isolatedAccum > notIsolatedAccum
+        ? (pow(notIsolatedAccum, 2) + remainingIsolated) * 1.0 / numAllocations
+        : pow(isolatedAccum, 2) * 1.0 / numAllocations;
+    total *= 1.0 * OptimizationParameters::WEAK_ISOLATED_FAMILY_ALLOCATION_PENALTY;
 
     return total;
 }
