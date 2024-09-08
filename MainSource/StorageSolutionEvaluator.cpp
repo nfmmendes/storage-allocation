@@ -509,9 +509,9 @@ double StorageSolutionEvaluator::DoRouteEstimation(const vector<Vertex>& solutio
 double StorageSolutionEvaluator::sumDistances(const vector<Vertex>& sequence)
 {
     double sum = 0.0;
-    int limit = sequence.size() > 0 ? sequence.size() - 1 : 0;
+    auto limit = sequence.size() > 0 ? sequence.size() - 1 : 0;
 
-    for (int i = 0; i < limit; i++)
+    for (auto i = 0; i < limit; i++)
         sum += distances->getDistance(sequence[i], sequence[i + 1]);
 
     return sum;
