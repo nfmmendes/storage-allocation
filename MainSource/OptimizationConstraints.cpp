@@ -57,7 +57,7 @@ void OptimizationConstraints::setProductAllocationProhibitions(vector<ProductAll
     productsCodeWithProhibition.clear(); 
 
     for(unsigned int i=0;i<allocationProhitions.size(); i++)
-        productsCodeWithProhibition.insert(allocationProhitions[i].getProduct().getName());
+        productsCodeWithProhibition.insert(allocationProhitions[i].getProductName());
 }
 
 void OptimizationConstraints::setIsolatedFamilies(vector<IsolatedFamily> value){ 
@@ -74,7 +74,7 @@ void OptimizationConstraints::setIsolatedFamilies(vector<IsolatedFamily> value){
 
 bool OptimizationConstraints::IsAllocationAllowed(const Product &product, const Position& newPosition){
     
-    auto query = [product](ProductAllocationProhibitions &other) {  return other.getProduct().getName() == product.getName() ;  };
+    auto query = [product](ProductAllocationProhibitions &other) {  return other.getProductName() == product.getName();  };
     vector<ProductAllocationProhibitions>::iterator prohibition = find_if(allocationProhitions.begin(), allocationProhitions.end(), query );
     
     if(prohibition == allocationProhitions.end())

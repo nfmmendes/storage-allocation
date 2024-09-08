@@ -86,7 +86,7 @@ void StorageSolutionEvaluator::InitializeIsolatedFamilies()
 
     vector<ProductAllocationProhibitions> prohibitions = this->optimizationConstraints.getProductAllocationProhibitions();
     for (auto& item : prohibitions)
-        prohibitionsByProduct[item.getProduct().getName()] = item;
+        prohibitionsByProduct[item.getProductName()] = item;
 }
 
 StorageSolutionEvaluator& StorageSolutionEvaluator::

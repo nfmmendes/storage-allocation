@@ -19,10 +19,10 @@ using std::map;
  */
 class ProductAllocationProhibitions{
     private:
-        Product product;						    ///< Product to be allocated 
-        vector<Shelf> forbiddenShelves;		///< Shelves where the product can not be stored
-        vector<Cell> forbiddenCells;			///< Shelves where the product can not be stored 
-        vector<Block> forbiddenBlocks;			///< Blocks where the product can not be stored 
+        string productName;						///< Name of the product with a prohibition. 
+        vector<Shelf> forbiddenShelves;		    ///< Shelves where the product can not be stored.
+        vector<Cell> forbiddenCells;			///< Shelves where the product can not be stored.
+        vector<Block> forbiddenBlocks;			///< Blocks where the product can not be stored. 
         static void recoverWarehouseData(Warehouse &warehouse,map<string, Cell> & cellsByCode, 
                                         map<long int, Shelf> &shelvesById, map<string, Block> & blocksByName);
     public:
@@ -51,7 +51,7 @@ class ProductAllocationProhibitions{
          * @brief Set the product with an allocation prohibition.
          * @param other The product.
          */ 
-        void setProduct(const Product & other);
+        void setProductName(const string & other);
 
         /**
          * @brief Set the forbidden shelves. 
@@ -72,10 +72,10 @@ class ProductAllocationProhibitions{
         void setForbiddenBlocks(const vector<Block> &others);
     
         /**
-         * @brief Get the product with an allocation prohibition.
-         * @return The product with an allocation prohibition.
+         * @brief Get the name of the product with the allocation prohibition.
+         * @return The name of the product with the allocation prohibition.
          */
-        const Product& getProduct() const; 
+        const string& getProductName() const; 
         
         /**
          * @brief Get the list of forbidden shelves. 

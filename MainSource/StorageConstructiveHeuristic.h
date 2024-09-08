@@ -44,8 +44,9 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		set<string> isolatedFamilies; 
 		set<string> restrictedProducts; 
 		map<string, vector<Product> > productsByFamily; 
+		map<string, Product*> productPointerByProductName;
 		map<string, IsolatedFamily > familyIsolationsByFamilyCode; 
-		map<string, ProductAllocationProhibitions > productAllocationsByProductName; 
+		map<string, ProductAllocationProhibitions > allocationProhibitionByProductName; 
 		map<Vertex, Position > cellByVertex;
 		map<string, vector<Vertex> > vertexByType; 
 		set<string> storageVertexTypes; 

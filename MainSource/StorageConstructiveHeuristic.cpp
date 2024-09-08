@@ -45,8 +45,8 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 
 	//Initialize product allocation prohibitions structures 
 	for(const auto& prohibition : prohibitions){
-		productAllocationsByProductName[prohibition.getProduct().getName()] = prohibition;
-		restrictedProducts.insert(prohibition.getProduct().getName());
+		allocationProhibitionByProductName[prohibition.getProductName()] = prohibition;
+		restrictedProducts.insert(prohibition.getProductName());
 	}
 
 	//Initialize structures to recover quickly information about store positions on graph
@@ -69,8 +69,10 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 	}
 
 	//Group products by family
-	for(unsigned int i=0;i<products.size();i++)
+	for(unsigned int i=0;i<products.size();i++){
 		productsByFamily[products[i].getFamily()].push_back(products[i]);
+		productPointerByProductName[products[i].getName()] = &products[i];
+	}
 
 	productsSortedByFrequence = getProductOrderByFrequence();
 
@@ -124,8 +126,8 @@ bool StorageConstructiveHeuristic::isForbiddenStore(const Product &product, cons
 	//If the cell does not exist (is not found in the set of cells) so obviously it is forbidden store something there 
 	if(cellByVertex.find(vertex) == cellByVertex.end())
 		return true; 
-	else if(productAllocationsByProductName.find(product.getName()) !=  productAllocationsByProductName.end()){
-		ProductAllocationProhibitions allocationProhibition = productAllocationsByProductName[product.getName()];
+	else if(allocationProhibitionByProductName.find(product.getName()) !=  allocationProhibitionByProductName.end()){
+		ProductAllocationProhibitions allocationProhibition = allocationProhibitionByProductName[product.getName()];
 		
 		Position location = cellByVertex[vertex]; 
 		Cell cell = location.first; 
@@ -250,8 +252,8 @@ double StorageConstructiveHeuristic::evaluatePenaltiesByAllocationProhibition(Ma
 
 	vector<ProductAllocationProhibitions> prohibitions = this->constraints.getProductAllocationProhibitions();
 	for(auto & prohibition : prohibitions){
-		const auto& product { prohibition.getProduct() }; 
-		const auto& cell { allocation[product].first }; 
+		const auto& productName { prohibition.getProductName() }; 
+		const auto& cell { allocation[*productPointerByProductName[productName]].first }; 
 		const auto& shelf { shelvesById[cell.getIdShelf()] };
 		const auto& block { blocksByName[shelf.getBlockName()] } ;
 		

@@ -14,7 +14,7 @@ ProductAllocationProhibitions::ProductAllocationProhibitions(){
 }
 
 ProductAllocationProhibitions::ProductAllocationProhibitions(const ProductAllocationProhibitions &other){
-    this->product = other.product;
+    this->productName = other.productName;
     
     copy(begin(other.forbiddenCells), end(other.forbiddenCells), back_inserter(this->forbiddenCells));
     copy(begin(other.forbiddenShelves), end(other.forbiddenShelves), back_inserter(this->forbiddenShelves));
@@ -22,7 +22,7 @@ ProductAllocationProhibitions::ProductAllocationProhibitions(const ProductAlloca
 }
 
 const ProductAllocationProhibitions & ProductAllocationProhibitions::operator=(const ProductAllocationProhibitions &other){
-    this->product = other.product;
+    this->productName = other.productName;
     
 	this->forbiddenCells.clear();
 	this->forbiddenShelves.clear();    
@@ -38,19 +38,19 @@ const ProductAllocationProhibitions & ProductAllocationProhibitions::operator=(c
 ProductAllocationProhibitions::ProductAllocationProhibitions(const Product &product, const vector<Shelf>& forbiddenShelves, 
                                                         const vector<Cell>& forbiddenCells,const vector<Block> &blocks){
     
-	this->product = product; 
+	this->productName = productName; 
 	
     copy(begin(forbiddenCells), end(forbiddenCells), back_inserter(this->forbiddenCells));
     copy(begin(forbiddenShelves), end(forbiddenShelves), back_inserter(this->forbiddenShelves));
     copy(begin(forbiddenBlocks), end(forbiddenBlocks), back_inserter(this->forbiddenBlocks));
 }
 
-void ProductAllocationProhibitions::setProduct(const Product & other){ this->product = other; }
+void ProductAllocationProhibitions::setProductName(const string & other){ this->productName = other; }
 void ProductAllocationProhibitions::setForbiddenShelves(const vector<Shelf> & others){  this->forbiddenShelves = others; }
 void ProductAllocationProhibitions::setForbiddenCells(const vector<Cell> &others) {  this->forbiddenCells = others; }
 void ProductAllocationProhibitions::setForbiddenBlocks(const vector<Block> &others) {  this->forbiddenBlocks = others; }
 
-const Product& ProductAllocationProhibitions::getProduct() const{   return this->product;}
+const string& ProductAllocationProhibitions::getProductName() const{   return this->productName;}
 const vector<Shelf>& ProductAllocationProhibitions::getForbiddenShelves() const { return this->forbiddenShelves;}
 const vector<Cell>& ProductAllocationProhibitions::getForbiddenCells() const { return this->forbiddenCells; }
 const vector<Block>& ProductAllocationProhibitions::getForbiddenBlocks() const { return this->forbiddenBlocks; }
@@ -58,7 +58,7 @@ const vector<Block>& ProductAllocationProhibitions::getForbiddenBlocks() const {
 vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProhibitionsData(ifstream &file){
     vector<ProductAllocationProhibitions> prohibitions;
     long int idShelve;
-	string productCode;
+	string productName;
     string cellCode, blockName;
     int numProhibitions,numCellProhibitions, numShelvesProhibitions, numBlocksProhibitions;
     
@@ -82,7 +82,7 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
 	
 	file>>numIterations; 
 	for(int w= 0; w < numIterations; w++){
-		file>>productCode;
+		file>>productName;
 		file>>numProhibitions;
 	
 		file>>numCellProhibitions>>numShelvesProhibitions>>numBlocksProhibitions;
@@ -96,7 +96,7 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
         vector<Shelf> _shelves;
         vector<Block> _blocks;
         
-        if(productsByCode.find(productCode) != productsByCode.end()){
+        if(productsByCode.find(productName) != productsByCode.end()){
             for(int i=0; i<numCellProhibitions; i++){
                 file>>cellCode;
                 _cells.push_back(cellsByCode[cellCode]);
@@ -115,7 +115,7 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
             prohibition.setForbiddenCells(_cells);
             prohibition.setForbiddenShelves(_shelves);
             prohibition.setForbiddenBlocks(_blocks);
-            prohibition.setProduct(productsByCode[productCode]);
+            prohibition.setProductName(productName);
             
             prohibitions.push_back(prohibition);
         }else{
