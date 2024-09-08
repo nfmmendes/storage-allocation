@@ -19,36 +19,21 @@ class Product{
         string family;
         
     public:
-        Product(){}
-        Product(const Product & other){
-			this->ID = other.ID;
-            this->name = other.name;
-            this->family = other.family;
-        }
+        Product() {}
+        Product(const Product & other);
         
-        Product(long int ID, const string& name, const string& family){
-            this->ID = ID;
-            this->name = name;
-            this->family = family;
-        }
-		
-		Product & operator=(const Product &other){
-			this->ID = other.ID;
-            this->name = other.name;
-            this->family = other.family;
-			
-			return *this;
-		}
+        Product(long int ID, const string& name, const string& family);
+		Product & operator=(const Product &other);
     
-        long int getID()const { return ID; }
-        string getName()const{ return name; }
-        string getFamily()const{ return family; }
+        long int getID()const; 
+        string getName()const; 
+        string getFamily()const; 
     
-        void setID(long int Id){ if(Id >= 0 ) this->ID = Id; }
-        void setName(const string& name){ this->name = name;}
-        void setFamily(const string& family){ this->family = family;}
-		bool operator<(const Product &other) const{ return this->ID < other.ID; }
+        void setID(long int Id);
+        void setName(const string& name); 
+        void setFamily(const string& family); 
+		bool operator<(const Product &other) const; 
         static vector<Product> readProductsData(std::ifstream &file);
-		void print()const{ std::cout<<ID<<" "<<name<<" "<<family<<std::endl; }
+		void print()const; 
     
 };
