@@ -73,8 +73,8 @@ vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProh
     vector<Product> products = input.getProducts();
     map<string,Product> productsByCode;
 	
-    for(unsigned int i=0; i < products.size(); i++)
-		productsByCode[products[i].getName()] = products[i];
+    for(const auto& product : products)
+		productsByCode[product.getName()] = product;
 	
 	ProductAllocationProhibitions::recoverWarehouseData(warehouse,cellsByCode,shelvesById,blocksByName);
 	
@@ -134,21 +134,21 @@ void ProductAllocationProhibitions::recoverWarehouseData(Warehouse& warehouse, m
     vector<Cell> cells;
     
     //Fill blocksById dictionary, while get the shelves of the block
-    for(unsigned int i=0; i<blocks.size(); i++){
-        blocksByName[blocks[i].getName()]= blocks[i];
+    for(const auto& block : blocks){
+        blocksByName[block.getName()] = block;
         
-        vector<Shelf> shelvesOnBlock = blocks[i].getShelves();
+        const auto& shelvesOnBlock = block.getShelves();
         shelves.insert(shelves.end(), shelvesOnBlock.begin(), shelvesOnBlock.end());
     }
     
     //Fill shelvesById dictionary, while get the cells of the shelf
-	for(unsigned int i=0; i< shelves.size(); i++){
-        shelvesById[shelves[i].getId()] = shelves[i];
+    for(const auto& shelf : shelves){
+        shelvesById[shelf.getId()] = shelf;
         
-        vector<Cell> cellsOnShelf = shelves[i].getCells();
+        const auto& cellsOnShelf = shelf.getCells();
         cells.insert(cells.end(), cellsOnShelf.begin(), cellsOnShelf.end());
     }
     
-    for(unsigned int i=0; i<cells.size();i++)
-        cellsByCode[cells[i].getCode()] = cells[i];
+    for(const auto& cell : cells)
+        cellsByCode[cell.getCode()] = cell;
 }
