@@ -44,32 +44,32 @@ class ProductAllocationProhibitions{
          * @param forbiddenCells The list of forbidden cells.
          * @param block The list of blocks.
          */
-        ProductAllocationProhibitions(Product &product, vector<Shelf>forbiddenShelves, vector<Cell> forbiddenCells, 
-                                     vector<Block> &blocks);
+        ProductAllocationProhibitions(const Product &product, const vector<Shelf>& forbiddenShelves, const vector<Cell>& forbiddenCells, 
+                                     const vector<Block> &blocks);
     
         /**
          * @brief Set the product with an allocation prohibition.
          * @param other The product.
          */ 
-        void setProduct(Product & other);
+        void setProduct(const Product & other);
 
         /**
          * @brief Set the forbidden shelves. 
          * @param others The list of forbiddend shelves.
          */
-        void setForbiddenShelves(vector<Shelf> & others);
+        void setForbiddenShelves(const vector<Shelf> & others);
 
         /**
          * @brief Set the forbidden cells.
          * @param others The list of fobrbidden cells. 
          */
-        void setForbiddenCells(vector<Cell> &others);
+        void setForbiddenCells(const vector<Cell> &others);
 
         /**
          * @brief Set the forbidden blocks. 
          * @param others The list of forbidden blocks. 
          */
-        void setForbiddenBlocks(vector<Block> &others);
+        void setForbiddenBlocks(const vector<Block> &others);
     
         /**
          * @brief Get the product with an allocation prohibition.
@@ -81,19 +81,19 @@ class ProductAllocationProhibitions{
          * @brief Get the list of forbidden shelves. 
          * @return The list of forbidden shelves. 
          */
-        const vector<Shelf>& getForbiddenShelves();
+        const vector<Shelf>& getForbiddenShelves() const;
 
         /**
          * @brief Get the list of forbidden cells. 
          * @return THe list of forbidden cells.
          */
-        const vector<Cell>& getForbiddenCells();
+        const vector<Cell>& getForbiddenCells() const;
 
         /**
          * @brief Get the list of forbidden blocks.
          * @return The list of forbidden blocks. 
          */
-        const vector<Block>& getForbiddenBlocks();
+        const vector<Block>& getForbiddenBlocks() const;
         
         /**
          * @brief Read prohibition data from a file. 

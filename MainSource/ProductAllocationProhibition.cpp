@@ -7,6 +7,7 @@
 using std::vector;
 using std::map;
 using std::ifstream;
+using std::back_inserter;
 
 ProductAllocationProhibitions::ProductAllocationProhibitions(){
     
@@ -34,7 +35,8 @@ const ProductAllocationProhibitions & ProductAllocationProhibitions::operator=(c
 	return *this;
 }
 
-ProductAllocationProhibitions::ProductAllocationProhibitions(Product &product,vector<Shelf>forbiddenShelves,vector<Cell> forbiddenCells,vector<Block> &blocks){
+ProductAllocationProhibitions::ProductAllocationProhibitions(const Product &product, const vector<Shelf>& forbiddenShelves, 
+                                                        const vector<Cell>& forbiddenCells,const vector<Block> &blocks){
     
 	this->product = product; 
 	
@@ -43,15 +45,15 @@ ProductAllocationProhibitions::ProductAllocationProhibitions(Product &product,ve
     copy(begin(forbiddenBlocks), end(forbiddenBlocks), back_inserter(this->forbiddenBlocks));
 }
 
-void ProductAllocationProhibitions::setProduct(Product & other){ this->product = other; }
-void ProductAllocationProhibitions::setForbiddenShelves(vector<Shelf> & others){  this->forbiddenShelves = others; }
-void ProductAllocationProhibitions::setForbiddenCells(vector<Cell> &others){  this->forbiddenCells = others; }
-void ProductAllocationProhibitions::setForbiddenBlocks(vector<Block> &others) {  this->forbiddenBlocks = others; }
+void ProductAllocationProhibitions::setProduct(const Product & other){ this->product = other; }
+void ProductAllocationProhibitions::setForbiddenShelves(const vector<Shelf> & others){  this->forbiddenShelves = others; }
+void ProductAllocationProhibitions::setForbiddenCells(const vector<Cell> &others) {  this->forbiddenCells = others; }
+void ProductAllocationProhibitions::setForbiddenBlocks(const vector<Block> &others) {  this->forbiddenBlocks = others; }
 
 const Product& ProductAllocationProhibitions::getProduct() const{   return this->product;}
-const vector<Shelf>& ProductAllocationProhibitions::getForbiddenShelves(){ return this->forbiddenShelves;}
-const vector<Cell>& ProductAllocationProhibitions::getForbiddenCells(){ return this->forbiddenCells; }
-const vector<Block>& ProductAllocationProhibitions::getForbiddenBlocks() { return this->forbiddenBlocks; }
+const vector<Shelf>& ProductAllocationProhibitions::getForbiddenShelves() const { return this->forbiddenShelves;}
+const vector<Cell>& ProductAllocationProhibitions::getForbiddenCells() const { return this->forbiddenCells; }
+const vector<Block>& ProductAllocationProhibitions::getForbiddenBlocks() const { return this->forbiddenBlocks; }
 
 vector<ProductAllocationProhibitions> ProductAllocationProhibitions::readAllProhibitionsData(ifstream &file){
     vector<ProductAllocationProhibitions> prohibitions;
