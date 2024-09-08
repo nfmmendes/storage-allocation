@@ -397,11 +397,11 @@ double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(const vector<Vertex
     assert(closestEndPoint.find(vertexes[0]) != closestEndPoint.end());
     assert(closestEndPoint.find(vertexes[1]) != closestEndPoint.end());
 
-    auto closestToZeroDepart = closestStartPoint[vertexes[0]];
-    auto closestToOneDepart = closestStartPoint[vertexes[1]];
+    const auto& closestToZeroDepart = closestStartPoint[vertexes[0]];
+    const auto& closestToOneDepart = closestStartPoint[vertexes[1]];
 
-    auto closestFromZeroArrival = closestEndPoint[vertexes[0]];
-    auto closestFromOneArrival = closestEndPoint[vertexes[1]];
+    const auto& closestFromZeroArrival = closestEndPoint[vertexes[0]];
+    const auto& closestFromOneArrival = closestEndPoint[vertexes[1]];
 
     auto distanceDepartZero = distances->getDistance(closestToOneDepart, vertexes[0]);
     auto distanceDepartOne = distances->getDistance(closestToOneDepart, vertexes[1]);
@@ -420,8 +420,8 @@ double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(const vector<Vertex
 
 double StorageSolutionEvaluator::getOnePointsBestRouteDistance(const Vertex& location)
 {
-    auto begin = closestStartPoint[location];
-    auto end = closestEndPoint[location];
+    const auto& begin = closestStartPoint[location];
+    const auto& end = closestEndPoint[location];
     double distance = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end);
 
     return distance;
@@ -432,12 +432,12 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute>& v
     TSP tsp(distances);
     vector<pair<Product, double> > items;
     vector<Vertex> storagePoints;
-    double penalty = 0.0;
-    double totalDistance = 0.0;
+    double penalty { 0.0 };
+    double totalDistance { 0.0 };
 
     for (unsigned int i = 0; i < vertexesVisits.size(); i++) {
 
-        vector<Vertex> vertexes = vertexesVisits[i].first;
+        const auto& vertexes = vertexesVisits[i].first;
         storagePoints.clear();
 
         if (items.size() == 1) {
