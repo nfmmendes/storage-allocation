@@ -28,8 +28,8 @@ Product & Product::operator=(const Product &other){
 }
 
 long int Product::getID()const { return ID; }
-string Product::getName() const { return name; }
-string Product::getFamily() const { return family; }
+const string& Product::getName() const { return name; }
+const string& Product::getFamily() const { return family; }
 
 void Product::setID(long int Id){ 
     if(Id >= 0 ) 

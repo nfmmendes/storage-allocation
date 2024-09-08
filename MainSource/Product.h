@@ -26,8 +26,8 @@ class Product{
 		Product & operator=(const Product &other);
     
         long int getID()const; 
-        string getName()const; 
-        string getFamily()const; 
+        const string& getName()const; 
+        const string& getFamily()const; 
     
         void setID(long int Id);
         void setName(const string& name); 
