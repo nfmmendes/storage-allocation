@@ -36,7 +36,7 @@ typedef struct pair<Cell, int> Position;
 class StorageSolutionEvaluator{
 
 	private:
-		map<const Vertex, map<int, vector<PickingRoute > >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
+		map<const Vertex, map<size_t, vector<PickingRoute > >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
 															 								   ///< the presence of a vertex and then by size.  
 		map<pair<Cell,int> , Vertex> vertexByCellPosition; 
 		const DistanceMatrix<Vertex> *distances; 
