@@ -31,17 +31,8 @@ long int Product::getID()const { return ID; }
 const string& Product::getName() const { return name; }
 const string& Product::getFamily() const { return family; }
 
-void Product::setID(long int Id){ 
-    if(Id >= 0 ) 
-        this->ID = Id; 
-}
-
 void Product::setName(const string& name){ 
     this->name = name;
-}
-
-void Product::setFamily(const string& family){ 
-    this->family = family;
 }
 
 bool Product::operator<(const Product &other) const { 

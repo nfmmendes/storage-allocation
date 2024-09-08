@@ -29,9 +29,7 @@ class Product{
         const string& getName()const; 
         const string& getFamily()const; 
     
-        void setID(long int Id);
         void setName(const string& name); 
-        void setFamily(const string& family); 
 		bool operator<(const Product &other) const; 
         static vector<Product> readProductsData(std::ifstream &file);
 		void print()const; 
