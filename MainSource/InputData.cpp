@@ -81,16 +81,16 @@ void InputData::setWarehouse(Warehouse &&warehouse){
     
 }
 
-const vector<Product> &InputData::getProducts(){return products;}
+const vector<Product> &InputData::getProducts() const {return products;}
 
-const vector<Client>& InputData::getClients(){ return clients;}
+const vector<Client>& InputData::getClients() const { return clients;}
 
-const vector<Order> &InputData::getOrders() { return orders;}
+const vector<Order> &InputData::getOrders() const { return orders;}
 
-const vector<Parameter>& InputData::getParameters() { return parameters;}
+const vector<Parameter>& InputData::getParameters() const { return parameters;}
 
-const Warehouse & InputData::getWarehouse() { return warehouse; }
+const Warehouse & InputData::getWarehouse() const { return warehouse; }
 
-const vector<IsolatedFamily>& InputData::getIsolatedFamily(){ return isolatedFamilies; }
+const vector<IsolatedFamily>& InputData::getIsolatedFamily() const { return isolatedFamilies; }
 
-const vector<ProductAllocationProhibitions>& InputData::getAllocationProhibitions(){ return prohibitions;	}
+const vector<ProductAllocationProhibitions>& InputData::getAllocationProhibitions() const{ return prohibitions;	}
