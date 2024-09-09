@@ -150,33 +150,35 @@ InsideBlockSwap::~InsideBlockSwap(){
 		delete startSolution;
 }
 
-InsideBlockSwap::InsideBlockSwap(StorageAllocationSolution *initial, OptimizationConstraints * constr, Block & block){
+InsideBlockSwap::InsideBlockSwap(const StorageAllocationSolution *initial, OptimizationConstraints * constr, const Block & block){
 	this->startSolution = initial;
 	this->constraints = constr;
 	this->block = block; 
 	
 }
 
-bool InsideBlockSwap::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
+bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, MapAllocation &allocations){
 	const auto& firstFamily { first.getFamily() }; 
 	const auto& secondFamily { second.getFamily() }; 
 
 	//if one of products are not allocated, the swap is not valid
-	if(allocations.find(first) == allocations.end() || allocations.find(second) == allocations.end() )
+	const auto firstAlocation { allocations.find(first) };
+	const auto secondAllocation { allocations.find(second) };
+	if(firstAlocation == allocations.end() || secondAllocation == allocations.end() )
 		return false; 
 
 	//Check the prohibitions
 	const auto& firstPosition { allocations[first] };
 	const auto& secondPosition { allocations[second] } ;
-	const auto& prohibitedProducts { this->constraints->getProductsCodeWithProhibition() }; 
+	const auto& prohibitedProducts { constraints->getProductsCodeWithProhibition() }; 
 	auto firstProhibition = prohibitedProducts.find(first.getName());
 	auto secondProhibition = prohibitedProducts.find(second.getName());
 
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		auto isFirstAllowed = this->constraints->IsAllocationAllowed(first, secondPosition);
-		auto isSecondAllowed = this->constraints->IsAllocationAllowed(second, firstPosition);
+		auto isFirstAllowed = constraints->IsAllocationAllowed(first, secondAllocation->second);
+		auto isSecondAllowed = constraints->IsAllocationAllowed(second, firstAlocation->second);
 
 		if(! (isFirstAllowed && isSecondAllowed) )
 			return false; 
@@ -272,7 +274,7 @@ MostFrequentSwap::MostFrequentSwap(StorageAllocationSolution *initial, Optimizat
 	this->constraints = constr; 
 }
 
-AbstractSolution * MostFrequentSwap::getStartSolution() const{
+const AbstractSolution * MostFrequentSwap::getStartSolution() const{
 	return this->startSolution; 
 }
 
@@ -352,7 +354,7 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 //////////////////////////////////////////////////////////////////////////////////////////
 ////                    Storage allocation pertubation region
 /////////////////////////////////////////////////////////////////////////////////////////
-AbstractSolution * StorageAllocationPertubation::getStartSolution() const{
+const AbstractSolution * StorageAllocationPertubation::getStartSolution() const{
 	return this->startSolution; 
 } 
 
@@ -444,7 +446,8 @@ IsolatedFamilySwap::IsolatedFamilySwap(StorageAllocationSolution *initial, Optim
 	this->interchangeableProducts = products; 
 	this->constraints = constr; 
 }
-AbstractSolution * IsolatedFamilySwap::getStartSolution() const{
+
+const AbstractSolution * IsolatedFamilySwap::getStartSolution() const{
 	return startSolution; 
 }
 

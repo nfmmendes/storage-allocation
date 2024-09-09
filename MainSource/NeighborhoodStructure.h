@@ -11,7 +11,7 @@
 class NeighborhoodStructure{
 
     protected:
-        AbstractSolution * startSolution {nullptr};
+        const AbstractSolution * startSolution {nullptr};
         
     public:
         /** 
@@ -43,7 +43,7 @@ class NeighborhoodStructure{
          * @brief Get the initial solution.
          * @return The initial solution.
          */
-        virtual AbstractSolution * getStartSolution() const = 0; 
+        virtual const AbstractSolution * getStartSolution() const = 0; 
 
         /**
          * @brief Create a list of neighbors from the initial solution. 

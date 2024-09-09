@@ -49,7 +49,7 @@ class InsideShelfSwap :public NeighborhoodStructure{
         InsideShelfSwap();
         ~InsideShelfSwap();
         InsideShelfSwap(AbstractSolution *initial, OptimizationConstraints * constr, Shelf & shelf);
-        AbstractSolution * getStartSolution() const { return this->startSolution; }
+        const AbstractSolution * getStartSolution() const { return this->startSolution; }
         vector<AbstractSolution *> createNeighbors();
         void setShelfAllocations(map<Position,Product> &value){ shelfAllocations = value; }
 		void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
@@ -78,12 +78,12 @@ class InsideBlockSwap : public NeighborhoodStructure{
 		Block block; 
         OptimizationConstraints *constraints;
 		map<Position, Product> blockAllocations;
-        bool isValidSwap(Product &first, Product &second, MapAllocation &allocations); 
+        bool isValidSwap(const Product &first, const Product &second, MapAllocation &allocations); 
     public:
         InsideBlockSwap();
         ~InsideBlockSwap();
-        InsideBlockSwap(StorageAllocationSolution *initial, OptimizationConstraints * constr, Block &block);
-        AbstractSolution * getStartSolution() const { return this->startSolution; }
+        InsideBlockSwap(const StorageAllocationSolution *initial, OptimizationConstraints * constr, const Block &block);
+        const AbstractSolution * getStartSolution() const { return this->startSolution; }
 
         vector<AbstractSolution *> createNeighbors();
 
@@ -91,9 +91,9 @@ class InsideBlockSwap : public NeighborhoodStructure{
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
-        int getRandomSeed(){ return this->randomSeed; }
+        int getRandomSeed() const{ return this->randomSeed; }
         void setBlock(Block &other){ this->block = other; }
-        unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
+        unsigned int getNumberOfNeighbors() const { return this->numberOfNeighbors; }
 };
 
 /**
@@ -118,7 +118,7 @@ class MostFrequentSwap : public NeighborhoodStructure{
         MostFrequentSwap();
         ~MostFrequentSwap();
         MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr , vector<Product> &products);
-        AbstractSolution * getStartSolution() const; 
+        const AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
 
         void setInterchangeableProducts(vector<Product> &prods) { this->interchangeableProducts = prods; }
@@ -152,7 +152,7 @@ class IsolatedFamilySwap :public NeighborhoodStructure{
         IsolatedFamilySwap();
         ~IsolatedFamilySwap();
         IsolatedFamilySwap(StorageAllocationSolution *initial, OptimizationConstraints *constr,  vector<Product> &products);
-        AbstractSolution * getStartSolution() const; 
+        const AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
 
         void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
@@ -187,7 +187,7 @@ class StorageAllocationPertubation : public NeighborhoodStructure {
         set<string> forbiddenAllocationProducts; 
         bool isValidSwap(Product &first, Product &second, MapAllocation &allocations);
     public:
-        AbstractSolution * getStartSolution() const; 
+        const AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
         StorageAllocationPertubation(OptimizationConstraints *constr){ constraints = constr; }
         ~StorageAllocationPertubation(){}
