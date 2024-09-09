@@ -22,9 +22,9 @@ class IsolatedFamily{
 
 
 	private:
-		string Force;		///< Strongness of the isolation (STRONG, WEEL)
-		string Level;		///< Level of isolation (BLOCK, SHELVE, CELL)
-		string Code;		///< Family code'
+		string Force { };		///< Strongness of the isolation (STRONG, WEEL)
+		string Level { };		///< Level of isolation (BLOCK, SHELVE, CELL)
+		string Code { };		///< Family code'
 		
 	public:
 		/**
