@@ -2,9 +2,12 @@
 #include<iostream>
 #include<cmath>
 #include<cstdlib>
+#include<cassert>
 #include<string>
+#include<map>
 #include<fstream>
 using std::cout;
+using std::map;
 using std::endl;
 using std::ifstream;
 
@@ -60,19 +63,15 @@ IsolatedFamily & IsolatedFamily::operator=(const IsolatedFamily & other){
 
 bool IsolatedFamily::isLowerOrEqualLevel(string firstLevel,string secondLevel){
 
-	if(firstLevel != CELL_LEVEL && firstLevel != SHELF_LEVEL && firstLevel != BLOCK_LEVEL){
-		return false; 
-	}if(secondLevel != CELL_LEVEL && secondLevel != SHELF_LEVEL && secondLevel != BLOCK_LEVEL){
-		return false; 
-	}
-	
-	if(firstLevel == CELL_LEVEL){
-		return true;
-	}if((firstLevel == SHELF_LEVEL) && (secondLevel == CELL_LEVEL || secondLevel == BLOCK_LEVEL)){
-		return true;
-	}if(firstLevel == BLOCK_LEVEL && secondLevel == BLOCK_LEVEL){
-		return true;
-	}
-	return false; 
+	assert(firstLevel == CELL_LEVEL || firstLevel == SHELF_LEVEL || firstLevel == BLOCK_LEVEL );
+	assert(secondLevel == CELL_LEVEL || secondLevel == SHELF_LEVEL || secondLevel == BLOCK_LEVEL );
+
+	const static map<string, int> levelValues = { 
+		{CELL_LEVEL, 0},
+		{SHELF_LEVEL, 1},
+		{BLOCK_LEVEL, 2}
+	};
+
+	return levelValues.at(firstLevel) <= levelValues.at(secondLevel); 
 
 }
