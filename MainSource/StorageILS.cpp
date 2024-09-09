@@ -111,33 +111,33 @@ bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, c
  * 
  */
 vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
-	std::map<Product , pair<Cell,int> > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
+	auto& allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
  
 	std::vector<AbstractSolution *> solutions; 
 	srand(this->randomSeed); 
 
 	//It is not possible to do swaps 
-	int allocationsSize = (int) shelfAllocations.size();
+	auto allocationsSize { shelfAllocations.size() };
 	
 	if(shelfAllocations.size() <=2)
 		return solutions;
 	
 	set<pair<int,int> > swapsDone; 
 	int first, second; 
-	unsigned int numIterations = min(numberOfNeighbors, ((unsigned int) (allocationsSize-1)*allocationsSize) );
-	unsigned int numTries { 0 }; 
+	auto numIterations { min((size_t) numberOfNeighbors, (allocationsSize-1)*allocationsSize) };
+	auto numTries { 0 }; 
 
-	for(unsigned int i=0; i< numIterations && numTries < 2*numIterations; i++, numTries++){
+	for(auto i=0; i< numIterations && numTries < 2*numIterations; i++, numTries++){
 		if(!Util::ChooseTwoProductIndexes(first ,second,allocationsSize, swapsDone))
 			break;
 
 		auto it = shelfAllocations.begin();
 		advance(it,first); 
-		Product firstProduct = it->second; 
+		const Product& firstProduct = it->second; 
 		
 		it = shelfAllocations.begin(); 
 		advance(it,second); 
-		Product secondProduct = it->second; 
+		const Product& secondProduct = it->second; 
 		
 		if(!isValidSwap(firstProduct, secondProduct, allocations)){
 			i--;
