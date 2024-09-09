@@ -14,14 +14,14 @@ using std::string;
 class Shelf{
 
     private:
-        long int Id;							///< Shelf id
-        vector<Cell> cells;         		    ///< Cells inside the shelf TODO: Make this relationship be consistent in both senses 
-        pair<double,double> bottomLeftCoords;	///< Coordinates of shelf the bottom left extremity 
-        string blockName;					    ///< Name of block where the shelf is 
-        int columns;							///< Number of columns in the shelf
-        int rows; 								///< Number of rows in the shelf 
-        double cellLength;						///< Shelf cells length (It is supposed that the cells have all the same size)
-        double cellWidth; 						///< Shelf cells width (It is supposed that the cells have all the same size)
+        unsigned long int Id { 0 };							///< Shelf id
+        vector<Cell> cells { };         		    ///< Cells inside the shelf TODO: Make this relationship be consistent in both senses 
+        pair<double,double> bottomLeftCoords { };	///< Coordinates of shelf the bottom left extremity 
+        string blockName { };					    ///< Name of block where the shelf is 
+        unsigned int columns { };							///< Number of columns in the shelf
+        unsigned int rows { }; 								///< Number of rows in the shelf 
+        double cellLength { };						///< Shelf cells length (It is supposed that the cells have all the same size)
+        double cellWidth { }; 						///< Shelf cells width (It is supposed that the cells have all the same size)
         
         
     public:
@@ -47,12 +47,12 @@ class Shelf{
          * @param cellLength The shelf cell lenght.
          * @param cellWidth The shelf cell width.
          */
-        Shelf(long int Id, const vector<Cell>& cells, const pair<double, double>& bottomLeftCoords, string blockName,
-              int columns, int rows, double cellLength, double cellWidth);
+        Shelf(unsigned long int Id, const vector<Cell>& cells, const pair<double, double>& bottomLeftCoords, const string& blockName,
+              unsigned int columns, unsigned int rows, double cellLength, double cellWidth);
     
         /**
          *  @brief Get shelf id.
-         * @return The shelf id. 
+         *  @return The shelf id. 
          */
         long int getId() const;
 
@@ -114,18 +114,18 @@ class Shelf{
          * @brief Set the shelf cells.
          * @param cells The shelf cells. 
          */
-        void setCells(vector<Cell> &cells);
+        void setCells(const vector<Cell> &cells);
 		
         /**
 		 * @brief Print shelf information in the console. 
          */
-		void printShelfInformation();
+		void printShelfInformation() const;
 
         /**
     	 *  @brief Get the number of available positions in the shelf. 
 		 * @return The number of available positions. 
          */
-		int getNumberOfAvailablePositions(); 
+		int getNumberOfAvailablePositions() const; 
 		
         /**
 		 * @brief Override less than operator<
@@ -133,7 +133,7 @@ class Shelf{
 		 * @return True if the left side object is smaller 
          *         than the right side object. False otherwise.
          */
-		bool operator<(const Shelf &other)const; 
+		bool operator<(const Shelf &other) const; 
         
         /**
     	 *  @brief Override equals operator==. 
@@ -141,14 +141,14 @@ class Shelf{
 		 * @return True if the objects are equals. False otherwise.
          */
         
-        bool operator==(const Shelf &other)const; 
+        bool operator==(const Shelf &other) const; 
         /**
     	 *  @brief Override not equals operator!=. 
 		 * @param other The right side object.
 		 * @return True if the objects are different. False otherwise.
          */
 		
-        bool operator!=(const Shelf &other)const; 
+        bool operator!=(const Shelf &other) const; 
         
         /**
     	 *  @brief Override the assignment operator=.

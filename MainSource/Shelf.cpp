@@ -28,8 +28,8 @@ Shelf::Shelf(const Shelf &other){
     this->cellWidth = other.cellWidth;
 }
 
-Shelf::Shelf(long int Id, const vector<Cell>& cells, const pair<double, double>& bottomLeftCoords, string blockName,
-      int columns, int rows, double cellLength, double cellWidth){
+Shelf::Shelf(unsigned long int Id, const vector<Cell>& cells, const pair<double, double>& bottomLeftCoords, 
+      const string& blockName, unsigned int columns, unsigned int rows, double cellLength, double cellWidth){
     
     for(unsigned int i=0;i<cells.size(); i++){
         Cell inserted(cells[i]);
@@ -56,9 +56,9 @@ int Shelf::getNumRows() const { return rows;}
 double Shelf::getCellLength()const { return cellLength;}
 double Shelf::getCellWidth()const { return cellWidth;}
 
-void Shelf::setCells(vector<Cell> &cells){ this->cells = cells;}
+void Shelf::setCells(const vector<Cell> &cells){ this->cells = cells;}
 
-void Shelf::printShelfInformation(){
+void Shelf::printShelfInformation() const{
 	cout<<"_________________________\n";
 	cout<<"Shelf: \t" << this->Id  <<"\tBlock name: \t"<<this->blockName<<endl;
 	cout<<"Bottom-left coord: \t(x="<<this->bottomLeftCoords.first<<",y="<<this->bottomLeftCoords.second<<")"<<endl; 
@@ -70,7 +70,7 @@ void Shelf::printShelfInformation(){
 	cout<<"_________________________\n";
 }
 
-int Shelf::getNumberOfAvailablePositions(){
+int Shelf::getNumberOfAvailablePositions() const{
 	int total = 0;
 	for(unsigned int i=0;i<cells.size();i++)
 		total+= cells[i].getLevels();
