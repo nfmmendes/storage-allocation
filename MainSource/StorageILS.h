@@ -43,18 +43,18 @@ class InsideShelfSwap :public NeighborhoodStructure{
 		Shelf shelf; 
         OptimizationConstraints *constraints;
         map<Position, Product> shelfAllocations; 
-        bool isValidSwap(Product &first, Product &second, MapAllocation &allocations);
+        bool isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations);
 
     public:
         InsideShelfSwap();
         ~InsideShelfSwap();
         InsideShelfSwap(AbstractSolution *initial, OptimizationConstraints * constr, Shelf & shelf);
-        AbstractSolution * getStartSolution() const {return this->startSolution; }
+        AbstractSolution * getStartSolution() const { return this->startSolution; }
         vector<AbstractSolution *> createNeighbors();
         void setShelfAllocations(map<Position,Product> &value){ shelfAllocations = value; }
 		void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
-        OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
-		void setShelf(Shelf & shelf) { this->shelf = shelf;} 
+        const OptimizationConstraints * getOptimizationConstraints()const { return constraints; }
+		void setShelf(const Shelf & shelf) { this->shelf = shelf;} 
         void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
 };

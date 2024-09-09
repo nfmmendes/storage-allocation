@@ -64,26 +64,26 @@ InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, OptimizationConstrai
 /**
  * Function to control if a 
  * */
-bool InsideShelfSwap::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
+bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations){
 	const auto& firstFamily = first.getFamily(); 
 	const auto& secondFamily = second.getFamily(); 
 
 	//if one of products are not allocated, the swap is not valid
-	if(allocations.find(first) == allocations.end() || allocations.find(second) == allocations.end() )
+	const auto firstAlocation { allocations.find(first) };
+	const auto secondAllocation { allocations.find(second) };
+	if(firstAlocation == allocations.end() || secondAllocation == allocations.end() )
 		return false; 
 
 	//Check the prohibitions
-	const auto& firstPosition { allocations[first] };
-	const auto& secondPosition { allocations[second] };
 	const auto& prohibitedProducts = this->constraints->getProductsCodeWithProhibition(); 
-	auto firstProhibition = prohibitedProducts.find(first.getName());
-	auto secondProhibition = prohibitedProducts.find(second.getName());
+	auto& firstProhibition = prohibitedProducts.find(first.getName());
+	auto& secondProhibition = prohibitedProducts.find(second.getName());
 
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		bool isFirstAllowed = this->constraints->IsAllocationAllowed(first, secondPosition);
-		bool isSecondAllowed = this->constraints->IsAllocationAllowed(second, firstPosition);
+		bool isFirstAllowed = this->constraints->IsAllocationAllowed(first, secondAllocation->second);
+		bool isSecondAllowed = this->constraints->IsAllocationAllowed(second, firstAlocation->second);
 
 		if(! (isFirstAllowed && isSecondAllowed) )
 			return false; 
@@ -100,7 +100,7 @@ bool InsideShelfSwap::isValidSwap(Product &first, Product &second, MapAllocation
 	/**
 	 * 
 	 * */
-	if(firstPosition.first.getCode() == secondPosition.first.getCode())
+	if(firstAlocation->second.first.getCode() == secondAllocation->second.first.getCode())
 		return true; 
 	
 	return false;  
