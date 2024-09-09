@@ -4,8 +4,9 @@
 #include<cstdlib>
 #include<string>
 #include<fstream>
-using namespace std;
-
+using std::cout;
+using std::endl;
+using std::ifstream;
 
 IsolatedFamily::IsolatedFamily(const IsolatedFamily &other){
 	this->Force = other.Force;
