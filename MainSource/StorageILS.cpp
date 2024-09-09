@@ -52,7 +52,6 @@ InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, OptimizationConstrai
 	this->startSolution = initial;
 	this->shelf = shelf; 
 	this->constraints = constr;
-	//this->products = products; 
 }
 
 bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations){
@@ -95,10 +94,10 @@ bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, c
 }
 
 vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
-	auto& allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
+	auto& allocations = ((StorageAllocationSolution *)startSolution)->getProductAllocations();
  
 	std::vector<AbstractSolution *> solutions; 
-	srand(this->randomSeed); 
+	srand(randomSeed); 
 
 	//It is not possible to do swaps 
 	auto allocationsSize { shelfAllocations.size() };
@@ -128,7 +127,7 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 			continue; 
 		}
 
-		auto newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution); 
+		auto newSolution = new StorageAllocationSolution((StorageAllocationSolution *)startSolution); 
 		newSolution->proceedSwap(firstProduct, secondProduct,true); 
 		
 		solutions.push_back(newSolution); 
