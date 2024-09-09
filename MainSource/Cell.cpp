@@ -72,7 +72,7 @@ unsigned short Cell::getRow() const { return row;}
 unsigned short Cell::getColumn() const { return column; }
 unsigned short Cell::getLevels() const { return levels; }
 
-void Cell::printCellInformation(){ 
+void Cell::printCellInformation() const{ 
 
 	cout<<"_____________________________\n";
 	cout<<"Cell code: \t"<<this->code<<"\tCell shelf: \t"<<this->idShelf<<endl;

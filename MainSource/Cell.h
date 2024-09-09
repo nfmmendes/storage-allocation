@@ -93,5 +93,5 @@ class Cell{
         /**
          * @brief Print cell information. 
          */
-		void printCellInformation();
+		void printCellInformation() const;
 };
