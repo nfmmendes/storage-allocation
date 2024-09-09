@@ -73,37 +73,37 @@ class OptimizationConstraints{
 		 *  @brief Get the list of products with some kind of prohibition.
 		 *  @return A list of products with some kind of prohibitions. 
 		 */
-		set<string> & getProductsCodeWithProhibition();
+		const set<string> & getProductsCodeWithProhibition() const;
 
 		/**
 		 *  @brief Get the list of product families with a weak isolation constraint. 
 		 *  @return The list of product families with a weak isolation constraint. 
 		 */
-		set<string> & getWeaklyIsolatedFamilyCodes();
+		const set<string> & getWeaklyIsolatedFamilyCodes() const;
 
 		/**
 		 *  @brief Get the list of product families with a strong isolation constraint. 
 		 *  @return The list of families with a strong isolation constraint. 
 		 */
-		set<string> & getStronglyIsolatedFamilyCodes();
+		const set<string> & getStronglyIsolatedFamilyCodes() const;
 
 		/**
 		 *  @brief Set the optimization parameters.
 		 *  @param value A vector containing the new optimization parameters.
 		 */
-		void setParameters(vector<Parameter> value);
+		void setParameters(const vector<Parameter>& value);
 
 		/**
 		 *  @brief Set the product allocation prohibitions.
 		 *  @param value The list of product allocation prohibitions. 
 		 */
-		void setProductAllocationProhibitions(vector<ProductAllocationProhibitions> value);
+		void setProductAllocationProhibitions(const vector<ProductAllocationProhibitions>& value);
 
 		/**
 		 *  @brief Set the list of product families with some isolation contraint. 
 		 *  @param value The list of product families with some isolation constraint. 
 		 */
-		void setIsolatedFamilies(vector<IsolatedFamily> value);
+		void setIsolatedFamilies(const vector<IsolatedFamily>& value);
 
 		/**
 		 *  @brief Get if a product allocation is allowed in a given position. 

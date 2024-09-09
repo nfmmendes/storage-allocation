@@ -36,23 +36,23 @@ const vector<IsolatedFamily> & OptimizationConstraints::getIsolatedFamilies()con
     return isolatedFamilies; 
 } 
 
-set<string> & OptimizationConstraints::getProductsCodeWithProhibition() { 
+const set<string> & OptimizationConstraints::getProductsCodeWithProhibition() const { 
     return productsCodeWithProhibition; 
 }
 
-set<string> & OptimizationConstraints::getWeaklyIsolatedFamilyCodes() { 
+const set<string> & OptimizationConstraints::getWeaklyIsolatedFamilyCodes() const { 
     return weaklyIsolatedFamilies; 
 }
 
-set<string> & OptimizationConstraints::getStronglyIsolatedFamilyCodes() { 
+const set<string> & OptimizationConstraints::getStronglyIsolatedFamilyCodes() const { 
     return stronglyIsolatedFamilies; 
 }
 
-void OptimizationConstraints::setParameters(vector<Parameter> value){ 
+void OptimizationConstraints::setParameters(const vector<Parameter>& value){ 
     parameters = value;
 } 
 
-void OptimizationConstraints::setProductAllocationProhibitions(vector<ProductAllocationProhibitions> value){ 	
+void OptimizationConstraints::setProductAllocationProhibitions(const vector<ProductAllocationProhibitions>& value){ 	
     allocationProhitions = value;
     productsCodeWithProhibition.clear(); 
 
@@ -60,7 +60,7 @@ void OptimizationConstraints::setProductAllocationProhibitions(vector<ProductAll
         productsCodeWithProhibition.insert(allocationProhitions[i].getProductName());
 }
 
-void OptimizationConstraints::setIsolatedFamilies(vector<IsolatedFamily> value){ 
+void OptimizationConstraints::setIsolatedFamilies(const vector<IsolatedFamily>& value){ 
     isolatedFamilies = value; 
     weaklyIsolatedFamilies.clear();
     stronglyIsolatedFamilies.clear(); 
