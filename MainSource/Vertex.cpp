@@ -48,6 +48,11 @@ Vertex & Vertex::operator=(const Vertex &other){
 
 ///This overload allows the use of an object of this class as a key to a map
 bool Vertex::operator<(const Vertex &other)const{
-    return (label+type == other.label+other.type) ? value < other.value: label+type < other.label+other.type;
+    auto concatA = label+type;
+    auto concatB = other.label+other.type;
+    if(concatA < concatB)
+        return true;
+
+    return concatA == concatB && value < other.value;
 }
 
