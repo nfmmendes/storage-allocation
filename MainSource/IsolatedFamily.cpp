@@ -49,9 +49,6 @@ vector<IsolatedFamily> IsolatedFamily::readIsolatedFamilyData(ifstream &file){
 bool IsolatedFamily::operator==(const IsolatedFamily &other){
 	return this->Force == other.Force && this->Code == other.Code && this->Level == other.Level; 
 }
-bool IsolatedFamily::operator<=(const IsolatedFamily &other){
-	return this->Code+this->Level+this->Force <= other.Code+other.Level+other.Force;
-}
 
 IsolatedFamily & IsolatedFamily::operator=(const IsolatedFamily & other){
 	this->Force = other.Force;

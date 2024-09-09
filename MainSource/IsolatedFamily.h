@@ -84,14 +84,6 @@ class IsolatedFamily{
 		bool operator==(const IsolatedFamily &other);
 		
 		/**
-		 * @brief The less than or equal operator override.  
-		 * @param other The right hand side object.
-		 * @return True if the left hand side object is considered less than or equal to the
-		 * 			right hand side object. False otherwise. 
-		 */
-		bool operator<=(const IsolatedFamily &other);
-		
-		/**
 		 * @brief The assignment operator override.
 		 * @param other The object to be assigned to the left hand side object. 
 		 * @return A reference to the modified left hand side object. 
