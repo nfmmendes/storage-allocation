@@ -20,11 +20,11 @@ IsolatedFamily::IsolatedFamily(string f, string l, string c){
 	this->Code = c; 
 }
 
-string IsolatedFamily::getForce() const{ return this->Force; }
+const string& IsolatedFamily::getForce() const{ return this->Force; }
 
-string IsolatedFamily::getLevel() const{ return this->Level; }
+const string& IsolatedFamily::getLevel() const{ return this->Level; }
 
-string IsolatedFamily::getCode() const{ return this->Code; }
+const string& IsolatedFamily::getCode() const{ return this->Code; }
 
 void IsolatedFamily::printIsolatedFamily(){
 	cout<<"___________________________________\n";

@@ -50,19 +50,19 @@ class IsolatedFamily{
 		 * @brief Get the isolation force.
 		 * @return The isolation force.
 		 */
-		string getForce() const;
+		const string& getForce() const;
 		
 		/**
 		 * @brief Get the isolation level.
 		 * @return The isolation level.
 		*/
-		string getLevel() const;
+		const string& getLevel() const;
 		
 		/**
 		 * @brief Get the family code.
 		 * @return The family code.
 		 */
-		string getCode() const;
+		const string& getCode() const;
 		
 		/**
 		 * @brief Print isolation information. 
