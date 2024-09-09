@@ -39,7 +39,7 @@ namespace QuickTSP{
              * @param Type The vertex type.
              * @param value The vertex value. 
              */
-            Vertex(string label, string Type, double value = 0);
+            Vertex(const string& label, const string& Type, double value = 0);
         
             /**
              * @brief Set the vertex label. 

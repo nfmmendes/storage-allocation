@@ -16,9 +16,9 @@ Vertex::Vertex(const Vertex &other){
 	
 }
 
-Vertex::Vertex(string label, string Type, double value){
+Vertex::Vertex(const string& label, const string& type, double value){
     this->label = label;
-    this->type = Type;
+    this->type = type;
     this->value = value;
 }
 
