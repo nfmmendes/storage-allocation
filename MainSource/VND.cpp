@@ -14,23 +14,10 @@
 #include <vector>
 using namespace QuickTSP; 
 
-/**
- *	Default constructor 
- */
 VND::VND(){
     
 }
 
-
-/***
- *	Member constructor 
- *  @param warehouse
- *	@param orders
- *  @param vertexByCell
- *  @param prohibitions
- *	@param isolated
- *	@param param
- */
 VND::VND(vector<Product> & prods, Warehouse &wh, DistanceMatrix<Vertex> distMatrix, map<pair<Cell, int>, Vertex> &vertexByCell,
 		 vector<Order> &orders, OptimizationConstraints &cons){
     this->products = prods;	
