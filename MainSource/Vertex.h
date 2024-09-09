@@ -52,12 +52,6 @@ namespace QuickTSP{
              * @param value The vertex type.
              */
             void setType(string value);
-
-            /**
-             * @brief Set the vertex value. 
-             * @param value The vertex value. 
-             */
-            void setValue(double value);
         
             /**
              * @brief Get the vertex label. 
