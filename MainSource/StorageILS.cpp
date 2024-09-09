@@ -37,9 +37,6 @@ using std::min;
 ////
 /////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * 
- */
 InsideShelfSwap::InsideShelfSwap(){
 	this->startSolution = NULL; 
 	this->numberOfNeighbors = 5;
@@ -51,9 +48,6 @@ InsideShelfSwap::~InsideShelfSwap(){
 	delete startSolution;
 }
 
-/**
- * 
- */
 InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, OptimizationConstraints *constr, Shelf &shelf){
 	this->startSolution = initial;
 	this->shelf = shelf; 
@@ -61,9 +55,6 @@ InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, OptimizationConstrai
 	//this->products = products; 
 }
 
-/**
- * Function to control if a 
- * */
 bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations){
 	const auto& firstFamily = first.getFamily(); 
 	const auto& secondFamily = second.getFamily(); 
@@ -97,19 +88,12 @@ bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, c
 	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
 			return true; 
 
-	/**
-	 * 
-	 * */
 	if(firstAlocation->second.first.getCode() == secondAllocation->second.first.getCode())
 		return true; 
 	
 	return false;  
 }
 
-
-/**
- * 
- */
 vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 	auto& allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
  
@@ -174,9 +158,6 @@ InsideBlockSwap::InsideBlockSwap(StorageAllocationSolution *initial, Optimizatio
 	
 }
 
-/**
- * Function to control if a 
- * */
 bool InsideBlockSwap::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
 	const auto& firstFamily { first.getFamily() }; 
 	const auto& secondFamily { second.getFamily() }; 
@@ -296,9 +277,6 @@ AbstractSolution * MostFrequentSwap::getStartSolution() const{
 	return this->startSolution; 
 }
 
-/**
- * Function to control if a 
- * */
 bool MostFrequentSwap::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
 	std::string firstFamily = first.getFamily(); 
 	std::string secondFamily = second.getFamily(); 
