@@ -26,19 +26,6 @@ string IsolatedFamily::getLevel() const{ return this->Level; }
 
 string IsolatedFamily::getCode() const{ return this->Code; }
 
-void IsolatedFamily::setForce(const string &other){
-	if(other == "STRONG" || other == "WEAK")
-		this->Force = other;
-}
-
-void IsolatedFamily::setLevel(const string &other){
-	this->Level = other;
-}
-
-void IsolatedFamily::setCode(const string &other){
-	this->Code = other;
-}
-
 void IsolatedFamily::printIsolatedFamily(){
 	cout<<"___________________________________\n";
 	cout<<"Printing Isolated Family information";

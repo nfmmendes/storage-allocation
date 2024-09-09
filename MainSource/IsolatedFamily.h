@@ -65,24 +65,6 @@ class IsolatedFamily{
 		string getCode() const;
 		
 		/**
-		 * @brief Set the isolation force.
-		 * @param other The isolation force.
-		 */
-		void setForce(const string &other);
-		
-		/**
-		 * @brief Set the isolation level.
-		 * @param other The isolation level.
-		 */
-		void setLevel(const string &other);
-		
-		/**
-		 * @brief Set the family code.
-		 * @param other The family code.
-		 */
-		void setCode(const string &other);
-		
-		/**
 		 * @brief Print isolation information. 
 		 */
 		void printIsolatedFamily();
