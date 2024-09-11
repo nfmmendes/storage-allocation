@@ -533,11 +533,15 @@ AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *cur
 	int maxNumberSwaps = (int) sqrt((int) mostFrequentProducts.size()); 
 	for(int i=0; i <maxNumberSwaps; i++){
 		vector<AbstractSolution *> neighbors;
-		((MostFrequentSwap *) neighborhoodStructure)->setRandomSeed(randomSeed*((int)products.size())+i);
-		((MostFrequentSwap *) neighborhoodStructure)->setNumberOfNeighbors( (int) mostFrequentProducts.size()/4 );
-		((MostFrequentSwap *) neighborhoodStructure)->setInterchangeableProducts( mostFrequentProducts);
+		auto localNeighborhoodStructurre = static_cast<MostFrequentSwap*>(neighborhoodStructure);
+		
+		if(localNeighborhoodStructurre == nullptr)
+			return nullptr;
+		localNeighborhoodStructurre->setRandomSeed(randomSeed*((int)products.size())+i);
+		localNeighborhoodStructurre->setNumberOfNeighbors( (int) mostFrequentProducts.size()/4 );
+		localNeighborhoodStructurre->setInterchangeableProducts( mostFrequentProducts);
 		neighborhoodStructure->setStartSolution(currentSolution); 
-		neighbors = ((MostFrequentSwap *) neighborhoodStructure)->createNeighbors(); 
+		neighbors = localNeighborhoodStructurre->createNeighbors(); 
 
 		double currentSolutionValue = currentSolution->getSolutionValue();
 		double newSolutionValue = neighbors[0]->getSolutionValue();
