@@ -48,8 +48,7 @@ InsideShelfSwap::~InsideShelfSwap(){
 	delete startSolution;
 }
 
-InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, OptimizationConstraints *constr, Shelf &shelf){
-	startSolution = initial;
+InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, OptimizationConstraints *constr, Shelf &shelf) : NeighborhoodStructure(initial){
 	this->shelf = shelf; 
 	constraints = constr;
 }
@@ -150,8 +149,9 @@ InsideBlockSwap::~InsideBlockSwap(){
 		delete startSolution;
 }
 
-InsideBlockSwap::InsideBlockSwap(const StorageAllocationSolution *initial, OptimizationConstraints * constr, const Block & block){
-	startSolution = initial;
+InsideBlockSwap::InsideBlockSwap(const StorageAllocationSolution *initial, OptimizationConstraints * constr, const Block & block)
+	:NeighborhoodStructure(initial)
+{
 	constraints = constr;
 	this->block = block; 
 }
@@ -267,7 +267,9 @@ MostFrequentSwap::~MostFrequentSwap(){
 	delete startSolution;
 }
 
-MostFrequentSwap::MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, const vector<Product> &products){
+MostFrequentSwap::MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, const vector<Product> &products)
+	:NeighborhoodStructure(initial)
+{
 	startSolution = initial;
 	interchangeableProducts = products; 
 	constraints = constr; 
@@ -360,9 +362,6 @@ const AbstractSolution * StorageAllocationPertubation::getStartSolution() const{
 	return startSolution; 
 } 
 
-/**
- * Function to control if a 
- * */
 bool StorageAllocationPertubation::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
 	string firstFamily = first.getFamily(); 
 	string secondFamily = second.getFamily(); 
@@ -443,8 +442,9 @@ IsolatedFamilySwap::IsolatedFamilySwap(){}
 
 IsolatedFamilySwap::~IsolatedFamilySwap(){}
 
-IsolatedFamilySwap::IsolatedFamilySwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, vector<Product> &products){
-	startSolution = new StorageAllocationSolution(initial);
+IsolatedFamilySwap::IsolatedFamilySwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, vector<Product> &products)
+	:NeighborhoodStructure(initial)
+{
 	interchangeableProducts = products; 
 	constraints = constr; 
 }

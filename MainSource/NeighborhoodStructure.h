@@ -26,7 +26,7 @@ class NeighborhoodStructure{
          * @param solution Initial solution.
          * @param seed The algorithm random seed. Default value is zero
          */
-        NeighborhoodStructure(AbstractSolution *solution, int seed = 0) { 
+        NeighborhoodStructure(const AbstractSolution *solution, int seed = 0) { 
             this->startSolution = solution; 
             randomSeed = seed;
         }
