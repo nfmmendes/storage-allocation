@@ -92,7 +92,7 @@ class InsideBlockSwap : public NeighborhoodStructure{
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
         int getRandomSeed() const{ return this->randomSeed; }
-        void setBlock(Block &other){ this->block = other; }
+        void setBlock(const Block &other){ this->block = other; }
         unsigned int getNumberOfNeighbors() const { return this->numberOfNeighbors; }
 };
 
