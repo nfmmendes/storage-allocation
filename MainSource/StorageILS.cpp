@@ -38,9 +38,9 @@ using std::min;
 /////////////////////////////////////////////////////////////////////////////////////////
 
 InsideShelfSwap::InsideShelfSwap(){
-	this->startSolution = NULL; 
-	this->numberOfNeighbors = 5;
-	this->randomSeed = 1;
+	startSolution = NULL; 
+	numberOfNeighbors = 5;
+	randomSeed = 1;
 	
 }
 
@@ -49,9 +49,9 @@ InsideShelfSwap::~InsideShelfSwap(){
 }
 
 InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, OptimizationConstraints *constr, Shelf &shelf){
-	this->startSolution = initial;
+	startSolution = initial;
 	this->shelf = shelf; 
-	this->constraints = constr;
+	constraints = constr;
 }
 
 bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations){
@@ -65,15 +65,15 @@ bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, c
 		return false; 
 
 	//Check the prohibitions
-	const auto& prohibitedProducts = this->constraints->getProductsCodeWithProhibition(); 
+	const auto& prohibitedProducts = constraints->getProductsCodeWithProhibition(); 
 	auto& firstProhibition = prohibitedProducts.find(first.getName());
 	auto& secondProhibition = prohibitedProducts.find(second.getName());
 
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		bool isFirstAllowed = this->constraints->IsAllocationAllowed(first, secondAllocation->second);
-		bool isSecondAllowed = this->constraints->IsAllocationAllowed(second, firstAlocation->second);
+		bool isFirstAllowed = constraints->IsAllocationAllowed(first, secondAllocation->second);
+		bool isSecondAllowed = constraints->IsAllocationAllowed(second, firstAlocation->second);
 
 		if(! (isFirstAllowed && isSecondAllowed) )
 			return false; 
@@ -82,7 +82,7 @@ bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, c
 	if(firstFamily == secondFamily)
 		return true; 
 		
-	auto stronglyIsolatedFamilies = this->constraints->getStronglyIsolatedFamilyCodes(); 
+	auto stronglyIsolatedFamilies = constraints->getStronglyIsolatedFamilyCodes(); 
 	if(stronglyIsolatedFamilies.find(firstFamily) == stronglyIsolatedFamilies.end() && 
 	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
 			return true; 
@@ -141,9 +141,9 @@ vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 ////
 /////////////////////////////////////////////////////////////////////////////////////////
 InsideBlockSwap::InsideBlockSwap(){
-	this->startSolution = NULL; 
-	this->numberOfNeighbors = 5;
-	this->randomSeed = 1;
+	startSolution = NULL; 
+	numberOfNeighbors = 5;
+	randomSeed = 1;
 }
 
 InsideBlockSwap::~InsideBlockSwap(){
@@ -151,10 +151,9 @@ InsideBlockSwap::~InsideBlockSwap(){
 }
 
 InsideBlockSwap::InsideBlockSwap(const StorageAllocationSolution *initial, OptimizationConstraints * constr, const Block & block){
-	this->startSolution = initial;
-	this->constraints = constr;
+	startSolution = initial;
+	constraints = constr;
 	this->block = block; 
-	
 }
 
 bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, MapAllocation &allocations){
@@ -187,7 +186,7 @@ bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, M
 	if(firstFamily == secondFamily)
 		return true; 
 		
-	auto stronglyIsolatedFamilies = this->constraints->getStronglyIsolatedFamilyCodes();
+	auto stronglyIsolatedFamilies = constraints->getStronglyIsolatedFamilyCodes();
 	auto endIterator = stronglyIsolatedFamilies.end();
 	if(stronglyIsolatedFamilies.find(firstFamily) == endIterator && 
 	   stronglyIsolatedFamilies.find(secondFamily) == endIterator)
@@ -200,10 +199,10 @@ bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, M
 }
 
 vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
-	std::map<Product, pair<Cell,int> > allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
+	std::map<Product, pair<Cell,int> > allocations = ((StorageAllocationSolution *) startSolution)->getProductAllocations();
 	blockAllocations.clear(); 
 	
-	std::vector<Shelf> shelves = this->block.getShelves(); 
+	std::vector<Shelf> shelves = block.getShelves(); 
 	std::vector<AbstractSolution *> solutions; 
 	set<long> shelfIds; 
 
@@ -243,7 +242,7 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 			continue; 
 		}
 
-		StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution); 
+		StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)startSolution); 
 		newSolution->proceedSwap(firstProduct, secondProduct,true); 
 
 		solutions.push_back(newSolution); 
@@ -259,9 +258,9 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 ////
 /////////////////////////////////////////////////////////////////////////////////////////
 MostFrequentSwap::MostFrequentSwap(){
-	this->startSolution = NULL; 
-	this->numberOfNeighbors = 5;
-	this->randomSeed = 1;
+	startSolution = NULL; 
+	numberOfNeighbors = 5;
+	randomSeed = 1;
 }
 
 MostFrequentSwap::~MostFrequentSwap(){ 
@@ -269,13 +268,13 @@ MostFrequentSwap::~MostFrequentSwap(){
 }
 
 MostFrequentSwap::MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, const vector<Product> &products){
-	this->startSolution = initial;
-	this->interchangeableProducts = products; 
-	this->constraints = constr; 
+	startSolution = initial;
+	interchangeableProducts = products; 
+	constraints = constr; 
 }
 
 const AbstractSolution * MostFrequentSwap::getStartSolution() const{
-	return this->startSolution; 
+	return startSolution; 
 }
 
 bool MostFrequentSwap::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
@@ -299,8 +298,8 @@ bool MostFrequentSwap::isValidSwap(Product &first, Product &second, MapAllocatio
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		auto isFirstAllowed = this->constraints->IsAllocationAllowed(first, secondPosition);
-		auto isSecondAllowed = this->constraints->IsAllocationAllowed(second, firstPosition);
+		auto isFirstAllowed = constraints->IsAllocationAllowed(first, secondPosition);
+		auto isSecondAllowed = constraints->IsAllocationAllowed(second, firstPosition);
 
 		if(!isFirstAllowed || !isSecondAllowed)
 			return false; 
@@ -323,31 +322,31 @@ bool MostFrequentSwap::isValidSwap(Product &first, Product &second, MapAllocatio
 
 vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 	vector<AbstractSolution *> solutions;
-	MapAllocation allocations = ((StorageAllocationSolution *)this->startSolution)->getProductAllocations();
+	MapAllocation allocations = ((StorageAllocationSolution *) startSolution)->getProductAllocations();
 
-	if(this->interchangeableProducts.size()<3)
+	if(interchangeableProducts.size()<3)
 		return solutions; 
 
 	int numTries = 0; 
 	int first; 
 	int second; 
 	set<pair<int,int> >swapsDone; 
-	int numInterchangeableProducts = (int)this->interchangeableProducts.size(); 
+	int numInterchangeableProducts = (int) interchangeableProducts.size(); 
 
 
-	for(int i=0;i<this->numberOfNeighbors && numTries < 2*numberOfNeighbors;i++, numTries++){
+	for(int i=0;i< numberOfNeighbors && numTries < 2*numberOfNeighbors;i++, numTries++){
 		
 		if(!Util::ChooseTwoProductIndexes(first ,second,numInterchangeableProducts, swapsDone))
 			break;
  
-		bool isValid = isValidSwap(this->interchangeableProducts[first], this->interchangeableProducts[second], allocations); 
+		bool isValid = isValidSwap(interchangeableProducts[first], interchangeableProducts[second], allocations); 
 		if(!isValid){
 			i--;
 			continue; 
 		}
 		
-		StorageAllocationSolution * newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution);
-		newSolution->proceedSwap(this->interchangeableProducts[first], this->interchangeableProducts[second],true);  
+		StorageAllocationSolution * newSolution = new StorageAllocationSolution((StorageAllocationSolution *) startSolution);
+		newSolution->proceedSwap(interchangeableProducts[first], interchangeableProducts[second],true);  
 		solutions.push_back(newSolution);
 	}
 
@@ -358,7 +357,7 @@ vector<AbstractSolution *> MostFrequentSwap::createNeighbors(){
 ////                    Storage allocation pertubation region
 /////////////////////////////////////////////////////////////////////////////////////////
 const AbstractSolution * StorageAllocationPertubation::getStartSolution() const{
-	return this->startSolution; 
+	return startSolution; 
 } 
 
 /**
@@ -375,15 +374,15 @@ bool StorageAllocationPertubation::isValidSwap(Product &first, Product &second, 
 	//Check the prohibitions
 	Position firstPosition =  allocations[first];
 	Position secondPosition = allocations[second];
-	set<string> prohibitedProducts = this->constraints->getProductsCodeWithProhibition(); 
+	set<string> prohibitedProducts = constraints->getProductsCodeWithProhibition(); 
 	auto firstProhibition = prohibitedProducts.find(first.getName());
 	auto secondProhibition = prohibitedProducts.find(second.getName());
 
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		bool isFirstAllowed = this->constraints->IsAllocationAllowed(first, secondPosition);
-		bool isSecondAllowed = this->constraints->IsAllocationAllowed(second, firstPosition);
+		bool isFirstAllowed = constraints->IsAllocationAllowed(first, secondPosition);
+		bool isSecondAllowed = constraints->IsAllocationAllowed(second, firstPosition);
 
 		if(!isFirstAllowed || !isSecondAllowed)
 			return false; 
@@ -392,7 +391,7 @@ bool StorageAllocationPertubation::isValidSwap(Product &first, Product &second, 
 	if(firstFamily == secondFamily)
 		return true; 
 		
-	auto stronglyIsolatedFamilies = this->constraints->getStronglyIsolatedFamilyCodes(); 
+	auto stronglyIsolatedFamilies = constraints->getStronglyIsolatedFamilyCodes(); 
 	if(stronglyIsolatedFamilies.find(firstFamily) == stronglyIsolatedFamilies.end() && 
 	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
 			return true; 
@@ -410,7 +409,7 @@ vector<AbstractSolution *> StorageAllocationPertubation::createNeighbors(){
 	set<pair<int,int> > swapsDone;
 	int numTries=0; 
  
-	StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)this->startSolution); 
+	StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *) startSolution); 
 	auto allocations = newSolution->getProductAllocations(); 
 
 	for( int i=0; i<  numIterations && numTries < 2*numIterations; i++, numTries++){
@@ -445,9 +444,9 @@ IsolatedFamilySwap::IsolatedFamilySwap(){}
 IsolatedFamilySwap::~IsolatedFamilySwap(){}
 
 IsolatedFamilySwap::IsolatedFamilySwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, vector<Product> &products){
-	this->startSolution = new StorageAllocationSolution(initial);
-	this->interchangeableProducts = products; 
-	this->constraints = constr; 
+	startSolution = new StorageAllocationSolution(initial);
+	interchangeableProducts = products; 
+	constraints = constr; 
 }
 
 const AbstractSolution * IsolatedFamilySwap::getStartSolution() const{
@@ -466,15 +465,15 @@ vector<AbstractSolution *> IsolatedFamilySwap::createNeighbors(){
 /////////////////////////////////////////////////////////////////////////////////////////
 StorageILS::StorageILS(const vector<Product> & prods, Warehouse &wh,const DistanceMatrix<Vertex> *distMatrix,
 					   map<pair<Cell, int>, Vertex>& vertexByCell, const vector<Order> &orders, const OptimizationConstraints &cons){
-	this->distanceMatrix = distMatrix; 
-	this->warehouse = &wh;
+	distanceMatrix = distMatrix; 
+	warehouse = &wh;
 	this->orders= orders;
 	this->vertexByCell = vertexByCell;
-	this->constraints = cons;
-	this->products = prods;
+	constraints = cons;
+	products = prods;
 	InitializeNeighborhoods();
 
-	this->productClasses = getProductABCClasses();
+	productClasses = getProductABCClasses();
 }
 
 
@@ -484,7 +483,7 @@ StorageILS::StorageILS(const vector<Product> & prods, Warehouse &wh,const Distan
  */
 StorageAllocationSolution * StorageILS::CreateInitialSolution(){
 	
-	StorageConstructiveHeuristic constr(this->products,*warehouse, distanceMatrix,vertexByCell, orders,constraints); 
+	StorageConstructiveHeuristic constr(products,*warehouse, distanceMatrix,vertexByCell, orders,constraints); 
 	return  constr.Execute(); 
 }
 
@@ -498,24 +497,24 @@ StorageILS::StorageILS(StorageILS &other){
 	this->distanceMatrix = other.distanceMatrix;
 	this->warehouse = other.warehouse;
 	this->orders = other.orders; 
-	this->productClasses = getProductABCClasses();
+	productClasses = getProductABCClasses();
 	InitializeNeighborhoods();
 }
 
 bool StorageILS::StopCriteriaReached(){
-    return  this->numIterationsWithoutImprovement >= OptimizationParameters::instance()->MAX_ITERATIONS_WITHOUT_IMPROVEMENT;
+    return  numIterationsWithoutImprovement >= OptimizationParameters::instance()->MAX_ITERATIONS_WITHOUT_IMPROVEMENT;
 }
 
 void StorageILS::InitializeNeighborhoods(){
-	this->neighborhoodStructures.push_back(new MostFrequentSwap());
-	this->neighborhoodStructures.push_back(new InsideShelfSwap());
-	this->neighborhoodStructures.push_back(new InsideBlockSwap());
-	this->neighborhoodStructures.push_back(new IsolatedFamilySwap());
+	neighborhoodStructures.push_back(new MostFrequentSwap());
+	neighborhoodStructures.push_back(new InsideShelfSwap());
+	neighborhoodStructures.push_back(new InsideBlockSwap());
+	neighborhoodStructures.push_back(new IsolatedFamilySwap());
 
-	this->neighborhoodStructures[0]->setOptimizationConstraints(&constraints);
-	this->neighborhoodStructures[1]->setOptimizationConstraints(&constraints);
-	this->neighborhoodStructures[2]->setOptimizationConstraints(&constraints);
-	this->neighborhoodStructures[3]->setOptimizationConstraints(&constraints);
+	neighborhoodStructures[0]->setOptimizationConstraints(&constraints);
+	neighborhoodStructures[1]->setOptimizationConstraints(&constraints);
+	neighborhoodStructures[2]->setOptimizationConstraints(&constraints);
+	neighborhoodStructures[3]->setOptimizationConstraints(&constraints);
 	
 	neighborhoodType.push_back("MostFrequentSwap");
 	neighborhoodType.push_back("InsideShelfSwap");
@@ -565,7 +564,7 @@ AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *cur
 }
 
 AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
-	vector<Block> blocks = this->warehouse->getBlocks(); 
+	vector<Block> blocks = warehouse->getBlocks(); 
 	
 	int randomMultiplier = 0;
 	for(const auto& block : blocks){
@@ -608,7 +607,7 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 
 AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
 	
-	const auto& blocks = this->warehouse->getBlocks(); 
+	const auto& blocks = warehouse->getBlocks(); 
 	auto& allocations = ((StorageAllocationSolution *) currentSolution)->getProductAllocations();
 	map<long, map<Position,Product> > shelfAllocations; 
 	
@@ -678,7 +677,7 @@ const map<Product, char>& StorageILS::getProductABCClasses(){
 
 AbstractSolution * StorageILS::Execute(){
 
-    this->numIterationsWithoutImprovement = 0;
+    numIterationsWithoutImprovement = 0;
 	double bestGlobalSolutionValue; 
 	
     auto* initialSolution = CreateInitialSolution();
@@ -702,7 +701,7 @@ AbstractSolution * StorageILS::Execute(){
 		StorageAllocationSolution *auxiliaryPointer = NULL; 
 		
 		//Perform a local search as a VNS
-		for(unsigned int i=0;i< this->neighborhoodStructures.size();i++){
+		for(unsigned int i=0;i< neighborhoodStructures.size();i++){
 
 			currentSolution = new StorageAllocationSolution(*originalSolution);
 
@@ -732,13 +731,13 @@ AbstractSolution * StorageILS::Execute(){
 			delete auxiliaryPointer;
 		}
 		
-		this->numIterationsWithoutImprovement++;
+		numIterationsWithoutImprovement++;
 		
 		if((bestLocalSearchSolutionValue - bestGlobalSolutionValue)*100/bestGlobalSolutionValue <= -0.1){
 			delete bestGlobalSolution;
 			bestGlobalSolution = new StorageAllocationSolution(*bestLocalSearchSolution);
 			bestGlobalSolutionValue = bestLocalSearchSolution->getSolutionValue();
-			this->numIterationsWithoutImprovement = 0; 
+			numIterationsWithoutImprovement = 0; 
 		}
 		
 		cout<<"Iterations without improvement: " << numIterationsWithoutImprovement<<" Best global solution: "<<bestGlobalSolution->getSolutionValue()<<endl;  
