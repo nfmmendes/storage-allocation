@@ -77,7 +77,7 @@ class InsideBlockSwap : public NeighborhoodStructure{
                                             // until its cause be discovered
 		Block block; 
         OptimizationConstraints *constraints;
-		map<Position, Product> blockAllocations;
+		map<Position, const Product*> blockAllocations;
         bool isValidSwap(const Product &first, const Product &second, MapAllocation &allocations); 
     public:
         InsideBlockSwap();
@@ -312,5 +312,5 @@ class StorageILS : public Heuristic{
          * @brief Get a map from products to ABC frequence classes.
          * @return A map from products to ABC frequence classes.
          */
-        const map<Product, char>& getProductABCClasses();
+        const map<Product, char> getProductABCClasses();
 };

@@ -210,7 +210,7 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 	
 	for(auto &[product, position] : allocations){
 		if(shelfIds.find(position.first.getIdShelf()) != shelfIds.end())
-			blockAllocations[position] = product;
+			blockAllocations[position] = &product;
 	}
 	
 	int allocationsSize = (int)blockAllocations.size();
@@ -236,14 +236,14 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 		advance(it,second); 
 		const auto& secondProduct = it->second; 
 
-		bool isValid = isValidSwap(firstProduct, secondProduct, allocations); 
+		bool isValid = isValidSwap(*firstProduct, *secondProduct, allocations); 
 		if(!isValid){
 			i--;
 			continue; 
 		}
 
 		auto *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)startSolution); 
-		newSolution->proceedSwap(firstProduct, secondProduct,true); 
+		newSolution->proceedSwap(*firstProduct, *secondProduct,true); 
 
 		solutions.push_back(newSolution); 
 	}
@@ -665,7 +665,7 @@ AbstractSolution * StorageILS::RunPerturbation(AbstractSolution *currentSolution
 	return neighbors[0]; 
 }
 
-const map<Product, char>& StorageILS::getProductABCClasses(){
+const map<Product, char> StorageILS::getProductABCClasses(){
 	vector<double> thresholds;
 	thresholds.push_back(OptimizationParameters::instance()->A_THRESHOLD_CLASS);
 	thresholds.push_back(OptimizationParameters::instance()->B_THRESHOLD_CLASS); 
