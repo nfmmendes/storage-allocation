@@ -279,34 +279,37 @@ const AbstractSolution * MostFrequentSwap::getStartSolution() const{
 }
 
 bool MostFrequentSwap::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
-	std::string firstFamily = first.getFamily(); 
-	std::string secondFamily = second.getFamily(); 
 
-	//if one of products are not allocated, the swap is not valid
-	if(allocations.find(first) == allocations.end() || allocations.find(second) == allocations.end() )
+	//if one of products is not allocated, the swap is not valid
+	auto firstIt = allocations.find(first);
+	auto secondIt = allocations.find(second);
+	if(firstIt == allocations.end() || secondIt == allocations.end() )
 		return false; 
 
+	const auto& firstFamily = first.getFamily(); 
+	const auto& secondFamily = second.getFamily(); 
+
 	//Check the prohibitions
-	Position firstPosition =  allocations[first];
-	Position secondPosition = allocations[second];
-	set<std::string> prohibitedProducts = this->constraints->getProductsCodeWithProhibition(); 
+	const auto& firstPosition { firstIt->second };
+	const auto& secondPosition { secondIt->second };
+	const auto& prohibitedProducts { constraints->getProductsCodeWithProhibition() }; 
 	auto firstProhibition = prohibitedProducts.find(first.getName());
 	auto secondProhibition = prohibitedProducts.find(second.getName());
 
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		bool isFirstAllowed = this->constraints->IsAllocationAllowed(first, secondPosition);
-		bool isSecondAllowed = this->constraints->IsAllocationAllowed(second, firstPosition);
+		auto isFirstAllowed = this->constraints->IsAllocationAllowed(first, secondPosition);
+		auto isSecondAllowed = this->constraints->IsAllocationAllowed(second, firstPosition);
 
-		if(! (isFirstAllowed && isSecondAllowed) )
+		if(!isFirstAllowed || !isSecondAllowed)
 			return false; 
 	}
 
 	if(firstFamily == secondFamily)
 		return true; 
 		
-	auto stronglyIsolatedFamilies = this->constraints->getStronglyIsolatedFamilyCodes(); 
+	const auto& stronglyIsolatedFamilies { constraints->getStronglyIsolatedFamilyCodes() }; 
 	if(stronglyIsolatedFamilies.find(firstFamily) == stronglyIsolatedFamilies.end() && 
 	   stronglyIsolatedFamilies.find(secondFamily) == stronglyIsolatedFamilies.end())
 			return true; 
