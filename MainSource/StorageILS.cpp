@@ -277,7 +277,7 @@ const AbstractSolution * MostFrequentSwap::getStartSolution() const{
 	return startSolution; 
 }
 
-bool MostFrequentSwap::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
+bool MostFrequentSwap::isValidSwap(const Product &first, const Product &second, MapAllocation &allocations){
 
 	//if one of products is not allocated, the swap is not valid
 	auto firstIt = allocations.find(first);

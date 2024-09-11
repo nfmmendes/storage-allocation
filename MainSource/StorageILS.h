@@ -35,11 +35,6 @@ class InsideShelfSwap :public NeighborhoodStructure{
         unsigned int numberOfNeighbors;     // Max number of neighbors that will be created in this class when the 
                                             // function createNeighbors is called. The real number of neighbors can be
                                             // lower due to impossibilities in creating more solutions
-        int randomSeed;                 //The algorithm use random functions, but it can not be 100% random because
-                                        //two consecutive runs of the same instance must have the same result due to
-                                        // the hardness of a company accepts a random behavior of the algorithm. It
-                                        // also helps to debug the code, as the bug can be reproduced several times 
-                                        // until its cause be discovered
 		Shelf shelf; 
         OptimizationConstraints *constraints;
         map<Position, Product> shelfAllocations; 
@@ -55,7 +50,7 @@ class InsideShelfSwap :public NeighborhoodStructure{
 		void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         const OptimizationConstraints * getOptimizationConstraints()const { return constraints; }
 		void setShelf(const Shelf & shelf) { this->shelf = shelf;} 
-        void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
+        
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
 };
 
@@ -70,11 +65,6 @@ class InsideBlockSwap : public NeighborhoodStructure{
         int numberOfNeighbors;              // Max number of neighbors that will be created in this class when the 
                                             // function createNeighbors is called. The real number of neighbors can be
                                             // lower due to impossibilities in creating more solutions
-        int randomSeed;                     //The algorithm use random functions, but it can not be 100% random because
-                                            //two consecutive runs of the same instance must have the same result due to
-                                            // the hardness of a company accepts a random behavior of the algorithm. It
-                                            // also helps to debug the code, as the bug can be reproduced several times 
-                                            // until its cause be discovered
 		Block block; 
         OptimizationConstraints *constraints;
 		map<Position, const Product*> blockAllocations;
@@ -87,11 +77,9 @@ class InsideBlockSwap : public NeighborhoodStructure{
 
         vector<AbstractSolution *> createNeighbors();
 
-        void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
-        int getRandomSeed() const{ return this->randomSeed; }
         void setBlock(const Block &other){ this->block = other; }
         unsigned int getNumberOfNeighbors() const { return this->numberOfNeighbors; }
 };
@@ -106,14 +94,9 @@ class MostFrequentSwap : public NeighborhoodStructure{
         int numberOfNeighbors;              // Max number of neighbors that will be created in this class when the 
                                             // function createNeighbors is called. The real number of neighbors can be
                                             // lower due to impossibilities in creating more solutions
-        int randomSeed;                     //The algorithm use random functions, but it can not be 100% random because
-                                            //two consecutive runs of the same instance must have the same result due to
-                                            // the hardness of a company accepts a random behavior of the algorithm. It
-                                            // also helps to debug the code, as the bug can be reproduced several times 
-                                            // until its cause be discovered
         OptimizationConstraints *constraints;
         vector<Product> interchangeableProducts; 
-        bool isValidSwap(Product &first, Product &second, MapAllocation &allocations);
+        bool isValidSwap(const Product &first, const Product &second, MapAllocation &allocations);
     public:
         MostFrequentSwap();
         ~MostFrequentSwap();
@@ -122,12 +105,10 @@ class MostFrequentSwap : public NeighborhoodStructure{
         vector<AbstractSolution *> createNeighbors();
 
         void setInterchangeableProducts(const vector<Product> &prods) { this->interchangeableProducts = prods; }
-        void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
-        vector<Product> getInterchangeableProducts() {return this->interchangeableProducts; }
-        int getRandomSeed(){ return this->randomSeed; srand(this->randomSeed); }
+        vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
 };
 
@@ -141,11 +122,6 @@ class IsolatedFamilySwap :public NeighborhoodStructure{
         int numberOfNeighbors;              // Max number of neighbors that will be created in this class when the 
                                             // function createNeighbors is called. The real number of neighbors can be
                                             // lower due to impossibilities in creating more solutions
-        int randomSeed;                     //The algorithm use random functions, but it can not be 100% random because
-                                            //two consecutive runs of the same instance must have the same result due to
-                                            // the hardness of a company accepts a random behavior of the algorithm. It
-                                            // also helps to debug the code, as the bug can be reproduced several times 
-                                            // until its cause be discovered
         vector<Product> interchangeableProducts;
         OptimizationConstraints *constraints; 
     public:
@@ -155,11 +131,9 @@ class IsolatedFamilySwap :public NeighborhoodStructure{
         const AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
 
-        void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
-        int getRandomSeed(){ return this->randomSeed; srand(this->randomSeed); }
         void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
         vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
         unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
@@ -176,11 +150,6 @@ class IsolatedFamilySwap :public NeighborhoodStructure{
 class StorageAllocationPertubation : public NeighborhoodStructure {
 
     private: 
-        int randomSeed;                     //The algorithm use random functions, but it can not be 100% random because
-                                            //two consecutive runs of the same instance must have the same result due to
-                                            // the hardness of a company accepts a random behavior of the algorithm. It
-                                            // also helps to debug the code, as the bug can be reproduced several times 
-                                            // until its cause be discovered
         int numOfPertubationMoves; 
 		vector<Product> interchangeableProducts; 
         OptimizationConstraints * constraints; 
@@ -192,11 +161,9 @@ class StorageAllocationPertubation : public NeighborhoodStructure {
         StorageAllocationPertubation(OptimizationConstraints *constr){ constraints = constr; }
         ~StorageAllocationPertubation(){}
 
-        void setRandomSeed(int seed){ this->randomSeed = seed; srand(randomSeed);  }
         void setNumberOfNeighbors(unsigned int val){ this->numOfPertubationMoves = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
         OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
-        int getRandomSeed(){ return this->randomSeed; }
         void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
         vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
         unsigned int getNumberOfNeighbors(){ return this->numOfPertubationMoves; }

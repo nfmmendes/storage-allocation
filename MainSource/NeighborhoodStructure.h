@@ -12,6 +12,8 @@ class NeighborhoodStructure{
 
     protected:
         const AbstractSolution * startSolution {nullptr};
+
+        int randomSeed { 0 };             
         
     public:
         /** 
@@ -22,15 +24,23 @@ class NeighborhoodStructure{
         /**
          * @brief Constructor.
          * @param solution Initial solution.
+         * @param seed The algorithm random seed. Default value is zero
          */
-        NeighborhoodStructure(AbstractSolution *solution) { this->startSolution = solution; }
+        NeighborhoodStructure(AbstractSolution *solution, int seed = 0) { 
+            this->startSolution = solution; 
+            randomSeed = seed;
+        }
 
         /**
          * @brief Set the initial solution. 
          * @param solution The initial solution.
          */
         void setStartSolution(AbstractSolution *solution) {  
-            this->startSolution = solution; 
+            startSolution = solution; 
+        }
+
+        void setRandomSeed(int seed){ 
+            randomSeed = seed; srand(this->randomSeed); 
         }
 
         /**
