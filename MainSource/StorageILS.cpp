@@ -362,18 +362,20 @@ const AbstractSolution * StorageAllocationPertubation::getStartSolution() const{
 	return startSolution; 
 } 
 
-bool StorageAllocationPertubation::isValidSwap(Product &first, Product &second, MapAllocation &allocations){
+bool StorageAllocationPertubation::isValidSwap(const Product &first, const Product &second, MapAllocation &allocations){
 	string firstFamily = first.getFamily(); 
 	string secondFamily = second.getFamily(); 
 
 	//if one of products are not allocated, the swap is not valid
-	if(allocations.find(first) == allocations.end() || allocations.find(second) == allocations.end() )
+	auto firstAllocation = allocations.find(first);
+	auto secondAllocation = allocations.find(second);
+	if(firstAllocation == allocations.end() || secondAllocation == allocations.end() )
 		return false; 
 
 	//Check the prohibitions
-	Position firstPosition =  allocations[first];
-	Position secondPosition = allocations[second];
-	set<string> prohibitedProducts = constraints->getProductsCodeWithProhibition(); 
+	const auto& firstPosition = firstAllocation->second;
+	const auto& secondPosition = secondAllocation->second;
+	const auto& prohibitedProducts = constraints->getProductsCodeWithProhibition(); 
 	auto firstProhibition = prohibitedProducts.find(first.getName());
 	auto secondProhibition = prohibitedProducts.find(second.getName());
 
@@ -408,15 +410,15 @@ vector<AbstractSolution *> StorageAllocationPertubation::createNeighbors(){
 	set<pair<int,int> > swapsDone;
 	int numTries=0; 
  
-	StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *) startSolution); 
+ 	auto *newSolution = new StorageAllocationSolution((StorageAllocationSolution *) startSolution); 
 	auto allocations = newSolution->getProductAllocations(); 
 
 	for( int i=0; i<  numIterations && numTries < 2*numIterations; i++, numTries++){
 		if(!Util::ChooseTwoProductIndexes(first ,second,interchangeableProducts.size(), swapsDone) || ++numTries > 2*numIterations                                                                                                                                                        )
 			break;
 
-		Product firstProduct  = interchangeableProducts[first]; 
-		Product secondProduct = interchangeableProducts[second];
+		const auto& firstProduct  = interchangeableProducts[first]; 
+		const auto& secondProduct = interchangeableProducts[second];
 
 		bool isValid = isValidSwap(firstProduct, secondProduct, allocations); 
 

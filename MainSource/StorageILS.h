@@ -154,7 +154,7 @@ class StorageAllocationPertubation : public NeighborhoodStructure {
 		vector<Product> interchangeableProducts; 
         OptimizationConstraints * constraints; 
         set<string> forbiddenAllocationProducts; 
-        bool isValidSwap(Product &first, Product &second, MapAllocation &allocations);
+        bool isValidSwap(const Product &first, const Product &second, MapAllocation &allocations);
     public:
         const AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
