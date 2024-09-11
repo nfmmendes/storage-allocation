@@ -19,6 +19,7 @@ using std::string;
 using std::set;
 using std::pair;
 using std::ofstream;
+using std::shared_ptr;
 
 class OptimizationParameters;
 
@@ -214,4 +215,10 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @return True if the solution is valid, false otherwise.
 		 */
 		bool checkSolution();
+
+		/**
+		 * @brief Create a copy of the object passed as paremeter encapsulated in a smart pointer.
+		 * @param pointer The object to be copied.
+		 */
+		static shared_ptr<AbstractSolution> createSharedPtrCopy(shared_ptr<const AbstractSolution> pointer);
 };

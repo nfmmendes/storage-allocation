@@ -14,6 +14,7 @@
 #include "DistanceMatrix.h"
 using namespace QuickTSP; 
 using std::ofstream;
+using std::shared_ptr;
 using std::to_string;
 using std::cout;
 using std::flush;
@@ -333,4 +334,9 @@ bool StorageAllocationSolution::checkSolution(){
 	}
 
 	return prods.size() == positions.size();
+}
+
+shared_ptr<AbstractSolution> StorageAllocationSolution::createSharedPtrCopy(shared_ptr<const AbstractSolution> pointer)
+{
+    return shared_ptr<AbstractSolution>(new StorageAllocationSolution((StorageAllocationSolution*)pointer.get()));
 }
