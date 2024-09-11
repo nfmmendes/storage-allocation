@@ -117,11 +117,11 @@ class MostFrequentSwap : public NeighborhoodStructure{
     public:
         MostFrequentSwap();
         ~MostFrequentSwap();
-        MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr , vector<Product> &products);
+        MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr , const vector<Product> &products);
         const AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
 
-        void setInterchangeableProducts(vector<Product> &prods) { this->interchangeableProducts = prods; }
+        void setInterchangeableProducts(const vector<Product> &prods) { this->interchangeableProducts = prods; }
         void setRandomSeed(int seed){ this->randomSeed = seed; srand(this->randomSeed); }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }

@@ -268,7 +268,7 @@ MostFrequentSwap::~MostFrequentSwap(){
 	delete startSolution;
 }
 
-MostFrequentSwap::MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, vector<Product> &products){
+MostFrequentSwap::MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, const vector<Product> &products){
 	this->startSolution = initial;
 	this->interchangeableProducts = products; 
 	this->constraints = constr; 
