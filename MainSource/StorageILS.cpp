@@ -199,15 +199,14 @@ bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, M
 }
 
 vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
-	std::map<Product, pair<Cell,int> > allocations = ((StorageAllocationSolution *) startSolution)->getProductAllocations();
+	auto& allocations = ((StorageAllocationSolution *) startSolution)->getProductAllocations();
 	blockAllocations.clear(); 
 	
-	std::vector<Shelf> shelves = block.getShelves(); 
-	std::vector<AbstractSolution *> solutions; 
+	const auto& shelves = block.getShelves();  
 	set<long> shelfIds; 
 
-	for(unsigned int i=0; i < shelves.size(); i++)
-		shelfIds.insert(shelves[i].getId()); 
+	transform(begin(shelves), end(shelves), inserter(shelfIds, end(shelfIds)), 
+			 [](auto &s){ return s.getId(); });
 	
 	for(auto &[product, position] : allocations){
 		if(shelfIds.find(position.first.getIdShelf()) != shelfIds.end())
@@ -216,25 +215,26 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 	
 	int allocationsSize = (int)blockAllocations.size();
 	if(allocationsSize <=2)
-		return solutions;
+		return {};
 	
 	std::set<pair<int,int> > swapsDone; 
 	int first, second; 
 	int numTries = 0; 
 
 	int numIterations = min(numberOfNeighbors, (allocationsSize-1)*allocationsSize);
+	std::vector<AbstractSolution *> solutions;
 	for( int i=0; i< numIterations && numTries < 2*numIterations; i++, numTries++){
 	
 		if(!Util::ChooseTwoProductIndexes(first ,second,allocationsSize, swapsDone))
 			break;
 
-		std::map< pair<Cell, int> , Product>::iterator it = blockAllocations.begin();
+		auto it = blockAllocations.begin();
 		advance(it,first); 
-		Product firstProduct = it->second; 
+		const auto& firstProduct = it->second; 
 
 		it = blockAllocations.begin(); 
 		advance(it,second); 
-		Product secondProduct = it->second; 
+		const auto& secondProduct = it->second; 
 
 		bool isValid = isValidSwap(firstProduct, secondProduct, allocations); 
 		if(!isValid){
@@ -242,7 +242,7 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 			continue; 
 		}
 
-		StorageAllocationSolution *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)startSolution); 
+		auto *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)startSolution); 
 		newSolution->proceedSwap(firstProduct, secondProduct,true); 
 
 		solutions.push_back(newSolution); 
