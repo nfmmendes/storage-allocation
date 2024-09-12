@@ -89,13 +89,13 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @brief Pointer copy constructor. 
 		 * @param other Object to be copied. 
 		 */
-		StorageAllocationSolution(StorageAllocationSolution *other);
+		StorageAllocationSolution(const StorageAllocationSolution *other);
 
 		/**
 		 * @brief Copy constructor. 
 		 * @param other Object to be copied. 
 		 */
-		StorageAllocationSolution(StorageAllocationSolution &other);
+		StorageAllocationSolution(const StorageAllocationSolution &other);
 
 		/**
 		 * @brief Constructor.

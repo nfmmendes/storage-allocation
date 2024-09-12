@@ -31,7 +31,7 @@ StorageAllocationSolution::StorageAllocationSolution(){
 	StorageAllocationSolution::countSolutions++;
 }
 
-StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution *other){
+StorageAllocationSolution::StorageAllocationSolution(const StorageAllocationSolution *other){
 	StorageAllocationSolution::countSolutions++;
 	this->solutionValue = other->solutionValue;
 	this->runtime = other->runtime;
@@ -57,7 +57,7 @@ StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution *
 	}
 }
 
-StorageAllocationSolution::StorageAllocationSolution(StorageAllocationSolution &other):AbstractSolution(other){
+StorageAllocationSolution::StorageAllocationSolution(const StorageAllocationSolution &other):AbstractSolution(other){
 	
 	StorageAllocationSolution::countSolutions++;
 	this->solutionValue = other.solutionValue;
@@ -338,5 +338,6 @@ bool StorageAllocationSolution::checkSolution(){
 
 shared_ptr<AbstractSolution> StorageAllocationSolution::createSharedPtrCopy(shared_ptr<const AbstractSolution> pointer)
 {
-    return shared_ptr<AbstractSolution>(new StorageAllocationSolution((StorageAllocationSolution*)pointer.get()));
+	auto castPointer = static_cast<const StorageAllocationSolution*>(pointer.get());
+    return shared_ptr<AbstractSolution>(new StorageAllocationSolution(castPointer));
 }
