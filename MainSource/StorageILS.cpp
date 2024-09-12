@@ -210,7 +210,7 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 	
 	for(auto &[product, position] : allocations){
 		if(shelfIds.find(position.first.getIdShelf()) != shelfIds.end())
-			blockAllocations[position] = &product;
+			blockAllocations[position] = product;
 	}
 	
 	int allocationsSize = (int)blockAllocations.size();
@@ -236,14 +236,14 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 		advance(it,second); 
 		const auto& secondProduct = it->second; 
 
-		bool isValid = isValidSwap(*firstProduct, *secondProduct, allocations); 
+		bool isValid = isValidSwap(firstProduct, secondProduct, allocations); 
 		if(!isValid){
 			i--;
 			continue; 
 		}
 
 		auto *newSolution = new StorageAllocationSolution((StorageAllocationSolution *)startSolution); 
-		newSolution->proceedSwap(*firstProduct, *secondProduct,true); 
+		newSolution->proceedSwap(firstProduct, secondProduct,true); 
 
 		solutions.push_back(newSolution); 
 	}
@@ -566,7 +566,8 @@ AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *cur
 }
 
 AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
-	vector<Block> blocks = warehouse->getBlocks(); 
+
+	const auto& blocks { warehouse->getBlocks() }; 
 	
 	int randomMultiplier = 0;
 	for(const auto& block : blocks){
@@ -608,10 +609,10 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 }
 
 AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
-	
+
 	const auto& blocks = warehouse->getBlocks(); 
 	auto& allocations = ((StorageAllocationSolution *) currentSolution)->getProductAllocations();
-	map<long, map<Position,Product> > shelfAllocations; 
+	map<long, map<Position, Product> > shelfAllocations; 
 	
 	for(auto &[product, position] : allocations)
 		shelfAllocations[position.first.getIdShelf()][position] = product;
@@ -620,7 +621,7 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 	assert(insideShelfSwap != nullptr);
 	
 	for(unsigned int j=0;j<blocks.size();j++){
-		vector<Shelf> shelves = blocks[j].getShelves();
+		const auto& shelves { blocks[j].getShelves() };
 		vector<AbstractSolution *> neighbors;
 	
 		for(unsigned int k=0;k<shelves.size();k++){
@@ -662,7 +663,8 @@ AbstractSolution * StorageILS::RunPerturbation(AbstractSolution *currentSolution
 	perturbationNeighborhood->setInterchangeableProducts(products); 
 	perturbationNeighborhood->setNumberOfNeighbors(1);
 	neighborhoodStructure->setStartSolution(currentSolution); 
-	vector<AbstractSolution *> neighbors = perturbationNeighborhood->createNeighbors(); 
+	auto neighbors = perturbationNeighborhood->createNeighbors(); 
+
 
 	return neighbors[0]; 
 }
