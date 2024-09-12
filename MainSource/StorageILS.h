@@ -212,7 +212,7 @@ class StorageILS : public Heuristic{
 		map<Position, Vertex> vertexByCell;
         Warehouse *warehouse; 
 		vector<Order> orders; 
-        vector<NeighborhoodStructure *> neighborhoodStructures;
+        vector<shared_ptr<NeighborhoodStructure>> neighborhoodStructures;
         unsigned int numIterationsWithoutImprovement; 
         vector<string> neighborhoodType;
         map<Product, char> productClasses; 
@@ -247,7 +247,8 @@ class StorageILS : public Heuristic{
          * @param randomSeed The random seed of the search. 
          * @return A new solution. 
          */
-        AbstractSolution * SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure,int randomSeed);
+        AbstractSolution * SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure,int randomSeed);
+
         
         /**
          * @brief Perform a local search inside a block.
@@ -256,7 +257,7 @@ class StorageILS : public Heuristic{
          * @param randomSeed The random seed of the search. 
          * @return A new solution. 
          */
-        AbstractSolution * SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
+        AbstractSolution * SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed);
         
         /**
          * @brief Perform a local search considering only the most frequent products. 
@@ -265,7 +266,7 @@ class StorageILS : public Heuristic{
          * @param randomSeed The random seed of the search. 
          * @return A new solution.
          */ 
-        AbstractSolution * SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed);
+        AbstractSolution * SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed);
         
         /**
          * @brief Perform a pertubation in the given solution.
@@ -273,7 +274,7 @@ class StorageILS : public Heuristic{
          * @param neighborhoodStructure The neighborhood structure to be used in the pertubation. 
          * @return A new solution. 
          */
-        AbstractSolution * RunPerturbation(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure);
+        AbstractSolution * RunPerturbation(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure);
         
         /**
          * @brief Get a map from products to ABC frequence classes.

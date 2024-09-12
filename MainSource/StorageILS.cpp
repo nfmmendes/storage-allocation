@@ -30,6 +30,7 @@
 #include <cassert>
 using std::make_unique;
 using std::min;
+using std::make_shared;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -508,10 +509,10 @@ bool StorageILS::StopCriteriaReached(){
 }
 
 void StorageILS::InitializeNeighborhoods(){
-	neighborhoodStructures.push_back(new MostFrequentSwap());
-	neighborhoodStructures.push_back(new InsideShelfSwap());
-	neighborhoodStructures.push_back(new InsideBlockSwap());
-	neighborhoodStructures.push_back(new IsolatedFamilySwap());
+	neighborhoodStructures.push_back(make_shared<MostFrequentSwap>());
+	neighborhoodStructures.push_back(make_shared<InsideShelfSwap>());
+	neighborhoodStructures.push_back(make_shared<InsideBlockSwap>());
+	neighborhoodStructures.push_back(make_shared<IsolatedFamilySwap>());
 
 	neighborhoodStructures[0]->setOptimizationConstraints(&constraints);
 	neighborhoodStructures[1]->setOptimizationConstraints(&constraints);
@@ -524,8 +525,7 @@ void StorageILS::InitializeNeighborhoods(){
 	neighborhoodType.push_back("IsolatedFamilySwap"); 
 }
 
-AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
-	
+AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
 	vector<Product> mostFrequentProducts;
 	for(auto &[product, cl]: productClasses)
 		if(cl == 'A')
@@ -533,7 +533,7 @@ AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *cur
 
 	int maxNumberSwaps = (int) sqrt((int) mostFrequentProducts.size()); 
 	for(int i=0; i <maxNumberSwaps; i++){
-		auto localNeighborhoodStructurre = static_cast<MostFrequentSwap*>(neighborhoodStructure);
+		auto localNeighborhoodStructurre = static_cast<MostFrequentSwap*>(neighborhoodStructure.get());
 		
 		if(localNeighborhoodStructurre == nullptr)
 			return nullptr;
@@ -565,8 +565,7 @@ AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *cur
 	return currentSolution; 
 }
 
-AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
-
+AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
 	const auto& blocks { warehouse->getBlocks() }; 
 	
 	int randomMultiplier = 0;
@@ -574,7 +573,7 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 
 		const auto& shelves = block.getShelves();
 
-		auto insideBlockSwap = static_cast<InsideBlockSwap*>(neighborhoodStructure);
+		auto insideBlockSwap = static_cast<InsideBlockSwap*>(neighborhoodStructure.get());
 		assert(insideBlockSwap);
 
 		insideBlockSwap->setBlock(block); 
@@ -608,8 +607,7 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 	return currentSolution;
 }
 
-AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure, int randomSeed){
-
+AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
 	const auto& blocks = warehouse->getBlocks(); 
 	auto& allocations = ((StorageAllocationSolution *) currentSolution)->getProductAllocations();
 	map<long, map<Position, Product> > shelfAllocations; 
@@ -617,7 +615,7 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 	for(auto &[product, position] : allocations)
 		shelfAllocations[position.first.getIdShelf()][position] = product;
 
-	auto insideShelfSwap = static_cast<InsideShelfSwap *>(neighborhoodStructure);
+	auto insideShelfSwap = static_cast<InsideShelfSwap *>(neighborhoodStructure.get());
 	assert(insideShelfSwap != nullptr);
 
 
@@ -660,9 +658,9 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 	return currentSolution;
 }
 
-AbstractSolution * StorageILS::RunPerturbation(AbstractSolution *currentSolution, NeighborhoodStructure * neighborhoodStructure){
+AbstractSolution * StorageILS::RunPerturbation(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure){
 
-	auto perturbationNeighborhood = static_cast<StorageAllocationPertubation *>(neighborhoodStructure);
+	auto perturbationNeighborhood = static_cast<StorageAllocationPertubation *>(neighborhoodStructure.get());
 	assert(perturbationNeighborhood != nullptr);
 
 	perturbationNeighborhood->setInterchangeableProducts(products); 
@@ -694,8 +692,9 @@ AbstractSolution * StorageILS::Execute(){
 	auto* currentSolution = new StorageAllocationSolution(bestGlobalSolution); 
 
 	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue(); 
-	cout<<"Greed value : "<<bestGlobalSolutionValue<< " penalty: "<< initialSolution->getTotalPenalty()<<endl;
-	auto * perturbation = new StorageAllocationPertubation(&constraints); 
+
+	cout<<"Greed value : "<<bestGlobalSolutionValue<< " penalty: "<< ((StorageAllocationSolution*)initialSolution)->getTotalPenalty()<<endl;
+	auto perturbation = make_shared<StorageAllocationPertubation>(&constraints); 
 
 	int randomSeed= 1;
 	auto allocations = initialSolution->getProductAllocations(); 
