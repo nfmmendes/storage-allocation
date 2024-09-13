@@ -649,8 +649,8 @@ vector<Vertex> StorageConstructiveHeuristic::getStoragePoints(){
 vector<Vertex> StorageConstructiveHeuristic::getStorageVertexesOrderedByDistance(){
 	
 	vector<pair< double,Vertex> > vertexesOrderedByDistance; 
-	vector<Vertex> expeditionPoints = vertexByType["ExpeditionPointVertex"];
-	vector<Vertex> storagePoints = getStoragePoints(); 
+	auto expeditionPoints = vertexByType["ExpeditionPointVertex"];
+	auto storagePoints = getStoragePoints(); 
 	
 	for(unsigned i=0;i<storagePoints.size(); i++){
 		double lowerDistance = 1e200; 

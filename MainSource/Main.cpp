@@ -110,7 +110,7 @@ int main(int argc, char **argv){
 	OptimizationConstraints cons(input.getParameters(), input.getAllocationProhibitions(), input.getIsolatedFamily());
 
 	Warehouse warehouse =  input.getWarehouse();
-	map<pair<Cell, int>, Vertex> vertexByCell = processInput.getWarehouseToGraphConverter()->getVertexByCell();
+	auto vertexByCell = processInput.getWarehouseToGraphConverter()->getVertexByCell();
 
 	StorageAllocationSolution::setEvaluator(processInput.getDistanceMatrix(),vertexByCell, warehouse.getBlocks(), cons);
 

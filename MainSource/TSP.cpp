@@ -20,8 +20,8 @@ pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
     VertexVertexMap& bestEnd)
 {
 
-    vector<Vertex> currentOrder = points;
-    vector<Vertex> solution = points;
+    auto currentOrder = points;
+    auto solution = points;
     double bestCost = std::numeric_limits<double>::max();
     auto orderSize {currentOrder.size()};
 
@@ -106,7 +106,7 @@ pair<double, vector<Vertex> >
 TSP::quickLocalSearchTSP(const vector<Vertex>& points, VertexVertexMap& bestStart,
     VertexVertexMap& bestEnd)
 {
-    pair<double, vector<Vertex> > currentOrder = closestNeighborTSP(points, bestStart, bestEnd);
+    auto currentOrder = closestNeighborTSP(points, bestStart, bestEnd);
     const auto& order { currentOrder.second };
     auto orderSize = order.size();
 
