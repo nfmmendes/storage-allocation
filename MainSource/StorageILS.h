@@ -18,6 +18,7 @@
 using std::vector;
 using std::map;
 using std::pair;
+using std::unique_ptr;
 
 class OptimizationConstrains;
 class StorageAllocationEvaluator;
@@ -246,7 +247,7 @@ class StorageILS : public Heuristic{
          * @param randomSeed The random seed of the search. 
          * @return A new solution. 
          */
-        AbstractSolution * SwapInsideShelfLocalSearch(shared_ptr<AbstractSolution> currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure,int randomSeed);
+        unique_ptr<AbstractSolution> SwapInsideShelfLocalSearch(shared_ptr<AbstractSolution> currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure,int randomSeed);
 
         
         /**

@@ -579,10 +579,10 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(shared_ptr<AbstractSol
 	return bestSolution;
 }
 
-AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(shared_ptr<AbstractSolution> currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
+unique_ptr<AbstractSolution> StorageILS::SwapInsideShelfLocalSearch(shared_ptr<AbstractSolution> currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
 	const auto& blocks = warehouse->getBlocks(); 
 	auto& allocations = ((StorageAllocationSolution *) currentSolution.get())->getProductAllocations();
-	StorageAllocationSolution* bestSolution = new StorageAllocationSolution((const StorageAllocationSolution*)currentSolution.get());
+	auto bestSolution = make_unique<StorageAllocationSolution>((const StorageAllocationSolution*)currentSolution.get());
 	map<long, map<Position, Product> > shelfAllocations; 
 	
 	for(auto &[product, position] : allocations)
@@ -605,7 +605,7 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(shared_ptr<AbstractSol
 			insideShelfSwap->setRandomSeed(randomSeed+j*((int)shelves.size())+k);
 			insideShelfSwap->setNumberOfNeighbors((int)sqrt(shelves[k].getCells().size()));
 
-			neighborhoodStructure->setStartSolution(bestSolution); 
+			neighborhoodStructure->setStartSolution(bestSolution.get()); 
 			neighbors = insideShelfSwap->createNeighbors(); 
 			double currentSolutionValue = currentSolution->getSolutionValue();
 			double newSolutionValue = neighbors[0]->getSolutionValue();
@@ -615,8 +615,7 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(shared_ptr<AbstractSol
 				//A margin of 0.1% is used to avoid to update constantly the current solution with solutions that 
 				//are not significantly better 
 				if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
-					delete bestSolution;
-					bestSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbor);	
+					bestSolution.reset(new StorageAllocationSolution((StorageAllocationSolution *) neighbor));
 					currentSolutionValue = currentSolution->getSolutionValue();
 				}
 
@@ -660,8 +659,8 @@ AbstractSolution * StorageILS::Execute(){
 	double bestGlobalSolutionValue; 
 	
     auto* initialSolution = CreateInitialSolution();
-	auto bestGlobalSolution = shared_ptr<StorageAllocationSolution>(new StorageAllocationSolution(initialSolution));
-	auto currentSolution = shared_ptr<StorageAllocationSolution>(new StorageAllocationSolution(initialSolution)); 
+	auto bestGlobalSolution = shared_ptr<AbstractSolution>(new StorageAllocationSolution(initialSolution));
+	auto currentSolution = shared_ptr<AbstractSolution>(new StorageAllocationSolution(initialSolution)); 
 
 	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue(); 
 
@@ -673,19 +672,19 @@ AbstractSolution * StorageILS::Execute(){
 	//cout<<"Total penalty init : "<<currentSolution->getTotalPenalty()<<endl; 
 	while(!StopCriteriaReached()){
 		
-		auto bestLocalSearchSolution { make_unique<StorageAllocationSolution>(new StorageAllocationSolution(*currentSolution)) };
-		auto originalSolution { make_unique<StorageAllocationSolution>(new StorageAllocationSolution(*currentSolution)) };
+		auto bestLocalSearchSolution { StorageAllocationSolution::createSharedPtrCopy(currentSolution) };
+		auto originalSolution { StorageAllocationSolution::createSharedPtrCopy(currentSolution) };
 
 		double bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue();
-		unique_ptr<StorageAllocationSolution> auxiliaryPointer; 
+		unique_ptr<AbstractSolution> auxiliaryPointer; 
 		
 		//Perform a local search as a VNS
 		for(unsigned int i=0;i< neighborhoodStructures.size();i++){
 			double newSolutionValue = 0;
-		
+
 			if(neighborhoodType[i] == "InsideShelfSwap"){	
 				cout<<"Inside Shelf Swap"<<endl;
-				auxiliaryPointer.reset((StorageAllocationSolution *) SwapInsideShelfLocalSearch(currentSolution, neighborhoodStructures[i], randomSeed));
+				auxiliaryPointer = SwapInsideShelfLocalSearch(currentSolution, neighborhoodStructures[i], randomSeed);
 				newSolutionValue = auxiliaryPointer->getSolutionValue();	
 			}else if(neighborhoodType[i] == "InsideBlockSwap"){	 
 				cout<<"Inside Block Swap"<<endl;
@@ -706,14 +705,14 @@ AbstractSolution * StorageILS::Execute(){
 				bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue(); 
 			}
 			
- 			currentSolution.reset(new StorageAllocationSolution(originalSolution.get()));
+ 			currentSolution.reset(new StorageAllocationSolution((StorageAllocationSolution*)originalSolution.get()));
 		}
 		
 		numIterationsWithoutImprovement++;
-		
+
 		if((bestLocalSearchSolutionValue - bestGlobalSolutionValue)*100/bestGlobalSolutionValue <= -0.1){
 			bestGlobalSolution.reset();
-			bestGlobalSolution = make_shared<StorageAllocationSolution>(move(bestLocalSearchSolution.get()));
+			bestGlobalSolution = StorageAllocationSolution::createSharedPtrCopy(bestLocalSearchSolution);
 			bestGlobalSolutionValue = bestLocalSearchSolution->getSolutionValue();
 			numIterationsWithoutImprovement = 0; 
 		}
