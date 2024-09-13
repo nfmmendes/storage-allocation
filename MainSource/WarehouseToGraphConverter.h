@@ -3,6 +3,7 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include<memory>
 #include<set>
 #include "Warehouse.h"
 #include "Arc.h"
@@ -14,6 +15,7 @@
 #include "Arc.h"
 using std::map;
 using std::string;
+using std::shared_ptr;
 using std::vector;
 
 typedef std::vector< std::vector<std::string> > StringMatrix;
@@ -25,7 +27,7 @@ namespace QuickTSP{
         private:
             Warehouse warehouse; 
             Graph graph;
-            map<pair<Cell, int>, Vertex> vertexByCell;
+            map<pair<Cell, int>, shared_ptr<Vertex>> vertexByCell;
             vector<Vertex> firstLevelVertexes;                  //Store the vertexes corresponding to cell first levels. We need
                                                                 // it because this vertexes will be connected after in the graph
             map<const string, Vertex> vertexByCode;             //!< Stores all vertex, indexed by code
@@ -59,7 +61,7 @@ namespace QuickTSP{
             void generateGraph(); 
             Graph & getGraph();
             Warehouse & getWarehouse();
-            map<pair<Cell,int>, Vertex> getVertexByCell();
+            map<pair<Cell,int>, shared_ptr<Vertex>> getVertexByCell();
 		
 			//Vertex types 
 			const static string BLOCK_EXIT_VERTEX;

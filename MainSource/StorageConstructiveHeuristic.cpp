@@ -18,10 +18,11 @@ using std::vector;
 using std::queue;
 using std::make_pair;
 using std::min;
+using std::shared_ptr;
 using namespace QuickTSP; 
 
 StorageConstructiveHeuristic::StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex> *distMatrix,
-														   map<Position, Vertex>& vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
+														   map<Position, shared_ptr<Vertex>>& vertexByCell, vector<Order> &orders, OptimizationConstraints &cons){
 	this->distanceMatrix = distMatrix; 
 	this->warehouse = &wh; 
 	this->orders= orders; 
@@ -51,7 +52,7 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 
 	//Initialize structures to recover quickly information about store positions on graph
 	for(auto &[key, value] : vertexByCell)
-		cellByVertex[value] = key;
+		cellByVertex[*value] = key;
 
 	vector<Vertex> allVertexes = distanceMatrix->getKeys();
 	for(auto key : allVertexes)
@@ -88,7 +89,7 @@ void StorageConstructiveHeuristic::InitializeAuxiliaryDataStructures(){
 
 void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 	
-	vector<Vertex> storagePoints = getStoragePoints(); 
+	auto storagePoints = getStoragePoints(); 
 	vector<Vertex> expeditionPoints = vertexByType[WarehouseToGraphConverter::EXPEDITION_POINT_VERTEX]; 
 	
 	for(const auto& storagePoint : storagePoints){
@@ -97,8 +98,8 @@ void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 		Vertex bestStart, bestEnd; 
 
 		for(const auto& expeditionPoint : expeditionPoints){
-			double startDistance = distanceMatrix->getDistance(expeditionPoint, storagePoint);
-			double endDistance = distanceMatrix->getDistance(storagePoint, expeditionPoint); 
+			double startDistance = distanceMatrix->getDistance(expeditionPoint, *storagePoint);
+			double endDistance = distanceMatrix->getDistance(*storagePoint, expeditionPoint); 
 
 			if(startDistance < minStartDistance){
 				minStartDistance = startDistance; 
@@ -111,8 +112,8 @@ void StorageConstructiveHeuristic::InitializeClosestDeliveryPoint(){
 			}
 		}
 		
-		closestStartPoint[storagePoint] = bestStart;
-		closestEndPoint[storagePoint ] = bestEnd; 
+		closestStartPoint[*storagePoint] = std::make_shared<Vertex>(bestStart);
+		closestEndPoint[*storagePoint ] = std::make_shared<Vertex>(bestEnd); 
 	}	
 }
 
@@ -172,15 +173,15 @@ bool StorageConstructiveHeuristic::hasConstraints(const Product &prod){
 
 double StorageConstructiveHeuristic::getBestRouteWithTwoPoints(const vector<Product> &items, MapAllocation &productAllocation){
 																	 
-	Vertex location = vertexByCell[ productAllocation[items[0] ] ]; 
-	Vertex begin = closestStartPoint[ location  ];
-	Vertex end =   closestEndPoint[   location  ] ; 
-	double dist1 = this->distanceMatrix->getDistance(begin, location) + this->distanceMatrix->getDistance(location, end); 
+	auto location = vertexByCell[ productAllocation[items[0] ] ]; 
+	auto begin = closestStartPoint[ *location  ];
+	auto end =   closestEndPoint[   *location  ] ; 
+	double dist1 = this->distanceMatrix->getDistance(*begin, *location) + this->distanceMatrix->getDistance(*location, *end); 
 	
 	location = vertexByCell[ productAllocation[items[1] ] ]; 
-	begin = closestStartPoint[ location  ];
-	end =   closestEndPoint[   location  ] ; 
-	double dist2 = this->distanceMatrix->getDistance(begin, location) + this->distanceMatrix->getDistance(location, end); 
+	begin = closestStartPoint[ *location  ];
+	end =   closestEndPoint[   *location  ] ; 
+	double dist2 = this->distanceMatrix->getDistance(*begin, *location) + this->distanceMatrix->getDistance(*location, *end); 
 	
 	return min(dist1, dist2); 
 	
@@ -273,7 +274,7 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 	
 	TSP tsp(distanceMatrix); 
 	vector<pair<Product, double> > items; 
-	vector<Vertex> storagePoints; 
+	vector<shared_ptr<Vertex>> storagePoints; 
 	double penalty = 0.0; 
 	double nonExistentPositionPenalty = 0.0;  
 	
@@ -300,16 +301,16 @@ void StorageConstructiveHeuristic::EvaluateSolution(AbstractSolution * solution)
 		}
 
 		if(allocated.size() == 1) {
-			Vertex location = vertexByCell[ productAllocation[allocated[0] ] ]; 
-			Vertex begin = closestStartPoint[ location  ];
-			Vertex end =   closestEndPoint[   location  ] ; 
-			totalDistance += this->distanceMatrix->getDistance(begin, location) + this->distanceMatrix->getDistance(location, end); 
+			auto location = vertexByCell[ productAllocation[allocated[0] ] ]; 
+			auto begin = closestStartPoint[ *location  ];
+			auto end =   closestEndPoint[   *location  ] ; 
+			totalDistance += this->distanceMatrix->getDistance(*begin, *location) + this->distanceMatrix->getDistance(*location, *end); 
 		}else if(allocated.size() == 2){
 			totalDistance += this->getBestRouteWithTwoPoints(allocated, productAllocation);
 		}else{
 			if(allocated.size() == 0)continue; 
 
-			pair<double, vector<Vertex> > route; 
+			pair<double, vector<shared_ptr<Vertex>> > route; 
 			//This is just a limit to use the brute force TSP algorithm
 			if(storagePoints.size() < OptimizationParameters::instance()->BRUTE_FORCE_TSP_THRESHOLD){ 
 				route = tsp.bruteForceTSP(storagePoints, closestStartPoint, closestEndPoint); 
@@ -365,7 +366,7 @@ vector<pair<int, string > > StorageConstructiveHeuristic::orderFamilyByFrequence
 }
 
 
-tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAllocation(queue<Product>& products, const vector<Vertex> &vertexes){
+tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAllocation(queue<Product>& products, const vector<shared_ptr<Vertex>> &vertexes){
 	
 	int contFrequence = 0;
 	map<Vertex,Product> currentAllocation; 
@@ -376,11 +377,11 @@ tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAlloca
 		products.pop(); 
 		int cont =0; 
 		int tryInsert=0; 
-		while(isForbiddenStore(prod, vertexes[tryInsert%vertexes.size()]) && (unsigned)cont++ < vertexes.size())
+		while(isForbiddenStore(prod, *vertexes[tryInsert%vertexes.size()]) && (unsigned)cont++ < vertexes.size())
 			tryInsert++;
 		
 		if(cont < (int) vertexes.size()){
-			currentAllocation[vertexes[tryInsert] ] = prod; 
+			currentAllocation[*vertexes[tryInsert] ] = prod; 
 			contFrequence += frequenceByProduct[prod];
 		}
 	}
@@ -388,14 +389,14 @@ tuple<int, map<Vertex,Product> >  StorageConstructiveHeuristic::testFamilyAlloca
 	return {contFrequence, currentAllocation};
 }
 
-bool StorageConstructiveHeuristic::AllocateBestFamily(map<Vertex, Product> & allocations, vector<Vertex>& vertexes, 
+bool StorageConstructiveHeuristic::allocateBestFamily(map<Vertex, Product> & allocations, vector<shared_ptr<Vertex>>& vertexes, 
 										vector<string> familyCodes,  map<string, queue<Product> > &orderedProductsByFamily){
 
 	//Order the vertexes in the block by distance from the closest delivery point 
 	//Maybe it could be pre-evaluated 
-	auto &closestStartPointDistance = [this](const Vertex & v){ return distanceMatrix->getDistance(closestStartPoint[v], v); };
-	sort(vertexes.begin(), vertexes.end(), [this,&closestStartPointDistance](const Vertex &a,const Vertex &b){ 
-		return closestStartPointDistance(a) < closestStartPointDistance(b); 
+	auto &closestStartPointDistance = [this](const Vertex & v){ return distanceMatrix->getDistance(*closestStartPoint[v], v); };
+	sort(vertexes.begin(), vertexes.end(), [this,&closestStartPointDistance](const shared_ptr<Vertex> a,const shared_ptr<Vertex> &b){ 
+		return closestStartPointDistance(*a) < closestStartPointDistance(*b); 
 	});
 	 
 	string bestFamily; 
@@ -457,7 +458,7 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 	for(auto block: notUsedBlocks){
  
 		map<long int, Shelf> shelves = block.getShelvesById(); 
-		vector<Vertex> vertexes; 
+		vector<shared_ptr<Vertex>> vertexes; 
 		for(auto [id, shelf] : shelves){
 			vector<Cell> shelfCells =  shelf.getCells();
 			for(unsigned i=0;i<shelfCells.size();i++){
@@ -466,7 +467,7 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 			}
 		}
  
-		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel[BLOCK_LEVEL], orderedProductsByFamily); 
+		bool allocated = allocateBestFamily(allocations, vertexes, familiesByIsolationLevel[BLOCK_LEVEL], orderedProductsByFamily); 
 		if(allocated){
 			vector<Shelf> blockShelves= block.getShelves(); 
 			//Remove all the shelves of the block (they cannot be used by other family
@@ -483,12 +484,12 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 	for(auto shelf : notUsedShelves){
 	
 		vector<Cell> shelfCells =  shelf.getCells();
-		vector<Vertex> vertexes;
+		vector<shared_ptr<Vertex>> vertexes;
 	
 		for(unsigned i=0;i<shelfCells.size();i++)
 			for(int j=0;j<shelfCells[i].getLevels();j++)
 				vertexes.push_back(vertexByCell[make_pair(shelfCells[i],j+1)]); 
-		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel[SHELF_LEVEL], orderedProductsByFamily);
+		bool allocated = allocateBestFamily(allocations, vertexes, familiesByIsolationLevel[SHELF_LEVEL], orderedProductsByFamily);
 	
 		if(allocated){
 			vector<Cell> shelfCells = shelf.getCells(); 
@@ -503,11 +504,11 @@ void StorageConstructiveHeuristic::allocateStronglyIsolatedFamilies(map<Vertex,P
 	}
 	
 	for(auto cell : notUsedCells){
-		vector<Vertex> vertexes;
+		vector<shared_ptr<Vertex>> vertexes;
 		for(int j=0;j<cell.getLevels();j++)
 			vertexes.push_back(vertexByCell[make_pair(cell,j+1)]); 
 		
-		bool allocated = AllocateBestFamily(allocations, vertexes, familiesByIsolationLevel[CELL_LEVEL], orderedProductsByFamily);
+		bool allocated = allocateBestFamily(allocations, vertexes, familiesByIsolationLevel[CELL_LEVEL], orderedProductsByFamily);
 		if(allocated)
 			notUsedCells.erase(cell);
 	}
@@ -629,17 +630,17 @@ set<Product>  StorageConstructiveHeuristic::getNotUsedProducts(const map<Vertex,
 	return result; 
 }
 
-vector<Vertex> StorageConstructiveHeuristic::getStoragePoints(){
+vector<shared_ptr<Vertex>> StorageConstructiveHeuristic::getStoragePoints(){
 	
 	storageVertexTypes.insert(WarehouseToGraphConverter::UPPER_LEVEL_CELL);
 	storageVertexTypes.insert(WarehouseToGraphConverter::UNIQUE_LEVEL_CELL);
 	storageVertexTypes.insert(WarehouseToGraphConverter::FIRST_LEVEL_CELL);
 	
-	vector<Vertex> result;
+	vector<shared_ptr<Vertex>> result;
 	
 	for( auto &[key, value] : vertexByCell){
 		(void) key; //Only to clean warnings about not using this variable
-		if(storageVertexTypes.find(value.getType()) != storageVertexTypes.end() )
+		if(storageVertexTypes.find(value->getType()) != storageVertexTypes.end() )
 			result.push_back(value);
 	}
 	
@@ -655,10 +656,10 @@ vector<Vertex> StorageConstructiveHeuristic::getStorageVertexesOrderedByDistance
 	for(unsigned i=0;i<storagePoints.size(); i++){
 		double lowerDistance = 1e200; 
 		for(unsigned int j=0; j<expeditionPoints.size();j++)
-			if(lowerDistance >distanceMatrix->getDistance(expeditionPoints[j], storagePoints[i]))
-				lowerDistance = distanceMatrix->getDistance(expeditionPoints[j], storagePoints[i]);
+			if(lowerDistance >distanceMatrix->getDistance(expeditionPoints[j], *storagePoints[i]))
+				lowerDistance = distanceMatrix->getDistance(expeditionPoints[j], *storagePoints[i]);
 		
-		vertexesOrderedByDistance.push_back(make_pair(lowerDistance, storagePoints[i])); 
+		vertexesOrderedByDistance.push_back(make_pair(lowerDistance, *storagePoints[i])); 
 	}
 	
 	sort(vertexesOrderedByDistance.begin(), vertexesOrderedByDistance.end());

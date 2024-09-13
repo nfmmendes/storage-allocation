@@ -4,6 +4,7 @@
 #include<string>
 #include<vector>
 #include<map>
+#include<memory>
 #include "Order.h"
 #include "AbstractSolution.h"
 #include "StorageSolutionEvaluator.h"
@@ -24,7 +25,7 @@ using std::shared_ptr;
 class OptimizationParameters;
 
 //Represent a sequence of vertexes to be visited and the cost to visit them all
-typedef struct pair< vector<Vertex>, double> PickingRoute; 
+typedef struct pair< vector<shared_ptr<Vertex>>, double> PickingRoute; 
 
 /**
  * @brief Class <c> StorageAllocationSolution </c> holds and manipulates all information needed
@@ -118,7 +119,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @param blocks  The warehouse blocks. 
 		 * @param optimizationConstraints The optimization constraints.
 		 */
-		static void setEvaluator(const DistanceMatrix<Vertex> *distanceMatrix, map<Position , Vertex > & positionToVertex, 
+		static void setEvaluator(const DistanceMatrix<Vertex> *distanceMatrix, map<Position , shared_ptr<Vertex> > & positionToVertex, 
 								 const vector<Block> &blocks, OptimizationConstraints & optimizationConstraints);
 		
 		/**

@@ -15,7 +15,7 @@ TSP::TSP(const DistanceMatrix<Vertex>* distanceMatrix)
     this->distanceMatrixSet = true;
 }
 
-pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
+pair<double, vector<shared_ptr<Vertex>> > TSP::bruteForceTSP(const vector<shared_ptr<Vertex>>& points,
     VertexVertexMap& bestStart,
     VertexVertexMap& bestEnd)
 {
@@ -28,12 +28,12 @@ pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
     do {
         double sum = 0.0;
         for (int i = 1; sum <= bestCost && i < orderSize; i++) {
-            sum += distanceMatrix->getDistance(currentOrder[i - 1], currentOrder[i]);
+            sum += distanceMatrix->getDistance(*currentOrder[i - 1], *currentOrder[i]);
         }
 
-        sum += distanceMatrix->getDistance(bestStart[currentOrder[0]], currentOrder[0]);
-        sum += distanceMatrix->getDistance(currentOrder[orderSize - 1],
-            bestEnd[currentOrder[orderSize - 1]]);
+        sum += distanceMatrix->getDistance(*bestStart[*currentOrder[0]], *currentOrder[0]);
+        sum += distanceMatrix->getDistance(*currentOrder[orderSize - 1],
+            *bestEnd[*currentOrder[orderSize - 1]]);
 
         if (sum < bestCost) {
             bestCost = sum;
@@ -44,15 +44,15 @@ pair<double, vector<Vertex> > TSP::bruteForceTSP(const vector<Vertex>& points,
     return make_pair(bestCost, solution);
 }
 
-pair<double, vector<Vertex> >
-TSP::closestNeighborTSP(const vector<Vertex>& points,
+pair<double, vector<shared_ptr<Vertex>> >
+TSP::closestNeighborTSP(const vector<shared_ptr<Vertex>>& points,
     VertexVertexMap& bestStart,
     VertexVertexMap& bestEnd)
 {
 
-    vector<Vertex> solution;
-    set<Vertex> remainingPoints;
-    Vertex previousPoint;
+    vector<shared_ptr<Vertex>> solution;
+    set<shared_ptr<Vertex>> remainingPoints;
+    shared_ptr<Vertex> previousPoint;
     double sumCost = 0;
 
     double lowerDistance = 1e100;
@@ -60,7 +60,7 @@ TSP::closestNeighborTSP(const vector<Vertex>& points,
     double distance;
 
     for (auto i = 0; i < points.size(); i++) {
-        distance = distanceMatrix->getDistance(bestStart[points[i]], points[i]);
+        distance = distanceMatrix->getDistance(*bestStart[*points[i]], *points[i]);
         // find the closest point to a delivery point
         if (distance < lowerDistance) {
             lowerDistance = distance;
@@ -80,10 +80,10 @@ TSP::closestNeighborTSP(const vector<Vertex>& points,
     while (!remainingPoints.empty()) {
         lowerDistance = 1e100;
         distance = 0;
-        Vertex bestPoint;
+        shared_ptr<Vertex> bestPoint;
 
         for (auto value : remainingPoints) {
-            distance = distanceMatrix->getDistance(previousPoint, value);
+            distance = distanceMatrix->getDistance(*previousPoint, *value);
 
             if (distance < lowerDistance) {
                 lowerDistance = distance;
@@ -97,13 +97,13 @@ TSP::closestNeighborTSP(const vector<Vertex>& points,
         remainingPoints.erase(bestPoint);
     }
 
-    sumCost += distanceMatrix->getDistance(previousPoint, bestEnd[previousPoint]);
+    sumCost += distanceMatrix->getDistance(*previousPoint, *bestEnd[*previousPoint]);
 
     return make_pair(sumCost, solution);
 }
 
-pair<double, vector<Vertex> >
-TSP::quickLocalSearchTSP(const vector<Vertex>& points, VertexVertexMap& bestStart,
+pair<double, vector<shared_ptr<Vertex>> >
+TSP::quickLocalSearchTSP(const vector<shared_ptr<Vertex>>& points, VertexVertexMap& bestStart,
     VertexVertexMap& bestEnd)
 {
     auto currentOrder = closestNeighborTSP(points, bestStart, bestEnd);
@@ -115,13 +115,13 @@ TSP::quickLocalSearchTSP(const vector<Vertex>& points, VertexVertexMap& bestStar
         int changingPoint = 0;
 
         for (int j = 1; j + 2 < orderSize; j++) {
-            auto oldCost = distanceMatrix->getDistance(order[j - 1], order[j])
-                + distanceMatrix->getDistance(order[j], order[j + 1])
-                + distanceMatrix->getDistance(order[j + 1], order[j + 2]);
+            auto oldCost = distanceMatrix->getDistance(*order[j - 1], *order[j])
+                + distanceMatrix->getDistance(*order[j], *order[j + 1])
+                + distanceMatrix->getDistance(*order[j + 1], *order[j + 2]);
 
-            auto newCost = distanceMatrix->getDistance(order[j - 1], order[j + 1])
-                + distanceMatrix->getDistance(order[j + 1], order[j])
-                + distanceMatrix->getDistance(order[j], order[j + 2]);
+            auto newCost = distanceMatrix->getDistance(*order[j - 1], *order[j + 1])
+                + distanceMatrix->getDistance(*order[j + 1], *order[j])
+                + distanceMatrix->getDistance(*order[j], *order[j + 2]);
 
             if (newCost - oldCost < costReduction) {
                 costReduction = newCost - oldCost;

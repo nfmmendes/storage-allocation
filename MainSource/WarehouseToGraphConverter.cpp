@@ -16,6 +16,7 @@
 using namespace QuickTSP;
 using std::to_string;
 using std::make_pair;
+using std::make_shared;
 
 #define DEBUG_LEVEL -1
 #define MIN_DIFF 0.000001
@@ -157,7 +158,7 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
 			cout<<"Connecting cell: \t"<<cell.getCode()<<" which has a single level\n";
 		#endif 
         Vertex firstLevel(cell.getCode(), UNIQUE_LEVEL_CELL);	/// All the vertexes created based on cell position have 
-		vertexByCell[make_pair(cell,1)] = firstLevel;
+		vertexByCell[make_pair(cell,1)] = make_shared<Vertex>(firstLevel);
 		
 		/// the world "Cell" in their type name
         initializeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
@@ -166,7 +167,7 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
         Vertex firstLevel(cell.getCode()+"_L_1", FIRST_LEVEL_CELL);
 
         initializeCellFirstLevel(firstLevelVertexes, cellPositions, firstLevel, cell);
-		vertexByCell[make_pair(cell,1)] = firstLevel;
+		vertexByCell[make_pair(cell,1)] = make_shared<Vertex>(firstLevel);
 
 		#if DEBUG_LEVEL > 0
 			cout<<"Connecting cell levels of cell "<<cell.getCode()<<" which has " <<numLevels<<" levels\n";
@@ -177,7 +178,7 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
             Vertex vertex( cell.getCode()+"_L_"+to_string(l) , UPPER_LEVEL_CELL);		/// To the graph is irrelevant if a vertex
 																						/// can not connect directly with each other 
             vertexByCode[vertex.getLabel()] = vertex;
-            vertexByCell[make_pair(cell,l)] = vertex;
+            vertexByCell[make_pair(cell,l)] = make_shared<Vertex>(vertex);
             //We suppose that the pickers came from the lower level, take a product on the first or upper leves
             // and then come back (or stay) into the first level before go away. In this sense, all the inter-level
             // connections should be done in both senses (up-down and bottom-up)
@@ -878,6 +879,6 @@ Warehouse & WarehouseToGraphConverter::getWarehouse(){
     return this->warehouse;
 }
 
-map<pair<Cell,int>, Vertex> WarehouseToGraphConverter::getVertexByCell(){
+map<pair<Cell,int>, shared_ptr<Vertex>> WarehouseToGraphConverter::getVertexByCell(){
     return this->vertexByCell;
 }

@@ -14,6 +14,7 @@
 #include "Arc.h"
 #include "DistanceMatrix.h"
 #include "StorageSolutionEvaluator.h"
+#include "StorageAllocationSolution.h"
 #include "WarehouseToGraphConverter.h"
 #include "OptimizationParameters.h"
 #include "TSP.h"
@@ -48,10 +49,10 @@ StorageSolutionEvaluator::StorageSolutionEvaluator(
 }
 
 StorageSolutionEvaluator::StorageSolutionEvaluator(
-    const DistanceMatrix<Vertex>* distances, map<Position, Vertex>& vertexByPosition,
+    const DistanceMatrix<Vertex>* distances, map<Position, shared_ptr<Vertex>>& vertexByPosition,
     const vector<Block>& blocks, const OptimizationConstraints& constraints)
 {
-
+    
     this->distances = distances;
     this->optimizationConstraints = constraints;
     InitializeClosestDeliveryPoint();
@@ -142,7 +143,7 @@ void StorageSolutionEvaluator::InitializeClosestDeliveryPoint()
     for (unsigned int i = 0; i < storagePoints.size(); i++) {
         double minStartDistance = 1e100;
         double minEndDistance = 1e100;
-        Vertex bestStart, bestEnd;
+        shared_ptr<Vertex> bestStart, bestEnd;
 
         for (unsigned int j = 0; j < expeditionPoints.size(); j++) {
             double startDistance = distances->getDistance(expeditionPoints[j], storagePoints[i]);
@@ -150,12 +151,12 @@ void StorageSolutionEvaluator::InitializeClosestDeliveryPoint()
 
             if (startDistance < minStartDistance) {
                 minStartDistance = startDistance;
-                bestStart = expeditionPoints[j];
+                bestStart = make_shared<Vertex>(expeditionPoints[j]);
             }
 
             if (endDistance < minEndDistance) {
                 minEndDistance = endDistance;
-                bestEnd = expeditionPoints[j];
+                bestEnd =  make_shared<Vertex>(expeditionPoints[j]);
             }
         }
 
@@ -391,26 +392,26 @@ double StorageSolutionEvaluator::evaluatePenaltyOnLevel(map<string, int>& alloca
     return total;
 }
 
-double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(const vector<Vertex>& vertexes)
+double StorageSolutionEvaluator::getBetterRouteWithTwoPoints(const vector<shared_ptr<Vertex>>& vertexes)
 {
     assert(vertexes.size() >= 2);
     assert(closestEndPoint.find(vertexes[0]) != closestEndPoint.end());
     assert(closestEndPoint.find(vertexes[1]) != closestEndPoint.end());
 
-    const auto& closestToZeroDepart = closestStartPoint[vertexes[0]];
-    const auto& closestToOneDepart = closestStartPoint[vertexes[1]];
+    auto closestToZeroDepart = closestStartPoint[*vertexes[0]];
+    auto closestToOneDepart = closestStartPoint[*vertexes[1]];
 
-    const auto& closestFromZeroArrival = closestEndPoint[vertexes[0]];
-    const auto& closestFromOneArrival = closestEndPoint[vertexes[1]];
+    auto closestFromZeroArrival = closestEndPoint[*vertexes[0]];
+    auto closestFromOneArrival = closestEndPoint[*vertexes[1]];
 
-    auto distanceDepartZero = distances->getDistance(closestToOneDepart, vertexes[0]);
-    auto distanceDepartOne = distances->getDistance(closestToOneDepart, vertexes[1]);
+    auto distanceDepartZero = distances->getDistance(*closestToOneDepart, *vertexes[0]);
+    auto distanceDepartOne = distances->getDistance(*closestToOneDepart, *vertexes[1]);
 
-    auto distanceZeroArrival = distances->getDistance(closestFromZeroArrival, vertexes[0]);
-    auto distanceOneArrival = distances->getDistance(closestFromOneArrival, vertexes[1]);
+    auto distanceZeroArrival = distances->getDistance(*closestFromZeroArrival, *vertexes[0]);
+    auto distanceOneArrival = distances->getDistance(*closestFromOneArrival, *vertexes[1]);
 
-    auto distanceZeroOne = distances->getDistance(vertexes[0], vertexes[1]);
-    auto distancesOneZero = distances->getDistance(vertexes[1], vertexes[0]);
+    auto distanceZeroOne = distances->getDistance(*vertexes[0], *vertexes[1]);
+    auto distancesOneZero = distances->getDistance(*vertexes[1], *vertexes[0]);
 
     auto firstOption = distanceDepartZero + distanceZeroOne + distanceOneArrival;
     auto secondOption = distanceDepartOne + distancesOneZero + distanceZeroArrival;
@@ -422,7 +423,7 @@ double StorageSolutionEvaluator::getOnePointsBestRouteDistance(const Vertex& loc
 {
     const auto& begin = closestStartPoint[location];
     const auto& end = closestEndPoint[location];
-    double distance = this->distances->getDistance(begin, location) + this->distances->getDistance(location, end);
+    double distance = this->distances->getDistance(*begin, location) + this->distances->getDistance(location, *end);
 
     return distance;
 }
@@ -431,7 +432,7 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute>& v
 {
     TSP tsp(distances);
     vector<pair<Product, double> > items;
-    vector<Vertex> storagePoints;
+    vector<shared_ptr<Vertex>> storagePoints;
     double penalty { 0.0 };
     double totalDistance { 0.0 };
 
@@ -441,7 +442,7 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute>& v
         storagePoints.clear();
 
         if (items.size() == 1) {
-            vertexesVisits[i].second = getOnePointsBestRouteDistance(vertexes[0]);
+            vertexesVisits[i].second = getOnePointsBestRouteDistance(*vertexes[0]);
             totalDistance += vertexesVisits[i].second;
         }
         else if (items.size() == 2) {
@@ -452,7 +453,7 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute>& v
             for (unsigned int j = 0; j < vertexes.size(); j++)
                 storagePoints.push_back(vertexes[j]);
 
-            pair<double, vector<Vertex> > route;
+            pair<double, vector<shared_ptr<Vertex>> > route;
             // This is just a limit to use the brute force TSP algorithm
             if (storagePoints.size() < OptimizationParameters::instance()->BRUTE_FORCE_TSP_THRESHOLD)
                 route = tsp.bruteForceTSP(storagePoints, closestStartPoint,
@@ -471,17 +472,16 @@ double StorageSolutionEvaluator::DoFullEvaluationWithTSP(vector<PickingRoute>& v
     return totalDistance + penalty;
 }
 
-double StorageSolutionEvaluator::DoRouteEvaluation(const vector<Vertex>& route)
+double StorageSolutionEvaluator::DoRouteEvaluation(const vector<shared_ptr<Vertex>>& route)
 {
-
     TSP tsp(distances);
     vector<pair<Product, double> > items;
     double penalty = 0.0;
     double totalDistance = 0.0;
 
-    pair<double, vector<Vertex> > routeEvaluation;
+    pair<double, vector<shared_ptr<Vertex>> > routeEvaluation;
     if (route.size() == 1) {
-        totalDistance = getOnePointsBestRouteDistance(route[0]);
+        totalDistance = getOnePointsBestRouteDistance(*route[0]);
     }
     else if (route.size() == 2) {
         totalDistance = this->getBetterRouteWithTwoPoints(route);
@@ -502,7 +502,7 @@ double StorageSolutionEvaluator::DoRouteEvaluation(const vector<Vertex>& route)
     return totalDistance + penalty;
 }
 
-double StorageSolutionEvaluator::DoRouteEstimation(const vector<Vertex>& solution)
+double StorageSolutionEvaluator::DoRouteEstimation(const vector<shared_ptr<Vertex>>& solution)
 {
     for (unsigned int i = 0; i < solution.size(); i++) {
     }
@@ -562,12 +562,12 @@ double StorageSolutionEvaluator::searchSequenceOnCache(vector<Vertex>& vertexes)
 
     vector<PickingRoute> cachedRoutes = routesByVertexAndSize[firstVertex][vertexes.size()];
     for (unsigned int i = 0; i < vertexes.size(); i++){
-        if (cachedRoutes[i].first[0].getLabel() != firstVertex.getLabel()) 
+        if (cachedRoutes[i].first[0]->getLabel() != firstVertex.getLabel()) 
             continue;
         
         unsigned j;
         for (j = 1; j < cachedRoutes[i].first.size(); j++)
-            if (cachedRoutes[i].first[j].getLabel() != vertexes[j].getLabel())
+            if (cachedRoutes[i].first[j]->getLabel() != vertexes[j].getLabel())
                 break;
 
         if (j == cachedRoutes[i].first.size())
@@ -580,14 +580,14 @@ PickingRoute StorageSolutionEvaluator::getVertexes(const vector<Position>& posit
 {
     PickingRoute value;
     for (unsigned int i = 0; i < positions.size(); i++) {
-        if (this->vertexByCellPosition.find(positions[i]) != this->vertexByCellPosition.end())
-            value.first.push_back(this->vertexByCellPosition[positions[i]]);
+        if (vertexByCellPosition.find(positions[i]) != vertexByCellPosition.end())
+            value.first.push_back(vertexByCellPosition[positions[i]]);
     }
 
     return value;
 }
 
-const Vertex& StorageSolutionEvaluator::getVertex(const Position& position)
+const shared_ptr<Vertex> StorageSolutionEvaluator::getVertex(const Position& position)
 {
     return this->vertexByCellPosition[position];
 }

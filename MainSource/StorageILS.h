@@ -197,7 +197,7 @@ class StorageILS : public Heuristic{
 		 * @param cons The optimization constraints. 
          */
 		StorageILS(const vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex>* distMatrix,
-				   map<Position, Vertex>& vertexByCell, const vector<Order> &orders, const OptimizationConstraints &cons);
+				   map<Position, shared_ptr<Vertex>>& vertexByCell, const vector<Order> &orders, const OptimizationConstraints &cons);
         
         /**
          * @brief Run the heuristic.
@@ -209,7 +209,7 @@ class StorageILS : public Heuristic{
 		OptimizationConstraints constraints;
 		vector<Product> products; 
         const DistanceMatrix<Vertex> *distanceMatrix; 
-		map<Position, Vertex> vertexByCell;
+		map<Position, shared_ptr<Vertex>> vertexByCell;
         Warehouse *warehouse; 
 		vector<Order> orders; 
         vector<shared_ptr<NeighborhoodStructure>> neighborhoodStructures;

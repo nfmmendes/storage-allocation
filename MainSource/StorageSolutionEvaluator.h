@@ -5,6 +5,7 @@
 #include<set>
 #include<vector>
 #include<map>
+#include<memory>
 #include<unordered_map>
 #include<utility>
 #include "Vertex.h"
@@ -20,11 +21,11 @@ using namespace QuickTSP;
 using std::map;
 using std::vector;
 using std::pair;
+using std::shared_ptr;
 using std::unordered_map;
 
 class OptimizationParameters;
-
-typedef struct pair< vector<Vertex>, double> PickingRoute; 
+typedef struct pair< vector<shared_ptr<Vertex>>, double> PickingRoute; 
 typedef class map< Product, pair<Cell,int> > MapAllocation;  
 typedef struct pair<Cell, int> Position; 
 
@@ -38,7 +39,7 @@ class StorageSolutionEvaluator{
 	private:
 		map<const Vertex, map<size_t, vector<PickingRoute > >  > routesByVertexAndSize; ///< A pool of already calculated routes, divided by 
 															 								   ///< the presence of a vertex and then by size.  
-		map<pair<Cell,int> , Vertex> vertexByCellPosition; 
+		map<pair<Cell,int> , shared_ptr<Vertex>> vertexByCellPosition; 
 		const DistanceMatrix<Vertex> *distances; 
 		OptimizationConstraints optimizationConstraints;	
 
@@ -46,8 +47,8 @@ class StorageSolutionEvaluator{
 		set<string> weaklyIsolatedFamilies;  
 		set<string> stronglyIsolatedFamilies;
 		map<string, pair<string, string> > isolationDataByFamilyCode; 			// Isolation level and force by family code 
-		unordered_map<Vertex, Vertex> closestStartPoint;
-		unordered_map<Vertex, Vertex> closestEndPoint;
+		unordered_map<Vertex, shared_ptr<Vertex>> closestStartPoint;
+		unordered_map<Vertex, shared_ptr<Vertex>> closestEndPoint;
 		map<string, const ProductAllocationProhibitions* > prohibitionPointerByProductName; 
 		map<long, const Shelf*> shelfPointerById; 
 		map<string, set<long> > shelfIdsSetByBlockName;
@@ -57,7 +58,7 @@ class StorageSolutionEvaluator{
 		 * @param vertexes The list of vertexes (pair). 
 		 * @return The minimal distance. 
 		 */
-		double getBetterRouteWithTwoPoints(const vector<Vertex>& vertexes); 
+		double getBetterRouteWithTwoPoints(const vector<shared_ptr<Vertex>>& vertexes); 
 
 		/** 
 		 * @brief Get the minimum distance in a route containing only an initial expedition point, a product 
@@ -131,7 +132,7 @@ class StorageSolutionEvaluator{
 		 * @param blocks Warehouse blocks. 
 		 * @param constraints Allocation constraints. 
 		 */
-		StorageSolutionEvaluator(const DistanceMatrix<Vertex> * distanceMatrix, map<Position, Vertex> &vertexByPosition, const vector<Block> &blocks, const OptimizationConstraints &constraints); 
+		StorageSolutionEvaluator(const DistanceMatrix<Vertex> * distanceMatrix, map<Position, shared_ptr<Vertex>> &vertexByPosition, const vector<Block> &blocks, const OptimizationConstraints &constraints); 
 
 		/**
 		 * @brief Get the total distance between a sequence of vertexes. 
@@ -145,14 +146,14 @@ class StorageSolutionEvaluator{
 		 * @param route The list of vertexes to be visited in the route. 
 		 * @return The best route length found. 
 		 */
-		double DoRouteEvaluation(const vector<Vertex> & route);
+		double DoRouteEvaluation(const vector<shared_ptr<Vertex>> & route);
 
 		/**
 		 * @brief Estimate the route distance.
 		 * @param route The route to be estimated. 
 		 * @return The distance route estimation. 
 		 */
-		double DoRouteEstimation(const vector<Vertex> & route);
+		double DoRouteEstimation(const vector<shared_ptr<Vertex>> & route);
 
 		/**
 		 * @brief Evaluate the route distance solving a TSP.
@@ -194,7 +195,7 @@ class StorageSolutionEvaluator{
 		 * @param position The warehouse position.
 		 * @return The graph vertex. 
 		 */
-		const Vertex& getVertex(const Position &position);
+		const shared_ptr<Vertex> getVertex(const Position &position);
 
 		/**
 		 * @brief Evaluate the penalty variation on swapping the position of two products. 

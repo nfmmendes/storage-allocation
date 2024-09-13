@@ -439,7 +439,7 @@ vector<AbstractSolution *> IsolatedFamilySwap::createNeighbors(){
 ////
 /////////////////////////////////////////////////////////////////////////////////////////
 StorageILS::StorageILS(const vector<Product> & prods, Warehouse &wh,const DistanceMatrix<Vertex> *distMatrix,
-					   map<pair<Cell, int>, Vertex>& vertexByCell, const vector<Order> &orders, const OptimizationConstraints &cons){
+					   map<pair<Cell, int>, shared_ptr<Vertex>>& vertexByCell, const vector<Order> &orders, const OptimizationConstraints &cons){
 	distanceMatrix = distMatrix; 
 	warehouse = &wh;
 	this->orders= orders;

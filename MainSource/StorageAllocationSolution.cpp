@@ -4,6 +4,7 @@
 #include <string> 
 #include <cmath>
 #include <chrono>
+#include <memory>
 #include "OptimizationConstraints.h"
 #include "OptimizationParameters.h"
 #include "Vertex.h"
@@ -95,7 +96,7 @@ StorageAllocationSolution::StorageAllocationSolution(double value, double time, 
 }
 
 
-void StorageAllocationSolution::setEvaluator(const DistanceMatrix<Vertex> *distanceMatrix, map<Position , Vertex > &vertexByPosition,
+void StorageAllocationSolution::setEvaluator(const DistanceMatrix<Vertex> *distanceMatrix, map<Position , shared_ptr<Vertex> > &vertexByPosition,
 											const vector<Block> &blocks, OptimizationConstraints &constraints){
 	if(Evaluator != NULL)
 		delete Evaluator;
@@ -218,8 +219,8 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 		
 	pair<Cell,int> first = productsAllocation[firstProduct];
 	pair<Cell,int> second	= productsAllocation[secondProduct];
-	Vertex firstVertex = Evaluator->getVertex(first);
-	Vertex secondVertex = Evaluator->getVertex(second);
+	auto firstVertex = Evaluator->getVertex(first);
+	auto secondVertex = Evaluator->getVertex(second);
 	double delta = 0.0; 
 
 	double penaltyDelta = StorageAllocationSolution::Evaluator->evaluatePenaltyDelta(getProductAllocations(), firstProduct, secondProduct);
@@ -234,10 +235,10 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
 	for(unsigned int i=0; i<firstRoutes.size(); i++)
-		delta += getVariationAndUpdateAfterSwap(firstRoutes[i], firstVertex, secondVertex, useTSPEvaluator);
+		delta += getVariationAndUpdateAfterSwap(firstRoutes[i], *firstVertex, *secondVertex, useTSPEvaluator);
 
 	for(unsigned int i=0; i<secondRoutes.size(); i++)
-		delta += getVariationAndUpdateAfterSwap(secondRoutes[i], secondVertex, firstVertex, useTSPEvaluator);
+		delta += getVariationAndUpdateAfterSwap(secondRoutes[i], *secondVertex, *firstVertex, useTSPEvaluator);
 
 	this->solutionValue += delta + penaltyDelta; 
 }
@@ -245,10 +246,13 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *original,Vertex &oldVertex, Vertex &newVertex, bool useTSPEvaluator){
 
 	//if a same route has both products in the swap the evaluation don't need to be done
-	if(find(original->first.begin(),original->first.end(), newVertex) != original->first.end())
+	if(find_if(original->first.begin(),original->first.end(), [newVertex](auto v){ return *v == newVertex; }) != original->first.end())
 		return 0;
-	
-	replace(original->first.begin(), original->first.end(), oldVertex, newVertex);
+
+	std::replace_if(original->first.begin(),original->first.end(), [oldVertex](shared_ptr<Vertex> v){
+		return *(v.get()) == oldVertex;
+	}, shared_ptr<Vertex>(new Vertex(newVertex)));
+
 	double oldValue = original->second; 
 
 	original->second = useTSPEvaluator ? Evaluator->DoRouteEvaluation(original->first) : Evaluator->DoRouteEstimation(original->first);
@@ -260,7 +264,7 @@ double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *o
 	return original->second - oldValue; 
 }
 
-void StorageAllocationSolution::setAllocation(MapAllocation &allocations,const vector<Order> &orders){
+void StorageAllocationSolution::setAllocation(MapAllocation &allocations, const vector<Order> &orders){
 	
 	for(auto &[product,allocation] : allocations)
 		this->productsAllocation[product] = allocation; 

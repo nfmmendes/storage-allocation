@@ -21,6 +21,7 @@ using std::vector;
 using std::set;
 using std::map;
 using std::tuple;
+using std::shared_ptr;
 using std::string;
 using std::queue;
 
@@ -34,7 +35,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 
 	private:
 		OptimizationConstraints constraints;
-		map<Position, Vertex > vertexByCell; 
+		map<Position, shared_ptr<Vertex> > vertexByCell; 
 		vector<Product> products; 
         const DistanceMatrix<Vertex> *distanceMatrix; 
         Warehouse *warehouse; 
@@ -52,8 +53,8 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		set<string> storageVertexTypes; 
 		map<string, Block> blocksByName; 
 		map<long int, Shelf> shelvesById; 
-		unordered_map<Vertex, Vertex> closestStartPoint;
-		unordered_map<Vertex, Vertex> closestEndPoint; 
+		unordered_map<Vertex, shared_ptr<Vertex>> closestStartPoint;
+		unordered_map<Vertex, shared_ptr<Vertex>> closestEndPoint; 
 		vector<pair<Product, int> > productsSortedByFrequence;
 		map<Product, int> frequenceByProduct;
 		
@@ -85,7 +86,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		 * @brief Get the list of storage points vertexes in the warehouse graph representation. 
 		 * @return The storage points vertexes in the warehouse graph representation. 
 		 **/
-		vector<Vertex> getStoragePoints(); 
+		vector<shared_ptr<Vertex>> getStoragePoints(); 
 
 		/**
 		 * @brief Check if a product belongs to one of the family products that must be isolated inside the warehouse.
@@ -204,7 +205,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		 * @param vertexes The vertexes available to allocate the products. 
 		 * @return A tuple containing the frequence of each product allocated and the possible allocation. 
 		 **/
-		tuple<int, map<Vertex,Product> > testFamilyAllocation(queue<Product>& products, const vector<Vertex> &vertexes);
+		tuple<int, map<Vertex,Product> > testFamilyAllocation(queue<Product>& products, const vector<shared_ptr<Vertex>> &vertexes);
 
 		/**
 		 * @brief Allocate the best family (by frequence) in the remaining warehouse positions. 
@@ -214,7 +215,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		 * @param orderedProductsByFamily A map of ordered products by family. 
 		 * @return Return true if a family is allocated. False otherwise. 
 		 **/
-		bool AllocateBestFamily(map<Vertex, Product> & allocations, vector<Vertex>& vertexes, 
+		bool allocateBestFamily(map<Vertex, Product> & allocations, vector<shared_ptr<Vertex>>& vertexes, 
 				  vector<string> familyCodes,  map<string, queue<Product> >  &orderedProductsByFamily);
 
 		/**
@@ -268,7 +269,7 @@ class StorageConstructiveHeuristic : public Heuristic  {
 		 * @param cons Optimization constraints. 
 		 **/
 		StorageConstructiveHeuristic(vector<Product> & prods, Warehouse &wh, const DistanceMatrix<Vertex> *distMatrix,
-									 map<Position, Vertex>& vertexByCell,
+									 map<Position, shared_ptr<Vertex>>& vertexByCell,
 									vector<Order> &orders, OptimizationConstraints &cons);
 };
 

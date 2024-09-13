@@ -3,18 +3,20 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <memory>
 #include <unordered_map>
 #include "Vertex.h"
 using namespace QuickTSP; 
 using std::vector;
 using std::pair;
+using std::shared_ptr;
 using std::unordered_map;
 
 
 template<class T=Vertex> 
 class DistanceMatrix; 
 
-typedef unordered_map<Vertex,Vertex> VertexVertexMap; 
+typedef unordered_map<Vertex, shared_ptr<Vertex>> VertexVertexMap; 
 
 /**
  * @brief The <c> TSP </c> class that holds data and methods to represent and solve
@@ -51,7 +53,7 @@ class TSP {
 		 * @param bestEnd The ending point.
 		 * @return A pair containing the best distance and a the sequence of visits in the optimal solution. 
 		 */
-		pair<double , vector<Vertex> > bruteForceTSP(const vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd);
+		pair<double , vector<shared_ptr<Vertex>> > bruteForceTSP(const vector<shared_ptr<Vertex>> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd);
 
 		/**
 		 * @brief Run a closest neighborhood algorithm to solve the TSP.
@@ -60,7 +62,7 @@ class TSP {
 		 * @param bestEnd The ending point.
 		 * @return A pair containing the best distance found and a the sequence of visits in the solution found. 
 		 */
-		pair<double , vector<Vertex> > closestNeighborTSP(const vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd);
+		pair<double , vector<shared_ptr<Vertex>> > closestNeighborTSP(const vector<shared_ptr<Vertex>> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd);
 
 		/**
 		 * @brief Run a quick local search algorithm to solve the TSP. 
@@ -69,5 +71,5 @@ class TSP {
 		 * @param bestEnd The ending point.
 		 * @return A pair containing the best distance found and a the sequence of visits in the solution found. 
 		 */
-		pair<double , vector<Vertex> > quickLocalSearchTSP(const vector<Vertex> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd); 
+		pair<double , vector<shared_ptr<Vertex>> > quickLocalSearchTSP(const vector<shared_ptr<Vertex>> &points, VertexVertexMap &bestStart, VertexVertexMap &bestEnd); 
 }; 
