@@ -578,10 +578,10 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(shared_ptr<AbstractSol
 	return bestSolution;
 }
 
-AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(const AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
+AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(shared_ptr<AbstractSolution> currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
 	const auto& blocks = warehouse->getBlocks(); 
-	auto& allocations = ((StorageAllocationSolution *) currentSolution)->getProductAllocations();
-	StorageAllocationSolution* bestSolution = new StorageAllocationSolution((const StorageAllocationSolution*)currentSolution);
+	auto& allocations = ((StorageAllocationSolution *) currentSolution.get())->getProductAllocations();
+	StorageAllocationSolution* bestSolution = new StorageAllocationSolution((const StorageAllocationSolution*)currentSolution.get());
 	map<long, map<Position, Product> > shelfAllocations; 
 	
 	for(auto &[product, position] : allocations)
@@ -684,7 +684,7 @@ AbstractSolution * StorageILS::Execute(){
 		
 			if(neighborhoodType[i] == "InsideShelfSwap"){	
 				cout<<"Inside Shelf Swap"<<endl;
-				auxiliaryPointer.reset((StorageAllocationSolution *) SwapInsideShelfLocalSearch(currentSolution.get(), neighborhoodStructures[i], randomSeed));
+				auxiliaryPointer.reset((StorageAllocationSolution *) SwapInsideShelfLocalSearch(currentSolution, neighborhoodStructures[i], randomSeed));
 				newSolutionValue = auxiliaryPointer->getSolutionValue();	
 			}else if(neighborhoodType[i] == "InsideBlockSwap"){	 
 				cout<<"Inside Block Swap"<<endl;

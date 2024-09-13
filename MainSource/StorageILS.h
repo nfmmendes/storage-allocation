@@ -246,7 +246,7 @@ class StorageILS : public Heuristic{
          * @param randomSeed The random seed of the search. 
          * @return A new solution. 
          */
-        AbstractSolution * SwapInsideShelfLocalSearch(const AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure,int randomSeed);
+        AbstractSolution * SwapInsideShelfLocalSearch(shared_ptr<AbstractSolution> currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure,int randomSeed);
 
         
         /**
