@@ -247,7 +247,7 @@ class StorageILS : public Heuristic{
          * @param randomSeed The random seed of the search. 
          * @return A new solution. 
          */
-        AbstractSolution * SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure,int randomSeed);
+        AbstractSolution * SwapInsideShelfLocalSearch(const AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure,int randomSeed);
 
         
         /**
@@ -257,7 +257,7 @@ class StorageILS : public Heuristic{
          * @param randomSeed The random seed of the search. 
          * @return A new solution. 
          */
-        AbstractSolution * SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed);
+        AbstractSolution * SwapInsideBlockLocalSearch(const AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed);
         
         /**
          * @brief Perform a local search considering only the most frequent products. 
@@ -266,7 +266,7 @@ class StorageILS : public Heuristic{
          * @param randomSeed The random seed of the search. 
          * @return A new solution.
          */ 
-        AbstractSolution * SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed);
+        AbstractSolution * SwapMostFrequentLocalSearch(const AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed);
         
         /**
          * @brief Perform a pertubation in the given solution.

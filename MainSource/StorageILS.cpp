@@ -31,6 +31,7 @@
 using std::make_unique;
 using std::min;
 using std::make_shared;
+using std::unique_ptr;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +47,7 @@ InsideShelfSwap::InsideShelfSwap(){
 }
 
 InsideShelfSwap::~InsideShelfSwap(){
-	delete startSolution;
+	//delete startSolution;
 }
 
 InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, OptimizationConstraints *constr, Shelf &shelf) : NeighborhoodStructure(initial){
@@ -147,7 +148,7 @@ InsideBlockSwap::InsideBlockSwap(){
 }
 
 InsideBlockSwap::~InsideBlockSwap(){
-		delete startSolution;
+	//delete startSolution;
 }
 
 InsideBlockSwap::InsideBlockSwap(const StorageAllocationSolution *initial, OptimizationConstraints * constr, const Block & block)
@@ -265,7 +266,9 @@ MostFrequentSwap::MostFrequentSwap(){
 }
 
 MostFrequentSwap::~MostFrequentSwap(){ 
-	delete startSolution;
+	// TODO: Solve it later
+	//if(startSolution != nullptr)
+	//	delete startSolution;
 }
 
 MostFrequentSwap::MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, const vector<Product> &products)
@@ -525,8 +528,9 @@ void StorageILS::InitializeNeighborhoods(){
 	neighborhoodType.push_back("IsolatedFamilySwap"); 
 }
 
-AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
+AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(const AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
 	vector<Product> mostFrequentProducts;
+	StorageAllocationSolution* bestSolution = new StorageAllocationSolution((const StorageAllocationSolution*)currentSolution);
 	for(auto &[product, cl]: productClasses)
 		if(cl == 'A')
 			mostFrequentProducts.push_back(product);
@@ -540,37 +544,36 @@ AbstractSolution * StorageILS::SwapMostFrequentLocalSearch(AbstractSolution *cur
 		localNeighborhoodStructurre->setRandomSeed(randomSeed*((int)products.size())+i);
 		localNeighborhoodStructurre->setNumberOfNeighbors( (int) mostFrequentProducts.size()/4 );
 		localNeighborhoodStructurre->setInterchangeableProducts( mostFrequentProducts);
-		neighborhoodStructure->setStartSolution(currentSolution); 
+		neighborhoodStructure->setStartSolution(bestSolution); 
 		const auto neighbors = localNeighborhoodStructurre->createNeighbors(); 
 
 		double currentSolutionValue = currentSolution->getSolutionValue();
 		double newSolutionValue = neighbors[0]->getSolutionValue();
-		for(unsigned int k=0;k<neighbors.size();k++){
-			newSolutionValue = neighbors[k]->getSolutionValue();
+		for(auto neighbor: neighbors){
+			newSolutionValue = neighbor->getSolutionValue();
 
 			//If the neighbor has a better value than the current solution value, so update the current solution
 			//A margin of 0.1% is used to avoid to update constantly the current solution with solutions that 
 			//are not significantly better 
 			if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
-				delete currentSolution;
-				currentSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbors[k]);
+				delete bestSolution;
+				bestSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbor);
 				currentSolutionValue = currentSolution->getSolutionValue();
 			}
 
-			delete neighbors[k];
+			delete neighbor;
 		}
-		
 	}
 
-	return currentSolution; 
+	return bestSolution; 
 }
 
-AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
+AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(const AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
 	const auto& blocks { warehouse->getBlocks() }; 
+	StorageAllocationSolution* bestSolution = new StorageAllocationSolution((const StorageAllocationSolution*)currentSolution);
 	
 	int randomMultiplier = 0;
 	for(const auto& block : blocks){
-
 		const auto& shelves = block.getShelves();
 
 		auto insideBlockSwap = static_cast<InsideBlockSwap*>(neighborhoodStructure.get());
@@ -581,7 +584,7 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 		randomMultiplier++;
 
 		insideBlockSwap->setNumberOfNeighbors((int)sqrt(block.getShelves().size()));
-		neighborhoodStructure->setStartSolution(currentSolution); 
+		neighborhoodStructure->setStartSolution(bestSolution); 
 		const auto neighbors = insideBlockSwap->createNeighbors(); 
 
 		double currentSolutionValue = currentSolution->getSolutionValue();
@@ -595,8 +598,8 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 			//are not significantly better 
 			//cout<<"Comparison : "<<newSolutionValue<<" | "<<currentSolutionValue<<endl;
 			if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
-				delete currentSolution;
-				currentSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbor);
+				delete bestSolution;
+				bestSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbor);
 				currentSolutionValue = currentSolution->getSolutionValue();
 			}
 
@@ -604,12 +607,13 @@ AbstractSolution * StorageILS::SwapInsideBlockLocalSearch(AbstractSolution *curr
 		}
 	}
  
-	return currentSolution;
+	return bestSolution;
 }
 
-AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
+AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(const AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure, int randomSeed){
 	const auto& blocks = warehouse->getBlocks(); 
 	auto& allocations = ((StorageAllocationSolution *) currentSolution)->getProductAllocations();
+	StorageAllocationSolution* bestSolution = new StorageAllocationSolution((const StorageAllocationSolution*)currentSolution);
 	map<long, map<Position, Product> > shelfAllocations; 
 	
 	for(auto &[product, position] : allocations)
@@ -632,7 +636,7 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 			insideShelfSwap->setRandomSeed(randomSeed+j*((int)shelves.size())+k);
 			insideShelfSwap->setNumberOfNeighbors((int)sqrt(shelves[k].getCells().size()));
 
-			neighborhoodStructure->setStartSolution(currentSolution); 
+			neighborhoodStructure->setStartSolution(bestSolution); 
 			neighbors = insideShelfSwap->createNeighbors(); 
 			double currentSolutionValue = currentSolution->getSolutionValue();
 			double newSolutionValue = neighbors[0]->getSolutionValue();
@@ -642,9 +646,8 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 				//A margin of 0.1% is used to avoid to update constantly the current solution with solutions that 
 				//are not significantly better 
 				if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
-					delete currentSolution;
-					currentSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbor);
-					
+					delete bestSolution;
+					bestSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbor);	
 					currentSolutionValue = currentSolution->getSolutionValue();
 				}
 
@@ -655,7 +658,7 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 		j++;
 	}
 
-	return currentSolution;
+	return bestSolution;
 }
 
 AbstractSolution * StorageILS::RunPerturbation(AbstractSolution *currentSolution, shared_ptr<NeighborhoodStructure> neighborhoodStructure){
@@ -688,8 +691,8 @@ AbstractSolution * StorageILS::Execute(){
 	double bestGlobalSolutionValue; 
 	
     auto* initialSolution = CreateInitialSolution();
-	auto* bestGlobalSolution = new StorageAllocationSolution( (StorageAllocationSolution *) initialSolution);
-	auto* currentSolution = new StorageAllocationSolution(bestGlobalSolution); 
+	auto bestGlobalSolution = unique_ptr<StorageAllocationSolution>(new StorageAllocationSolution(initialSolution));
+	auto currentSolution = unique_ptr<StorageAllocationSolution>(new StorageAllocationSolution(initialSolution)); 
 
 	bestGlobalSolutionValue = bestGlobalSolution->getSolutionValue(); 
 
@@ -704,55 +707,53 @@ AbstractSolution * StorageILS::Execute(){
 		auto bestLocalSearchSolution { make_unique<StorageAllocationSolution>(new StorageAllocationSolution(*currentSolution)) };
 		auto originalSolution { make_unique<StorageAllocationSolution>(new StorageAllocationSolution(*currentSolution)) };
 
-		delete currentSolution;
 		double bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue();
-		StorageAllocationSolution *auxiliaryPointer = NULL; 
+		unique_ptr<StorageAllocationSolution> auxiliaryPointer; 
 		
 		//Perform a local search as a VNS
 		for(unsigned int i=0;i< neighborhoodStructures.size();i++){
-
-			currentSolution = new StorageAllocationSolution(*originalSolution);
-
 			double newSolutionValue = 0;
 		
 			if(neighborhoodType[i] == "InsideShelfSwap"){	
 				cout<<"Inside Shelf Swap"<<endl;
-				auxiliaryPointer = (StorageAllocationSolution *) SwapInsideShelfLocalSearch(currentSolution, neighborhoodStructures[i], randomSeed);
+				auxiliaryPointer.reset((StorageAllocationSolution *) SwapInsideShelfLocalSearch(currentSolution.get(), neighborhoodStructures[i], randomSeed));
 				newSolutionValue = auxiliaryPointer->getSolutionValue();	
 			}else if(neighborhoodType[i] == "InsideBlockSwap"){	 
 				cout<<"Inside Block Swap"<<endl;
-				auxiliaryPointer = (StorageAllocationSolution *) SwapInsideBlockLocalSearch(currentSolution, neighborhoodStructures[i], randomSeed);
+				auxiliaryPointer.reset((StorageAllocationSolution *) SwapInsideBlockLocalSearch(currentSolution.get(), neighborhoodStructures[i], randomSeed));
 				newSolutionValue = auxiliaryPointer->getSolutionValue();
 			}else if(neighborhoodType[i] == "MostFrequentSwap"){
 				cout<<"Most frequent Swap"<<endl;
-				auxiliaryPointer = (StorageAllocationSolution *) SwapMostFrequentLocalSearch(currentSolution, neighborhoodStructures[i], randomSeed);
+				auxiliaryPointer.reset((StorageAllocationSolution *) SwapMostFrequentLocalSearch(currentSolution.get(), neighborhoodStructures[i], randomSeed));
 				newSolutionValue = auxiliaryPointer->getSolutionValue();
 			}else{
 				continue;
 			}
 			
 			cout<<"Best local search solution: "<<bestGlobalSolutionValue<<endl;
-			if((newSolutionValue-bestLocalSearchSolutionValue)*100.0/bestLocalSearchSolutionValue <= -0.1){ 
-				bestLocalSearchSolution.reset(new StorageAllocationSolution(auxiliaryPointer));
+			if((newSolutionValue-bestLocalSearchSolutionValue)*100.0/bestLocalSearchSolutionValue <= -0.1){
+				bestLocalSearchSolution.reset(new StorageAllocationSolution(auxiliaryPointer.get()));
 				bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue(); 
 			}
-			delete auxiliaryPointer;
+			
+			auto test = new StorageAllocationSolution(originalSolution.get());
+ 			currentSolution.reset(new StorageAllocationSolution(originalSolution.get()));
 		}
 		
 		numIterationsWithoutImprovement++;
 		
 		if((bestLocalSearchSolutionValue - bestGlobalSolutionValue)*100/bestGlobalSolutionValue <= -0.1){
-			delete bestGlobalSolution;
-			bestGlobalSolution = new StorageAllocationSolution(*bestLocalSearchSolution);
+			bestGlobalSolution.reset(new StorageAllocationSolution(bestLocalSearchSolution.get()));
 			bestGlobalSolutionValue = bestLocalSearchSolution->getSolutionValue();
 			numIterationsWithoutImprovement = 0; 
 		}
 		
 		cout<<"Iterations without improvement: " << numIterationsWithoutImprovement<<" Best global solution: "<<bestGlobalSolution->getSolutionValue()<<endl;  
 		
-		currentSolution = (StorageAllocationSolution *) RunPerturbation(bestGlobalSolution,perturbation);
+		currentSolution.reset((StorageAllocationSolution*) RunPerturbation(bestGlobalSolution.get(),perturbation));
 		randomSeed++; 
 	}
 	
-	return bestGlobalSolution;
+	auto returnPointer = bestGlobalSolution.release();
+	return returnPointer;
 }
