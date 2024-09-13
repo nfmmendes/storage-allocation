@@ -47,7 +47,6 @@ InsideShelfSwap::InsideShelfSwap(){
 }
 
 InsideShelfSwap::~InsideShelfSwap(){
-	//delete startSolution;
 }
 
 bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations){
@@ -143,7 +142,6 @@ InsideBlockSwap::InsideBlockSwap(){
 }
 
 InsideBlockSwap::~InsideBlockSwap(){
-	//delete startSolution;
 }
 
 bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, MapAllocation &allocations){
@@ -254,9 +252,6 @@ MostFrequentSwap::MostFrequentSwap(){
 }
 
 MostFrequentSwap::~MostFrequentSwap(){ 
-	// TODO: Solve it later
-	//if(startSolution != nullptr)
-	//	delete startSolution;
 }
 
 const AbstractSolution * MostFrequentSwap::getStartSolution() const{
