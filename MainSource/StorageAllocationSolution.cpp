@@ -39,11 +39,11 @@ StorageAllocationSolution::StorageAllocationSolution(const StorageAllocationSolu
 	isMaximization = other->isMaximization; 
 	this->totalPenalty = other->totalPenalty; 
 
-	for(auto & key : other->notAllocatedProducts)
-		this->notAllocatedProducts.insert(key); 
+	copy(begin(other->notAllocatedProducts), end(other->notAllocatedProducts), 
+		inserter(notAllocatedProducts, end(notAllocatedProducts)));
 	
-	for(auto & [key, value] : other->productsAllocation)
-		this->productsAllocation[key] = value; 
+	copy(begin(other->productsAllocation), end(other->productsAllocation), 
+		inserter(productsAllocation, end(productsAllocation)));
 
 	for(const auto&product : other->routesByProduct){
 		this->routesByProduct[product.first].resize(product.second.size());
@@ -66,12 +66,11 @@ StorageAllocationSolution::StorageAllocationSolution(const StorageAllocationSolu
 	isMaximization = other.isMaximization; 
 	this->totalPenalty = other.totalPenalty; 
 	
-	//unsigned long long int solutionIndex;  
-		
-	for(auto & key : other.notAllocatedProducts)
-		this->notAllocatedProducts.insert(key); 
-	for(auto & [key, value] : other.productsAllocation)
-		this->productsAllocation[key] = value; 
+	copy(begin(other.notAllocatedProducts), end(other.notAllocatedProducts), 
+		inserter(notAllocatedProducts, end(notAllocatedProducts)));
+	
+	copy(begin(other.productsAllocation), end(other.productsAllocation), 
+		inserter(productsAllocation, end(productsAllocation)));
 
 	for(const auto& product : other.routesByProduct){
 		this->routesByProduct[product.first].resize(product.second.size());
