@@ -50,11 +50,6 @@ InsideShelfSwap::~InsideShelfSwap(){
 	//delete startSolution;
 }
 
-InsideShelfSwap::InsideShelfSwap(AbstractSolution *initial, OptimizationConstraints *constr, Shelf &shelf) : NeighborhoodStructure(initial){
-	this->shelf = shelf; 
-	constraints = constr;
-}
-
 bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations){
 	const auto& firstFamily = first.getFamily(); 
 	const auto& secondFamily = second.getFamily(); 
@@ -149,13 +144,6 @@ InsideBlockSwap::InsideBlockSwap(){
 
 InsideBlockSwap::~InsideBlockSwap(){
 	//delete startSolution;
-}
-
-InsideBlockSwap::InsideBlockSwap(const StorageAllocationSolution *initial, OptimizationConstraints * constr, const Block & block)
-	:NeighborhoodStructure(initial)
-{
-	constraints = constr;
-	this->block = block; 
 }
 
 bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, MapAllocation &allocations){
@@ -269,14 +257,6 @@ MostFrequentSwap::~MostFrequentSwap(){
 	// TODO: Solve it later
 	//if(startSolution != nullptr)
 	//	delete startSolution;
-}
-
-MostFrequentSwap::MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, const vector<Product> &products)
-	:NeighborhoodStructure(initial)
-{
-	startSolution = initial;
-	interchangeableProducts = products; 
-	constraints = constr; 
 }
 
 const AbstractSolution * MostFrequentSwap::getStartSolution() const{
@@ -447,13 +427,6 @@ vector<AbstractSolution *> StorageAllocationPertubation::createNeighbors(){
 IsolatedFamilySwap::IsolatedFamilySwap(){}
 
 IsolatedFamilySwap::~IsolatedFamilySwap(){}
-
-IsolatedFamilySwap::IsolatedFamilySwap(StorageAllocationSolution *initial, OptimizationConstraints *constr, vector<Product> &products)
-	:NeighborhoodStructure(initial)
-{
-	interchangeableProducts = products; 
-	constraints = constr; 
-}
 
 const AbstractSolution * IsolatedFamilySwap::getStartSolution() const{
 	return startSolution; 

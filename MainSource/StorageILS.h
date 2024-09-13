@@ -72,7 +72,6 @@ class InsideBlockSwap : public NeighborhoodStructure{
     public:
         InsideBlockSwap();
         ~InsideBlockSwap();
-        InsideBlockSwap(const StorageAllocationSolution *initial, OptimizationConstraints * constr, const Block &block);
         const AbstractSolution * getStartSolution() const { return this->startSolution; }
 
         vector<AbstractSolution *> createNeighbors();
@@ -100,7 +99,7 @@ class MostFrequentSwap : public NeighborhoodStructure{
     public:
         MostFrequentSwap();
         ~MostFrequentSwap();
-        MostFrequentSwap(StorageAllocationSolution *initial, OptimizationConstraints *constr , const vector<Product> &products);
+        
         const AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
 
@@ -127,7 +126,7 @@ class IsolatedFamilySwap :public NeighborhoodStructure{
     public:
         IsolatedFamilySwap();
         ~IsolatedFamilySwap();
-        IsolatedFamilySwap(StorageAllocationSolution *initial, OptimizationConstraints *constr,  vector<Product> &products);
+    
         const AbstractSolution * getStartSolution() const; 
         vector<AbstractSolution *> createNeighbors();
 
