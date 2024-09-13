@@ -30,6 +30,7 @@
 #include <cassert>
 using std::make_unique;
 using std::min;
+using std::move;
 using std::make_shared;
 using std::unique_ptr;
 
@@ -700,18 +701,19 @@ AbstractSolution * StorageILS::Execute(){
 			
 			cout<<"Best local search solution: "<<bestGlobalSolutionValue<<endl;
 			if((newSolutionValue-bestLocalSearchSolutionValue)*100.0/bestLocalSearchSolutionValue <= -0.1){
-				bestLocalSearchSolution.reset(new StorageAllocationSolution(auxiliaryPointer.get()));
+				bestLocalSearchSolution.reset();
+				bestLocalSearchSolution = move(auxiliaryPointer);
 				bestLocalSearchSolutionValue = bestLocalSearchSolution->getSolutionValue(); 
 			}
 			
-			auto test = new StorageAllocationSolution(originalSolution.get());
  			currentSolution.reset(new StorageAllocationSolution(originalSolution.get()));
 		}
 		
 		numIterationsWithoutImprovement++;
 		
 		if((bestLocalSearchSolutionValue - bestGlobalSolutionValue)*100/bestGlobalSolutionValue <= -0.1){
-			bestGlobalSolution.reset(new StorageAllocationSolution(bestLocalSearchSolution.get()));
+			bestGlobalSolution.reset();
+			bestGlobalSolution = make_shared<StorageAllocationSolution>(move(bestLocalSearchSolution.get()));
 			bestGlobalSolutionValue = bestLocalSearchSolution->getSolutionValue();
 			numIterationsWithoutImprovement = 0; 
 		}
