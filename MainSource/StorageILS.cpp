@@ -619,12 +619,15 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 
 	auto insideShelfSwap = static_cast<InsideShelfSwap *>(neighborhoodStructure);
 	assert(insideShelfSwap != nullptr);
-	
-	for(unsigned int j=0;j<blocks.size();j++){
-		const auto& shelves { blocks[j].getShelves() };
+
+
+	int j { 0 };
+	for(const auto& block : blocks){
+		const auto& shelves { block.getShelves() };
 		vector<AbstractSolution *> neighbors;
 	
-		for(unsigned int k=0;k<shelves.size();k++){
+		int k { 0 };
+		for(const auto& shelf : shelves){
 			int indexShelf = rand()%shelves.size();
 			insideShelfSwap->setShelf(shelves[indexShelf]);
 			insideShelfSwap->setShelfAllocations(shelfAllocations[shelves[indexShelf].getId()]); 
@@ -635,21 +638,23 @@ AbstractSolution * StorageILS::SwapInsideShelfLocalSearch(AbstractSolution *curr
 			neighbors = insideShelfSwap->createNeighbors(); 
 			double currentSolutionValue = currentSolution->getSolutionValue();
 			double newSolutionValue = neighbors[0]->getSolutionValue();
-			for(unsigned int w=0;w<neighbors.size();w++){
-				newSolutionValue = neighbors[w]->getSolutionValue(); 
+			for(const auto neighbor : neighbors){
+				newSolutionValue = neighbor->getSolutionValue(); 
 				//If the neighbor has a better value than the current solution value, so update the current solution
 				//A margin of 0.1% is used to avoid to update constantly the current solution with solutions that 
 				//are not significantly better 
-				//cout<<"Comparison : "<<newSolutionValue<<" | "<<currentSolutionValue<<endl;
 				if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
 					delete currentSolution;
-					currentSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbors[w]);
+					currentSolution = new StorageAllocationSolution((StorageAllocationSolution *) neighbor);
+					
 					currentSolutionValue = currentSolution->getSolutionValue();
 				}
 
-				delete neighbors[w];
+				delete neighbor;
 			}
+			k++; 
 		}
+		j++;
 	}
 
 	return currentSolution;
