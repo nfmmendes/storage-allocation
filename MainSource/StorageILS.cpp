@@ -597,9 +597,9 @@ unique_ptr<AbstractSolution> StorageILS::SwapInsideShelfLocalSearch(shared_ptr<A
 	
 		int k { 0 };
 		for(const auto& shelf : shelves){
-			int indexShelf = rand()%shelves.size();
-			insideShelfSwap->setShelf(shelves[indexShelf]);
-			insideShelfSwap->setShelfAllocations(shelfAllocations[shelves[indexShelf].getId()]); 
+			const auto& shelf = shelves[rand()%shelves.size()];
+			insideShelfSwap->setShelf(shelf);
+			insideShelfSwap->setShelfAllocations(shelfAllocations[shelf.getId()]); 
 			insideShelfSwap->setRandomSeed(randomSeed+j*((int)shelves.size())+k);
 			insideShelfSwap->setNumberOfNeighbors((int)sqrt(shelves[k].getCells().size()));
 
