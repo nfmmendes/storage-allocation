@@ -127,10 +127,10 @@ void WarehouseToGraphConverter::generateGraph(){
 	// It is important to remember that block exits does not belongs exclusivelly to one block
 	// We will consider here (and other parts of code) that the exit belongs to only one block (blockA) for 
 	// simplicity, but if it is needed this can be changed 
-	for(int i = 0; i < (int) blocks.size(); i++){
-		vector<BlockExit> blockExits = blocks[i].getExits(); 
-		for(int j=0; j<(int) blockExits.size();j++)
-			connectBlockExits(blockExits[j], arcs, blocksByName);
+	for(const auto& block : blocks){
+		vector<BlockExit> blockExits = block.getExits(); 
+		for(const auto& blockExit : blockExits)
+			connectBlockExits(blockExit, arcs, blocksByName);
 	}
 	
     // The expedition points need to be inside a block. In this code, we does not consider cases where the products
