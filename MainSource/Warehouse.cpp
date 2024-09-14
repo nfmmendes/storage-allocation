@@ -221,7 +221,7 @@
  }
  
 void Warehouse::insertNewBlock(const Block &b){
-    blocks.push_back(Block(b));
+    blocks.push_back(b);
 }
 
 void Warehouse::setProductAllocation(const vector<pair<Product, Cell> > & productAllocation){
