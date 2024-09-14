@@ -459,12 +459,10 @@ void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, s
 void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, set<Arc> &arcs){
     
     long int id = corridor.getId();
-	Point beginCorridor("beginCorridor_"+to_string(id), corridor.getBeginCoords().first, corridor.getBeginCoords().second, 0); 
-	Point endCorridor("endCorridor_"+to_string(id), corridor.getEndCoords().first, corridor.getEndCoords().second,0); 
-    
+
 	vector<Point> points = pointsByCorridor[id];
-	points.push_back(beginCorridor);
-	points.push_back(endCorridor);
+	points.emplace_back("beginCorridor_"+to_string(id), corridor.getBeginCoords().first, corridor.getBeginCoords().second, 0);
+	points.emplace_back("endCorridor_"+to_string(id), corridor.getEndCoords().first, corridor.getEndCoords().second,0);
 	
 	vector<Point> processedPoints = Point::removeDuplicates(points); 
 	corridor.orderCorridorPoints(processedPoints);
@@ -512,8 +510,8 @@ void WarehouseToGraphConverter::splitCorridorByCurves(const Curve &curve, map<lo
     long int start = curve.getStartCorridor();
     long int end = curve.getEndCorridor();
     
-    Point curveStartPoint = curve.getStartingPoint();
-    Point curveEndingPoint = curve.getEndingPoint();
+    const auto & curveStartPoint { curve.getStartingPoint() };
+    const auto & curveEndingPoint { curve.getEndingPoint() };
     
     curvesByCorridor[start].push_back(curve);
     curvesByCorridor[end].push_back(curve);
