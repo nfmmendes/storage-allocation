@@ -341,8 +341,8 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::getInternalAndExternalCellsVerte
     return make_pair(vertexCell, cellOther);				
 }
 
-pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(const Corridor *corridor, pair<double,double> coords, 
-                                                                              string cellName, string position){
+pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(const Corridor *corridor, const pair<double,double>& coords, 
+                                                                              const string& cellName, const string& position){
 
     const auto corridorCoordX { corridor->getBeginCoords().first };
     const auto corridorCoordY { corridor->getBeginCoords().second };
@@ -373,7 +373,7 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(co
 }
 
 void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corridor *&down,Corridor *& left,Corridor *&right,
-															const vector<Corridor>& adjacents,Shelf shelf){
+															const vector<Corridor>& adjacents, const Shelf& shelf){
 	
 	up = down = right = left = NULL;
 	

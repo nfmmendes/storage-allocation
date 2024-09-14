@@ -47,8 +47,8 @@ namespace QuickTSP{
             void connectShelvesToCorridor(const Shelf &, const vector<Corridor>&, const StringMatrix &, int , int , set<Arc> & );
             void connectCellLevels(Cell , StringMatrix &, set<Arc> &);
 			void createArcsCellToCorridor(Vertex vertexCell, Vertex vertexCorridor,double value, set<Arc> &arcs);
-			void InitializeAdjacentCorridors(Corridor *&up,Corridor *& down, Corridor *& left,Corridor *& right,const vector<Corridor>& adjacents, Shelf shelf);
-            pair<Vertex, Vertex> createCellAndCorridorVertexes( const Corridor *corridor, pair<double,double> coords, string cellName, string position);
+			void InitializeAdjacentCorridors(Corridor *&up,Corridor *& down, Corridor *& left,Corridor *& right,const vector<Corridor>& adjacents, const Shelf& shelf);
+            pair<Vertex, Vertex> createCellAndCorridorVertexes( const Corridor *corridor, const pair<double,double> &coords, const string &cellName, const string& position);
             void connectSingleCellToSingleCorridor(const Shelf &shelf, Corridor * corridor,set<Arc> &arcs, string cellName, string position,int row, int column);
             pair<Vertex, Vertex> getInternalAndExternalCellsVertexes(string cellNameA, string cellNameB);
             void connectExpeditionPoint(const ExpeditionPoint &expedition, set<Arc> &arcs, map<string, Block> &blocksByName);
