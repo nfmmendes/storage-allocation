@@ -518,7 +518,7 @@ unique_ptr<AbstractSolution> StorageILS::SwapMostFrequentLocalSearch(shared_ptr<
 		const auto neighbors = localNeighborhoodStructurre->createNeighbors(); 
 
 		double currentSolutionValue = bestSolution->getSolutionValue();
-		double newSolutionValue = neighbors[0]->getSolutionValue();
+		double newSolutionValue {};
 		for(auto neighbor: neighbors){
 			newSolutionValue = neighbor->getSolutionValue();
 
@@ -557,7 +557,7 @@ unique_ptr<AbstractSolution> StorageILS::SwapInsideBlockLocalSearch(shared_ptr<A
 		const auto neighbors = insideBlockSwap->createNeighbors(); 
 
 		double currentSolutionValue = bestSolution->getSolutionValue();
-		double newSolutionValue = neighbors[0]->getSolutionValue();
+		double newSolutionValue {};
 		
 		for(const auto* neighbor : neighbors){
 			newSolutionValue = neighbor->getSolutionValue();
@@ -606,7 +606,7 @@ unique_ptr<AbstractSolution> StorageILS::SwapInsideShelfLocalSearch(shared_ptr<A
 			neighborhoodStructure->setStartSolution(bestSolution.get()); 
 			neighbors = insideShelfSwap->createNeighbors(); 
 			double currentSolutionValue = bestSolution->getSolutionValue();
-			double newSolutionValue = neighbors[0]->getSolutionValue();
+			double newSolutionValue {}; 
 			for(const auto neighbor : neighbors){
 				newSolutionValue = neighbor->getSolutionValue(); 
 				//If the neighbor has a better value than the current solution value, so update the current solution
