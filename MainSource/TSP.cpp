@@ -6,6 +6,10 @@
 #include "TSP.h"
 #include "DistanceMatrix.h"
 using std::set;
+using std::numeric_limits;
+using std::next_permutation;
+using std::make_pair;
+using std::shared_ptr;
 
 TSP::TSP() {}
 
@@ -22,7 +26,7 @@ pair<double, vector<shared_ptr<Vertex>> > TSP::bruteForceTSP(const vector<shared
 
     auto currentOrder = points;
     auto solution = points;
-    double bestCost = std::numeric_limits<double>::max();
+    double bestCost = numeric_limits<double>::max();
     auto orderSize {currentOrder.size()};
 
     do {
@@ -39,7 +43,7 @@ pair<double, vector<shared_ptr<Vertex>> > TSP::bruteForceTSP(const vector<shared
             bestCost = sum;
             solution = currentOrder;
         }
-    } while (std::next_permutation(currentOrder.begin(), currentOrder.end()));
+    } while (next_permutation(currentOrder.begin(), currentOrder.end()));
 
     return make_pair(bestCost, solution);
 }
