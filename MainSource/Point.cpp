@@ -5,7 +5,6 @@
 #include<cmath>
 #include<algorithm>
 #include "Point.h"
-using namespace std;
 
 #define TOLERANCE 0.000001
 
@@ -14,7 +13,7 @@ Point::Point(){
     coordX = coordY = coordZ = 0;
 }
 
-Point::Point(string label, double coordX, double coordY, double coordZ){
+Point::Point(const string &label, double coordX, double coordY, double coordZ){
     
     this->label = label;
     this->coordX = coordX;

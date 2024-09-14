@@ -3,7 +3,9 @@
 #include<iostream>
 #include<string>
 #include<vector>
-
+using std::string;
+using std::vector;
+using std::ostream;
 
 /**
  * Class <c> Point <c> represents a geometrical point in a 3D space
@@ -28,7 +30,7 @@ class Point {
          * @param coordY The point y coordinate.
          * @param coordZ The point z coordinate.
          */
-        Point(std::string label, double coordX=0, double coordY=0, double coordZ=0);
+        Point(const string& label, double coordX=0, double coordY=0, double coordZ=0);
 
         /**
          * @brief Copy constructor.
@@ -89,7 +91,7 @@ class Point {
          * @param points The list of points.
          * @return The new list of points without duplicates. 
          */
-        static std::vector<Point> removeDuplicates(std::vector<Point> & points);
+        static std::vector<Point> removeDuplicates(vector<Point> & points);
     
         /**
          * @brief The "less than" operator override.
@@ -132,7 +134,7 @@ class Point {
          * @param p The point to be print.
          * @return A reference to the out stream object. 
          */
-        friend std::ostream&operator<<(std::ostream &op, const Point &p){ 
+        friend ostream&operator<<(ostream &op, const Point &p){ 
             op<<"Label :"<<p.label<<" ("<<p.coordX<<","<<p.coordY<<","<<p.coordZ<<")\n"; 
             return op;
         }
