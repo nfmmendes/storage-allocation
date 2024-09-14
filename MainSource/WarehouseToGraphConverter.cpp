@@ -37,15 +37,15 @@ WarehouseToGraphConverter::WarehouseToGraphConverter(){
  *  Copy constructor
  */
 WarehouseToGraphConverter::WarehouseToGraphConverter(WarehouseToGraphConverter & other){
-    this->warehouse = *(new Warehouse(other.warehouse));
-    this->graph = *(new Graph(other.graph));
+    warehouse = Warehouse(other.warehouse);
+    graph = Graph(other.graph);
 }
 
 /**
  *  Constructor. It receaves a warehouse that will be used to create the converted graph
  */
 WarehouseToGraphConverter::WarehouseToGraphConverter(const Warehouse &warehouse){
-    this->warehouse = *(new Warehouse(warehouse));
+    this->warehouse = warehouse;
 }
 
 /**
@@ -872,13 +872,13 @@ void WarehouseToGraphConverter::connectBlockExits(const BlockExit &exit, set<Arc
 }
 
 Graph & WarehouseToGraphConverter::getGraph(){
-    return this->graph;
+    return graph;
 }
 
 Warehouse & WarehouseToGraphConverter::getWarehouse(){
-    return this->warehouse;
+    return warehouse;
 }
 
 map<pair<Cell,int>, shared_ptr<Vertex>> WarehouseToGraphConverter::getVertexByCell(){
-    return this->vertexByCell;
+    return vertexByCell;
 }
