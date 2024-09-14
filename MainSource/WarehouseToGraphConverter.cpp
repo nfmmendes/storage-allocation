@@ -769,7 +769,6 @@ void WarehouseToGraphConverter::connectExpeditionPoint(const ExpeditionPoint &ex
 	pair<double,double> reference = expeditionPoint.getCoordinates(); 
     Point referencePoint("expeditionPoint_"+expeditionPoint.getCode(), reference.first, reference.second, 0); 
     
-
     for(map<Point, Vertex>::iterator it=vertexByPoint.begin(); it!= vertexByPoint.end(); it++){
         if(!block.isInBlock(it->first))
             continue;
@@ -789,11 +788,8 @@ void WarehouseToGraphConverter::connectExpeditionPoint(const ExpeditionPoint &ex
     vertexByPoint[referencePoint] = expeditionVertex; 
     vertexByCode[expeditionVertex.getLabel()] = expeditionVertex; 
 
-    Arc one("expedition_"+expeditionPoint.getCode()+"_toVertex_"+closestVertex.getLabel(), minDistance, expeditionVertex, closestVertex);
-    Arc other("Vertex_"+closestVertex.getLabel()+"toExpedition_"+expeditionPoint.getCode(), minDistance, closestVertex, expeditionVertex);
-
-    arcs.insert(one);
-    arcs.insert(other);
+    arcs.emplace("expedition_"+expeditionPoint.getCode()+"_toVertex_"+closestVertex.getLabel(), minDistance, expeditionVertex, closestVertex);
+    arcs.emplace("Vertex_"+closestVertex.getLabel()+"toExpedition_"+expeditionPoint.getCode(), minDistance, closestVertex, expeditionVertex);
     
 }
 
@@ -848,26 +844,19 @@ void WarehouseToGraphConverter::connectBlockExits(const BlockExit &exit, set<Arc
     };
 
     if(minDistanceA <= 1e19){
-        
         vertexByPoint[referencePoint] = exitVertex; 
         vertexByCode[exitVertex.getLabel()] = exitVertex; 
-		
-        Arc one(buildExitToVertexName(exitVertex, closestVertexA), minDistanceA, exitVertex, closestVertexA);
-        Arc other(buildVertexToExitName(closestVertexA, exitVertex), minDistanceA, closestVertexA, exitVertex);
 
-        arcs.insert(one);
-        arcs.insert(other);
+        arcs.emplace(buildExitToVertexName(exitVertex, closestVertexA), minDistanceA, exitVertex, closestVertexA);
+        arcs.emplace(buildVertexToExitName(closestVertexA, exitVertex), minDistanceA, closestVertexA, exitVertex);
     }
     
 	if(minDistanceB <= 1e19){
 		vertexByPoint[referencePoint] = exitVertex; 
         vertexByCode[exitVertex.getLabel()] = exitVertex; 
-		
-        Arc one(buildExitToVertexName(exitVertex, closestVertexB), minDistanceB, exitVertex, closestVertexB);
-        Arc other(buildVertexToExitName(closestVertexB, exitVertex), minDistanceB, closestVertexB, exitVertex);
 
-        arcs.insert(one);
-        arcs.insert(other);
+        arcs.emplace(buildExitToVertexName(exitVertex, closestVertexB), minDistanceB, exitVertex, closestVertexB);
+        arcs.emplace(buildVertexToExitName(closestVertexB, exitVertex), minDistanceB, closestVertexB, exitVertex);
 	}
 }
 
