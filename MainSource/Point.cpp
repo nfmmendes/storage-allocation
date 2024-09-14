@@ -62,7 +62,9 @@ bool Point::operator>(const Point &other)const{
 }
 
 bool Point::operator==(const Point &other) const{
-	return fabs(this->coordX - other.coordX) <= 1e-5 &&  fabs(this->coordY - other.coordY)<=1e-5 && fabs(this->coordZ - other.coordZ) <= 1e-5;
+	return fabs(this->coordX - other.coordX) <= TOLERANCE &&  
+		   fabs(this->coordY - other.coordY)<= TOLERANCE && 
+		   fabs(this->coordZ - other.coordZ) <= TOLERANCE;
 }
 
 Point & Point::operator=(const Point &other){
