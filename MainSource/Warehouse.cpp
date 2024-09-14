@@ -69,7 +69,7 @@
 	//	cout<<numBlocks<<endl;
         for(int i=0; i<numBlocks; i++){
             file>> blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY>> width >> lenght;
-            this->blocks.push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY, width, lenght));
+            blocks.push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY, width, lenght));
         }
 		
 		file>>numExpeditionPoints;
@@ -79,7 +79,7 @@
 	//	cout<<numExpeditionPoints<<endl;
 		for(int i=0;i<numExpeditionPoints;i++){
 			file>>expeditionCode>>blockName>>coordX>>coordY; 
-			this->expeditionPoints.push_back(ExpeditionPoint(expeditionCode, blockName, pair<double,double>(coordX, coordY)));
+			expeditionPoints.push_back(ExpeditionPoint(expeditionCode, blockName, pair<double,double>(coordX, coordY)));
 		}
 
         //Read all the data concerning block exits
@@ -116,7 +116,7 @@
                 vector<BlockExit> exitsOfBlock = exitsByBlock[blocks[i].getName()];
 				
                 for(int j=0;j<(int)exitsOfBlock.size();j++)
-                    this->blocks[i].addExit(exitsOfBlock[j]);
+                    blocks[i].addExit(exitsOfBlock[j]);
             }
         }
 		
@@ -145,7 +145,7 @@
         //not harm the code performance
         for(int i=0;i<(int)blocks.size();i++){
 	        // cout<<"Shelves on block: \n" <<shelvesByBlock[blocks[i].getName()].size()<<endl;
-            this->blocks[i].setShelves(shelvesByBlock[blocks[i].getName()]);
+            blocks[i].setShelves(shelvesByBlock[blocks[i].getName()]);
         }
 		
         // cout<<"Reading corridors...\n";
@@ -168,7 +168,7 @@
         //Now, for each block, we insert all its corridors
         //We assume that it be few blocks, so this part of code will not harm too much the code perfomance
         for(unsigned int i=0; i<blocks.size();i++)
-            this->blocks[i].setCorridors(corridorsByBlock[this->blocks[i].getName()]);
+            blocks[i].setCorridors(corridorsByBlock[blocks[i].getName()]);
         
 	    // cout<<"Reading cells...\n";
         // Read all data concerning cells
@@ -221,7 +221,7 @@
  }
  
 void Warehouse::insertNewBlock(const Block &b){
-    this->blocks.push_back(Block(b));
+    blocks.push_back(Block(b));
 }
 
 void Warehouse::setProductAllocation(const vector<pair<Product, Cell> > & productAllocation){
@@ -235,25 +235,25 @@ void Warehouse::addProductAllocation(const pair<Product, Cell> & productAllocati
     this->productAllocation.push_back(make_pair(productAllocation.first, productAllocation.second));
 }
 
-const string& Warehouse::getName() const { return this->name;}
+const string& Warehouse::getName() const { return name;}
 
-const vector<Block>& Warehouse::getBlocks()  { return this->blocks;}
+const vector<Block>& Warehouse::getBlocks()  { return blocks;}
 
 map<string, Block> Warehouse::getBlocksByName(){
 	map<string, Block> result; 
 	
-	for(unsigned int i = 0; i< this->blocks.size(); i++)
+	for(unsigned int i = 0; i< blocks.size(); i++)
 		result[blocks[i].getName()] = blocks[i];
 	
 	return result; 
 }
 
 const vector<pair<Product, Cell>>& Warehouse::getProductAllocation() const {
-    return this->productAllocation;
+    return productAllocation;
 }
 
 void Warehouse::setName(string &name){
-    this->name = name;
+    name = name;
 }
 
 void Warehouse::setBlocks(const vector<Block>& blocks){
@@ -264,28 +264,28 @@ void Warehouse::setBlocks(const vector<Block>& blocks){
 }
 
 const vector<ExpeditionPoint>& Warehouse::getExpeditionPoints(){
-    return this->expeditionPoints;
+    return expeditionPoints;
 }
 
 void Warehouse::printWarehouseInformation(){
 	
 	cout<<"Printing warehouse information...\n\n\n";
-	cout<<"\tNumber of pavilion: \t"<<this->blocks.size() <<endl;
-	cout<<"\tNumber of expedition points \t"<<this->expeditionPoints.size()<<endl;
+	cout<<"\tNumber of pavilion: \t"<<blocks.size() <<endl;
+	cout<<"\tNumber of expedition points \t"<<expeditionPoints.size()<<endl;
 
 	cout<<"Printing detailed information of blocks...\n\n\n";
 	for(unsigned int i =0;i<blocks.size();i++)
-		this->blocks[i].printBlockInformation();
+		blocks[i].printBlockInformation();
 }
 
 Warehouse& Warehouse::operator=(const Warehouse &other){
-	this->name = other.name;
+	name = other.name;
 	
 	for(unsigned int i=0; i<other.blocks.size();i++)
-		this->blocks.push_back(other.blocks[i]);
+		blocks.push_back(other.blocks[i]);
 	
 	for(unsigned int i=0; i<other.expeditionPoints.size();i++)
-        this->expeditionPoints.push_back(other.expeditionPoints[i]);
+        expeditionPoints.push_back(other.expeditionPoints[i]);
 	
 	return *this;
 }
