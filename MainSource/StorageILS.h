@@ -49,7 +49,7 @@ class InsideShelfSwap :public NeighborhoodStructure{
         vector<AbstractSolution *> createNeighbors();
         void setShelfAllocations(map<Position,Product> &value){ shelfAllocations = value; }
 		void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
-        const OptimizationConstraints * getOptimizationConstraints()const { return constraints; }
+        const OptimizationConstraints * getOptimizationConstraints() const { return constraints; }
 		void setShelf(const Shelf & shelf) { this->shelf = shelf;} 
         
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
@@ -79,7 +79,7 @@ class InsideBlockSwap : public NeighborhoodStructure{
 
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
-        OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
+        const OptimizationConstraints * getOptimizationConstraints() const{ return constraints; }
         void setBlock(const Block &other){ this->block = other; }
         unsigned int getNumberOfNeighbors() const { return this->numberOfNeighbors; }
 };
@@ -106,10 +106,10 @@ class MostFrequentSwap : public NeighborhoodStructure{
 
         void setInterchangeableProducts(const vector<Product> &prods) { this->interchangeableProducts = prods; }
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
-        void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
-        OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
-        vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
-        unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
+        void setOptimizationConstraints(OptimizationConstraints * cons) { constraints = cons; }
+        OptimizationConstraints * getOptimizationConstraints() const{ return constraints; }
+        const vector<Product>& getInterchangeableProducts() const { return this->interchangeableProducts; }
+        unsigned int getNumberOfNeighbors() const { return this->numberOfNeighbors; }
 };
 
 /**
@@ -133,10 +133,10 @@ class IsolatedFamilySwap :public NeighborhoodStructure{
 
         void setNumberOfNeighbors(unsigned int val){ this->numberOfNeighbors = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
-        OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
+        const OptimizationConstraints * getOptimizationConstraints() const{ return constraints; }
         void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
-        vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
-        unsigned int getNumberOfNeighbors(){ return this->numberOfNeighbors; }
+        const vector<Product>& getInterchangeableProducts() const { return this->interchangeableProducts; }
+        unsigned int getNumberOfNeighbors() const{ return this->numberOfNeighbors; }
 };
 
 
@@ -163,9 +163,9 @@ class StorageAllocationPertubation : public NeighborhoodStructure {
 
         void setNumberOfNeighbors(unsigned int val){ this->numOfPertubationMoves = val; }
         void setOptimizationConstraints(OptimizationConstraints * cons){ constraints = cons; }
-        OptimizationConstraints * getOptimizationConstraints(){ return constraints; }
+        const OptimizationConstraints * getOptimizationConstraints() const { return constraints; }
         void setInterchangeableProducts(vector<Product> prods) {this->interchangeableProducts = prods; }
-        vector<Product> getInterchangeableProducts() { return this->interchangeableProducts; }
+        const vector<Product>& getInterchangeableProducts() const { return this->interchangeableProducts; }
         unsigned int getNumberOfNeighbors(){ return this->numOfPertubationMoves; }
 };
 
