@@ -871,14 +871,14 @@ void WarehouseToGraphConverter::connectBlockExits(const BlockExit &exit, set<Arc
 	}
 }
 
-Graph & WarehouseToGraphConverter::getGraph(){
+const Graph & WarehouseToGraphConverter::getGraph() const {
     return graph;
 }
 
-Warehouse & WarehouseToGraphConverter::getWarehouse(){
+const Warehouse & WarehouseToGraphConverter::getWarehouse() const{
     return warehouse;
 }
 
-map<pair<Cell,int>, shared_ptr<Vertex>> WarehouseToGraphConverter::getVertexByCell(){
+map<pair<Cell,int>, shared_ptr<Vertex>>& WarehouseToGraphConverter::getVertexByCell(){
     return vertexByCell;
 }

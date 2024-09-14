@@ -59,9 +59,9 @@ namespace QuickTSP{
             WarehouseToGraphConverter(WarehouseToGraphConverter & other);
             WarehouseToGraphConverter(const Warehouse &warehouse);
             void generateGraph(); 
-            Graph & getGraph();
-            Warehouse & getWarehouse();
-            map<pair<Cell,int>, shared_ptr<Vertex>> getVertexByCell();
+            const Graph & getGraph() const;
+            const Warehouse & getWarehouse() const;
+            map<pair<Cell,int>, shared_ptr<Vertex>>& getVertexByCell();
 		
 			//Vertex types 
 			const static string BLOCK_EXIT_VERTEX;
