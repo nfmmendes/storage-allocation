@@ -517,7 +517,7 @@ unique_ptr<AbstractSolution> StorageILS::SwapMostFrequentLocalSearch(shared_ptr<
 		neighborhoodStructure->setStartSolution(bestSolution.get()); 
 		const auto neighbors = localNeighborhoodStructurre->createNeighbors(); 
 
-		double currentSolutionValue = currentSolution->getSolutionValue();
+		double currentSolutionValue = bestSolution->getSolutionValue();
 		double newSolutionValue = neighbors[0]->getSolutionValue();
 		for(auto neighbor: neighbors){
 			newSolutionValue = neighbor->getSolutionValue();
@@ -527,7 +527,7 @@ unique_ptr<AbstractSolution> StorageILS::SwapMostFrequentLocalSearch(shared_ptr<
 			//are not significantly better 
 			if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
 				bestSolution.reset(new StorageAllocationSolution((StorageAllocationSolution *) neighbor));
-				currentSolutionValue = currentSolution->getSolutionValue();
+				currentSolutionValue = bestSolution->getSolutionValue();
 			}
 
 			delete neighbor;
@@ -556,7 +556,7 @@ unique_ptr<AbstractSolution> StorageILS::SwapInsideBlockLocalSearch(shared_ptr<A
 		neighborhoodStructure->setStartSolution(bestSolution.get()); 
 		const auto neighbors = insideBlockSwap->createNeighbors(); 
 
-		double currentSolutionValue = currentSolution->getSolutionValue();
+		double currentSolutionValue = bestSolution->getSolutionValue();
 		double newSolutionValue = neighbors[0]->getSolutionValue();
 		
 		for(const auto* neighbor : neighbors){
@@ -568,7 +568,7 @@ unique_ptr<AbstractSolution> StorageILS::SwapInsideBlockLocalSearch(shared_ptr<A
 			//cout<<"Comparison : "<<newSolutionValue<<" | "<<currentSolutionValue<<endl;
 			if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
 				bestSolution.reset(new StorageAllocationSolution((StorageAllocationSolution *) neighbor));
-				currentSolutionValue = currentSolution->getSolutionValue();
+				currentSolutionValue = bestSolution->getSolutionValue();
 			}
 
 			delete neighbor;
@@ -605,7 +605,7 @@ unique_ptr<AbstractSolution> StorageILS::SwapInsideShelfLocalSearch(shared_ptr<A
 
 			neighborhoodStructure->setStartSolution(bestSolution.get()); 
 			neighbors = insideShelfSwap->createNeighbors(); 
-			double currentSolutionValue = currentSolution->getSolutionValue();
+			double currentSolutionValue = bestSolution->getSolutionValue();
 			double newSolutionValue = neighbors[0]->getSolutionValue();
 			for(const auto neighbor : neighbors){
 				newSolutionValue = neighbor->getSolutionValue(); 
@@ -614,7 +614,7 @@ unique_ptr<AbstractSolution> StorageILS::SwapInsideShelfLocalSearch(shared_ptr<A
 				//are not significantly better 
 				if((newSolutionValue - currentSolutionValue)*100.0/newSolutionValue <= -0.1){
 					bestSolution.reset(new StorageAllocationSolution((StorageAllocationSolution *) neighbor));
-					currentSolutionValue = currentSolution->getSolutionValue();
+					currentSolutionValue = bestSolution->getSolutionValue();
 				}
 
 				delete neighbor;
