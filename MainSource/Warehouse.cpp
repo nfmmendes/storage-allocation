@@ -162,7 +162,7 @@
 			//cout<<idCorridor<<" "<<dirCorridor<<" "<<senseCorridor<<" "<<beginCoordX<<" "<<beginCoordY<<" "<<length<<endl;
             string dir = dirCorridor;
             string sense = senseCorridor;
-            corridorsByBlock[blockName].push_back(Corridor(idCorridor,blockName, dir, sense, make_pair(beginCoordX, beginCoordY), length));
+            corridorsByBlock[blockName].emplace_back(idCorridor,blockName, dir, sense, make_pair(beginCoordX, beginCoordY), length);
         }
         
         //Now, for each block, we insert all its corridors
@@ -181,7 +181,7 @@
 		
         for(int i=0;i<numCells;i++){
             file>>idShelf>>cellCode>>numLevels>>row>>column;
-            cellsByShelf[idShelf].push_back(Cell(cellCode,idShelf,numLevels,row,column));
+            cellsByShelf[idShelf].emplace_back(cellCode,idShelf,numLevels,row,column);
         }
         
         for(unsigned int i= 0; i<blocks.size();i++){
@@ -203,9 +203,9 @@
         map<string, vector<Curve> > curvesByBlock;
         for(int i=0;i<numCurves;i++){
             file>>blockName>>idCurve>>startCorridor>>endCorridor>>beginCoordX>>beginCoordY>>endCoordX>>endCoordY;
-            curvesByBlock[blockName].push_back(Curve(idCurve, startCorridor, endCorridor,
-                                                    Point("beginCurve"+to_string(idCurve),beginCoordX, beginCoordY,0), 
-			  									    Point("endCurve"+to_string(idCurve),endCoordX, endCoordY,0)));        
+            curvesByBlock[blockName].emplace_back(idCurve, startCorridor, endCorridor,
+                                                Point("beginCurve"+to_string(idCurve),beginCoordX, beginCoordY), 
+                                                Point("endCurve"+to_string(idCurve),endCoordX, endCoordY));        
         }
         
         for(unsigned int i=0; i<blocks.size();i++)
