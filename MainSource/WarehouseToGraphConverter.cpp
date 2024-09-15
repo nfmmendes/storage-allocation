@@ -87,7 +87,7 @@ void WarehouseToGraphConverter::generateGraph(){
              //It stores each vertex in its line and row at cell respective shelf. You should verify if it is 
              // updated anytime the current shelf changes
             vector<vector<string> > cellPositions;     
-            cellPositions.resize(shelf.getNumRows()+1);
+            cellPositions.resize(numRows+1);
             for(int k=1; k < (int) numRows+1; k++)
                 cellPositions[k].resize(numColumns+1);
 
@@ -127,7 +127,7 @@ void WarehouseToGraphConverter::generateGraph(){
 	// We will consider here (and other parts of code) that the exit belongs to only one block (blockA) for 
 	// simplicity, but if it is needed this can be changed 
 	for(const auto& block : blocks){
-		vector<BlockExit> blockExits = block.getExits(); 
+		const auto& blockExits { block.getExits() }; 
 		for(const auto& blockExit : blockExits)
 			connectBlockExits(blockExit, arcs, blocksByName);
 	}
@@ -139,7 +139,7 @@ void WarehouseToGraphConverter::generateGraph(){
 	
 	// All the conversion process is done to construct arcs. Obviously that to have arcs we need vertexes, but as 
 	// the adjacence matrix is very sparse we prefer to use a list of arcs representation 
-    this->graph = Graph::convertArcsToGraph(arcs);
+    graph = Graph::convertArcsToGraph(arcs);
 	
 	//this->graph.print();
 }
@@ -183,7 +183,7 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
             // connections should be done in both senses (up-down and bottom-up)
             arcs.emplace("arc_"+firstLevel.getLabel()+"_"+vertex.getLabel(), 1.5 ,firstLevel,vertex);
             arcs.emplace("arc_"+vertex.getLabel()+"_"+firstLevel.getLabel(), 1.5 ,vertex,firstLevel);
-            
+
             firstLevel = vertex;
         }
     }
