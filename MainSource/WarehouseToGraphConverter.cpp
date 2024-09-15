@@ -181,11 +181,9 @@ void WarehouseToGraphConverter::connectCellLevels(Cell cell,vector<vector<string
             //We suppose that the pickers came from the lower level, take a product on the first or upper leves
             // and then come back (or stay) into the first level before go away. In this sense, all the inter-level
             // connections should be done in both senses (up-down and bottom-up)
-            Arc oneSense( "arc_"+firstLevel.getLabel()+"_"+vertex.getLabel(), 1.5 ,firstLevel,vertex );
-            Arc otherSense( "arc_"+vertex.getLabel()+"_"+firstLevel.getLabel(), 1.5 ,vertex,firstLevel );
+            arcs.emplace("arc_"+firstLevel.getLabel()+"_"+vertex.getLabel(), 1.5 ,firstLevel,vertex);
+            arcs.emplace("arc_"+vertex.getLabel()+"_"+firstLevel.getLabel(), 1.5 ,vertex,firstLevel);
             
-            arcs.insert(oneSense);
-            arcs.insert(otherSense);
             firstLevel = vertex;
         }
     }
@@ -429,12 +427,8 @@ void WarehouseToGraphConverter::InitializeAdjacentCorridors(Corridor *&up,Corrid
 }
 
 void WarehouseToGraphConverter::createArcsCellToCorridor(Vertex vertexCell, Vertex vertexCorridor,double value, set<Arc> &arcs){	
-	
-	Arc leaving("arc("+ vertexCell.getLabel() + ","+ vertexCorridor.getLabel() +")", value, vertexCell, vertexCorridor);
-	Arc picking("arc("+ vertexCorridor.getLabel() + ","+ vertexCell.getLabel() +")", value, vertexCorridor, vertexCell);
-	
-	arcs.insert(leaving);
-	arcs.insert(picking);
+	arcs.emplace("arc("+ vertexCell.getLabel() + ","+ vertexCorridor.getLabel() +")", value, vertexCell, vertexCorridor);
+	arcs.emplace("arc("+ vertexCorridor.getLabel() + ","+ vertexCell.getLabel() +")", value, vertexCorridor, vertexCell);
 }
 
 /**
@@ -448,7 +442,7 @@ void WarehouseToGraphConverter::connectCorridorsByCurves(vector<Curve> curves, s
         Vertex end = vertexByPoint[curve.getEndingPoint()];
 		
         double distance = curve.getStartingPoint().getDistance(curve.getEndingPoint());
-        arcs.insert(Arc("arc_"+begin.getLabel()+ "_"+end.getLabel(),distance,begin, end));
+        arcs.emplace("arc_"+begin.getLabel()+ "_"+end.getLabel(),distance,begin, end);
     }
 }
 
