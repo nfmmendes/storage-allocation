@@ -468,8 +468,7 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
 		vertexByCode[second.getLabel()] = second;
 		
 		
-		auto distance = sqrt(pow(currentPoint.getCoordX() - previousPoint.getCoordX(),2)+
-							 pow(currentPoint.getCoordY() - previousPoint.getCoordY(),2));
+		auto distance = currentPoint.getDistance(previousPoint);
 		
 		arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
 		

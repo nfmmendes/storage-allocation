@@ -15,12 +15,12 @@ Corridor::Corridor(){}
 
 Corridor::Corridor(const Corridor & other){
 			
-    this->Id = other.Id;
-    this->blockName = other.blockName;
-    this->direction = other.direction;
-    this->sense = other.sense;
-    this->begin = other.begin; 
-    this->length = other.length;
+    Id = other.Id;
+    blockName = other.blockName;
+    direction = other.direction;
+    sense = other.sense;
+    begin = other.begin; 
+    length = other.length;
 }
 
 
@@ -59,32 +59,32 @@ const pair<double, double> Corridor::getEndCoords() const {
 
 void Corridor::orderCorridorPoints(vector<Point>& points) const {
     
-    if(this->getDirection() ==  VERTICAL){
+    if(getDirection() ==  VERTICAL){
         sort(points.begin(), points.end(), Point::isMinorY);
-        if(this->getSense() == UP_DOWN)
+        if(getSense() == UP_DOWN)
             reverse(points.begin(), points.end());
         
-    }else if(this->getDirection() == HORIZONTAL){
+    }else if(getDirection() == HORIZONTAL){
         sort(points.begin(), points.end(), Point::isMinorX);
-        if(this->getSense() == RIGHT_TO_LEFT)
+        if(getSense() == RIGHT_TO_LEFT)
             reverse(points.begin(), points.end());
     }
 }
 
 Corridor & Corridor::operator=(const Corridor &other){
-    this->Id = other.Id;
-    this->blockName = other.blockName;
-    this->direction = other.direction;
-    this->sense = other.sense;
-    this->begin = other.begin;
-    this->length = other.length;
+    Id = other.Id;
+    blockName = other.blockName;
+    direction = other.direction;
+    sense = other.sense;
+    begin = other.begin;
+    length = other.length;
     
     return *this;
 }
 
 bool Corridor::operator==(const Corridor &other)const{
-    return this->Id == other.Id && this->blockName == other.blockName && direction == other.direction && this->sense == other.sense &&
-            this->begin == other.begin && this->length == other.length; 
+    return Id == other.Id && blockName == other.blockName && direction == other.direction && sense == other.sense &&
+            begin == other.begin && length == other.length; 
 }
 
 bool Corridor::operator!=(const Corridor &other)const{
@@ -93,31 +93,31 @@ bool Corridor::operator!=(const Corridor &other)const{
 
 bool Corridor::operator<(const Corridor &other)const{
     
-    if(this->begin > other.begin)
+    if(begin > other.begin)
         return false;
-    else if(this->begin<other.begin)
+    else if(begin<other.begin)
         return true;
     
-    if(this->length > other.length)
+    if(length > other.length)
         return false; 
-    else if(this->length < other.length)
+    else if(length < other.length)
         return true; 
     
-    if(this->blockName > other.blockName)
+    if(blockName > other.blockName)
         return false;
-    else if(this->blockName < other.blockName)
+    else if(blockName < other.blockName)
         return true;
     
     
-    if(this->direction > other.direction)
+    if(direction > other.direction)
         return false;
-    else if(this->direction < other.direction)
+    else if(direction < other.direction)
         return true; 
         
     
-    if(this->sense > other.sense)
+    if(sense > other.sense)
         return false; 
-    else if(this->sense < other.sense)
+    else if(sense < other.sense)
         return true; 
     
     return false; 
@@ -127,8 +127,8 @@ bool Corridor::operator<(const Corridor &other)const{
 
 void Corridor::printCorridorInformation() const{
     cout<<"___________________________________\n";
-    cout<<"Corridor :\t"<<this->Id<<endl;
-    cout<<"Block name :\t"<<this->blockName<<"\tDirection: \t"<<this->direction<<"\tSense: \t"<<this->sense<<endl;
-    cout<<"Begin point: \t(x="<<this->begin.first<<" , y="<<this->begin.second<<")\t Length="<<this->length<<endl; 
+    cout<<"Corridor :\t"<<Id<<endl;
+    cout<<"Block name :\t"<<blockName<<"\tDirection: \t"<<direction<<"\tSense: \t"<<sense<<endl;
+    cout<<"Begin point: \t(x="<<begin.first<<" , y="<<begin.second<<")\t Length="<<length<<endl; 
     cout<<"___________________________________\n\n";
 }
