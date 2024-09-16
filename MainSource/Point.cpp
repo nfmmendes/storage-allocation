@@ -107,6 +107,6 @@ vector<Point>  Point::removeDuplicates(vector<Point> & points){
 		
 }
 
-double Point::getDistance(const Point &other){
+double Point::getDistance(const Point &other) const{
     return sqrt(pow(this->coordX-other.coordX,2)+pow(this->coordY-other.coordY,2)+ pow(this->coordZ,2));
 }

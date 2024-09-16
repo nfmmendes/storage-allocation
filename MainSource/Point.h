@@ -126,7 +126,7 @@ class Point {
          * @param other The point from which the distance will be measured.
          * @return The distance between this point and the parameter point. 
          */
-        double getDistance(const Point &other);
+        double getDistance(const Point &other) const;
 
         /**
          * @brief Out stream operator override. 
