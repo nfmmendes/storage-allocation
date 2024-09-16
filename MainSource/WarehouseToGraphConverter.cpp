@@ -227,8 +227,8 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
 				connectSingleCellToSingleCorridor(shelf, corridorLeft, arcs,   cellPositions[k][1], "LEFT", k, 1);
 			}else if(numColumns > 1){
 				//The cell is considered an internal cell thus it will be connected with its neighbors (a column to the rigth)			
-                pair<Vertex, Vertex> extremes = getInternalAndExternalCellsVertexes(cellPositions[k][1], cellPositions[k][2]);
-                createArcsCellToCorridor(extremes.first, extremes.second, cellWidth, arcs); 
+                const auto& [start, end] = getInternalAndExternalCellsVertexes(cellPositions[k][1], cellPositions[k][2]);
+                createArcsCellToCorridor(start, end, cellWidth, arcs); 
 			}
 			
 			//Last column
@@ -236,8 +236,8 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
 				connectSingleCellToSingleCorridor(shelf, corridorRight, arcs,  cellPositions[k][numColumns], "RIGHT", k, numColumns);
 			}else if(numColumns > 1){
 				//The cell is considered an internal cell thus it will be connected with its neighbors (one column to right)			
-                auto extremes = getInternalAndExternalCellsVertexes(cellPositions[k][numColumns], cellPositions[k][numColumns-1]);
-                createArcsCellToCorridor(extremes.first, extremes.second, cellWidth, arcs); 
+                const auto& [start, end] = getInternalAndExternalCellsVertexes(cellPositions[k][numColumns], cellPositions[k][numColumns-1]);
+                createArcsCellToCorridor(start, end, cellWidth, arcs); 
 			}
 		}       
 	}
@@ -250,8 +250,8 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
 				connectSingleCellToSingleCorridor(shelf, corridorUp, arcs, cellPositions[numRows][k], "UP", numRows, k);
 			}else if(shelf.getNumRows() > 1){
 				//The cell is considered an internal cell thus it will be connected with its neighbors			
-                auto extremes = getInternalAndExternalCellsVertexes(cellPositions[numRows][k], cellPositions[numRows-1][k]);
-                createArcsCellToCorridor(extremes.first, extremes.second, cellLength, arcs);
+                const auto& [start, end] = getInternalAndExternalCellsVertexes(cellPositions[numRows][k], cellPositions[numRows-1][k]);
+                createArcsCellToCorridor(start, end, cellLength, arcs);
 			}
 			
 			//Last row
@@ -259,8 +259,8 @@ void WarehouseToGraphConverter::connectShelvesToCorridor(const Shelf &shelf,cons
 				connectSingleCellToSingleCorridor(shelf, corridorDown, arcs,  cellPositions[1][k], "DOWN", 1, k);
 			}else if(shelf.getNumRows() > 1){
 				//The cell is considered an internal cell thus it will be connected with its neighbors			
-                auto extremes = getInternalAndExternalCellsVertexes(cellPositions[1][k], cellPositions[2][k]);
-                createArcsCellToCorridor(extremes.first, extremes.second, cellLength, arcs); 
+                const auto& [start, end] = getInternalAndExternalCellsVertexes(cellPositions[1][k], cellPositions[2][k]);
+                createArcsCellToCorridor(start, end, cellLength, arcs); 
 			}
 		}
 	}
