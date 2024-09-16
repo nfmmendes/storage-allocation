@@ -496,11 +496,12 @@ void WarehouseToGraphConverter::splitCorridorByCurves(const Curve &curve, map<lo
     //Almost a javascript code, but it works!!
     
     //Find condition
-    vector<Point> points = pointsByCorridor[start];
-	
-	if(!any_of(points.begin(), points.end(),[&curveStartPoint](const Point &b){
-              return fabs(curveStartPoint.getCoordX() - b.getCoordX()) < MIN_DIFF &&
-                     fabs(curveStartPoint.getCoordY() - b.getCoordY()) < MIN_DIFF && 
+    auto& points = pointsByCorridor[start];
+    auto doubleComp = [](const double &a, const double b){ return fabs(a - b) < MIN_DIFF; };
+
+	if(!any_of(points.begin(), points.end(),[&](const Point &b){
+              return doubleComp(curveStartPoint.getCoordX(), b.getCoordX())  &&
+                     doubleComp(curveStartPoint.getCoordY(),b.getCoordY()) && 
 					 curveStartPoint.getLabel() ==  b.getLabel();
           })){
            pointsByCorridor[start].push_back(curveStartPoint);
@@ -509,9 +510,9 @@ void WarehouseToGraphConverter::splitCorridorByCurves(const Curve &curve, map<lo
 	
     //Find condition
     points = pointsByCorridor[end];
-    if(!any_of(points.begin(), points.end(),[&curveEndingPoint](const Point &b){
-                 return fabs(curveEndingPoint.getCoordX() - b.getCoordX()) < MIN_DIFF &&
-                        fabs(curveEndingPoint.getCoordY() - b.getCoordY()) < MIN_DIFF &&
+    if(!any_of(points.begin(), points.end(),[&](const Point &b){
+                 return doubleComp(curveEndingPoint.getCoordX(),b.getCoordX()) &&
+                        doubleComp(curveEndingPoint.getCoordY(), b.getCoordY()) &&
 						curveEndingPoint.getLabel() ==  b.getLabel();
            })){
             pointsByCorridor[end].push_back(curveEndingPoint);
