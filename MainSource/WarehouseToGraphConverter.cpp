@@ -532,45 +532,45 @@ void WarehouseToGraphConverter::connectInternalNode(Vertex vertex, set<Arc> &arc
     if(numRows < numColumns){              // Horizontal shelf
         
         if(k > 1){
-            string sUp = cellPositions[k-1][l];
+            const auto& sUp { cellPositions[k-1][l] };
             connectVertexesByTwoArcs(vertex,sUp, arcs, length);
         }
         
         if(k<numRows){
-            string sDown = cellPositions[k+1][l];
+            const auto& sDown { cellPositions[k+1][l] };
             connectVertexesByTwoArcs(vertex,sDown, arcs, length);
         }
     }else if(numRows > numColumns){         // Vertical shelf
         
         if(l > 1){
-            const string sLeft = cellPositions[k][l-1];
+            const auto& sLeft { cellPositions[k][l-1] };
             connectVertexesByTwoArcs(vertex,sLeft, arcs, width);
         }
         
         if(l < numColumns){
-            const string sRight = cellPositions[k][l+1];
+            const auto& sRight { cellPositions[k][l+1] };
             connectVertexesByTwoArcs(vertex,sRight, arcs, width);
         }
         
     }else if(numRows == numColumns){        // Squared shelf
         
         if(k > 1){
-            string sUp = cellPositions[k-1][l];
+            const auto& sUp { cellPositions[k-1][l] };
             connectVertexesByTwoArcs(vertex,sUp, arcs, length);
         }
         
         if(k<numRows){
-            string sDown = cellPositions[k+1][l];
+            const auto& sDown { cellPositions[k+1][l] };
             connectVertexesByTwoArcs(vertex,sDown, arcs, length);
         }
         
         if(l > 1){
-            const string sLeft = cellPositions[k][l-1];
+            const auto& sLeft { cellPositions[k][l-1] };
             connectVertexesByTwoArcs(vertex,sLeft, arcs, width);
         }
         
         if(l < numColumns){
-            const string sRight = cellPositions[k][l+1];
+            const auto& sRight { cellPositions[k][l+1] };
             connectVertexesByTwoArcs(vertex,sRight, arcs, width);
         }
     }
