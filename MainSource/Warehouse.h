@@ -100,30 +100,6 @@ class Warehouse{
 			 * @return Return a reference to the modified object.
              */
 			Warehouse &operator= (const Warehouse &other);
-            
-            /**
-             * @brief Set the warehouse name. 
-             * @param name The warehouse name.
-             */
-            void setName(string &name);
-
-            /**
-             * @brief Set the warehouse blocks.
-             * @param blocks A list of blocks. 
-             */
-            void setBlocks(const vector<Block>& blocks);
-
-            /**
-             * @brief Set the warehouse production allocations.
-             * @param productAllocation The list of product allocations. 
-             */
-            void setProductAllocation(const vector<pair<Product, Cell> > & productAllocation);
-
-            /**
-			 * @brief Set the list of expedition points. 
-			 * @param points A list containing the expedition points. 
-             */
-			void setExpeditionPoints(vector<ExpeditionPoint> &points);
 
             /**
 			 * @brief Print warehouse information.
