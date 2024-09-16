@@ -34,14 +34,6 @@ WarehouseToGraphConverter::WarehouseToGraphConverter(){
 }
 
 /**
- *  Copy constructor
- */
-WarehouseToGraphConverter::WarehouseToGraphConverter(WarehouseToGraphConverter & other){
-    warehouse = Warehouse(other.warehouse);
-    graph = Graph(other.graph);
-}
-
-/**
  *  Constructor. It receaves a warehouse that will be used to create the converted graph
  */
 WarehouseToGraphConverter::WarehouseToGraphConverter(const Warehouse &p_warehouse):warehouse(p_warehouse){
