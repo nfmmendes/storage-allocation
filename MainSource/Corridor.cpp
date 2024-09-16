@@ -95,29 +95,27 @@ bool Corridor::operator<(const Corridor &other)const{
     
     if(begin > other.begin)
         return false;
-    else if(begin<other.begin)
+    if(begin< other.begin)
         return true;
     
     if(length > other.length)
         return false; 
-    else if(length < other.length)
+    if(length < other.length)
         return true; 
     
     if(blockName > other.blockName)
         return false;
-    else if(blockName < other.blockName)
+    if(blockName < other.blockName)
         return true;
-    
     
     if(direction > other.direction)
         return false;
-    else if(direction < other.direction)
+    if(direction < other.direction)
         return true; 
         
-    
     if(sense > other.sense)
         return false; 
-    else if(sense < other.sense)
+    if(sense < other.sense)
         return true; 
     
     return false; 
