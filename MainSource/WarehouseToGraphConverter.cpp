@@ -437,11 +437,11 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
     
     long int id = corridor.getId();
 
-	vector<Point> points = pointsByCorridor[id];
+	auto& points = pointsByCorridor[id];
 	points.emplace_back("beginCorridor_"+to_string(id), corridor.getBeginCoords().first, corridor.getBeginCoords().second, 0);
 	points.emplace_back("endCorridor_"+to_string(id), corridor.getEndCoords().first, corridor.getEndCoords().second,0);
 	
-	vector<Point> processedPoints = Point::removeDuplicates(points); 
+	auto& processedPoints = Point::removeDuplicates(points); 
 	corridor.orderCorridorPoints(processedPoints);
     
 	string vertexName = "corridor_"+to_string(id)+"_point_0"; 
@@ -456,19 +456,20 @@ void WarehouseToGraphConverter::createArcsOnCorridors(const Corridor corridor, s
 	vertexByCode[first.getLabel()] = first;
 	
 	for(int k=1; k<(int)processedPoints.size(); k++){
-
+        const auto& currentPoint { processedPoints[k] };
+        const auto& previousPoint { processedPoints[k - 1] };
 		Vertex second("corridor_"+to_string(id)+"_point_"+to_string(k), CORRIDOR_CURVE_POINT);
 		
-		if(vertexByPoint.find(processedPoints[k]) != vertexByPoint.end())
-			second = vertexByPoint[processedPoints[k] ];
+		if(vertexByPoint.find(currentPoint) != vertexByPoint.end())
+			second = vertexByPoint[currentPoint];
 		else 
-			vertexByPoint[processedPoints[k] ] = second; 
+			vertexByPoint[currentPoint] = second; 
 		
 		vertexByCode[second.getLabel()] = second;
 		
 		
-		auto distance = sqrt(pow(processedPoints[k].getCoordX()-processedPoints[k-1].getCoordX(),2)+
-							 pow(processedPoints[k].getCoordY()-processedPoints[k-1].getCoordY(),2));
+		auto distance = sqrt(pow(currentPoint.getCoordX() - previousPoint.getCoordX(),2)+
+							 pow(currentPoint.getCoordY() - previousPoint.getCoordY(),2));
 		
 		arcs.insert(Arc("arc_"+first.getLabel()+ "_"+second.getLabel(),distance,first, second));
 		
