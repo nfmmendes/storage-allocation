@@ -111,14 +111,15 @@ StorageAllocationSolution::~StorageAllocationSolution(){
 	 
 	this->notAllocatedProducts.clear();
 	this->productsAllocation.clear(); 
-	for(map<Product, vector<PickingRoute *> >::iterator it = this->routesByProduct.begin(); it != this->routesByProduct.end();it++ ){
-		for(unsigned int i=0;i< it->second.size(); i++){ 
-			it->second[i]->first.clear(); 
-			delete it->second[i]; 
+	for(auto& [product, pickingRoutes] : routesByProduct){
+		for(auto & pickingRoute : pickingRoutes){ 
+			pickingRoute->first.clear(); 
+			delete pickingRoute; 
 		}
-		it->second.clear();
+		pickingRoutes.clear();
 	}
-	this->routesByProduct.clear();
+
+	routesByProduct.clear();
 }
 
 void StorageAllocationSolution::setMinDelta(double minDelta){
