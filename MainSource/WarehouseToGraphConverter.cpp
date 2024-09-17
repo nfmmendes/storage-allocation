@@ -672,27 +672,27 @@ vector<Corridor> WarehouseToGraphConverter::getAdjacentCorridors(const vector<Co
 bool WarehouseToGraphConverter::doCorridorTranverse(const Corridor &corridor,const Shelf &shelf){
     auto numLines { shelf.getNumRows() };
     auto numColumns {shelf.getNumColumns() };
-    const auto& coordCorridor { corridor.getBeginCoords() };
-    const auto& shelfCoords { shelf.getBottomLeftCoords() };
+    const auto& [corridorCoordX, corridorCoordY] { corridor.getBeginCoords() };
+    const auto& [ shelfCoordX, shelfCoordY ] { shelf.getBottomLeftCoords() };
     auto len { corridor.getLength() };
 	auto shelfLen { numLines*shelf.getCellLength() };
 	auto shelfWidth { numLines*shelf.getCellWidth() };
     
     if(numColumns < numLines && corridor.getDirection() == VERTICAL){
 		if(corridor.getSense() == BOTTOM_UP || corridor.getSense()== BOTH)
-			return coordCorridor.second <= shelfCoords.second && coordCorridor.second + len >= shelfCoords.second + shelfLen;
+			return corridorCoordY <= shelfCoordY && corridorCoordY + len >= shelfCoordY + shelfLen;
 		
-		return coordCorridor.second >= shelfCoords.second + shelfLen && coordCorridor.second - len <= shelfCoords.second;
+		return corridorCoordY >= shelfCoordY + shelfLen && corridorCoordY - len <= shelfCoordY;
     }else if(numColumns > numLines && corridor.getDirection() == HORIZONTAL){
 		if(corridor.getSense() == LEFT_TO_RIGHT || corridor.getSense() == BOTH)
-			return coordCorridor.first <= shelfCoords.first && coordCorridor.first + len >= shelfCoords.first + shelfWidth; 
+			return corridorCoordX <= shelfCoordX && corridorCoordX + len >= shelfCoordX + shelfWidth; 
 		
-        return coordCorridor.first >= shelfCoords.first + shelfWidth && coordCorridor.first - len >= shelfCoords.first ;
+        return corridorCoordX >= shelfCoordX + shelfWidth && corridorCoordX - len >= shelfCoordX ;
     }else if(numColumns == numLines){
         if(corridor.getDirection() == HORIZONTAL)
-            return coordCorridor.first <= shelfCoords.first && coordCorridor.first + len >= shelfCoords.first + shelfWidth;
+            return corridorCoordX <= shelfCoordX && corridorCoordX + len >= shelfCoordX + shelfWidth;
         if(corridor.getDirection() == VERTICAL)
-            return coordCorridor.second <= shelfCoords.second && coordCorridor.second + len >= shelfCoords.second + shelfLen;
+            return corridorCoordY <= shelfCoordY && corridorCoordY + len >= shelfCoordY + shelfLen;
     }
 
     return false;
