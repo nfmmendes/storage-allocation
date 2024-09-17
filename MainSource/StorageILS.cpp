@@ -32,6 +32,8 @@ using std::make_unique;
 using std::min;
 using std::move;
 using std::make_shared;
+using std::pair;
+using std::vector; 
 using std::unique_ptr;
 
 
@@ -92,7 +94,7 @@ bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, c
 vector<AbstractSolution *> InsideShelfSwap::createNeighbors(){
 	auto& allocations = ((StorageAllocationSolution *)startSolution)->getProductAllocations();
  
-	std::vector<AbstractSolution *> solutions; 
+	vector<AbstractSolution *> solutions; 
 	srand(randomSeed); 
 
 	//It is not possible to do swaps 
@@ -206,12 +208,12 @@ vector<AbstractSolution *> InsideBlockSwap::createNeighbors(){
 	if(allocationsSize <=2)
 		return {};
 	
-	std::set<pair<int,int> > swapsDone; 
+	set<pair<int,int> > swapsDone; 
 	int first, second; 
 	int numTries = 0; 
 
 	int numIterations = min(numberOfNeighbors, (allocationsSize-1)*allocationsSize);
-	std::vector<AbstractSolution *> solutions;
+	vector<AbstractSolution *> solutions;
 	for( int i=0; i< numIterations && numTries < 2*numIterations; i++, numTries++){
 	
 		if(!Util::ChooseTwoProductIndexes(first ,second,allocationsSize, swapsDone))
