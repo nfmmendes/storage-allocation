@@ -23,6 +23,8 @@ using std::make_pair;
 using std::map;
 using std::vector;
 using std::pair;
+using std::copy;
+using std::back_inserter;
 
 
 StorageSolutionEvaluator * StorageAllocationSolution::Evaluator = NULL;
@@ -270,7 +272,7 @@ void StorageAllocationSolution::setAllocation(MapAllocation &allocations, const 
 		this->productsAllocation[product] = allocation; 
 
 	for(const Order & order : orders){
-		vector<pair<Product,double> > items = order.getOrderItems();
+		const auto& items { order.getOrderItems() };
 		vector<pair<Cell,int> > positions; 
 
 		for(unsigned int i=0; i< items.size(); i++ ){
@@ -278,12 +280,11 @@ void StorageAllocationSolution::setAllocation(MapAllocation &allocations, const 
 				positions.push_back(allocations[items[i].first]); 
 		}
 
-		PickingRoute vertexes = StorageAllocationSolution::Evaluator->getVertexes(positions); 
+		const auto& vertexes { StorageAllocationSolution::Evaluator->getVertexes(positions) }; 
 		for(auto &[product, quantity] : items ){
-			this->routesByProduct[product].push_back(new PickingRoute());
-			PickingRoute *inserted = this->routesByProduct[product][this->routesByProduct[product].size()-1];
-			for(unsigned int i=0;i<vertexes.first.size();i++)
-				inserted->first.push_back(vertexes.first[i]);
+			auto* inserted = new PickingRoute(); 
+			copy(begin(vertexes.first), end(vertexes.first), back_inserter(inserted->first));
+			this->routesByProduct[product].push_back(inserted);
 		}
 	}
 }
