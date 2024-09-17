@@ -135,21 +135,18 @@ void StorageAllocationSolution::setSolutionValue(double value){
 
 void StorageAllocationSolution::setRoutesByProduct(map<Product, vector<PickingRoute * > > &other){
 
-	for(map<Product, vector<PickingRoute *> >::iterator it = this->routesByProduct.begin(); it != this->routesByProduct.end(); it++ ){
-		for(unsigned int i=0;i<it->second.size(); i++){			
-			it->second[i]->first.clear();
-			delete it->second[i];
+	for(auto& [product, routes]: routesByProduct){
+		for(auto* pickingRoute : routes){			
+			pickingRoute->first.clear();
+			delete pickingRoute;
 		}
-		it->second.clear(); 
+		routes.clear(); 
 	}
 
-	for(map<Product,vector<PickingRoute*> >::iterator it = other.begin(); it!= other.end(); it++){
-		this->routesByProduct[it->first].resize(it->second.size());
-		for(unsigned int i =0;i<it->second.size(); i++){
-			this->routesByProduct[it->first][i] = new PickingRoute();
-			this->routesByProduct[it->first][i]->first = it->second[i]->first; 
-			this->routesByProduct[it->first][i]->second = it->second[i]->second; 
-		}
+	for(const auto& [product, routes] : other){
+		transform(begin(routes), end(routes), back_inserter(routesByProduct[product]), [](auto* v){
+				return new PickingRoute(v->first, v->second);
+		});
 	}
 }
 
