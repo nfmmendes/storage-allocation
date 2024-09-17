@@ -52,7 +52,7 @@ InsideShelfSwap::InsideShelfSwap(){
 InsideShelfSwap::~InsideShelfSwap(){
 }
 
-bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations){
+bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations) const{
 	const auto& firstFamily = first.getFamily(); 
 	const auto& secondFamily = second.getFamily(); 
 
@@ -147,7 +147,7 @@ InsideBlockSwap::InsideBlockSwap(){
 InsideBlockSwap::~InsideBlockSwap(){
 }
 
-bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations){
+bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations) const{
 	const auto& firstFamily { first.getFamily() }; 
 	const auto& secondFamily { second.getFamily() }; 
 
@@ -261,7 +261,7 @@ const AbstractSolution * MostFrequentSwap::getStartSolution() const{
 	return startSolution; 
 }
 
-bool MostFrequentSwap::isValidSwap(const Product &first, const Product &second, MapAllocation &allocations){
+bool MostFrequentSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations) const{
 
 	//if one of products is not allocated, the swap is not valid
 	auto firstAllocation = allocations.find(first);

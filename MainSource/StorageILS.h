@@ -39,7 +39,7 @@ class InsideShelfSwap :public NeighborhoodStructure{
 		Shelf shelf; 
         OptimizationConstraints *constraints;
         map<Position, Product> shelfAllocations; 
-        bool isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations);
+        bool isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations) const;
 
     public:
         InsideShelfSwap();
@@ -69,7 +69,7 @@ class InsideBlockSwap : public NeighborhoodStructure{
 		Block block; 
         OptimizationConstraints *constraints;
 		map<Position, Product> blockAllocations;
-        bool isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations); 
+        bool isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations) const; 
     public:
         InsideBlockSwap();
         ~InsideBlockSwap();
@@ -96,7 +96,7 @@ class MostFrequentSwap : public NeighborhoodStructure{
                                             // lower due to impossibilities in creating more solutions
         OptimizationConstraints *constraints;
         vector<Product> interchangeableProducts; 
-        bool isValidSwap(const Product &first, const Product &second, MapAllocation &allocations);
+        bool isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations) const;
     public:
         MostFrequentSwap();
         ~MostFrequentSwap();
