@@ -324,12 +324,10 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::getInternalAndExternalCellsVerte
 
 pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(const Corridor *corridor, const pair<double,double>& coords, 
                                                                               const string& cellName, const string& position){
-
-    const auto corridorCoordX { corridor->getBeginCoords().first };
-    const auto corridorCoordY { corridor->getBeginCoords().second };
+    const auto [corridorCoordX, corridorCoordY] { corridor->getBeginCoords()};
 
     bool horizontal = (position == "LEFT" || position == "RIGHT");
-    Point corridorPoint("", ( horizontal ? corridorCoordX :  coords.first) , (horizontal ?  coords.second : corridorCoordY ),0);
+    Point corridorPoint("", ( horizontal ? corridorCoordX :  coords.first), (horizontal ?  coords.second : corridorCoordY));
     
     pointsByCorridor[corridor->getId()].push_back(corridorPoint);
     
@@ -342,7 +340,6 @@ pair<Vertex, Vertex> WarehouseToGraphConverter::createCellAndCorridorVertexes(co
 	
     Vertex vertexCorridor("corridor_"+to_string(corridor->getId())+"_cell_"+ cellName, PICK_VERTEX);
 
-	
     vertexByCode[vertexCorridor.getLabel()] = vertexCorridor;
 	
 	if(vertexByPoint.find(corridorPoint) == vertexByPoint.end())
