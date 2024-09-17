@@ -25,6 +25,7 @@ using std::vector;
 using std::pair;
 using std::copy;
 using std::back_inserter;
+using std::make_shared;
 
 
 StorageSolutionEvaluator * StorageAllocationSolution::Evaluator = NULL;
@@ -247,17 +248,19 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 
 double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *original,const Vertex &oldVertex, const Vertex &newVertex, bool useTSPEvaluator){
 
+	auto &route = original->first;
+	
 	//if a same route has both products in the swap the evaluation don't need to be done
-	if(find_if(original->first.begin(),original->first.end(), [newVertex](auto v){ return *v == newVertex; }) != original->first.end())
+	if(find_if(begin(route), end(route), [newVertex](auto v){ return *v == newVertex; }) != route.end())
 		return 0;
 
-	std::replace_if(original->first.begin(),original->first.end(), [oldVertex](shared_ptr<Vertex> v){
+	std::replace_if(route.begin(), route.end(), [oldVertex](const shared_ptr<Vertex>& v){
 		return *(v.get()) == oldVertex;
-	}, shared_ptr<Vertex>(new Vertex(newVertex)));
+	}, make_shared<Vertex>(newVertex));
 
 	double oldValue = original->second; 
-
-	original->second = useTSPEvaluator ? Evaluator->DoRouteEvaluation(original->first) : Evaluator->DoRouteEstimation(original->first);
+	original->second = useTSPEvaluator ? Evaluator->DoRouteEvaluation(original->first) : 
+										 Evaluator->DoRouteEstimation(original->first);
 	
 	if(original->first.size() <= 4){
 	
