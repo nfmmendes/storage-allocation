@@ -207,7 +207,7 @@ void StorageAllocationSolution::setAllocation(const Cell &cell, int level, const
 	this->productsAllocation[product] =  make_pair(cell,level); 
 }
 
-void StorageAllocationSolution::removeAllocation(Product &product){	
+void StorageAllocationSolution::removeAllocation(const Product &product){	
 	this->productsAllocation.erase(product);	
 } 
 
@@ -243,7 +243,7 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	this->solutionValue += delta + penaltyDelta; 
 }
 
-double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *original,Vertex &oldVertex, Vertex &newVertex, bool useTSPEvaluator){
+double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *original,const Vertex &oldVertex, const Vertex &newVertex, bool useTSPEvaluator){
 
 	//if a same route has both products in the swap the evaluation don't need to be done
 	if(find_if(original->first.begin(),original->first.end(), [newVertex](auto v){ return *v == newVertex; }) != original->first.end())
@@ -288,7 +288,7 @@ void StorageAllocationSolution::setAllocation(MapAllocation &allocations, const 
 	}
 }
 
-void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRoutes, vector<PickingRoute> &newRoutes, bool useTSP){
+void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRoutes, const vector<PickingRoute> &newRoutes, bool useTSP){
 	double oldSum =0;
 	double newSum = 0;
 	

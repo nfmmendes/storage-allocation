@@ -66,7 +66,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @param evaluateSolutionWithTSP True if the new solution value must be evaluated using 
 		 *                                 the TSP algorithm, false otherwise. 
 		 */
-		void updateSolutionValue(vector<PickingRoute> &oldRoutes, vector<PickingRoute> &newRoutes, bool evaluateSolutionWithTSP=false);
+		void updateSolutionValue(vector<PickingRoute> &oldRoutes, const vector<PickingRoute> &newRoutes, bool evaluateSolutionWithTSP=false);
 
 		/**
 		 * @brief Update a picking route and returns the objective function variation after this update
@@ -75,7 +75,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @param newVertex Vertex that will be included in the new route
 		 * @param useTSPEvaluator Param to define how the route new cost will be calculated 
 		 * */
-		double getVariationAndUpdateAfterSwap(PickingRoute *original, Vertex &oldVertex, Vertex &newVertex, bool useTSPEvaluator);
+		double getVariationAndUpdateAfterSwap(PickingRoute *original, const Vertex &oldVertex, const Vertex &newVertex, bool useTSPEvaluator);
     public:
 		static int countSolutions; 
 
@@ -175,7 +175,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @brief Remove allocation from solution.
 		 * @param product Product about to have its allocation removed. 
 		 */
-		void removeAllocation(Product &product);
+		void removeAllocation(const Product &product);
 
 		/**
 		 * @brief Change the position of two products in the solution 
