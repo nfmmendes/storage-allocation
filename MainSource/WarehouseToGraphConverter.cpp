@@ -781,8 +781,8 @@ void WarehouseToGraphConverter::connectBlockExits(const BlockExit &exit, set<Arc
     if(exit.getBlockBName() != "#_#_#" && blocksByName.find(exit.getBlockAName()) == blocksByName.end())
         return; 
 
-    Block blockA = blocksByName[exit.getBlockAName()];
-    Block blockB = blocksByName[exit.getBlockBName()];
+    const auto& blockA { blocksByName[exit.getBlockAName()] };
+    const auto& blockB { blocksByName[exit.getBlockBName()] };
 
     const auto reference { exit.getCoords() }; 
     Point referencePoint("blockExit_"+to_string(exit.getId()), reference.first, reference.second, 0); 
