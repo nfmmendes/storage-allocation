@@ -147,7 +147,7 @@ InsideBlockSwap::InsideBlockSwap(){
 InsideBlockSwap::~InsideBlockSwap(){
 }
 
-bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, MapAllocation &allocations){
+bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations){
 	const auto& firstFamily { first.getFamily() }; 
 	const auto& secondFamily { second.getFamily() }; 
 
@@ -158,8 +158,8 @@ bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, M
 		return false; 
 
 	//Check the prohibitions
-	const auto& firstPosition { allocations[first] };
-	const auto& secondPosition { allocations[second] } ;
+	const auto& firstPosition { firstAlocation->second };
+	const auto& secondPosition { secondAllocation->second } ;
 	const auto& prohibitedProducts { constraints->getProductsCodeWithProhibition() }; 
 	auto firstProhibition = prohibitedProducts.find(first.getName());
 	auto secondProhibition = prohibitedProducts.find(second.getName());

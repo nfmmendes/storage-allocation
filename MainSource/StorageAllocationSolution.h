@@ -124,19 +124,19 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @brief The the product allocations. 
 		 * @return A map from each product to its allocation. 
 		 */
-		map<Product, pair<Cell, int> > & getProductAllocations();
+		const map<Product, pair<Cell, int> > & getProductAllocations() const;
 
 		/**
 		 * @brief Get the non-allocated products in the solution. 
 		 * @return The set of non allocated products. 
 		 */
-		set<Product> & getNonAllocatedProducts(); 		 
+		const set<Product> & getNonAllocatedProducts() const; 		 
 
 		/**
 		 * @brief Get solution total penalty.
 		 * @return The solution total penalty. 
 		 */
-		double getTotalPenalty(); 
+		double getTotalPenalty() const; 
 
 		/**
 		 * @brief Set a single product allocation. 
@@ -213,7 +213,7 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @brief Check the solution.
 		 * @return True if the solution is valid, false otherwise.
 		 */
-		bool checkSolution();
+		bool checkSolution() const;
 
 		/**
 		 * @brief Create a copy of the object passed as paremeter encapsulated in a smart pointer.

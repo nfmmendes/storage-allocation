@@ -204,5 +204,5 @@ class StorageSolutionEvaluator{
 		 * @param second The second product in the swap. 
 		 * @return The total delta. 
 		 */
-		double evaluatePenaltyDelta(MapAllocation & allocations,const Product &first,const Product &second);
+		double evaluatePenaltyDelta(const MapAllocation & allocations,const Product &first,const Product &second);
 };

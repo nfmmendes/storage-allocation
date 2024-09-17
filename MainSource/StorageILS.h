@@ -69,7 +69,7 @@ class InsideBlockSwap : public NeighborhoodStructure{
 		Block block; 
         OptimizationConstraints *constraints;
 		map<Position, Product> blockAllocations;
-        bool isValidSwap(const Product &first, const Product &second, MapAllocation &allocations); 
+        bool isValidSwap(const Product &first, const Product &second, const MapAllocation &allocations); 
     public:
         InsideBlockSwap();
         ~InsideBlockSwap();

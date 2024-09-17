@@ -237,10 +237,10 @@ double StorageSolutionEvaluator::evaluatePenaltyDeltaByProhibition(
 }
 
 double StorageSolutionEvaluator::evaluatePenaltyDelta(
-     MapAllocation& allocations, const Product& first, const Product& second)
+     const MapAllocation& allocations, const Product& first, const Product& second)
 {
-    pair<Cell, int> firstPosition = allocations[first];
-    pair<Cell, int> secondPosition = allocations[second];
+    pair<Cell, int> firstPosition = allocations.at(first);
+    pair<Cell, int> secondPosition = allocations.at(second);
 
     double delta = 0.0;
 

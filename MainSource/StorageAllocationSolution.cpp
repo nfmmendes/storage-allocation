@@ -181,15 +181,15 @@ void StorageAllocationSolution::printToFile(ofstream & out) const{
 	out.close(); 
 }
 
-map<Product, pair<Cell,int> > & StorageAllocationSolution::getProductAllocations(){
+const map<Product, pair<Cell,int> > & StorageAllocationSolution::getProductAllocations() const{
 	return productsAllocation;
 }
 
-double StorageAllocationSolution::getTotalPenalty(){
+double StorageAllocationSolution::getTotalPenalty() const {
 	return totalPenalty;
 }
 
-set<Product> & StorageAllocationSolution::getNonAllocatedProducts(){
+const set<Product> & StorageAllocationSolution::getNonAllocatedProducts() const{
 	return notAllocatedProducts; 
 }
 
@@ -317,7 +317,7 @@ StorageAllocationSolution & StorageAllocationSolution::operator=(const StorageAl
 }
 
 
-bool StorageAllocationSolution::checkSolution(){
+bool StorageAllocationSolution::checkSolution() const{
 
 	set<pair<string,int>> positions; 
 	set<long> prods;
