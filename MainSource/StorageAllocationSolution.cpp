@@ -168,9 +168,8 @@ void StorageAllocationSolution::Evaluate(bool evaluateWithTSP){
 	set<PickingRoute *> routes; 
 	double distance = 0.0; 
 	
-	for(auto [key, routeList] : routesByProduct)
-		for(unsigned int i=0; i<routeList.size(); i++)
-			routes.insert(routeList[i]); 
+	for(const auto& [key, routeList] : routesByProduct)
+		copy(begin(routeList), end(routeList), inserter(routes, end(routes)));
 	if(evaluateWithTSP){
 		for(auto route : routes){
 			route->second =  StorageAllocationSolution::Evaluator->DoRouteEvaluation(route->first);
@@ -249,7 +248,7 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *original,const Vertex &oldVertex, const Vertex &newVertex, bool useTSPEvaluator){
 
 	auto &route = original->first;
-	
+
 	//if a same route has both products in the swap the evaluation don't need to be done
 	if(find_if(begin(route), end(route), [newVertex](auto v){ return *v == newVertex; }) != route.end())
 		return 0;
