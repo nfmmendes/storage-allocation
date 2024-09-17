@@ -741,18 +741,18 @@ void WarehouseToGraphConverter::connectExpeditionPoint(const ExpeditionPoint &ex
     if(blocksByName.find(expeditionPoint.getBlockCode()) == blocksByName.end())
         return;
 
-    Block block = blocksByName[expeditionPoint.getBlockCode()];
-	pair<double,double> reference = expeditionPoint.getCoordinates(); 
-    Point referencePoint("expeditionPoint_"+expeditionPoint.getCode(), reference.first, reference.second, 0); 
+    const auto& block { blocksByName[expeditionPoint.getBlockCode()] };
+	const auto& [referenceCoordX, referenceCoordY] { expeditionPoint.getCoordinates() }; 
+    Point referencePoint("expeditionPoint_"+expeditionPoint.getCode(), referenceCoordX, referenceCoordY, 0); 
     
-    for(map<Point, Vertex>::iterator it=vertexByPoint.begin(); it!= vertexByPoint.end(); it++){
-        if(!block.isInBlock(it->first))
+    for(const auto& [point, vertex] : vertexByPoint){
+        if(!block.isInBlock(point))
             continue;
 
-        distance = sqrt( pow(it->first.getCoordX()-reference.first,2)+pow(it->first.getCoordY()-reference.second,2));
+        distance = sqrt( pow(point.getCoordX()-referenceCoordX,2)+pow(point.getCoordY()-referenceCoordY,2));
         if(distance< minDistance){
             minDistance = distance;
-            closestVertex = it->second;
+            closestVertex = vertex;
         }
     }
 
