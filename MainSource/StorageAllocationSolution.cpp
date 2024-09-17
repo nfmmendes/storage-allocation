@@ -207,10 +207,10 @@ void StorageAllocationSolution::setTotalPenalty(const double value){
  
 void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const Product &secondProduct, bool useTSPEvaluator){
 		
-	pair<Cell,int> first = productsAllocation[firstProduct];
-	pair<Cell,int> second	= productsAllocation[secondProduct];
-	auto firstVertex = Evaluator->getVertex(first);
-	auto secondVertex = Evaluator->getVertex(second);
+	const auto& first { productsAllocation[firstProduct] };
+	const auto& second	{ productsAllocation[secondProduct] };
+	const auto& firstVertex { Evaluator->getVertex(first) };
+	const auto& secondVertex { Evaluator->getVertex(second) };
 	double delta = 0.0; 
 
 	double penaltyDelta = StorageAllocationSolution::Evaluator->evaluatePenaltyDelta(getProductAllocations(), firstProduct, secondProduct);
@@ -219,8 +219,8 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	productsAllocation[firstProduct] = second; 
 	productsAllocation[secondProduct] = first;
 	
-	vector<PickingRoute *> firstRoutes = routesByProduct[firstProduct];
-	vector<PickingRoute *> secondRoutes = routesByProduct[secondProduct];
+	const auto& firstRoutes { routesByProduct[firstProduct] };
+	const auto& secondRoutes { routesByProduct[secondProduct] };
 	
 	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
