@@ -113,15 +113,15 @@ StorageAllocationSolution::~StorageAllocationSolution(){
 }
 
 void StorageAllocationSolution::setMinDelta(double minDelta){
-    this->minDelta = minDelta;
+    minDelta = minDelta;
 }
 
 void StorageAllocationSolution::setRuntime(double time){
-    this->runtime = time;
+    runtime = time;
 }
 
 void StorageAllocationSolution::setSolutionValue(double value){
-    this->solutionValue = value; 
+    solutionValue = value; 
 }
 
 void StorageAllocationSolution::setRoutesByProduct(map<Product, vector<PickingRoute * > > &other){
@@ -182,27 +182,27 @@ void StorageAllocationSolution::printToFile(ofstream & out) const{
 }
 
 map<Product, pair<Cell,int> > & StorageAllocationSolution::getProductAllocations(){
-	return this->productsAllocation;
+	return productsAllocation;
 }
 
 double StorageAllocationSolution::getTotalPenalty(){
-	return this->totalPenalty;
+	return totalPenalty;
 }
 
 set<Product> & StorageAllocationSolution::getNonAllocatedProducts(){
-	return this->notAllocatedProducts; 
+	return notAllocatedProducts; 
 }
 
 void StorageAllocationSolution::setAllocation(const Cell &cell, int level, const Product &product){
-	this->productsAllocation[product] =  make_pair(cell,level); 
+	productsAllocation[product] =  make_pair(cell,level); 
 }
 
 void StorageAllocationSolution::removeAllocation(const Product &product){	
-	this->productsAllocation.erase(product);	
+	productsAllocation.erase(product);	
 } 
 
 void StorageAllocationSolution::setTotalPenalty(const double value){ 
-	this->totalPenalty = value; 
+	totalPenalty = value; 
 } 
  
 void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const Product &secondProduct, bool useTSPEvaluator){
@@ -274,7 +274,7 @@ void StorageAllocationSolution::setAllocation(MapAllocation &allocations, const 
 		for(auto &[product, quantity] : items ){
 			auto* inserted = new PickingRoute(); 
 			copy(begin(vertexes.first), end(vertexes.first), back_inserter(inserted->first));
-			this->routesByProduct[product].push_back(inserted);
+			routesByProduct[product].push_back(inserted);
 		}
 	}
 }
@@ -292,26 +292,26 @@ void StorageAllocationSolution::updateSolutionValue(vector<PickingRoute> &oldRou
 		else
 			newSum += StorageAllocationSolution::Evaluator->DoRouteEstimation(newRoutes[i].first);
 
-	this->solutionValue += (newSum - oldSum);  
+	solutionValue += (newSum - oldSum);  
 }
 
 StorageAllocationSolution & StorageAllocationSolution::operator=(const StorageAllocationSolution &other){
 	
-	this->solutionValue = other.solutionValue;
-	this->runtime = other.runtime;
-	this->minDelta = other.minDelta;
+	solutionValue = other.solutionValue;
+	runtime = other.runtime;
+	minDelta = other.minDelta;
 	isMaximization = other.isMaximization; 
-	//this->totalPenalty = other.totalPenalty;
+	//totalPenalty = other.totalPenalty;
 	
-	this->notAllocatedProducts.clear();
-	this->productsAllocation.clear(); 
+	notAllocatedProducts.clear();
+	productsAllocation.clear(); 
 	
 	for(auto & key : other.notAllocatedProducts)
-		this->notAllocatedProducts.insert(key); 
+		notAllocatedProducts.insert(key); 
 	for(auto & [key, value] : other.productsAllocation)
-		this->productsAllocation[key] = value; 
+		productsAllocation[key] = value; 
 	for(auto & [key, value] : other.routesByProduct)
-		this->routesByProduct[key] = value; 
+		routesByProduct[key] = value; 
 	
 	return *this; 
 }
