@@ -36,12 +36,10 @@ class StorageAllocationSolution : public AbstractSolution{
 	private: 
 	
 		static StorageSolutionEvaluator *Evaluator; 
-		static vector<StorageAllocationSolution *> currentSolutions;
-		unsigned long long int solutionIndex; 
-		map<Product, Position > productsAllocation; 
-		map<Product, vector<PickingRoute *> > routesByProduct; 
-		set<Product> notAllocatedProducts; 
-		double totalPenalty; 
+		map<Product, Position > productsAllocation {}; 
+		map<Product, vector<PickingRoute *> > routesByProduct {}; 
+		set<Product> notAllocatedProducts {}; 
+		double totalPenalty {}; 
         
 		/**
 		 * @brief Set the solution value. 
