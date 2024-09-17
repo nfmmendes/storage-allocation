@@ -705,8 +705,8 @@ void WarehouseToGraphConverter::connectVertexesByTwoArcs(Vertex & first, string 
     
     Vertex secondVertex = vertexByCode[second];
     //Two arcs (in opposite senses) to each adjacent cell
-    arcs.insert(Arc("arc_"+first.getLabel()+"_"+secondVertex.getLabel(), size, first, secondVertex));
-    arcs.insert(Arc("arc_"+secondVertex.getLabel()+"_"+first.getLabel(), size, secondVertex, first));
+    arcs.emplace("arc_"+first.getLabel()+"_"+secondVertex.getLabel(), size, first, secondVertex);
+    arcs.emplace("arc_"+secondVertex.getLabel()+"_"+first.getLabel(), size, secondVertex, first);
 }
 
 
