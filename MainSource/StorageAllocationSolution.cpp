@@ -224,11 +224,11 @@ void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const P
 	
 	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
-	for(unsigned int i=0; i<firstRoutes.size(); i++)
-		delta += getVariationAndUpdateAfterSwap(firstRoutes[i], *firstVertex, *secondVertex, useTSPEvaluator);
+	for(const auto& route : firstRoutes)
+		delta += getVariationAndUpdateAfterSwap(route, *firstVertex, *secondVertex, useTSPEvaluator);
 
-	for(unsigned int i=0; i<secondRoutes.size(); i++)
-		delta += getVariationAndUpdateAfterSwap(secondRoutes[i], *secondVertex, *firstVertex, useTSPEvaluator);
+	for(const auto& route : secondRoutes)
+		delta += getVariationAndUpdateAfterSwap(route, *secondVertex, *firstVertex, useTSPEvaluator);
 
 	this->solutionValue += delta + penaltyDelta; 
 }
