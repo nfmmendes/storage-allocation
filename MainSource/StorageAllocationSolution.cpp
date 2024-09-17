@@ -37,11 +37,11 @@ StorageAllocationSolution::StorageAllocationSolution(){
 
 StorageAllocationSolution::StorageAllocationSolution(const StorageAllocationSolution *other){
 	StorageAllocationSolution::countSolutions++;
-	this->solutionValue = other->solutionValue;
-	this->runtime = other->runtime;
-	this->minDelta = other->minDelta;
+	solutionValue = other->solutionValue;
+	runtime = other->runtime;
+	minDelta = other->minDelta;
 	isMaximization = other->isMaximization; 
-	this->totalPenalty = other->totalPenalty; 
+	totalPenalty = other->totalPenalty; 
 
 	copy(begin(other->notAllocatedProducts), end(other->notAllocatedProducts), 
 		inserter(notAllocatedProducts, end(notAllocatedProducts)));
@@ -49,26 +49,21 @@ StorageAllocationSolution::StorageAllocationSolution(const StorageAllocationSolu
 	copy(begin(other->productsAllocation), end(other->productsAllocation), 
 		inserter(productsAllocation, end(productsAllocation)));
 
-	for(const auto&product : other->routesByProduct){
-		this->routesByProduct[product.first].resize(product.second.size());
-		
-		for(unsigned int i =0;i<product.second.size(); i++){
-			//cout<<product.first.getName()<<" "<<i<<" "<<product.second.size()<<" " <<endl;
-			this->routesByProduct[product.first][i] = new PickingRoute();
-			this->routesByProduct[product.first][i]->first = product.second[i]->first; 
-			this->routesByProduct[product.first][i]->second = product.second[i]->second; 
-		}
+	for(const auto& [product, pickingRoutes] : other->routesByProduct){
+		transform(begin(pickingRoutes), end(pickingRoutes), back_inserter(routesByProduct[product]), [](auto* v){
+				return new PickingRoute(v->first, v->second);
+		});
 	}
 }
 
 StorageAllocationSolution::StorageAllocationSolution(const StorageAllocationSolution &other):AbstractSolution(other){
 	
 	StorageAllocationSolution::countSolutions++;
-	this->solutionValue = other.solutionValue;
-	this->runtime = other.runtime;
-	this->minDelta = other.minDelta;
+	solutionValue = other.solutionValue;
+	runtime = other.runtime;
+	minDelta = other.minDelta;
 	isMaximization = other.isMaximization; 
-	this->totalPenalty = other.totalPenalty; 
+	totalPenalty = other.totalPenalty; 
 	
 	copy(begin(other.notAllocatedProducts), end(other.notAllocatedProducts), 
 		inserter(notAllocatedProducts, end(notAllocatedProducts)));
@@ -76,16 +71,11 @@ StorageAllocationSolution::StorageAllocationSolution(const StorageAllocationSolu
 	copy(begin(other.productsAllocation), end(other.productsAllocation), 
 		inserter(productsAllocation, end(productsAllocation)));
 
-	for(const auto& product : other.routesByProduct){
-		this->routesByProduct[product.first].resize(product.second.size());
-
-		for(unsigned int i =0;i< product.second.size(); i++){
-			this->routesByProduct[product.first][i] = new PickingRoute();
-			this->routesByProduct[product.first][i]->first = product.second[i]->first; 
-			this->routesByProduct[product.first][i]->second = product.second[i]->second; 
-		}
+	for(const auto& [product, pickingRoutes] : other.routesByProduct){
+		transform(begin(pickingRoutes), end(pickingRoutes), back_inserter(routesByProduct[product]), [](auto* v){
+				return new PickingRoute(v->first, v->second);
+		});
 	}
-	
 }
 
 StorageAllocationSolution::StorageAllocationSolution(double value, double time, double minDelta,bool maximization){
