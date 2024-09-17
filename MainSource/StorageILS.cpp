@@ -264,17 +264,17 @@ const AbstractSolution * MostFrequentSwap::getStartSolution() const{
 bool MostFrequentSwap::isValidSwap(const Product &first, const Product &second, MapAllocation &allocations){
 
 	//if one of products is not allocated, the swap is not valid
-	auto firstIt = allocations.find(first);
-	auto secondIt = allocations.find(second);
-	if(firstIt == allocations.end() || secondIt == allocations.end() )
+	auto firstAllocation = allocations.find(first);
+	auto secondAllocation = allocations.find(second);
+	if(firstAllocation == allocations.end() || secondAllocation == allocations.end() )
 		return false; 
 
 	const auto& firstFamily = first.getFamily(); 
 	const auto& secondFamily = second.getFamily(); 
 
 	//Check the prohibitions
-	const auto& firstPosition { firstIt->second };
-	const auto& secondPosition { secondIt->second };
+	const auto& firstPosition { firstAllocation->second };
+	const auto& secondPosition { secondAllocation->second };
 	const auto& prohibitedProducts { constraints->getProductsCodeWithProhibition() }; 
 	auto firstProhibition = prohibitedProducts.find(first.getName());
 	auto secondProhibition = prohibitedProducts.find(second.getName());
