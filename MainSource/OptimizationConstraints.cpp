@@ -72,7 +72,7 @@ void OptimizationConstraints::setIsolatedFamilies(const vector<IsolatedFamily>& 
             stronglyIsolatedFamilies.insert(isolatedFamilies[i].getCode());
 } 
 
-bool OptimizationConstraints::IsAllocationAllowed(const Product &product, const Position& newPosition){
+bool OptimizationConstraints::isAllocationAllowed(const Product &product, const Position& newPosition){
     
     auto query = [product](ProductAllocationProhibitions &other) {  return other.getProductName() == product.getName();  };
     vector<ProductAllocationProhibitions>::iterator prohibition = find_if(allocationProhitions.begin(), allocationProhitions.end(), query );

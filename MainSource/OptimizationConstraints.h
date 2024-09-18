@@ -112,7 +112,7 @@ class OptimizationConstraints{
 		 *  @param newPosition The position of the new allocation. 
 		 *  @return True if the product can be allocated in the new position. False otherwise. 
 		 */
-		bool IsAllocationAllowed(const Product &product, const Position &newPosition);
+		bool isAllocationAllowed(const Product &product, const Position &newPosition);
 
 		/**
 		 *  @brief Override of operator=.

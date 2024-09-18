@@ -70,8 +70,8 @@ bool InsideShelfSwap::isValidSwap(const Product &first, const Product &second, c
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		bool isFirstAllowed = constraints->IsAllocationAllowed(first, secondAllocation->second);
-		bool isSecondAllowed = constraints->IsAllocationAllowed(second, firstAlocation->second);
+		bool isFirstAllowed = constraints->isAllocationAllowed(first, secondAllocation->second);
+		bool isSecondAllowed = constraints->isAllocationAllowed(second, firstAlocation->second);
 
 		if(! (isFirstAllowed && isSecondAllowed) )
 			return false; 
@@ -167,8 +167,8 @@ bool InsideBlockSwap::isValidSwap(const Product &first, const Product &second, c
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		auto isFirstAllowed = constraints->IsAllocationAllowed(first, secondAllocation->second);
-		auto isSecondAllowed = constraints->IsAllocationAllowed(second, firstAlocation->second);
+		auto isFirstAllowed = constraints->isAllocationAllowed(first, secondAllocation->second);
+		auto isSecondAllowed = constraints->isAllocationAllowed(second, firstAlocation->second);
 
 		if(! (isFirstAllowed && isSecondAllowed) )
 			return false; 
@@ -282,8 +282,8 @@ bool MostFrequentSwap::isValidSwap(const Product &first, const Product &second, 
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		auto isFirstAllowed = constraints->IsAllocationAllowed(first, secondPosition);
-		auto isSecondAllowed = constraints->IsAllocationAllowed(second, firstPosition);
+		auto isFirstAllowed = constraints->isAllocationAllowed(first, secondPosition);
+		auto isSecondAllowed = constraints->isAllocationAllowed(second, firstPosition);
 
 		if(!isFirstAllowed || !isSecondAllowed)
 			return false; 
@@ -364,8 +364,8 @@ bool StorageAllocationPertubation::isValidSwap(const Product &first, const Produ
 	bool totallyFree =  (firstProhibition == prohibitedProducts.end() && secondProhibition == prohibitedProducts.end()); 
 
 	if(!totallyFree){
-		bool isFirstAllowed = constraints->IsAllocationAllowed(first, secondPosition);
-		bool isSecondAllowed = constraints->IsAllocationAllowed(second, firstPosition);
+		bool isFirstAllowed = constraints->isAllocationAllowed(first, secondPosition);
+		bool isSecondAllowed = constraints->isAllocationAllowed(second, firstPosition);
 
 		if(!isFirstAllowed || !isSecondAllowed)
 			return false; 
