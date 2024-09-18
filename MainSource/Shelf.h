@@ -14,12 +14,12 @@ using std::string;
 class Shelf{
 
     private:
-        unsigned long int Id { 0 };							///< Shelf id
+        unsigned long int Id { 0 };					///< Shelf id
         vector<Cell> cells { };         		    ///< Cells inside the shelf TODO: Make this relationship be consistent in both senses 
         pair<double,double> bottomLeftCoords { };	///< Coordinates of shelf the bottom left extremity 
         string blockName { };					    ///< Name of block where the shelf is 
-        unsigned int columns { };							///< Number of columns in the shelf
-        unsigned int rows { }; 								///< Number of rows in the shelf 
+        unsigned int columns { };					///< Number of columns in the shelf
+        unsigned int rows { }; 						///< Number of rows in the shelf 
         double cellLength { };						///< Shelf cells length (It is supposed that the cells have all the same size)
         double cellWidth { }; 						///< Shelf cells width (It is supposed that the cells have all the same size)
         
