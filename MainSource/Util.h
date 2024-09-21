@@ -4,13 +4,17 @@
 #include <string>
 #include <vector>
 #include <set> 
+using std::vector;
+using std::string;
+using std::pair;
+using std::set;
 
 class Util{
     
     public:
     
         Util(){}
-        static void splitString(std::vector<std::string>& returned ,std::string originalString, std::string delimiter);
-        static bool ChooseTwoProductIndexes(int &first, int &second, unsigned long long numProducts, const std::set<std::pair<int,int> > & swapsDone);
+        static void splitString(vector<string>& returned, string originalString, string delimiter);
+        static bool ChooseTwoProductIndexes(int &first, int &second, unsigned long long numProducts, const set<pair<int,int> > & swapsDone);
 };
 
