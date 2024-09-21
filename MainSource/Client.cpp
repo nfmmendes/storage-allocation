@@ -6,7 +6,7 @@
 
 Client::Client(){}
 
-Client::Client(string name, string type, pair<double, double> coordinates ){
+Client::Client(const string& name, const string& type, const pair<double, double>& coordinates ){
     this->name = name;
     this->type = type;
     this->coordinates = coordinates;

@@ -33,7 +33,7 @@ class Client{
          * @param type The client type.
          * @param coordinates The client location coordinates. 
          */
-        Client(string name, string type,  pair<double, double> coordinates );
+        Client(const string& name, const string& type, const pair<double, double>& coordinates );
 
         /**
          * @brief Copy constructor.
