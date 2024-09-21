@@ -3,8 +3,6 @@
 #include<fstream>
 #include<vector>
 #include "Client.h"
-using namespace std;
-
 
 Client::Client(){}
 
