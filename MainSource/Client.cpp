@@ -15,9 +15,9 @@ Client::Client(string name, string type, pair<double, double> coordinates ){
 }
 
 Client::Client(const Client &other){
-    this->name = other.name;
-    this->type = other.type;
-    this->coordinates = other.coordinates;
+    name = other.name;
+    type = other.type;
+    coordinates = other.coordinates;
 }
 
 const string& Client::getName() const { return name;}
@@ -26,9 +26,9 @@ const pair<double, double>& Client::getCoordinates() const { return coordinates;
 
 
 Client & Client::operator=(const Client &other){
-    this->name = other.name;
-    this->type = other.type;
-    this->coordinates = other.coordinates;
+    name = other.name;
+    type = other.type;
+    coordinates = other.coordinates;
     
     return *this;
 }
