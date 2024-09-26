@@ -227,8 +227,8 @@ void StorageAllocationSolution::setTotalPenalty(const double value){
 } 
  
 void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const Product &secondProduct, bool useTSPEvaluator){
-		
-	const auto& first { productsAllocation[firstProduct] };
+	//TODO: There is a bug related with the initialization of first as reference. 
+	const auto first { productsAllocation[firstProduct] };
 	const auto& second	{ productsAllocation[secondProduct] };
 	const auto& firstVertex { Evaluator->getVertex(first) };
 	const auto& secondVertex { Evaluator->getVertex(second) };
