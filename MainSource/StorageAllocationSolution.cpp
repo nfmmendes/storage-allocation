@@ -21,10 +21,13 @@ using std::cout;
 using std::flush;
 using std::make_pair;
 using std::map;
+using std::nullopt;
+using std::optional;
 using std::vector;
 using std::pair;
 using std::copy;
 using std::back_inserter;
+using std::string;
 using std::make_shared;
 
 
@@ -187,6 +190,24 @@ const map<Product, pair<Cell,int> > & StorageAllocationSolution::getProductAlloc
 
 double StorageAllocationSolution::getTotalPenalty() const {
 	return totalPenalty;
+}
+
+const optional<map<string, int>> StorageAllocationSolution::getItemsCountByFamilyOnCell(const string &cellCode) const
+{
+	auto it = itemsCountByFamilyAndCell.find(cellCode);
+    return it != itemsCountByFamilyAndCell.end() ? it->second : map<string, int>();
+}
+
+const optional<map<string, int>> StorageAllocationSolution::getItemsCountByFamilyOnShelf(unsigned long int shelfId) const
+{
+    auto it = itemsCountByFamilyAndShelf.find(shelfId);
+    return it != itemsCountByFamilyAndShelf.end() ? it->second : map<string, int>();
+}
+
+const optional<map<string, int>> StorageAllocationSolution::getItemsCountByFamilyOnBlock(const string &blockCode) const
+{
+	auto it = itemsCountByFamilyAndBlock.find(blockCode);
+    return it != itemsCountByFamilyAndBlock.end() ? it->second : map<string,int>();
 }
 
 const set<Product> & StorageAllocationSolution::getNonAllocatedProducts() const{

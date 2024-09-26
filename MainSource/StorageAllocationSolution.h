@@ -2,6 +2,7 @@
 
 #include<iostream>
 #include<string>
+#include<optional>
 #include<vector>
 #include<map>
 #include<memory>
@@ -18,6 +19,7 @@ using std::map;
 using std::vector;
 using std::string;
 using std::set;
+using std::optional;
 using std::pair;
 using std::ofstream;
 using std::shared_ptr;
@@ -37,6 +39,9 @@ class StorageAllocationSolution : public AbstractSolution{
 	
 		static StorageSolutionEvaluator *Evaluator; 
 		map<Product, Position > productsAllocation {}; 
+		map<string, map<string,int>> itemsCountByFamilyAndBlock {};
+		map<unsigned long int, map<string, int>> itemsCountByFamilyAndShelf {};
+		map<const string, map<string, int>> itemsCountByFamilyAndCell {};
 		map<Product, vector<PickingRoute *> > routesByProduct {}; 
 		set<Product> notAllocatedProducts {}; 
 		double totalPenalty {}; 
@@ -137,6 +142,27 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @return The solution total penalty. 
 		 */
 		double getTotalPenalty() const; 
+		
+		/** 
+		 * @brief Get the number of items allocated in a cell grouped by family.
+		 * @param cellCode The cell code.
+		 * @return A map containing items count by family, if the cell exists and contains allocations. 
+		 */ 
+		const optional<map<string, int>> getItemsCountByFamilyOnCell(const string& cellCode) const; 
+		
+		/**
+		 * @brief Get the number of items allocated in a shelf grouped by family.
+		 * @param shelfId The shelf id. 
+		 * @return A map containing items count by family, if the cell exists and contains allocations. 
+		 */
+		const optional<map<string, int>> getItemsCountByFamilyOnShelf(unsigned long int shelfId) const; 
+		
+		/**
+		 * @brief Get the number of items allocated in a block grouped by family.
+		 * @param blockCode The block code.
+		 * @return A map containing items count by family, if the cell exists and contains allocations.
+		 */
+		const optional<map<string, int>> getItemsCountByFamilyOnBlock(const string& blockCode) const; 
 
 		/**
 		 * @brief Set a single product allocation. 
@@ -147,9 +173,9 @@ class StorageAllocationSolution : public AbstractSolution{
 		void setAllocation(const Cell &cell, int level, const Product &product);  
 		
 		/**
-		/// @brief Set solution total penalty. 
-		/// @param value Solution total penalty. 
-		*/
+		 * @brief Set solution total penalty. 
+		 * @param value Solution total penalty. 
+		 */
 		void setTotalPenalty(const double value); 
 		
 		/**
