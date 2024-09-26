@@ -45,3 +45,16 @@ TEST(TestStorageAllocationSolution, StorageAllocationSolutionPointerConstructor_
     EXPECT_DOUBLE_EQ(a->getSolutionValue(), b.getSolutionValue());
     EXPECT_DOUBLE_EQ(a->getRuntime(), b.getRuntime());
 }
+
+TEST(StorageAllocationSolution, StorageAllocationSolutionSetTotalPenalty_Test){
+    StorageAllocationSolution a;
+    a.setTotalPenalty(3.5);
+
+    EXPECT_DOUBLE_EQ(a.getTotalPenalty(), 3.5);
+
+    a.setTotalPenalty(-1.5);
+    EXPECT_DOUBLE_EQ(a.getTotalPenalty(), -1.5);
+
+    a.setTotalPenalty(0);
+    EXPECT_DOUBLE_EQ(a.getTotalPenalty(), 0);
+}
