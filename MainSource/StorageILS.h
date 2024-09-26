@@ -86,7 +86,7 @@ class InsideBlockSwap : public NeighborhoodStructure{
 
 /**
  * It creates neighbors by swapping the position of the most frequent products. The list of 
- * the most frequent products is given 
+ * the most frequent products is given.
  */
 class MostFrequentSwap : public NeighborhoodStructure{
 
@@ -113,8 +113,7 @@ class MostFrequentSwap : public NeighborhoodStructure{
 };
 
 /**
- * It creates neighbors by swapping the position of the most frequent products. The list of 
- * the most frequent products is given 
+ * It creates neighbors by swapping the position of products belonging to families with isolation constraints. 
  */
 class IsolatedFamilySwap :public NeighborhoodStructure{
 
