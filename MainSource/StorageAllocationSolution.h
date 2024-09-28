@@ -53,18 +53,6 @@ class StorageAllocationSolution : public AbstractSolution{
 		void setSolutionValue(double value) override;
 
 		/**
-         * @brief Set the total run time to get the solution. 
-         * @param time The total run time. 
-		 */
-        void setRuntime(double time) override; 
-
-		/**
-         * @brief Set the minimum delta to consider two solutions different. 
-         * @param minDelta The minimum delta to consider two solutions different. 
-		 */
-        void setMinDelta(double minDelta) override;
-
-		/**
 		 * @brief Update the solution value after a replacement of routes. 
 		 * @param oldRoutes Old routes.
 		 * @param newRoutes New routes. 
@@ -177,7 +165,19 @@ class StorageAllocationSolution : public AbstractSolution{
 		 * @param value Solution total penalty. 
 		 */
 		void setTotalPenalty(const double value); 
-		
+
+		/**
+         * @brief Set the total run time to get the solution. 
+         * @param time The total run time. 
+		 */
+        void setRuntime(double time) override; 
+
+		/**
+         * @brief Set the minimum delta to consider two solutions different. 
+         * @param minDelta The minimum delta to consider two solutions different. 
+		 */
+        void setMinDelta(double minDelta) override;
+
 		/**
 		 * @brief Set the product allocations. 
 		 * @param allocations The product allocations.
