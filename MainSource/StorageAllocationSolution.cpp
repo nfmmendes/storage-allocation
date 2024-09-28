@@ -122,7 +122,8 @@ void StorageAllocationSolution::setMinDelta(double minDelta){
 }
 
 void StorageAllocationSolution::setRuntime(double time){
-    runtime = time;
+    if(time >= 0)
+		runtime = time;
 }
 
 void StorageAllocationSolution::setSolutionValue(double value){
