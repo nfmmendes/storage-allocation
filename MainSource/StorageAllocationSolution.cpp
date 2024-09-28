@@ -277,9 +277,9 @@ double StorageAllocationSolution::getVariationAndUpdateAfterSwap(PickingRoute *o
 }
 
 void StorageAllocationSolution::setAllocation(MapAllocation &allocations, const vector<Order> &orders){
-	
-	for(auto &[product,allocation] : allocations)
-		this->productsAllocation[product] = allocation; 
+	productsAllocation.clear();
+	for(const auto &[product,allocation] : allocations)
+		productsAllocation[product] = allocation; 
 
 	for(const Order & order : orders){
 		const auto& items { order.getOrderItems() };
