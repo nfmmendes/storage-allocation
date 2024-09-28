@@ -29,6 +29,7 @@ using std::copy;
 using std::back_inserter;
 using std::string;
 using std::make_shared;
+using std::swap;
 
 
 StorageSolutionEvaluator * StorageAllocationSolution::Evaluator = NULL;
@@ -227,18 +228,14 @@ void StorageAllocationSolution::setTotalPenalty(const double value){
 } 
  
 void StorageAllocationSolution::proceedSwap(const Product &firstProduct, const Product &secondProduct, bool useTSPEvaluator){
-	//TODO: There is a bug related with the initialization of first as reference. 
-	const auto first { productsAllocation[firstProduct] };
-	const auto& second	{ productsAllocation[secondProduct] };
-	const auto& firstVertex { Evaluator->getVertex(first) };
-	const auto& secondVertex { Evaluator->getVertex(second) };
+	const auto& firstVertex { Evaluator->getVertex(productsAllocation[firstProduct]) };
+	const auto& secondVertex { Evaluator->getVertex(productsAllocation[secondProduct]) };
 	double delta = 0.0; 
 
 	double penaltyDelta = StorageAllocationSolution::Evaluator->evaluatePenaltyDelta(getProductAllocations(), firstProduct, secondProduct);
 	totalPenalty  += penaltyDelta; 
 	
-	productsAllocation[firstProduct] = second; 
-	productsAllocation[secondProduct] = first;
+	swap(productsAllocation[firstProduct], productsAllocation[secondProduct]);
 	
 	const auto& firstRoutes { routesByProduct[firstProduct] };
 	const auto& secondRoutes { routesByProduct[secondProduct] };
