@@ -58,3 +58,28 @@ TEST(StorageAllocationSolution, StorageAllocationSolutionSetTotalPenalty_Test){
     a.setTotalPenalty(0);
     EXPECT_DOUBLE_EQ(a.getTotalPenalty(), 0);
 }
+
+TEST(StorageAllocationSolution, StorageAllocationSolutionSetMinDelta_Test) {
+    StorageAllocationSolution a;
+
+    a.setMinDelta(3.5);
+
+    EXPECT_DOUBLE_EQ(a.getMinDelta(), 3.5);
+
+    a.setMinDelta(-2);
+
+    EXPECT_NE(a.getMinDelta(), -2);
+}
+
+
+TEST(StorageAllocationSolution, StorageAllocationSolutionSetRuntime_Test) {
+    StorageAllocationSolution a;
+
+    a.setRuntime(3.5);
+
+    EXPECT_DOUBLE_EQ(a.getRuntime(), 3.5);
+
+    a.setRuntime(-2);
+
+    EXPECT_NE(a.getRuntime(), -2);
+}
