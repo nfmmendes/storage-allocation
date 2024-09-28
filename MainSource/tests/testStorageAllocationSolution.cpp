@@ -1,8 +1,18 @@
-#include<gtest/gtest.h>
 #include "../StorageAllocationSolution.h"
-#include <memory>
-using std::make_unique;
 
+#include<gtest/gtest.h>
+#include <memory>
+#include <map>
+#include <vector>
+#include <utility>
+#include <string>
+#include "../Cell.h"
+#include "../Product.h"
+using std::make_unique;
+using std::vector;
+using std::map;
+using std::string;
+using std::make_pair;
 
 TEST(TestStorageAllocationSolution, StorageAllocationSolutionDefaultConstructor_Test){
     StorageAllocationSolution a; 
@@ -82,4 +92,65 @@ TEST(StorageAllocationSolution, StorageAllocationSolutionSetRuntime_Test) {
     a.setRuntime(-2);
 
     EXPECT_NE(a.getRuntime(), -2);
+}
+
+TEST(StorageAllocationSolution, StorageAllocationSolutionSetAllocations_Test){
+    vector<Product> products { 
+        { 1, "AAA", "family_a"},
+        { 2, "ABC", "family_a"},
+        { 3, "ACD", "family_a"},
+        { 4, "BBB", "family_b"},
+        { 5, "BBC", "family_b"},
+        { 6, "CCC", "family_c"},
+        { 7, "CCD", "family_c"},
+        { 8, "CCE", "family_c"},
+        { 9, "CCF", "family_c"},
+    };
+
+    vector<Cell> cells { 
+        {"cell1", 1, 1, 1, 1}, 
+        {"cell2", 1, 1, 1, 2},
+        {"cell3", 1, 1, 2, 1},
+        {"cell4", 1, 1, 2, 2},
+        {"cell5", 1, 2, 3, 1},
+        {"cell6", 1, 2, 3, 2},
+        {"cell7", 1, 1, 4, 1},
+        {"cell8", 1, 1, 4, 2},
+        {"cell11", 2, 1, 1, 1}, 
+        {"cell12", 2, 1, 1, 2},
+        {"cell13", 2, 1, 2, 1},
+        {"cell14", 2, 1, 2, 2},
+        {"cell15", 2, 1, 3, 1},
+        {"cell16", 2, 1, 3, 2},
+
+    };
+
+    map<Product, Position> allocations {
+        { products[0], make_pair(cells[0], 1) },
+        { products[1], make_pair(cells[2], 1) },
+        { products[2], make_pair(cells[3], 1) },
+        { products[3], make_pair(cells[5], 2) },
+        { products[4], make_pair(cells[5], 1) },
+        { products[5], make_pair(cells[8], 1) },
+        { products[6], make_pair(cells[10], 1) },
+        { products[7], make_pair(cells[11], 1) },
+        { products[8], make_pair(cells[12], 1) },
+    };
+    
+    StorageAllocationSolution a;
+    
+    EXPECT_TRUE(a.getProductAllocations().empty());
+    
+    a.setAllocation(allocations, vector<Order>());
+
+    EXPECT_EQ(a.getProductAllocations().size(), allocations.size());
+    EXPECT_EQ(a.getProductAllocations().at(products[0]).first.getCode(), cells[0].getCode());
+    EXPECT_EQ(a.getProductAllocations().at(products[1]).first.getCode(), cells[2].getCode());
+    EXPECT_EQ(a.getProductAllocations().at(products[2]).first.getCode(), cells[3].getCode());
+    EXPECT_EQ(a.getProductAllocations().at(products[3]).first.getCode(), cells[5].getCode());
+    EXPECT_EQ(a.getProductAllocations().at(products[4]).first.getCode(), cells[5].getCode());
+    EXPECT_EQ(a.getProductAllocations().at(products[5]).first.getCode(), cells[8].getCode());
+    EXPECT_EQ(a.getProductAllocations().at(products[6]).first.getCode(), cells[10].getCode());
+    EXPECT_EQ(a.getProductAllocations().at(products[7]).first.getCode(), cells[11].getCode());
+    EXPECT_EQ(a.getProductAllocations().at(products[8]).first.getCode(), cells[12].getCode());   
 }
