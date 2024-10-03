@@ -44,3 +44,34 @@ TEST(WarehouseTest, ReadWarehouseDataInput1) {
     EXPECT_EQ(expeditionPoints[1].getCoordinates(), make_pair(122, 60));
     EXPECT_EQ(expeditionPoints[2].getCoordinates(), make_pair(295, 50));
 }
+
+TEST(WarehouseTest, ReadWarehouseDataInput2) { 
+    string inputDir { TEST_INPUTS_DIR }; 
+    ifstream input(inputDir + "warehouse_input_2.txt");
+    Warehouse a;
+
+    a.readWarehouseData(input);
+
+    EXPECT_EQ(a.getBlocks().size(), 2);
+    EXPECT_EQ(a.getExpeditionPoints().size(), 3);
+
+    const auto blocks = a.getBlocks();
+
+    auto [coordX0, coordY0] = blocks[0].getBottomLeftCoords();
+    EXPECT_DOUBLE_EQ(coordX0, 0.0);
+    EXPECT_DOUBLE_EQ(coordY0, 0.0);
+
+    auto [coordX1, coordY1] = blocks[1].getBottomLeftCoords();
+    EXPECT_DOUBLE_EQ(coordX1, 310.0);
+    EXPECT_DOUBLE_EQ(coordY1, 100.0);
+
+    const auto & expeditionPoints = a.getExpeditionPoints();
+    EXPECT_EQ(expeditionPoints[0].getCoordinates(), make_pair(122, 15));
+    EXPECT_EQ(expeditionPoints[0].getBlockCode(), "BL1");
+
+    EXPECT_EQ(expeditionPoints[1].getCoordinates(), make_pair(122, 60));
+    EXPECT_EQ(expeditionPoints[1].getBlockCode(), "BL2");
+    
+    EXPECT_EQ(expeditionPoints[2].getCoordinates(), make_pair(295, 50));
+    EXPECT_EQ(expeditionPoints[2].getBlockCode(), "BL1");
+}
