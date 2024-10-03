@@ -5,7 +5,7 @@
 #include "../BlockExit.h"
 using std::string;
 
-TEST(BlockExitTests, BlocExitDefaultConstructor_Test){
+TEST(BlockExitTest, BlocExitDefaultConstructor){
     BlockExit b;
 
     EXPECT_EQ(b.getId(), 0);
@@ -15,7 +15,7 @@ TEST(BlockExitTests, BlocExitDefaultConstructor_Test){
     EXPECT_EQ(b.getBlockBName(), "");
 }
 
-TEST(BlockExitTests, BlockExitMemberConstructor_Test){
+TEST(BlockExitTest, BlockExitMemberConstructor){
     BlockExit b(4, 4.3, 5.9, "A", "B");
 
     EXPECT_EQ(b.getId(), 4);
@@ -25,7 +25,7 @@ TEST(BlockExitTests, BlockExitMemberConstructor_Test){
     EXPECT_EQ(b.getBlockBName(), "B");
 }
 
-TEST(BlockExitTests, BlockExitCopyConstructor_Test){
+TEST(BlockExitTest, BlockExitCopyConstructor){
     BlockExit a(3, 5.9, 1.2, "X", "Y");
     BlockExit b { a };
 
@@ -36,7 +36,7 @@ TEST(BlockExitTests, BlockExitCopyConstructor_Test){
     EXPECT_EQ(a.getBlockBName(), b.getBlockBName());
 }
 
-TEST(BlockExitTests, BlockExitEqualitOperator_Test){
+TEST(BlockExitTest, BlockExitEqualitOperator){
     BlockExit a(3, 5.9, 1.2, "X", "Y");
     BlockExit b { a };
 
@@ -63,7 +63,7 @@ TEST(BlockExitTests, BlockExitEqualitOperator_Test){
     EXPECT_FALSE(a == g);
 }
 
-TEST(BlockExitTests, BlockExitTests_BlockExitInequalityOperator_Test){
+TEST(BlockExitTest, BlockExitTest_BlockExitInequalityOperator){
     BlockExit a(3, 5.9, 1.2, "X", "Y");
     BlockExit b { a };
 
@@ -90,7 +90,7 @@ TEST(BlockExitTests, BlockExitTests_BlockExitInequalityOperator_Test){
     EXPECT_TRUE(a != g);
 }
 
-TEST(BlockExitTests, BlockExitAssignmentOperator_Test){
+TEST(BlockExitTest, BlockExitAssignmentOperator){
     BlockExit a(3, 5.9, 1.2, "X", "Y");
     BlockExit b(5, 8.8, 2.3, "A", "B");
 
@@ -110,7 +110,7 @@ TEST(BlockExitTests, BlockExitAssignmentOperator_Test){
     EXPECT_EQ(a.getBlockBName(), b.getBlockBName());
 }
 
-TEST(BlockExitTests, BlockExitLessThanOperator_Test){
+TEST(BlockExitTest, BlockExitLessThanOperator){
     BlockExit a(2, 2, 3, "A", "B");
     BlockExit b(1, 2, 3, "A", "B");
     BlockExit c(2, 2, 1, "A", "B");

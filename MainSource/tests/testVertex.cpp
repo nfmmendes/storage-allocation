@@ -3,7 +3,7 @@
 using namespace QuickTSP;
 
 
-TEST(TestVertex, VertexDefaultConstructor_Test){
+TEST(VertexTest, VertexDefaultConstructor){
     Vertex a;
 
     EXPECT_DOUBLE_EQ(a.getValue(), 0);
@@ -11,7 +11,7 @@ TEST(TestVertex, VertexDefaultConstructor_Test){
     EXPECT_EQ(a.getType(), "");
 }
 
-TEST(TestVertex, VertexMemberConstructor_Test){ 
+TEST(VertexTest, VertexMemberConstructor){ 
     Vertex a("LABEL", "TYPE", 10.4);
 
     EXPECT_DOUBLE_EQ(a.getValue(), 10.4);
@@ -19,7 +19,7 @@ TEST(TestVertex, VertexMemberConstructor_Test){
     EXPECT_EQ(a.getType(), "TYPE");
 }
 
-TEST(TestVertex, VertexCopyConstructor_Test){ 
+TEST(VertexTest, VertexCopyConstructor){ 
     Vertex a("LABEL", "TYPE", 10.4);
     Vertex b { a };
 
@@ -28,7 +28,7 @@ TEST(TestVertex, VertexCopyConstructor_Test){
     EXPECT_EQ(a.getType(), b.getType());
 }
 
-TEST(TestVertex, VertexSetLabel_Test) { 
+TEST(VertexTest, VertexSetLabel) { 
     Vertex a("LABEL", "TYPE", 10.4);
 
     string newLabel = "NEW_LABEL";
@@ -41,7 +41,7 @@ TEST(TestVertex, VertexSetLabel_Test) {
     EXPECT_EQ(a.getLabel(), newLabel);
 }
 
-TEST(TestVertex, VertexSetTYPE_Test) { 
+TEST(VertexTest, VertexSetTYPE) { 
     Vertex a("LABEL", "TYPE", 10.4);
 
     string newType = "NEW_TYPE";
@@ -54,7 +54,7 @@ TEST(TestVertex, VertexSetTYPE_Test) {
     EXPECT_EQ(a.getType(), newType);
 }
 
-TEST(TestVertex, VertexEqualityOperator_Test){
+TEST(VertexTest, VertexEqualityOperator){
     Vertex a("A", "T_A", 10.0);
     Vertex b("A", "T_A", 10.0);
     Vertex c("B", "T_A", 10.0);
@@ -69,7 +69,7 @@ TEST(TestVertex, VertexEqualityOperator_Test){
     EXPECT_TRUE(a == f);
 }
 
-TEST(TestVertex, VertexInequalityOperator_Test){
+TEST(VertexTest, VertexInequalityOperator){
     Vertex a("A", "T_A", 10.0);
     Vertex b("A", "T_A", 10.0);
     Vertex c("B", "T_A", 10.0);
@@ -84,7 +84,7 @@ TEST(TestVertex, VertexInequalityOperator_Test){
     EXPECT_FALSE(a != f);
 }
 
-TEST(TestVertex, VertexLessThanOperator_Test){
+TEST(VertexTest, VertexLessThanOperator){
     Vertex a("B", "T_B", 10.0);
     Vertex b("B", "T_B", 10.0);
     Vertex c("C", "T_B", 10.0);
@@ -104,7 +104,7 @@ TEST(TestVertex, VertexLessThanOperator_Test){
 }
 
 
-TEST(TestVertex, VertexAssingmentOperator_Test){
+TEST(VertexTest, VertexAssingmentOperator){
     Vertex a("B", "T_B", 10.0);
     Vertex b("A", "T_X", 9.0);
 

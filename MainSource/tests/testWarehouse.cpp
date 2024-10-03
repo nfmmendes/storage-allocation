@@ -4,9 +4,9 @@
 #include <vector>
 using std::vector;
 
-TEST(TestWarehouse, WarehouseDefaultConstructor_Test){
+TEST(WarehouseTest, WarehouseDefaultConstructor){
     Warehouse a;
-    
+
     EXPECT_EQ(a.getName(), "");
     EXPECT_TRUE(a.getBlocks().empty());
     EXPECT_TRUE(a.getExpeditionPoints().empty());

@@ -4,7 +4,7 @@
 
 using std::make_pair;
 
-TEST(TestCorridor, CorridorDefaultConstructor_Test){
+TEST(CorridorTest, CorridorDefaultConstructor){
     Corridor a;
 
     EXPECT_EQ(a.getId(), 0);
@@ -14,7 +14,7 @@ TEST(TestCorridor, CorridorDefaultConstructor_Test){
     EXPECT_DOUBLE_EQ(a.getLength(), 0.0);
 }
 
-TEST(TestCorridor, CorridorMemberConstructor_Test){
+TEST(CorridorTest, CorridorMemberConstructor){
     Corridor a(3, "A", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
 
     EXPECT_EQ(a.getId(), 3);
@@ -24,7 +24,7 @@ TEST(TestCorridor, CorridorMemberConstructor_Test){
     EXPECT_EQ(a.getLength(), 3.9);
 }
 
-TEST(TestCorridor, CorridorCopyConstructor_Test){
+TEST(CorridorTest, CorridorCopyConstructor){
     Corridor a(3, "A", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
     Corridor b { a }; 
 
@@ -35,7 +35,7 @@ TEST(TestCorridor, CorridorCopyConstructor_Test){
     EXPECT_EQ(a.getLength(), b.getLength());
 }
 
-TEST(TestCorridor, CorridorGetEndCoords_Test){
+TEST(CorridorTest, CorridorGetEndCoords){
     Corridor a;
 
     EXPECT_DOUBLE_EQ(a.getEndCoords().first, 0);
@@ -43,7 +43,7 @@ TEST(TestCorridor, CorridorGetEndCoords_Test){
 }
 
 
-TEST(TestCorridor, CorridorAssignentOperator_Test){
+TEST(CorridorTest, CorridorAssignentOperator){
     Corridor a(3, "A", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
     Corridor b(5, "B", VERTICAL, UP_DOWN, {1.2, 4.9}, 1.0); 
 
@@ -63,7 +63,7 @@ TEST(TestCorridor, CorridorAssignentOperator_Test){
     EXPECT_DOUBLE_EQ(a.getLength(), b.getLength());
 }
 
-TEST(TestCorridor, CorridorEqualsOperator_Test){ 
+TEST(CorridorTest, CorridorEqualsOperator){ 
     Corridor a(3, "A", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
     Corridor b(5, "B", VERTICAL, UP_DOWN, {1.2, 4.9}, 1.0); 
     Corridor c(3, "A", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
@@ -86,7 +86,7 @@ TEST(TestCorridor, CorridorEqualsOperator_Test){
     EXPECT_TRUE(a == c);
 }
 
-TEST(TestCorridor, CorridorInequalsOperator_Test){ 
+TEST(CorridorTest, CorridorInequalsOperator){ 
     Corridor a(3, "A", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
     Corridor b(5, "B", VERTICAL, UP_DOWN, {1.2, 4.9}, 1.0); 
     Corridor c(3, "A", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
@@ -109,7 +109,7 @@ TEST(TestCorridor, CorridorInequalsOperator_Test){
     EXPECT_FALSE(a != c);
 }
 
-TEST(TestCorridor, CorridorLessThanOperatorWithDifferentBlocks_Test){
+TEST(CorridorTest, CorridorLessThanOperatorWithDifferentBlocks){
     Corridor a(3, "B", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
     Corridor b(3, "C", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
     Corridor c(3, "A", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
@@ -118,7 +118,7 @@ TEST(TestCorridor, CorridorLessThanOperatorWithDifferentBlocks_Test){
     EXPECT_FALSE(a < c);
 }
 
-TEST(TestCorridor, CorridorLessThanOperatorWithDifferentBegins_Test){
+TEST(CorridorTest, CorridorLessThanOperatorWithDifferentBegins){
     Corridor a(3, "B", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
     Corridor b(3, "B", HORIZONTAL, LEFT_TO_RIGHT, {5.5, 3.2}, 3.9);
     Corridor c(3, "B", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 4.2}, 3.9);

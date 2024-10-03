@@ -54,7 +54,7 @@ vector<Vertex> vertexes { {"A", "X", 1},
     };
 
 
-TEST(TestGraph, GraphDefaultConstructor_Test){
+TEST(GraphTest, GraphDefaultConstructor){
     Graph a;
 
     EXPECT_TRUE(a.getVertexes().empty());
@@ -62,7 +62,7 @@ TEST(TestGraph, GraphDefaultConstructor_Test){
     EXPECT_EQ(a.getName(), "");
 }
 
-TEST(TestGraph, GraphMemberConstructor_Test){
+TEST(GraphTest, GraphMemberConstructor){
 
     Graph a(vertexes, arcs, "graph");
 
@@ -99,7 +99,7 @@ TEST(TestGraph, GraphMemberConstructor_Test){
     
 }
 
-TEST(TestGraph, GraphCopyConstructor_Test){
+TEST(GraphTest, GraphCopyConstructor){
     
     Graph a(vertexes, arcs, "graph");
     Graph b { a };
@@ -133,7 +133,7 @@ TEST(TestGraph, GraphCopyConstructor_Test){
 }
 
 
-TEST(TestGraph, GraphAssignmentOperator_Test){
+TEST(GraphTest, GraphAssignmentOperator){
     Graph a(vertexes, arcs, "graph");
     Graph b(vector<Vertex>{vertexes[0], 
                            vertexes[1], 

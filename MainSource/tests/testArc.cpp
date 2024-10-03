@@ -4,7 +4,7 @@
 using namespace QuickTSP;
 
 
-TEST(ArcTests, TestDefaultMemberConstructor)
+TEST(ArcTest, TestDefaultMemberConstructor)
 {
     Vertex beginVertex, endVertex;
     Arc arc("label", 1.0, beginVertex, endVertex);
@@ -16,7 +16,7 @@ TEST(ArcTests, TestDefaultMemberConstructor)
     EXPECT_EQ(arc.getEndVertex(), endVertex);
 }
 
-TEST(ArcTests, TestMemberConstructor){
+TEST(ArcTest, TestMemberConstructor){
     Vertex beginVertex, endVertex;
     Arc arc("label", 1.0, beginVertex, endVertex,false);
     
@@ -27,7 +27,7 @@ TEST(ArcTests, TestMemberConstructor){
     EXPECT_EQ(arc.getEndVertex(), endVertex);
 }
 
-TEST(ArcTests, TestCopyConstructor){
+TEST(ArcTest, TestCopyConstructor){
     Vertex beginVertex, endVertex;
     Arc arc("label", 1.0, beginVertex, endVertex,false);
 
@@ -41,7 +41,7 @@ TEST(ArcTests, TestCopyConstructor){
 }
 
 
-TEST(ArcTests, TestAssignment){
+TEST(ArcTest, TestAssignment){
     Vertex beginVertexA("vertexBeginA", "A");
     Vertex endVertexA("vertexEndA", "A");
     Arc arc("labelA", 2.0, beginVertexA, endVertexA);
@@ -66,7 +66,7 @@ TEST(ArcTests, TestAssignment){
     EXPECT_EQ(arc.getEndVertex(), other.getEndVertex());
 }
 
-TEST(ArcTests, TestEqualsOperator){
+TEST(ArcTest, TestEqualsOperator){
     Vertex beginVertexA("vertexBeginA", "A");
     Vertex endVertexA("vertexEndA", "A");
     Arc arc("labelA", 2.0, beginVertexA, endVertexA);
@@ -83,7 +83,7 @@ TEST(ArcTests, TestEqualsOperator){
     EXPECT_TRUE(arc == other);
 }
 
-TEST(ArcTests, TestLowerThanOperatorWithSameLabelArcs){
+TEST(ArcTest, TestLowerThanOperatorWithSameLabelArcs){
     Vertex beginVertexA("vertexBeginA", "A");
     Vertex endVertexA("vertexEndA", "A");
     Arc arcA("label", 2.0, beginVertexA, endVertexA);
@@ -95,7 +95,7 @@ TEST(ArcTests, TestLowerThanOperatorWithSameLabelArcs){
     EXPECT_TRUE(arcB < arcA);
 }
 
-TEST(ArcTests, TestLowerThanOperatorWithDifferentLabelArcs){
+TEST(ArcTest, TestLowerThanOperatorWithDifferentLabelArcs){
     Vertex beginVertexA("vertexBeginA", "A");
     Vertex endVertexA("vertexEndA", "A");
     Arc arcA("labelA", 2.0, beginVertexA, endVertexA);

@@ -11,7 +11,7 @@
 #include "../Curve.h"
 
 
-TEST(BlockTests, TestDefaultConstructor){
+TEST(BlockTest, TestDefaultConstructor){
     Block b;
     
     EXPECT_TRUE(b.getShelves().empty());
@@ -21,7 +21,7 @@ TEST(BlockTests, TestDefaultConstructor){
     EXPECT_TRUE(b.getName().empty());
 }
 
-TEST(BlockTests, TestMemberConstructor){
+TEST(BlockTest, TestMemberConstructor){
     Block b("Block", 4, 5, 10, 12);
 
     EXPECT_EQ(b.getName(), "Block");
@@ -36,19 +36,19 @@ TEST(BlockTests, TestMemberConstructor){
     EXPECT_TRUE(b.getCurves().empty());
 }
 
-TEST(BlockTests, TestMemberConstructorWithNegativeWidth){
+TEST(BlockTest, TestMemberConstructorWithNegativeWidth){
     Block b("", 0, 0, -5, 1);
 
     EXPECT_DOUBLE_EQ(b.getWidth(), 0);
 }
 
-TEST(BlockTests, TestMemberConstructorWithNegativeLength){
+TEST(BlockTest, TestMemberConstructorWithNegativeLength){
     Block b("", 0, 0, 1, -5);
 
     EXPECT_DOUBLE_EQ(b.getLenght(), 0);
 }
 
-TEST(BlockTests, TestCopyConstructor){
+TEST(BlockTest, TestCopyConstructor){
     Shelf s1(15, {}, {0,0}, "Block", 1, 1, 1, 1);
     Shelf s2(13, {}, {0,0}, "Block", 1, 1, 1, 1);
     Shelf s3(28, {}, {0,0}, "Block", 1, 1, 1, 1);
@@ -80,7 +80,7 @@ TEST(BlockTests, TestCopyConstructor){
     EXPECT_TRUE(result);
 }
 
-TEST(BlockTests, TestSetBlockCurvesEmpty){
+TEST(BlockTest, TestSetBlockCurvesEmpty){
     Block block;
     block.setCurves(vector<Curve>());
 
@@ -88,7 +88,7 @@ TEST(BlockTests, TestSetBlockCurvesEmpty){
 }
 
 
-TEST(BlockTests, TestSetBlockCurves){
+TEST(BlockTest, TestSetBlockCurves){
     Curve a(5, 1, 2, Point("A", 3, 4), Point("B", 5, 6));
     Curve b(6, 5, 6, Point("C", 8, 9), Point("D", 1, 4));
     Curve c(7, 0, 3, Point("E", 7, 5), Point("F", 3, 9));
@@ -104,14 +104,14 @@ TEST(BlockTests, TestSetBlockCurves){
     }
 }
 
-TEST(BlockTests, TestSetBlockCorridorsEmpty){
+TEST(BlockTest, TestSetBlockCorridorsEmpty){
     Block b;
     b.setCorridors(vector<Corridor>());
 
     EXPECT_TRUE(b.getCorridors().empty());
 }
 
-TEST(BlockTests, TestSetBlockCorridors){ 
+TEST(BlockTest, TestSetBlockCorridors){ 
     Corridor a (1, "A", "HORIZONTAL", "LEFT_TO_RIGHT", {2, 4}, 3);
     Corridor b (2, "B", "VERTICAL", "UP_DOWN", {2, 4}, 3);
     Corridor c (3, "C", "HORIZONTAL", "RIGHT_TO_LEFT", {2, 4}, 3);
@@ -127,14 +127,14 @@ TEST(BlockTests, TestSetBlockCorridors){
     }
 }
 
-TEST(BlockTests, TestSetShelvesEmpty){
+TEST(BlockTest, TestSetShelvesEmpty){
     Block b;
     b.setShelves(vector<Shelf>());
 
     EXPECT_TRUE(b.getShelves().empty());
 }
 
-TEST(BlockTests, TestSetShelves){
+TEST(BlockTest, TestSetShelves){
     Shelf a(1, {}, {1, 2}, "A", 3, 5, 2, 7);
     Shelf b(2, {}, {3, 5}, "A", 6, 2, 1, 5);
     Shelf c(3, {}, {4, 7}, "A", 1, 4, 3, 8);
@@ -156,7 +156,7 @@ TEST(BlockTests, TestSetShelves){
     EXPECT_TRUE(result);
 }
 
-TEST(BlockTests, TestAddExits){
+TEST(BlockTest, TestAddExits){
     Block b;
     BlockExit exit(1, 9, 2, "A", "B");
 
@@ -165,7 +165,7 @@ TEST(BlockTests, TestAddExits){
     EXPECT_EQ(b.getExits()[0], exit);
 }
 
-TEST(BlockTests, TestSetName){
+TEST(BlockTest, TestSetName){
     Block b;
 
     b.setName("Test");
@@ -173,14 +173,14 @@ TEST(BlockTests, TestSetName){
     EXPECT_EQ(b.getName(), "Test");
 }
 
-TEST(BlockTests, TestLowerThanOperator){
+TEST(BlockTest, TestLowerThanOperator){
     Block b("AAA", 0, 0, 0, 0); 
     Block c("BBB", 0, 0, 0, 0);
 
     EXPECT_TRUE(b < c);
 }
 
-TEST(BlockTests, TestAssignmentOperator){
+TEST(BlockTest, TestAssignmentOperator){
     Shelf s1(15, {}, {0,0}, "Block", 1, 1, 1, 1);
     Shelf s2(13, {}, {0,0}, "Block", 1, 1, 1, 1);
     Shelf s3(28, {}, {0,0}, "Block", 1, 1, 1, 1);

@@ -14,14 +14,14 @@ using std::map;
 using std::string;
 using std::make_pair;
 
-TEST(TestStorageAllocationSolution, StorageAllocationSolutionDefaultConstructor_Test){
+TEST(StorageAllocationSolutionTest, StorageAllocationSolutionDefaultConstructor){
     StorageAllocationSolution a; 
     
     EXPECT_EQ(a.getProductAllocations().size(), 0);
     EXPECT_EQ(a.getNonAllocatedProducts().size(), 0);
 }
 
-TEST(TestStorageAllocationSolution, StorageAllocationSolutionMemberConstructor_Test){
+TEST(StorageAllocationSolutionTest, StorageAllocationSolutionMemberConstructor){
     double solutionValue = 1.5;
     double time = 5.6;
     double minDelta = 0.002;
@@ -32,7 +32,7 @@ TEST(TestStorageAllocationSolution, StorageAllocationSolutionMemberConstructor_T
     EXPECT_DOUBLE_EQ(a.getRuntime(), time);
 }
 
-TEST(TestStorageAllocationSolution, StorageAllocationSolutionCopyConstructor_test){
+TEST(StorageAllocationSolutionTest, StorageAllocationSolutionCopyConstructor){
     double solutionValue = 1.5;
     double time = 5.6;
     double minDelta = 0.002;
@@ -44,7 +44,7 @@ TEST(TestStorageAllocationSolution, StorageAllocationSolutionCopyConstructor_tes
     EXPECT_DOUBLE_EQ(a.getRuntime(), b.getRuntime());
 }
 
-TEST(TestStorageAllocationSolution, StorageAllocationSolutionPointerConstructor_test){
+TEST(StorageAllocationSolutionTest, StorageAllocationSolutionPointerConstructor){
     double solutionValue = 1.5;
     double time = 5.6;
     double minDelta = 0.002;
@@ -56,7 +56,7 @@ TEST(TestStorageAllocationSolution, StorageAllocationSolutionPointerConstructor_
     EXPECT_DOUBLE_EQ(a->getRuntime(), b.getRuntime());
 }
 
-TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetTotalPenalty_Test){
+TEST(StorageAllocationSolutionTest, StorageAllocationSolutionSetTotalPenalty){
     StorageAllocationSolution a;
     a.setTotalPenalty(3.5);
 
@@ -69,7 +69,7 @@ TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetTotalPenalty_Tes
     EXPECT_DOUBLE_EQ(a.getTotalPenalty(), 0);
 }
 
-TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetMinDelta_Test) {
+TEST(StorageAllocationSolutionTest, StorageAllocationSolutionSetMinDelta) {
     StorageAllocationSolution a;
 
     a.setMinDelta(3.5);
@@ -82,7 +82,7 @@ TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetMinDelta_Test) {
 }
 
 
-TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetRuntime_Test) {
+TEST(StorageAllocationSolutionTest, StorageAllocationSolutionSetRuntime) {
     StorageAllocationSolution a;
 
     a.setRuntime(3.5);
@@ -94,7 +94,7 @@ TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetRuntime_Test) {
     EXPECT_NE(a.getRuntime(), -2);
 }
 
-TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetAllocations_Test){
+TEST(StorageAllocationSolutionTest, StorageAllocationSolutionSetAllocations){
     vector<Product> products { 
         { 1, "AAA", "family_a"},
         { 2, "ABC", "family_a"},

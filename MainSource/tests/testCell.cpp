@@ -5,7 +5,7 @@
 #include "../Cell.h"
 
 
-TEST(TestCell, CellDefaultConstructor_Test){ 
+TEST(CellTest, CellDefaultConstructor){ 
     Cell a;
     
     EXPECT_EQ(a.getCode(), "");
@@ -15,7 +15,7 @@ TEST(TestCell, CellDefaultConstructor_Test){
     EXPECT_EQ(a.getLevels(), 1);
 }
 
-TEST(TestCell, CellMemberConstructor_Test){
+TEST(CellTest, CellMemberConstructor){
     Cell a("A", 2, 3, 5, 4);
 
     EXPECT_EQ(a.getCode(), "A");
@@ -25,7 +25,7 @@ TEST(TestCell, CellMemberConstructor_Test){
     EXPECT_EQ(a.getColumn(), 4);
 }
 
-TEST(TestCell, CellCopyConstructor_Test){
+TEST(CellTest, CellCopyConstructor){
     Cell a("A", 2, 3, 5, 4);
     Cell b { a };
 
@@ -36,7 +36,7 @@ TEST(TestCell, CellCopyConstructor_Test){
     EXPECT_EQ(a.getColumn(), b.getColumn()); 
 }
 
-TEST(TestCell, CellEqualityOperator_Test){
+TEST(CellTest, CellEqualityOperator){
     Cell a("A", 2, 3, 5, 4);
     Cell b("A", 2, 3, 5, 4);
     Cell c("B", 2, 3, 5, 4);
@@ -53,7 +53,7 @@ TEST(TestCell, CellEqualityOperator_Test){
     EXPECT_FALSE(a == g);
 }
 
-TEST(TestCell, CellTestAssignmentOperator_Test){
+TEST(CellTest, CellTestAssignmentOperator){
     Cell a("A", 2, 3, 5, 4);
     Cell b("B", 3, 8, 4, 9);
 
@@ -72,14 +72,14 @@ TEST(TestCell, CellTestAssignmentOperator_Test){
     EXPECT_EQ(a.getColumn(), b.getColumn()); 
 }
 
-TEST(TestCell, CellLessThanOperatorEqualValues_Test){
+TEST(CellTest, CellLessThanOperatorEqualValues){
     Cell a("A", 2, 3, 5, 4);
     Cell b("A", 2, 3, 5, 4);
 
     EXPECT_FALSE(a < b);
 }
 
-TEST(TestCell, CellLessThanOperatorDifferentCodes_Test){
+TEST(CellTest, CellLessThanOperatorDifferentCodes){
     Cell a("B", 2, 3, 5, 4);
     Cell b("A", 2, 3, 5, 4);
     Cell c("C", 2, 3, 5, 4);
@@ -88,7 +88,7 @@ TEST(TestCell, CellLessThanOperatorDifferentCodes_Test){
     EXPECT_TRUE(a < c);
 }
 
-TEST(TestCell, CellLessThanOperatorDifferentIdShelves_Test){
+TEST(CellTest, CellLessThanOperatorDifferentIdShelves){
     Cell a("A", 2, 3, 5, 4);
     Cell b("A", 1, 3, 5, 4);
     Cell c("A", 3, 3, 5, 4);
@@ -97,7 +97,7 @@ TEST(TestCell, CellLessThanOperatorDifferentIdShelves_Test){
     EXPECT_TRUE(a < c);
 }
 
-TEST(TestCell, CellLessThanOperatorDifferentRows_Test){
+TEST(CellTest, CellLessThanOperatorDifferentRows){
     Cell a("A", 2, 4, 5, 4);
     Cell b("A", 2, 1, 5, 4);
     Cell c("A", 2, 5, 5, 4);
@@ -106,7 +106,7 @@ TEST(TestCell, CellLessThanOperatorDifferentRows_Test){
     EXPECT_TRUE(a < c);
 }
 
-TEST(TestCell, CellLessThanOperatorDifferentColums_Test){
+TEST(CellTest, CellLessThanOperatorDifferentColums){
     Cell a("A", 2, 3, 2, 4);
     Cell b("A", 2, 3, 1, 4);
     Cell c("A", 2, 3, 3, 4);
@@ -115,7 +115,7 @@ TEST(TestCell, CellLessThanOperatorDifferentColums_Test){
     EXPECT_TRUE(a < c);
 }
 
-TEST(TestCell, CellLessThanOperatorDifferentLevels_Test){
+TEST(CellTest, CellLessThanOperatorDifferentLevels){
     Cell a("A", 2, 3, 5, 2);
     Cell b("A", 2, 3, 5, 1);
     Cell c("A", 2, 3, 5, 3);

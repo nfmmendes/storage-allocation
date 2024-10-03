@@ -5,7 +5,7 @@
 using std::pair;
 using std::make_pair;
 
-TEST(TestExpeditionPoint, ExpeditionPointConstructor_Test){
+TEST(ExpeditionPointTest, ExpeditionPointConstructor){
     ExpeditionPoint a("A", "b", {3.0, 5.2});
     
     EXPECT_EQ(a.getCode(), "A");
@@ -13,7 +13,7 @@ TEST(TestExpeditionPoint, ExpeditionPointConstructor_Test){
     EXPECT_EQ(a.getCoordinates(), make_pair(3.0, 5.2));
 }
 
-TEST(TestExpeditionPoint, ExpeditionPointCopyConstructor_Test){
+TEST(ExpeditionPointTest, ExpeditionPointCopyConstructor){
     ExpeditionPoint a("A", "b", {3.0, 5.2});
     ExpeditionPoint b { a };
 

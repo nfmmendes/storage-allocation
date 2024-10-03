@@ -4,7 +4,7 @@
 #include <gmock/gmock.h>
 using ::testing::Throws;
 
-TEST(TestIsolatedFamily, IsolatedFamilyDefaultConstructor_Test){
+TEST(IsolatedFamilyTest, IsolatedFamilyDefaultConstructor){
     IsolatedFamily a;
 
     EXPECT_EQ(a.getCode(), "");
@@ -12,7 +12,7 @@ TEST(TestIsolatedFamily, IsolatedFamilyDefaultConstructor_Test){
     EXPECT_EQ(a.getLevel(), "");
 }
 
-TEST(TestIsolatedFamily, IsolatedFamilyMemberConstructor_Test){
+TEST(IsolatedFamilyTest, IsolatedFamilyMemberConstructor){
     IsolatedFamily a("Force", "Level", "Code");
 
     EXPECT_EQ(a.getCode(), "Code");
@@ -21,7 +21,7 @@ TEST(TestIsolatedFamily, IsolatedFamilyMemberConstructor_Test){
 }
 
 
-TEST(TestIsolatedFamily, IsolatedFamilyCopyConstructor_Test){
+TEST(IsolatedFamilyTest, IsolatedFamilyCopyConstructor){
     IsolatedFamily a("Force", "Level", "Code");
     IsolatedFamily b { a };
 
@@ -30,7 +30,7 @@ TEST(TestIsolatedFamily, IsolatedFamilyCopyConstructor_Test){
     EXPECT_EQ(a.getLevel(), b.getLevel());
 }
 
-TEST(TestIsolatedFamily, IsolatedFamilyAssignmentOperator_Test){
+TEST(IsolatedFamilyTest, IsolatedFamilyAssignmentOperator){
     IsolatedFamily a("Force", "Level", "Code");
     IsolatedFamily b("No", "Pi", "Delta"); 
     
@@ -46,7 +46,7 @@ TEST(TestIsolatedFamily, IsolatedFamilyAssignmentOperator_Test){
     EXPECT_EQ(a.getLevel(), b.getLevel());
 }
 
-TEST(TestIsolatedFamily, IsolatedFamilyEqualityOperator_Test){
+TEST(IsolatedFamilyTest, IsolatedFamilyEqualityOperator){
     IsolatedFamily a("Force", "Level", "Code");
     IsolatedFamily b("Force", "Level", "Code");
     IsolatedFamily c("X", "Level", "Code");
@@ -60,7 +60,7 @@ TEST(TestIsolatedFamily, IsolatedFamilyEqualityOperator_Test){
 }
 
 
-TEST(TestIsolatedFamily, IsolatedFamilyIsLowerOrEqualLevel_Test){
+TEST(IsolatedFamilyTest, IsolatedFamilyIsLowerOrEqualLevel){
     EXPECT_TRUE(IsolatedFamily::isLowerOrEqualLevel(CELL_LEVEL, CELL_LEVEL));
     EXPECT_TRUE(IsolatedFamily::isLowerOrEqualLevel(CELL_LEVEL, SHELF_LEVEL));
     EXPECT_TRUE(IsolatedFamily::isLowerOrEqualLevel(CELL_LEVEL, BLOCK_LEVEL));
