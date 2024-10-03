@@ -143,14 +143,8 @@ TEST(StorageAllocationSolution, StorageAllocationSolutionSetAllocations_Test){
     
     a.setAllocation(allocations, vector<Order>());
 
+    int sequence[] = { 0, 2, 3, 5, 5, 8, 10, 11, 12};
     EXPECT_EQ(a.getProductAllocations().size(), allocations.size());
-    EXPECT_EQ(a.getProductAllocations().at(products[0]).first.getCode(), cells[0].getCode());
-    EXPECT_EQ(a.getProductAllocations().at(products[1]).first.getCode(), cells[2].getCode());
-    EXPECT_EQ(a.getProductAllocations().at(products[2]).first.getCode(), cells[3].getCode());
-    EXPECT_EQ(a.getProductAllocations().at(products[3]).first.getCode(), cells[5].getCode());
-    EXPECT_EQ(a.getProductAllocations().at(products[4]).first.getCode(), cells[5].getCode());
-    EXPECT_EQ(a.getProductAllocations().at(products[5]).first.getCode(), cells[8].getCode());
-    EXPECT_EQ(a.getProductAllocations().at(products[6]).first.getCode(), cells[10].getCode());
-    EXPECT_EQ(a.getProductAllocations().at(products[7]).first.getCode(), cells[11].getCode());
-    EXPECT_EQ(a.getProductAllocations().at(products[8]).first.getCode(), cells[12].getCode());   
+    for(auto i = 0; i < products.size(); i++)
+        EXPECT_EQ(a.getProductAllocations().at(products[i]).first.getCode(), cells[sequence[i]].getCode());
 }
