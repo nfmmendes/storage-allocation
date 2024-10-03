@@ -22,5 +22,7 @@ set(TESTS_SOURCE_DIRECTORY "${CMAKE_SOURCE_DIR}/tests/")
 file(GLOB TESTS_SOURCE_CODE "${TESTS_SOURCE_DIRECTORY}/*.cpp")
 list(REMOVE_ITEM SOURCE_CODE "${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp")
 
+add_definitions(-DTEST_INPUTS_DIR="${TESTS_SOURCE_DIRECTORY}inputfiles/")
+
 add_executable(tests ${TESTS_SOURCE_CODE}  ${SOURCE_CODE})
 target_link_libraries(tests GTest::gtest_main  GTest::gmock_main)
