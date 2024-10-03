@@ -60,7 +60,7 @@ TEST(TestIsolatedFamily, IsolatedFamilyEqualityOperator_Test){
 }
 
 
-TEST(TestISolatedFamily, IsolatedFamilyIsLowerOrEqualLevel_Test){
+TEST(TestIsolatedFamily, IsolatedFamilyIsLowerOrEqualLevel_Test){
     EXPECT_TRUE(IsolatedFamily::isLowerOrEqualLevel(CELL_LEVEL, CELL_LEVEL));
     EXPECT_TRUE(IsolatedFamily::isLowerOrEqualLevel(CELL_LEVEL, SHELF_LEVEL));
     EXPECT_TRUE(IsolatedFamily::isLowerOrEqualLevel(CELL_LEVEL, BLOCK_LEVEL));

@@ -109,7 +109,7 @@ TEST(TestCorridor, CorridorInequalsOperator_Test){
     EXPECT_FALSE(a != c);
 }
 
-TEST(Test_Corridor, CorridorLessThanOperatorWithDifferentBlocks_Test){
+TEST(TestCorridor, CorridorLessThanOperatorWithDifferentBlocks_Test){
     Corridor a(3, "B", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
     Corridor b(3, "C", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
     Corridor c(3, "A", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
@@ -118,7 +118,7 @@ TEST(Test_Corridor, CorridorLessThanOperatorWithDifferentBlocks_Test){
     EXPECT_FALSE(a < c);
 }
 
-TEST(Test_Corridor, CorridorLessThanOperatorWithDifferentBegins_Test){
+TEST(TestCorridor, CorridorLessThanOperatorWithDifferentBegins_Test){
     Corridor a(3, "B", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 3.2}, 3.9);
     Corridor b(3, "B", HORIZONTAL, LEFT_TO_RIGHT, {5.5, 3.2}, 3.9);
     Corridor c(3, "B", HORIZONTAL, LEFT_TO_RIGHT, {4.5, 4.2}, 3.9);

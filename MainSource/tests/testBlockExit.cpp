@@ -110,7 +110,7 @@ TEST(BlockExitTests, BlockExitAssignmentOperator_Test){
     EXPECT_EQ(a.getBlockBName(), b.getBlockBName());
 }
 
-TEST(TestBlockExits, BlockExitLessThanOperator_Test){
+TEST(BlockExitTests, BlockExitLessThanOperator_Test){
     BlockExit a(2, 2, 3, "A", "B");
     BlockExit b(1, 2, 3, "A", "B");
     BlockExit c(2, 2, 1, "A", "B");

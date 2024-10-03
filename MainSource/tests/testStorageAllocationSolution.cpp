@@ -56,7 +56,7 @@ TEST(TestStorageAllocationSolution, StorageAllocationSolutionPointerConstructor_
     EXPECT_DOUBLE_EQ(a->getRuntime(), b.getRuntime());
 }
 
-TEST(StorageAllocationSolution, StorageAllocationSolutionSetTotalPenalty_Test){
+TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetTotalPenalty_Test){
     StorageAllocationSolution a;
     a.setTotalPenalty(3.5);
 
@@ -69,7 +69,7 @@ TEST(StorageAllocationSolution, StorageAllocationSolutionSetTotalPenalty_Test){
     EXPECT_DOUBLE_EQ(a.getTotalPenalty(), 0);
 }
 
-TEST(StorageAllocationSolution, StorageAllocationSolutionSetMinDelta_Test) {
+TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetMinDelta_Test) {
     StorageAllocationSolution a;
 
     a.setMinDelta(3.5);
@@ -82,7 +82,7 @@ TEST(StorageAllocationSolution, StorageAllocationSolutionSetMinDelta_Test) {
 }
 
 
-TEST(StorageAllocationSolution, StorageAllocationSolutionSetRuntime_Test) {
+TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetRuntime_Test) {
     StorageAllocationSolution a;
 
     a.setRuntime(3.5);
@@ -94,7 +94,7 @@ TEST(StorageAllocationSolution, StorageAllocationSolutionSetRuntime_Test) {
     EXPECT_NE(a.getRuntime(), -2);
 }
 
-TEST(StorageAllocationSolution, StorageAllocationSolutionSetAllocations_Test){
+TEST(TestStorageAllocationSolution, StorageAllocationSolutionSetAllocations_Test){
     vector<Product> products { 
         { 1, "AAA", "family_a"},
         { 2, "ABC", "family_a"},
