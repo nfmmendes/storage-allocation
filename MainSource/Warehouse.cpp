@@ -224,10 +224,6 @@ void Warehouse::insertNewBlock(const Block &b){
     blocks.push_back(b);
 }
 
-void Warehouse::addProductAllocation(const pair<Product, Cell> & productAllocation){
-    this->productAllocation.push_back(make_pair(productAllocation.first, productAllocation.second));
-}
-
 const string& Warehouse::getName() const { return name;}
 
 const vector<Block>& Warehouse::getBlocks()  { return blocks;}
@@ -239,10 +235,6 @@ map<string, Block> Warehouse::getBlocksByName(){
 		result[blocks[i].getName()] = blocks[i];
 	
 	return result; 
-}
-
-const vector<pair<Product, Cell>>& Warehouse::getProductAllocation() const {
-    return productAllocation;
 }
 
 const vector<ExpeditionPoint>& Warehouse::getExpeditionPoints(){

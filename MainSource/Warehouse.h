@@ -20,7 +20,6 @@ class Warehouse{
         private:
             string name;
             vector<Block> blocks;  
-            vector<pair<Product, Cell> > productAllocation;
             vector<ExpeditionPoint> expeditionPoints;    ///<! Points where the products must be delivered after be picked on shelves
         public:
             /**
@@ -53,12 +52,6 @@ class Warehouse{
             void insertNewBlock(const Block &block);
 
             /**
-             * @brief Set the product allocation in the warehouse. 
-             * @param productionAllocation A list of product/cell allocations.
-             */
-            void setProductAllocation(const pair<Product, Cell> & productionAllocation); 
-
-            /**
              * @brief Add a product allocation.
              * @param productionAllocation A pair containing the product and its respective position.
              */
@@ -87,12 +80,6 @@ class Warehouse{
 			 * @return Get a list with the expedition points. 
              */
 			const vector<ExpeditionPoint>& getExpeditionPoints();
-
-            /**
-             * @brief Get warehouse product allocations. 
-             * @return The list of product allocations. 
-             */
-            const vector<pair<Product, Cell>>& getProductAllocation() const;
 
             /**
 			 * @brief Warehouse assignment operator. 
