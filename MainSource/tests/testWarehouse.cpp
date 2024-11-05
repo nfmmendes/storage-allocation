@@ -75,3 +75,27 @@ TEST(WarehouseTest, ReadWarehouseDataInput2) {
     EXPECT_EQ(expeditionPoints[2].getCoordinates(), make_pair(295, 50));
     EXPECT_EQ(expeditionPoints[2].getBlockCode(), "BL1");
 }
+
+TEST(WarehouseTest, GetBlocksByName){
+    string inputDir { TEST_INPUTS_DIR }; 
+    ifstream first_input(inputDir + "warehouse_input_1.txt");
+    Warehouse a;
+
+    EXPECT_TRUE(a.getBlocksByName().empty());
+
+    a.readWarehouseData(first_input);
+    auto blocksByName = a.getBlocksByName();
+
+    EXPECT_EQ(blocksByName.size(), 1);
+    EXPECT_EQ(blocksByName.begin()->first, "BL1");
+
+    ifstream second_input(inputDir + "warehouse_input_2.txt");
+    Warehouse b;
+
+    b.readWarehouseData(second_input);
+    blocksByName = b.getBlocksByName();
+
+    EXPECT_EQ(blocksByName.size(), 2);
+    EXPECT_NE(blocksByName.find("BL1"), blocksByName.end());
+    EXPECT_NE(blocksByName.find("BL2"), blocksByName.end());
+}
