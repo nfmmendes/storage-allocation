@@ -65,9 +65,9 @@ class Warehouse{
 
             /**
 			 * @brief Get blocks mapped by their names. 
-			 * @return A map containing the block name as key and the block as value. 
+			 * @return A map containing the block name as key and a pointer to a block as value. 
              */
-			map<string, Block> getBlocksByName();  
+			map<string, Block*> getBlocksByName();  
 
             /**
              * @brief Get the list of warehouse blocks. 

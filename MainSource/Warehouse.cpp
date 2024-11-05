@@ -228,11 +228,11 @@ const string& Warehouse::getName() const { return name;}
 
 const vector<Block>& Warehouse::getBlocks()  { return blocks;}
 
-map<string, Block> Warehouse::getBlocksByName(){
-	map<string, Block> result; 
+map<string, Block*> Warehouse::getBlocksByName(){
+	map<string, Block*> result; 
 	
 	for(unsigned int i = 0; i< blocks.size(); i++)
-		result[blocks[i].getName()] = blocks[i];
+		result[blocks[i].getName()] = &blocks[i];
 	
 	return result; 
 }
