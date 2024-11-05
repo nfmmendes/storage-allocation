@@ -7,6 +7,7 @@
 #include<vector>
 #include<cstdlib>
 #include "Warehouse.h"
+#include "Point.h"
  
  using namespace std;
  Warehouse::Warehouse(const Warehouse &other){
@@ -72,6 +73,8 @@
             blocks.push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY, width, lenght));
         }
 		
+        map<string, Block*> blocksByName = getBlocksByName();
+
 		file>>numExpeditionPoints;
 	//	cout<<"Reading expedition points...\n";
 		double coordX, coordY;
@@ -95,6 +98,14 @@
             for(int i=0; i<numExits; i++){
 				
                 file>> idExit >> exitCoordX >> exitCoordY>>blockName>>blockBName; 
+
+                // Tests if the exit is valid.
+                if(blocksByName.find(blockName) == blocksByName.end())
+                    continue;
+                auto firstBlock = blocksByName[blockName];
+                if(firstBlock->isInBlock(Point("", exitCoordX, exitCoordY)))
+                    continue;
+                
 
 				//Fill auxiliary structure to connect 
                 if(blockBName == "#_#_#")
