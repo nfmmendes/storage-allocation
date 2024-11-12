@@ -99,10 +99,9 @@
                 if(blocksByName.find(blockName) == blocksByName.end())
                     continue;
                 auto firstBlock = blocksByName[blockName];
-                if(firstBlock->isInBlock(Point("", exitCoordX, exitCoordY)))
+                if(!firstBlock->isInBlock(Point("", exitCoordX, exitCoordY)))
                     continue;
-                
-
+            
 				//Fill auxiliary structure to connect 
                 if(blockBName == "#_#_#")
                     exitsByBlock[blockName].emplace_back(idExit, exitCoordX, exitCoordY, blockName);
