@@ -11,15 +11,11 @@
  
  using namespace std;
  Warehouse::Warehouse(const Warehouse &other){
-	
 	this->name = other.name;
 	
-	for(unsigned int i=0; i<other.blocks.size();i++)
-		this->blocks.push_back(other.blocks[i]);
-	
-    for(unsigned int i=0; i<other.expeditionPoints.size();i++)
-        this->expeditionPoints.push_back(other.expeditionPoints[i]);
-	 
+	copy(begin(other.blocks), end(other.blocks), back_inserter(this->blocks));
+    copy(begin(other.expeditionPoints), end(other.expeditionPoints), 
+                back_inserter(this->expeditionPoints));	 
  }
 
  void Warehouse::readWarehouseData(ifstream &file){   
