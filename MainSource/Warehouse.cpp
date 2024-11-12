@@ -66,7 +66,7 @@
 	//	cout<<numBlocks<<endl;
         for(int i=0; i<numBlocks; i++){
             file>> blockName>> blockBottomLeftCoordX >> blockBottomLeftCoordY>> width >> lenght;
-            blocks.push_back(Block(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY, width, lenght));
+            blocks.emplace_back(blockName, blockBottomLeftCoordX, blockBottomLeftCoordY, width, lenght);
         }
 		
         map<string, Block*> blocksByName = getBlocksByName();
@@ -78,7 +78,7 @@
 	//	cout<<numExpeditionPoints<<endl;
 		for(int i=0;i<numExpeditionPoints;i++){
 			file>>expeditionCode>>blockName>>coordX>>coordY; 
-			expeditionPoints.push_back(ExpeditionPoint(expeditionCode, blockName, pair<double,double>(coordX, coordY)));
+			expeditionPoints.emplace_back(expeditionCode, blockName, pair<double,double>(coordX, coordY));
 		}
 
         //Read all the data concerning block exits
@@ -105,14 +105,14 @@
 
 				//Fill auxiliary structure to connect 
                 if(blockBName == "#_#_#")
-                    exitsByBlock[blockName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockName));
+                    exitsByBlock[blockName].emplace_back(idExit, exitCoordX, exitCoordY, blockName);
                 else{
 					
                     //Here are done two inserts because the data describing the exits can arrive in just one way, 
                     //but the exit should be inserted in both blocks objects (We can assume that a single exit connects
                     //just two blocks)
-                    exitsByBlock[blockName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockName,blockBName));
-                    exitsByBlock[blockBName].push_back(BlockExit(idExit, exitCoordX, exitCoordY, blockBName,blockName));
+                    exitsByBlock[blockName].emplace_back(idExit, exitCoordX, exitCoordY, blockName,blockBName);
+                    exitsByBlock[blockBName].emplace_back(idExit, exitCoordX, exitCoordY, blockBName,blockName);
                 }
             }
 
